@@ -4,6 +4,7 @@ import Home from "../pages/client/Home";
 import Footer from "../components/client/Footer";
 import '../styles/client.css';
 import Header from "../components/client/Header";
+import ForgotPage from "../components/ForgotPage";
 
 function Client({
   handleLogout,
@@ -18,6 +19,7 @@ function Client({
         <Header />
           <Routes>
             <Route path="/" element={<Home handleLogin={handleLogin} />} />
+            <Route path="/forgot" element={<ForgotPage />} />
           </Routes>
           <Footer />
         </BrowserRouter>
