@@ -6,10 +6,91 @@
 }
 
 :root {
-  --admin-primary-color: #fff8e9;
-  --admin-secondary-color: #8b714a;
-  --admin-teritary-color: #d7ac6c;
-  --admin-accent-color: #000;
-  --admin-background-color: #ad8c5c;
-  --admin-text-color: #fff;
+  --client-primary-color: #FA8232;
+  --client-secondary-color: #F2F4F5;
+  --client-teritary-color: #000;
+  --client-text-color: #fff;
+  --client-fonts-color:#5C5F6A;
+  --client-top-primary-color:#2f3336;
+  --client-top-secondary-color:#676868;
+  
 }
+
+.common-button{
+  background-color: var(--client-primary-color) !important;
+  color: var(--client-text-color) !important;
+  border: none;
+}
+
+/* / Topbar / */
+.top-bar{
+  background-color: var(--client-top-primary-color);
+  overflow: hidden; 
+  white-space: nowrap
+}
+
+.top-bar .search{
+  background-color: var(--client-top-primary-color);
+  border: none !important;
+}
+
+.top-bar .btn-link {
+  color: var(--client-top-secondary-color);
+}
+
+.top-bar .btn-link:hover {
+  color: var(--client-text-color);
+}
+
+.top-bar .badge {
+  background-color: var(--client-text-color);
+  font-size: 0.5rem;
+}
+
+.top-bar .form-control {
+  transition: all 0.3s ease;
+}
+
+.top-bar .flex-grow-1 {
+  flex: 1;
+}
+
+.top-bar form {
+  width: 100%; 
+}
+
+.top-bar .form-control {
+  background-color: var(--client-top-primary-color);
+  border: none;
+  color: var(--client-top-secondary-color);
+}
+
+.top-bar .form-control::placeholder {
+  color: var(--client-top-secondary-color);
+}
+
+.top-bar button {
+  white-space: nowrap;
+}
+
+/* / Header / */
+.header{
+  color: var(--client-teritary-color);
+}
+
+@media (min-width: 992px) {
+  .top-bar .form-control {
+    width: "800px";
+  }
+}
+
+
+/* Footer */
+.footer-bg{
+  background-color: var(--client-secondary-color);
+  color: var(--client-teritary-color);
+}
+.fonts-color{
+color: var(--client-fonts-color);
+}
+/* Footer End */
