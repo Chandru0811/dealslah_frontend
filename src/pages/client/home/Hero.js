@@ -46,7 +46,7 @@ const carouselImages = [
 
 function Hero() {
   return (
-    <div>
+    <div className="mt-4">
       <Carousel
         responsive={responsive}
         infinite={true}

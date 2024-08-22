@@ -61,7 +61,7 @@ function Categories() {
 
     return (
         <section>
-            <div className='container my-4'>
+            <div className='container-fluid my-4'>
                 <h4 className='fw-bold'>Top Categories</h4>
                 <div className='row mt-4'>
                     {categories.slice(0, visibleCategories).map((category) => (
