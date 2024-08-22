@@ -150,7 +150,9 @@ function Footer() {
                   <IoLocationOutline size={25} />
                 </div>
                 <div className="col-md-11 col-11">
-                  <p className="fonts-color">4517 Washington Ave. Manchester,Road, 234 Kentucky USA</p>
+                  <p className="fonts-color">
+                    4517 Washington Ave. Manchester,Road, 234 Kentucky USA
+                  </p>
                 </div>
               </div>
             </div>

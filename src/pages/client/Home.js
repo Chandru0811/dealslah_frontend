@@ -1,15 +1,19 @@
 import React from "react";
-import Registration from "../../components/auth/Registration";
-import NotFound from "../../components/NotFound";
 import Hero from "./home/Hero";
+import DailyDeals from "./home/DailyDeals";
+import BestSelling from "./home/BestSelling";
+import Categories from "./home/Categories";
+import SubCategories from "./home/SubCategories";
 
 function Home({ handleLogin }) {
   return (
-    <div className="container">
+    <div>
       {/* <button onClick={handleLogin} className="btn btn-primary"></button> */}
-      <Registration />
-      <NotFound />
       <Hero />
+      <Categories />
+      <DailyDeals />
+      <SubCategories />
+      <BestSelling />
     </div>
   );
 }
