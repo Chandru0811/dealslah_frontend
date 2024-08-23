@@ -128,7 +128,6 @@
 
 /* / / Topbar / / */
 .top-bar{
-  background-color: var(--client-top-primary-color);
   overflow: hidden; 
   white-space: nowrap
 }
@@ -166,7 +165,6 @@
 .top-bar .form-control {
   background-color: var(--client-top-primary-color);
   border: none;
-  color: var(--client-top-secondary-color);
 }
 
 .top-bar .form-control::placeholder {
@@ -179,6 +177,11 @@
 
 .search-buttons .form-control{
  background-color: var(--client-search-button-color);
+ border-color: var(--client-top-secondary-color);
+}
+
+.search-buttons .form-control::placeholder {
+  color: var(--client-top-secondary-color);
 }
 
 /* / / Header / / */
@@ -194,6 +197,13 @@
 
 .custom-dropdown-menu {
   width: 100%;
+  padding: 0;
+}
+
+.custom-dropdown-menu .nav-link {
+  padding: 10px 20px;
+  width: 100%;
+  text-align: left;
 }
 
 @media (min-width: 992px) { 
@@ -204,14 +214,8 @@
 
 @media (max-width: 991px) {
   .offcanvas-body .nav-link {
-    border-bottom: 1px solid var(--client-top-secondary-color); 
     padding-bottom: 10px;
     margin-bottom: 10px; 
-  }
-  
-
-  .offcanvas-body .nav-link:last-child {
-    border-bottom: none; 
   }
 }
 
