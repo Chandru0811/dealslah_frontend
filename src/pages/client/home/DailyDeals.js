@@ -57,7 +57,7 @@ function DailyDeals() {
 
   return (
     <section>
-      <div className="container mb-4">
+      <div className="container-fluid mb-4">
         <div className="row">
           <div className="d-flex justify-content-between align-items-center">
             <h5>Daily Deals</h5>

@@ -165,14 +165,14 @@ const groceries = [
 function SubCategories() {
     return (
         <section>
-            <div className='container'>
+            <div className='container-fluid'>
                 <div className='row'>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Fashions</h4>
                             <div className='row'>
                                 {fashions.map((fashion) => (
-                                    <div className='col-3 text-center' key={fashion.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={fashion.id}>
                                         <img
                                             src={fashion.img}
                                             alt={fashion.title}
@@ -184,12 +184,12 @@ function SubCategories() {
                             </div>
                         </div>
                     </div>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Furnitures</h4>
                             <div className='row'>
                                 {furnitures.map((furniture) => (
-                                    <div className='col-3 text-center' key={furniture.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={furniture.id}>
                                         <img
                                             src={furniture.img}
                                             alt={furniture.title}
@@ -201,12 +201,12 @@ function SubCategories() {
                             </div>
                         </div>
                     </div>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Appliances</h4>
                             <div className='row'>
                                 {appliances.map((appliance) => (
-                                    <div className='col-3 text-center' key={appliance.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={appliance.id}>
                                         <img
                                             src={appliance.img}
                                             alt={appliance.title}
@@ -218,12 +218,12 @@ function SubCategories() {
                             </div>
                         </div>
                     </div>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Electronics</h4>
                             <div className='row'>
                                 {electronics.map((electronic) => (
-                                    <div className='col-3 text-center' key={electronic.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={electronic.id}>
                                         <img
                                             src={electronic.img}
                                             alt={electronic.title}
@@ -235,12 +235,12 @@ function SubCategories() {
                             </div>
                         </div>
                     </div>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Baby Care's</h4>
                             <div className='row'>
                                 {babycares.map((babycare) => (
-                                    <div className='col-3 text-center' key={babycare.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={babycare.id}>
                                         <img
                                             src={babycare.img}
                                             alt={babycare.title}
@@ -252,12 +252,12 @@ function SubCategories() {
                             </div>
                         </div>
                     </div>
-                    <div className='col-lg-4 col-md-6 col-12 mb-4'>
+                    <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
                             <h4 className='fw-bold'>Groceries</h4>
                             <div className='row'>
                                 {groceries.map((grocery) => (
-                                    <div className='col-3 text-center' key={grocery.id}>
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={grocery.id}>
                                         <img
                                             src={grocery.img}
                                             alt={grocery.title}
