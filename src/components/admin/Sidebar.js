@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../../assets/Logo_dark.png";
+import Logo from "../../assets/Header_logo.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
@@ -38,7 +38,8 @@ function Sidebar({ handleLogout }) {
             }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo" />
+          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
+          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"170px",height:"50px"}} />
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">
