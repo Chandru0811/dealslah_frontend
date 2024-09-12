@@ -62,7 +62,7 @@ const Categories = () => {
       <div class="card-header d-flex align-items-center">
         <h3 class="mb-0">Categories</h3>
         <div class="container-fluid d-flex justify-content-end">
-          <Link to="/product/add">
+          <Link to="/category/add">
             <button type="submit" className="btn btn-button btn-sm p-3">
               <span>Add category</span>
             </button>

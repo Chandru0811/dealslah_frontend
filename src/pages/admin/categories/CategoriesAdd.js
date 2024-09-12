@@ -30,34 +30,44 @@ function CategoriesAdd() {
 
   return (
     <section className="px-4">
-      <div
-        className="container card shadow bgroupId-0"
-        style={{ minHeight: "90vh" }}
-      >
-        <form onSubmit={formik.handleSubmit}>
-          <div className="row p-2">
-            <div className="d-flex justify-content-between align-items-center">
-              <h1 className="">Add Category</h1>
-              <div>
-                <Link to="/categories">
-                  <button type="button" className="btn btn-light btn-sm">
-                    <span>Back</span>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="card shadow border-0 mb-2 top-header">
+          <div className="container-fluid py-4">
+            <div className="row align-items-center">
+              <div className="col">
+                <h1 className="h4 ls-tight headingColor">Add Category</h1>
+              </div>
+              <div className="col-auto">
+                <div className="hstack gap-2 justify-content-end">
+                  <Link to="/categories">
+                    <button type="button" className="btn btn-light btn-sm">
+                      Back
+                    </button>
+                  </Link>
+                  <button
+                    type="submit"
+                    className="btn btn-sm btn-button"
+                    disabled={loadIndicator}
+                  >
+                    {loadIndicator && (
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        aria-hidden="true"
+                      ></span>
+                    )}
+                    Save
                   </button>
-                </Link>
-                <button type="submit" className="btn btn-sm btn-button">
-                  {loadIndicator && (
-                    <span
-                      className="spinner-bgroupId spinner-bgroupId-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Save
-                </button>
+                </div>
               </div>
             </div>
           </div>
-          <div className="container">
-            <div className="row">
+        </div>
+        <div
+          className="card shadow border-0 my-2"
+          style={{ minHeight: "80vh" }}
+        >
+          <div className="container mb-5">
+            <div className="row py-4">
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Category Group Id<span className="text-danger">*</span>
@@ -167,8 +177,8 @@ function CategoriesAdd() {
               </div>
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </section>
   );
 }
