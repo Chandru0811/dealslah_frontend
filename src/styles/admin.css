@@ -10,6 +10,7 @@
   --admin-teritary-color: #0625a0;
   --admin-accent-color: #fff;
   --admin-text-color: #FDBF46;
+  --admin-border-color: #263057;
 }
 
 /* Sidebar */
@@ -58,4 +59,77 @@
 
 .sidebar-logo{
   max-width: 150px;
+}
+
+.btn-button {
+  color: var(--admin-accent-color) !important;
+  background-color: var(--admin-primary-color) !important;
+  border-color: var(--admin-primary-color) !important;
+  font-weight: 600 !important;
+}
+.btn-button:hover {
+  color: var(--admin-text-color) !important;
+  background-color: var(--admin-teritary-color) !important;
+  border-color: var(--admin-primary-color) !important;
+}
+.btn-check:focus + .btn-button,
+.btn-button:focus {
+  color: var(--admin-text-color);
+  background-color: var(--admin-secondary-color);
+  border-color: var(--admin-secondary-color);
+  box-shadow: 0 0 0 0.25rem var(--admin-teritary-color);
+}
+.btn-check:checked + .btn-button,
+.btn-check:active + .btn-button,
+.btn-button:active,
+.btn-button.active,
+.show > .btn-button.dropdown-toggle {
+  color: var(--admin-text-color);
+  background-color: var(--admin-secondary-color);
+  border-color: var(--admin-secondary-color);
+}
+.btn-check:checked + .btn-button:focus,
+.btn-check:active + .btn-button:focus,
+.btn-button:active:focus,
+.btn-button.active:focus,
+.show > .btn-button.dropdown-toggle:focus {
+  box-shadow: 0 0 0 0.25rem var(--admin-teritary-color);
+}
+.btn-button:disabled,
+.btn-button.disabled {
+  color: var(--admin-text-color);
+  background-color: var(--admin-secondary-color);
+  border-color: var(--admin-secondary-color);
+}
+
+.btn-button-check:checked + .btn-button,
+.btn-button.active,
+.btn-button.show,
+.btn-button:first-child:active,
+:not(.btn-button-check) + .btn-button:active {
+  background-color: var(--admin-secondary-color);
+  border-color: var(--admin-secondary-color);
+  color: var(--admin-text-color);
+}
+
+/* / Banner / */
+.bannerAdd .circle {
+  width: 35px;
+  height: 30px;
+  border: none;
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.inputGroup {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+.banner_input-group-text{
+  padding: 0.360rem.75rem;
+}
+
+.bannerAdd .circle::-webkit-color-swatch {
+  border-radius: 50%;
 }

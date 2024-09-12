@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Logo_dark.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
+import { MdCategory } from "react-icons/md";
 
 function Sidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -44,6 +45,22 @@ function Sidebar({ handleLogout }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
                 <BsBarChartFill />Dashboard
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/slider">
+                <BiSolidCategory />Slider
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/banner">
+                <BiSolidCategory />Banner
+                {/* {/ <i className="bi bi-images"></i>Banners /} */}
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/categorygroup">
+                <MdCategory />Category Groups
               </NavLink>
             </li>
             <li className="nav-item">
