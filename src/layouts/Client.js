@@ -5,6 +5,8 @@ import Footer from "../components/client/Footer";
 import "../styles/client.css";
 import Header from "../components/client/Header";
 import ForgotPage from "../components/common/ForgotPage";
+import Registration from "../components/auth/Registration";
+import NotFound from "../components/common/NotFound";
 
 function Client({
   handleLogout,
@@ -18,7 +20,9 @@ function Client({
         <BrowserRouter>
           <Header />
           <Routes>
-            <Route path="/" element={<Home handleLogin={handleLogin} />} />
+            <Route path="/" element={<Home  />} />
+            <Route path="*" element={<NotFound />} />
+            <Route path="/login" element={<Registration handleLogin={handleLogin} />} />
             <Route path="/forgot" element={<ForgotPage />} />
           </Routes>
           <Footer />

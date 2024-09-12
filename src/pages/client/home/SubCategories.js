@@ -15,14 +15,14 @@ import Electronic1 from '../../../assets/category5.png';
 import Electronic2 from '../../../assets/headphone.png';
 import Electronic3 from '../../../assets/camera.png';
 import Electronic4 from '../../../assets/printer.png';
-import BabyCare1 from '../../../assets/diaper.png';
-import BabyCare2 from '../../../assets/feeding_bottle.png';
-import BabyCare3 from '../../../assets/cerelac.png';
-import BabyCare4 from '../../../assets/wipes.png';
-import Grocery1 from '../../../assets/dals.png';
-import Grocery2 from '../../../assets/masala.png';
-import Grocery3 from '../../../assets/oil.png';
-import Grocery4 from '../../../assets/atta.png';
+import Wedding1 from '../../../assets/marriage_hall.png';
+import Wedding2 from '../../../assets/wedding_suits.png';
+import Wedding3 from '../../../assets/haldi.jpg';
+import Wedding4 from '../../../assets/wedding_catering.png';
+import Transport1 from '../../../assets/house_shifting.png';
+import Transport2 from '../../../assets/medicine_delivery.png';
+import Transport3 from '../../../assets/tickets_booking.png';
+import Transport4 from '../../../assets/import_and_export.png';
 
 const fashions = [
     {
@@ -74,7 +74,7 @@ const appliances = [
     {
         id: 1,
         img: Appliance1,
-        title: "Refridgerator"
+        title: "Double Door Fridge"
     },
     {
         id: 2,
@@ -116,49 +116,49 @@ const electronics = [
     }
 ];
 
-const babycares = [
+const weddings = [
     {
         id: 1,
-        img: BabyCare1,
-        title: "Dry Diaper"
+        img: Wedding1,
+        title: "Marriage Hall"
     },
     {
         id: 2,
-        img: BabyCare2,
-        title: "Feeding Bottle"
+        img: Wedding2,
+        title: "Wedding Suits"
     },
     {
         id: 3,
-        img: BabyCare3,
-        title: "Multigrain Cerelac"
+        img: Wedding3,
+        title: "Haldi Stage Decors"
     },
     {
         id: 4,
-        img: BabyCare4,
-        title: "Wet Wipes"
+        img: Wedding4,
+        title: "Wedding Catering"
     }
 ];
 
-const groceries = [
+const transports = [
     {
         id: 1,
-        img: Grocery1,
-        title: "Dal's"
+        img: Transport1,
+        title: "House Shifting"
     },
     {
         id: 2,
-        img: Grocery2,
-        title: "Masala's"
+        img: Transport2,
+        title: "Medicine Delivery"
     },
     {
         id: 3,
-        img: Grocery3,
-        title: "Oil's"
+        img: Transport3,
+        title: "Ticket's Booking"
     },
     {
         id: 4,
-        img: Grocery4,
-        title: "Flour's"
+        img: Transport4,
+        title: "Import & Export"
     }
 ];
 
@@ -169,7 +169,7 @@ function SubCategories() {
                 <div className='row'>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Fashions</h4>
+                            <h4 className='fw-bold'>Fashion's</h4>
                             <div className='row'>
                                 {fashions.map((fashion) => (
                                     <div className='col-lg-3 col-md-6 col-3 text-center' key={fashion.id}>
@@ -178,7 +178,7 @@ function SubCategories() {
                                             alt={fashion.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{fashion.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{fashion.title}</h6>
                                     </div>
                                 ))}
                             </div>
@@ -186,7 +186,7 @@ function SubCategories() {
                     </div>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Furnitures</h4>
+                            <h4 className='fw-bold'>Furniture's</h4>
                             <div className='row'>
                                 {furnitures.map((furniture) => (
                                     <div className='col-lg-3 col-md-6 col-3 text-center' key={furniture.id}>
@@ -195,7 +195,7 @@ function SubCategories() {
                                             alt={furniture.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{furniture.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{furniture.title}</h6>
                                     </div>
                                 ))}
                             </div>
@@ -203,7 +203,7 @@ function SubCategories() {
                     </div>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Appliances</h4>
+                            <h4 className='fw-bold'>Appliance's</h4>
                             <div className='row'>
                                 {appliances.map((appliance) => (
                                     <div className='col-lg-3 col-md-6 col-3 text-center' key={appliance.id}>
@@ -212,7 +212,7 @@ function SubCategories() {
                                             alt={appliance.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{appliance.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{appliance.title}</h6>
                                     </div>
                                 ))}
                             </div>
@@ -220,7 +220,7 @@ function SubCategories() {
                     </div>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Electronics</h4>
+                            <h4 className='fw-bold'>Electronic's</h4>
                             <div className='row'>
                                 {electronics.map((electronic) => (
                                     <div className='col-lg-3 col-md-6 col-3 text-center' key={electronic.id}>
@@ -229,7 +229,7 @@ function SubCategories() {
                                             alt={electronic.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{electronic.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{electronic.title}</h6>
                                     </div>
                                 ))}
                             </div>
@@ -237,16 +237,16 @@ function SubCategories() {
                     </div>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Baby Care's</h4>
+                            <h4 className='fw-bold'>Wedding's</h4>
                             <div className='row'>
-                                {babycares.map((babycare) => (
-                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={babycare.id}>
+                                {weddings.map((wedding) => (
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={wedding.id}>
                                         <img
-                                            src={babycare.img}
-                                            alt={babycare.title}
+                                            src={wedding.img}
+                                            alt={wedding.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{babycare.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{wedding.title}</h6>
                                     </div>
                                 ))}
                             </div>
@@ -254,16 +254,16 @@ function SubCategories() {
                     </div>
                     <div className='col-xl-4 col-md-6 col-12 mb-4'>
                         <div className='card subCatCard p-3 h-100'>
-                            <h4 className='fw-bold'>Groceries</h4>
+                            <h4 className='fw-bold'>Transport's</h4>
                             <div className='row'>
-                                {groceries.map((grocery) => (
-                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={grocery.id}>
+                                {transports.map((transport) => (
+                                    <div className='col-lg-3 col-md-6 col-3 text-center' key={transport.id}>
                                         <img
-                                            src={grocery.img}
-                                            alt={grocery.title}
+                                            src={transport.img}
+                                            alt={transport.title}
                                             className='img-fluid'
                                         />
-                                        <h6 className='mt-3'>{grocery.title}</h6>
+                                        <h6 className='mt-3' style={{ fontSize: "13px" }}>{transport.title}</h6>
                                     </div>
                                 ))}
                             </div>

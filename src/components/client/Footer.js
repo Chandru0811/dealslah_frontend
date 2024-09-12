@@ -1,165 +1,44 @@
-import React from "react";
-import Logo from "../../assets/Logo.png";
-import { FaWhatsapp, FaInstagram } from "react-icons/fa";
-import { MdOutlineEmail } from "react-icons/md";
-import { IoLocationOutline, IoCallOutline } from "react-icons/io5";
-import { Link } from "react-router-dom";
-import { RiFacebookCircleLine } from "react-icons/ri";
-import { FiYoutube } from "react-icons/fi";
-import { AiOutlineLinkedin } from "react-icons/ai";
-import { TfiTwitter } from "react-icons/tfi";
+import React from 'react';
+import Logo from '../../assets/Logo_dark.png';
+import { Link } from 'react-router-dom';
+import { FaFacebook, FaYoutube, FaLinkedinIn, FaTwitter } from "react-icons/fa";
+import { IoLogoWhatsapp } from "react-icons/io";
+import { RiInstagramFill } from "react-icons/ri";
 
 function Footer() {
   return (
-    <section>
-      <div className="container-fluid footer-bg">
-        <div className="row p-5">
-          <div className="col-md-4 col-12">
-            <div className="">
-              <img
-                src={Logo}
-                alt="logo"
-                className="img-fluid mb-3"
-                style={{ height: "3rem" }}
-              ></img>
-              <p className="fonts-color">
-                Etoshi is an exciting contemporary brand which focuses on
-                high-quality products graphics with a British style
-              </p>
-            </div>
-            <div className="">
-              <h5 className="mb-3">Connect with us</h5>
-              <div className="d-flex align-items-center">
-                <Link to="#" className="fonts-color">
-                  <p>
-                    <FaWhatsapp size={25} />
-                  </p>
-                </Link>
-                <Link to="#" className="fonts-color">
-                  <p className="ms-3">
-                    <FaInstagram size={25} />
-                  </p>
-                </Link>
-                <Link to="#" className="fonts-color">
-                  <p className="ms-3">
-                    <RiFacebookCircleLine size={25} />
-                  </p>
-                </Link>
-                <Link to="#" className="fonts-color">
-                  <p className="ms-3">
-                    <FiYoutube size={25} />
-                  </p>
-                </Link>
-                <Link to="#" className="fonts-color">
-                  <p className="ms-3">
-                    <AiOutlineLinkedin size={25} />
-                  </p>
-                </Link>
-                <Link to="#" className="fonts-color">
-                  <p className="ms-3">
-                    <TfiTwitter size={25} />
-                  </p>
-                </Link>
-              </div>
-            </div>
+    <footer className='footerBg'>
+      <div className='container pt-5'>
+        <div className='row text-center'>
+          <div className='col-md-12'>
+            <img src={Logo} alt='Dealslah' className='img-fluid mb-3' style={{ height: "3rem" }} />
           </div>
-          <div className="col-md-2 col-12">
-            <div className="">
-              <h5 className="mb-3">Get to Know Us</h5>
-              <div className="row">
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">Home</p>
-                </Link>
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">About</p>
-                </Link>
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">Shop</p>
-                </Link>
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">Contact</p>
-                </Link>
-              </div>
-            </div>
+          <div className='col-md-12'>
+            <ul className='footer-links list-inline'>
+              <li className='list-inline-item'><Link to='/'>Home</Link></li>
+              <li className='list-inline-item'><Link to='/deals'>Deals</Link></li>
+              <li className='list-inline-item'><Link to='/stores'>Stores</Link></li>
+              <li className='list-inline-item'><Link to='/categories'>Categories</Link></li>
+              <li className='list-inline-item'><Link to='/contactus'>Contact Us</Link></li>
+            </ul>
           </div>
-          <div className="col-md-2 col-12">
-            <div className="">
-              <h5 className="mb-3">Quick Link</h5>
-              <div className="row">
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">Terms Of Use</p>
-                </Link>
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">Privacy Policy</p>
-                </Link>
-                <Link
-                  to="#"
-                  className="fonts-color"
-                  style={{ textDecoration: "none" }}
-                >
-                  <p className="">FAQ</p>
-                </Link>
-              </div>
-            </div>
+          <div className='col-md-12 mb-3'>
+            <ul className='social-icons list-inline'>
+              <li className='list-inline-item'><a href='https://www.facebook.com/' target='_blank' rel="noreferrer"><FaFacebook /></a></li>
+              <li className='list-inline-item'><a href='https://www.whatsapp.com/' target='_blank' rel="noreferrer"><IoLogoWhatsapp /></a></li>
+              <li className='list-inline-item'><a href='https://www.instagram.com/' target='_blank' rel="noreferrer"><RiInstagramFill /></a></li>
+              <li className='list-inline-item'><a href='https://www.youtube.com/' target='_blank' rel="noreferrer"><FaYoutube /></a></li>
+              <li className='list-inline-item'><a href='https://in.linkedin.com/' target='_blank' rel="noreferrer"><FaLinkedinIn /></a></li>
+              <li className='list-inline-item'><a href='https://x.com/?lang=en' target='_blank' rel="noreferrer"><FaTwitter /></a></li>
+            </ul>
           </div>
-          <div className="col-md-4 col-12">
-            <div className="">
-              <h5 className="mb-3">Contact Us</h5>
-              <div className="row d-flex">
-                <div className="col-md-1 col-1 fonts-color">
-                  <IoCallOutline size={25} />
-                </div>
-                <div className="col-md-11 col-11">
-                  <p className="fonts-color">9187338281</p>
-                </div>
-              </div>
-              <div className="row d-flex">
-                <div className="col-md-1 col-1 fonts-color">
-                  <MdOutlineEmail size={25} />
-                </div>
-                <div className="col-md-11 col-11">
-                  <p className="fonts-color">ecommerce@gmail.com</p>
-                </div>
-              </div>
-              <div className="row d-flex">
-                <div className="col-md-1 col-1 fonts-color">
-                  <IoLocationOutline size={25} />
-                </div>
-                <div className="col-md-11 col-11">
-                  <p className="fonts-color">
-                    4517 Washington Ave. Manchester,Road, 234 Kentucky USA
-                  </p>
-                </div>
-              </div>
-            </div>
+          <hr className='mb-0' />
+          <div className='col-md-12'>
+            <p className='footer-text py-3 mb-0'><Link to='/termsandconditions' className='copyrights'>Terms and Conditions</Link> | <Link to='/privacypolicy' className='copyrights'>Privacy Policy</Link> | 2024 © Copyright Dealslah. All Rights Reserved.</p>
           </div>
         </div>
       </div>
-    </section>
+    </footer>
   );
 }
 

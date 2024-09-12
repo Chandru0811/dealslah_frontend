@@ -232,19 +232,60 @@
 }
 
 .bestSelling-card:hover {
-  border: 2px solid var(--client-primary-color); 
+  border: 1px solid #FDBF46 !important; 
   transform: scale(1.05); 
 }
 
 /* Best selling and Daily Deals */
 
 /* Footer */
-.footer-bg {
-  background-color: var(--client-secondary-color);
-  color: var(--client-teritary-color);
+.footerBg {
+  background-color: #2C3454;
+  color: #fff;
 }
-.fonts-color {
-  color: var(--client-fonts-color);
+
+.footer-links a {
+  color: #fff;
+  text-decoration: none;
+  padding: 0 15px;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.footer-links a:hover {
+  color: #FDBF46;
+}
+
+.social-icons a {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0 10px;
+}
+
+.social-icons a:hover{
+  color: #FDBF46;
+}
+
+.footer-text {
+  font-size: 0.875rem;
+}
+
+@media (max-width: 768px) {
+  .footer-links a, .social-icons a {
+    font-size: 1.2rem;
+  }
+  .footer-text {
+    font-size: 0.75rem;
+  }
+}
+
+.copyrights{
+  text-decoration: none;
+  color: var(--client-text-color);
+}
+
+.copyrights:hover{
+  color: #FDBF46;
 }
 /* Footer End */
 
@@ -262,7 +303,33 @@
   margin: 0 auto;
 }
 
+@media (min-width: 992px) and (max-width: 1199px) {
+  .categoryCard {
+      width: 80px;
+      height: 80px;
+  }
+}
+
 .categoryCard img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.categoryOffCard {
+  border: none;
+  border-radius: 50%;
+  box-shadow: 0px 6px 12px 0px var(--client-boxshadow-color);
+  width: 80px;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.categoryOffCard img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -281,3 +348,67 @@
   object-fit: contain;
 }
 /* / Sub Categories / */
+
+/* Sub Banner */
+.row .equal-height {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.row.equal-height .col-md-6 {
+  display: flex;
+  flex-direction: column;
+}
+
+.subBannerCard {
+  border: none;
+  border-radius: 25px;
+  background-size: cover;
+  background-position: center;
+  padding: 40px;
+  color: var(--client-text-color);
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.subBannerCard::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(0deg, #FDBF46 25%, #000 50%);
+  z-index: 1;
+  opacity: 0.2;
+}
+
+.subBannerCard h3,
+.subBannerCard .seeDealsBtn {
+  position: relative;
+  z-index: 2;
+}
+
+.subBannerCard h3 {
+  margin-top: 125px;
+}
+
+.seeDealsBtn {
+  background-color: var(--client-text-color);
+  border: 2px solid var(--client-text-color);
+  border-radius: 5px;
+  color: #FDBF46;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.seeDealsBtn:hover {
+  background-color: none;
+  border: 2px solid var(--client-text-color);
+  color: var(--client-text-color);
+}
+/* Sub Banner */
