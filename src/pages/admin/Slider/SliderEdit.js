@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Image from "../../../assets/tv.png";
 
 function SliderEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -21,11 +20,11 @@ function SliderEdit() {
     initialValues: {
       title: "Laptop",
       order: "3",
-      image: Image,
+      image: "",
       description: "Combines style and performance for everyday computing.",
       link: "https://ecsaio.com/",
       link_label: "https://ecsaio.com/",
-      bg_color: "Black",
+      bg_color: "#000000",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -35,34 +34,34 @@ function SliderEdit() {
 
   return (
     <section className="px-4">
-      <div className="card shadow border-0 mb-3">
-        <div className="row p-3">
-          <div className="d-flex justify-content-between align-items-center">
-            <h1 className="h4 ls-tight">Edit Slider</h1>
-            <div>
-              <Link to="/slider">
-                <button type="button" className="btn btn-light btn-sm">
-                  <span>Back</span>
+      <form onSubmit={formik.handleSubmit}>
+        <div className="card shadow border-0 mb-3">
+          <div className="row p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <h1 className="h4 ls-tight">Edit Slider</h1>
+              <div  className="hstack gap-2 justify-content-end">
+                <Link to="/slider">
+                  <button type="button" className="btn btn-light btn-sm">
+                    <span>Back</span>
+                  </button>
+                </Link>
+                <button type="submit" className="btn btn-sm btn-button">
+                  {loadIndicator && (
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      aria-hidden="true"
+                    ></span>
+                  )}
+                  Update
                 </button>
-              </Link>
-              <button type="submit" className="btn btn-sm btn-button">
-                {loadIndicator && (
-                  <span
-                    className="spinner-border spinner-border-sm me-2"
-                    aria-hidden="true"
-                  ></span>
-                )}
-                Update
-              </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        className="container card shadow border-0"
-        style={{ minHeight: "80vh" }}
-      >
-        <form onSubmit={formik.handleSubmit}>
+        <div
+          className="container card shadow border-0"
+          style={{ minHeight: "80vh" }}
+        >
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -70,11 +69,10 @@ function SliderEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.title && formik.errors.title
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.title && formik.errors.title
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("title")}
               />
               {formik.touched.title && formik.errors.title && (
@@ -88,11 +86,11 @@ function SliderEdit() {
               <input
                 type="file"
                 accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${
-                  formik.touched.image && formik.errors.image
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.image && formik.errors.image
+                  ? "is-invalid"
+                  : ""
+                  }`}
+                  {...formik.getFieldProps("image")}
               />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
@@ -104,9 +102,8 @@ function SliderEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.link && formik.errors.link ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.link && formik.errors.link ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("link")}
               />
               {formik.touched.link && formik.errors.link && (
@@ -119,11 +116,10 @@ function SliderEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.link_label && formik.errors.link_label
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.link_label && formik.errors.link_label
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("link_label")}
               />
               {formik.touched.link_label && formik.errors.link_label && (
@@ -138,11 +134,10 @@ function SliderEdit() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${
-                  formik.touched.order && formik.errors.order
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.order && formik.errors.order
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>
@@ -161,10 +156,10 @@ function SliderEdit() {
                 <div className="invalid-feedback">{formik.errors.order}</div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
+            <div className="col-md-6 col-12 mb-3 bannerAdd">
               <label className="form-label">Color Code</label><span className="text-danger">*</span>
-              <div class="input-group mb-3 bannerAdd">
-                <div class="banner_input-group-text inputGroup">
+              <div className="input-group mb-3">
+                <div className="input-group-text inputGroup">
                   <input
                     type="color"
                     {...formik.getFieldProps("bg_color")}
@@ -173,7 +168,10 @@ function SliderEdit() {
                 </div>
                 <input
                   type="text"
-                  className={`form-control form-control-sm iconInput `}
+                  className={`form-control ${formik.touched.bg_color && formik.errors.bg_color
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   value={formik.values.bg_color}
                   placeholder=""
                 />
@@ -190,11 +188,10 @@ function SliderEdit() {
               </label>
               <textarea
                 rows={5}
-                className={`form-control ${
-                  formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.description && formik.errors.description
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("description")}
               />
               {formik.touched.description && formik.errors.description && (
@@ -204,8 +201,8 @@ function SliderEdit() {
               )}
             </div>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </section>
   );
 }

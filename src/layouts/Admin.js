@@ -7,12 +7,12 @@ import "../styles/admin.css";
 import AdminFooter from "../components/admin/AdminFooter";
 import CategoryGroups from "../pages/admin/CategoryGroups/CategoryGroups";
 import CategoryGroupAdd from "../pages/admin/CategoryGroups/CategoryGroupAdd";
-import CategoryGroupEdit from "../pages/admin/CategoryGroups/CategotyGroupEdit";
+import CategoryGroupEdit from "../pages/admin/CategoryGroups/CategoryGroupEdit";
 import CategoryGroupView from "../pages/admin/CategoryGroups/CategoryGroupView";
-import Categories from "../../src/pages/admin/categories/Categories";
-import CategoriesAdd from "../../src/pages/admin/categories/CategoriesAdd";
-import CategoriesView from "../pages/admin/categories/CategoriesView";
-import CategoriesEdit from "../pages/admin/categories/CategoriesEdit";
+import CategoriesIndex from "../pages/admin/Categories/CategoriesIndex";
+import CategoriesAdd from "../pages/admin/Categories/CategoriesAdd";
+import CategoriesView from "../pages/admin/Categories/CategoriesView";
+import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
 import Banner from "../pages/admin/Banner/Banner";
 import BannerAdd from "../pages/admin/Banner/BannerAdd";
 import BannerEdit from "../pages/admin/Banner/BannerEdit";
@@ -42,7 +42,7 @@ function Admin({ handleLogout }) {
                   <Route path="/categorygroup/view" element={<CategoryGroupView />} />
 
                   {/* Categories */}
-                  <Route path="/categories" element={<Categories />} />
+                  <Route path="/categories" element={<CategoriesIndex />} />
                   <Route path="/category/add" element={<CategoriesAdd />} />
                   <Route path="/category/view" element={<CategoriesView />} />
                   <Route path="/category/edit" element={<CategoriesEdit />} />

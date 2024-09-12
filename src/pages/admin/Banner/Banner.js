@@ -74,10 +74,7 @@ const Banner = () => {
                     <Link to="/banner/edit">
                       <button className="button-btn btn-sm m-2">Edit</button>
                     </Link>
-                    {/* <DeleteModel
-                        onSuccess={refreshData}
-                      /> */}
-                    <button className="button-btn btn-sm m-2">Delete</button>
+                    <DeleteModel />
                   </div>
                 </td>
               </tr>

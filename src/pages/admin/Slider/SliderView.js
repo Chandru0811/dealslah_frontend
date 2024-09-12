@@ -81,7 +81,7 @@ function SliderView() {
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: Blue</p>
+                <p className="text-muted text-sm">: #000000</p>
               </div>
             </div>
           </div>

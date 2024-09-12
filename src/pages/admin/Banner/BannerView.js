@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 
 function BannerView() {
- 
+
   return (
     <section className="px-4">
       <div className="card shadow border-0 mb-3">
@@ -81,7 +81,7 @@ function BannerView() {
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: Blue</p>
+                <p className="text-muted text-sm">: #000000</p>
               </div>
             </div>
           </div>

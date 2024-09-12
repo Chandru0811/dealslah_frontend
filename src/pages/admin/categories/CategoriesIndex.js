@@ -3,6 +3,7 @@ import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
+import DeleteModel from '../../../components/admin/DeleteModel';
 
 const Categories = () => {
   const tableRef = useRef(null);
@@ -122,6 +123,7 @@ const Categories = () => {
                       <Link to={`/category/edit`}>
                         <button className="button-btn btn-sm m-2">Edit</button>
                       </Link>
+                      <DeleteModel />
                     </div>
                   </td>
                 </tr>

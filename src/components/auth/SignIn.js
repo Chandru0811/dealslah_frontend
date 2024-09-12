@@ -95,11 +95,11 @@ function SignIn({ handleLogin }) {
         </Button>
 
         <div className="text-center mt-4">
-          <p>or</p>
+          <p className="mb-3">or</p>
 
           <Button
             variant="light"
-            className="w-100 border"
+            className="w-100 border shadow-none"
             style={{
               position: "relative",
               display: "flex",

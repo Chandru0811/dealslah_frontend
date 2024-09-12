@@ -21,7 +21,7 @@ function Registration({ handleLogin }) {
             }`}
             onClick={() => setIsSignIn(true)}
             style={{
-              borderBottom: isSignIn ? "2px solid #fa8232" : "none",
+              borderBottom: isSignIn ? "2px solid #9C54FF" : "none",
               paddingBottom: "5px",
               width: "100%",
               textAlign: "center",
@@ -35,7 +35,7 @@ function Registration({ handleLogin }) {
             }`}
             onClick={() => setIsSignIn(false)}
             style={{
-              borderBottom: !isSignIn ? "2px solid #fa8232" : "none",
+              borderBottom: !isSignIn ? "2px solid #9C54FF" : "none",
               paddingBottom: "5px",
               width: "100%",
               textAlign: "center",

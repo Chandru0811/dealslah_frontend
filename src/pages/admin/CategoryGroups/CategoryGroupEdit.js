@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 function CategoryGroupEdit() {
+    const [loadIndicator, setLoadIndicator] = useState(false);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
@@ -48,6 +49,12 @@ function CategoryGroupEdit() {
                                         </button>
                                     </Link>
                                     <button type="submit" className="btn btn-button btn-sm">
+                                        {loadIndicator && (
+                                            <span
+                                                className="spinner-border spinner-border-sm me-2"
+                                                aria-hidden="true"
+                                            ></span>
+                                        )}
                                         Update
                                     </button>
                                 </div>
@@ -68,8 +75,8 @@ function CategoryGroupEdit() {
                                 <input
                                     type="text"
                                     className={`form-control ${formik.touched.name && formik.errors.name
-                                            ? "is-invalid"
-                                            : ""
+                                        ? "is-invalid"
+                                        : ""
                                         }`}
                                     {...formik.getFieldProps("name")}
                                 />
@@ -84,8 +91,8 @@ function CategoryGroupEdit() {
                                 <input
                                     type="text"
                                     className={`form-control ${formik.touched.slug && formik.errors.slug
-                                            ? "is-invalid"
-                                            : ""
+                                        ? "is-invalid"
+                                        : ""
                                         }`}
                                     {...formik.getFieldProps("slug")}
                                 />
@@ -100,10 +107,10 @@ function CategoryGroupEdit() {
                                 <input
                                     type="file"
                                     className={`form-control ${formik.touched.icon && formik.errors.icon
-                                            ? "is-invalid"
-                                            : ""
+                                        ? "is-invalid"
+                                        : ""
                                         }`}
-                                        {...formik.getFieldProps("icon")}
+                                    {...formik.getFieldProps("icon")}
                                 />
                                 {formik.touched.icon && formik.errors.icon && (
                                     <div className="invalid-feedback">{formik.errors.icon}</div>
@@ -116,8 +123,8 @@ function CategoryGroupEdit() {
                                 <select
                                     aria-label="Default select example"
                                     className={`form-select ${formik.touched.order && formik.errors.order
-                                            ? "is-invalid"
-                                            : ""
+                                        ? "is-invalid"
+                                        : ""
                                         }`}
                                     {...formik.getFieldProps("order")}
                                 >
@@ -137,8 +144,8 @@ function CategoryGroupEdit() {
                                 <select
                                     aria-label="Default select example"
                                     className={`form-select ${formik.touched.active && formik.errors.active
-                                            ? "is-invalid"
-                                            : ""
+                                        ? "is-invalid"
+                                        : ""
                                         }`}
                                     {...formik.getFieldProps("active")}
                                 >

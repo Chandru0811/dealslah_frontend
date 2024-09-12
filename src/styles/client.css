@@ -6,7 +6,7 @@
 }
 
 :root {
-  --client-primary-color: #fa8232;
+  --client-primary-color: #9C54FF;
   --client-secondary-color: #f2f4f5;
   --client-teritary-color: #000;
   --client-text-color: #fff;
@@ -22,7 +22,9 @@
   color: var(--client-text-color) !important;
   border: none;
 }
-
+.common-button:focus{
+  box-shadow: none !important;
+}
 /* / Hero Section  / */
 .custom-carousel .custom-dots {
   position: absolute;
