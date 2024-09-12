@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Dropdown } from "react-bootstrap";
 import Logo from "../../assets/Logo.png";
-import { Form, FormControl, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { FaSearch, FaMapMarkerAlt, FaStore } from 'react-icons/fa';
 import { BiLogIn } from "react-icons/bi";
-import { RiInputField, RiUserAddFill } from "react-icons/ri";
+import { RiUserAddFill } from "react-icons/ri";
 import { GrAnnounce } from "react-icons/gr";
 
 function Header() {
@@ -18,6 +18,8 @@ function Header() {
   const [showExpandedSearch, setShowExpandedSearch] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showAdditionalSearch, setShowAdditionalSearch] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -115,14 +117,18 @@ function Header() {
 
           <div className="d-flex align-items-center">
             <div style={{ borderLeft: "1px solid #676868" }}>
-              <Button variant="link" className="text-white" style={{ textDecoration: "none" }}>
-                <BiLogIn style={{ color: "#676868", fontSize: "20px" }} />{" "}
-                <span style={{ color: "#676868" }}>LOGIN</span>
-              </Button>
+              <Link to='/login'>
+                <Button variant="link" className="text-white" style={{ textDecoration: "none" }}>
+                  <BiLogIn style={{ color: "#676868", fontSize: "20px" }} />{" "}
+                  <span style={{ color: "#676868" }}>LOGIN</span>
+                </Button>
+              </Link>
             </div>
 
             <div style={{ borderLeft: "1px solid #676868", borderRight: "1px solid #676868" }}>
-              <Button variant="link" className="text-white " style={{ textDecoration: "none" }}>
+              <Button variant="link" className="text-white " style={{ textDecoration: "none" }}
+                onClick={() => navigate('/login', { state: { showSignUp: true } })}
+              >
                 <RiUserAddFill style={{ color: "#676868", fontSize: "20px" }} />{" "}
                 <span style={{ color: "#676868" }}>REGISTER</span>
               </Button>
@@ -213,27 +219,27 @@ function Header() {
               <div className="d-flex flex-column flex-lg-row justify-content-end w-100 align-items-stretch">
                 <div className="col-lg-9 col-md-6 d-flex flex-column flex-lg-row justify-content-end align-items-stretch gap-4">
                   <Dropdown className="withoutDropdownArrow">
-                      <Dropdown.Toggle
-                        id="dropdown-basic"
-                        style={{ background: "none", border: "none", color: "#000" }}
-                        className="ps-0 nav-link text-center"
-                      >
-                        Deals
-                      </Dropdown.Toggle>
+                    <Dropdown.Toggle
+                      id="dropdown-basic"
+                      style={{ background: "none", border: "none", color: "#000" }}
+                      className="ps-0 nav-link text-center"
+                    >
+                      Deals
+                    </Dropdown.Toggle>
                     <Dropdown.Menu className="custom-dropdown-menu" style={{ width: 'fit-content' }} >
-                        <Dropdown.Item>
-                          <p className="fw-bold text-center">Top Categories</p>
-                        </Dropdown.Item>
-                        <Dropdown.Item>Computer & Laptop</Dropdown.Item>
-                        <Dropdown.Item>Computer Accessories</Dropdown.Item>
-                        <Dropdown.Item>SmartPhone</Dropdown.Item>
-                        <Dropdown.Item>Headphone</Dropdown.Item>
-                        <Dropdown.Item>Mobile Accessories</Dropdown.Item>
-                        <Dropdown.Item>Gaming Console</Dropdown.Item>
-                        <Dropdown.Item>Camera & Photo</Dropdown.Item>
-                        <Dropdown.Item>TV & Homes Appliances</Dropdown.Item>
-                        <Dropdown.Item>Watches & Accessories</Dropdown.Item>
-                        <Dropdown.Item>Wearable Technology</Dropdown.Item>
+                      <Dropdown.Item>
+                        <p className="fw-bold text-center">Top Categories</p>
+                      </Dropdown.Item>
+                      <Dropdown.Item>Computer & Laptop</Dropdown.Item>
+                      <Dropdown.Item>Computer Accessories</Dropdown.Item>
+                      <Dropdown.Item>SmartPhone</Dropdown.Item>
+                      <Dropdown.Item>Headphone</Dropdown.Item>
+                      <Dropdown.Item>Mobile Accessories</Dropdown.Item>
+                      <Dropdown.Item>Gaming Console</Dropdown.Item>
+                      <Dropdown.Item>Camera & Photo</Dropdown.Item>
+                      <Dropdown.Item>TV & Homes Appliances</Dropdown.Item>
+                      <Dropdown.Item>Watches & Accessories</Dropdown.Item>
+                      <Dropdown.Item>Wearable Technology</Dropdown.Item>
                     </Dropdown.Menu>
                   </Dropdown>
                   <Nav.Link className="d-flex align-items-center nav-link" style={{color: "#000"}}>
@@ -245,7 +251,7 @@ function Header() {
                 </div>
               </div>
             </Offcanvas.Body>
-
+            
           </Navbar.Offcanvas>
         </Container>
       </Navbar>

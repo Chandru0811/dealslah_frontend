@@ -4,9 +4,11 @@ import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useNavigate, Link } from "react-router-dom";
 
-function SignIn() {
+function SignIn({ handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -20,7 +22,9 @@ function SignIn() {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: (values) => {
-      console.log("SigIn Values:", values);
+      console.log("SignIn Values:", values);
+      handleLogin(values);
+      navigate('/')
     },
   });
 
@@ -48,13 +52,13 @@ function SignIn() {
 
         <div className="d-flex justify-content-between align-items-center py-2">
           <Form.Label>Password</Form.Label>
-          <a
-            href="#"
+          <Link
+            to='/forgot'
             className="ml-auto"
             style={{ fontSize: "0.9em", textDecoration: "none" }}
           >
             Forgot Password?
-          </a>
+          </Link>
         </div>
         <Form.Group controlId="formPassword" className="mb-3">
           <div style={{ position: "relative" }}>

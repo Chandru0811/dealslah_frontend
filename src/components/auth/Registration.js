@@ -1,9 +1,12 @@
 import React, { useState } from "react";
+import { useLocation } from "react-router-dom";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
-function Registration() {
-  const [isSignIn, setIsSignIn] = useState(true);
+function Registration({ handleLogin }) {
+  const location = useLocation();
+  const initialSignInState = location.state?.showSignUp ? false : true;
+  const [isSignIn, setIsSignIn] = useState(initialSignInState);
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100 my-5">
@@ -41,7 +44,9 @@ function Registration() {
             Sign Up
           </h4>
         </div>
-        <div className="p-3">{isSignIn ? <SignIn /> : <SignUp />}</div>
+        <div className="p-3">
+          {isSignIn ? <SignIn handleLogin={handleLogin} /> : <SignUp />}
+        </div>
       </div>
     </div>
   );

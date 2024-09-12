@@ -93,8 +93,8 @@ function BestSelling() {
   return (
     <section>
       <div className="container-fluid mb-4">
-        <div className="d-flex justify-content-between align-items-center mb-4">
-          <h5>Best Selling</h5>
+        <div className="d-flex justify-content-between align-items-center">
+          <h4 className="fw-bold">Best Sellers</h4>
           <div className="d-flex align-items-center">
             <IoIosArrowDropleftCircle
               size={40}
@@ -130,7 +130,7 @@ function BestSelling() {
                 <div className="h-100">
                   <img
                     src={deal.img}
-                    alt="image"
+                    alt={deal.name}
                     className="img-fluid mb-3 p-4"
                   />
                 </div>
