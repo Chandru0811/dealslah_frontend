@@ -21,7 +21,7 @@ function Client({
           {/* <Header /> */}
           <Routes>
             {/* <Route path="/" element={<Home  />} /> */}
-            <Route path="*" element={<NotFound />} />
+            {/* <Route path="*" element={<NotFound />} /> */}
             <Route path="/" element={<Registration handleLogin={handleLogin} />} />
             <Route path="/forgot" element={<ForgotPage />} />
           </Routes>
