@@ -1,12 +1,12 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "../pages/client/Home";
-import Footer from "../components/client/Footer";
+// import Home from "../pages/client/Home";
+// import Footer from "../components/client/Footer";
 import "../styles/client.css";
-import Header from "../components/client/Header";
+// import Header from "../components/client/Header";
 import ForgotPage from "../components/common/ForgotPage";
 import Registration from "../components/auth/Registration";
-import NotFound from "../components/common/NotFound";
+// import NotFound from "../components/common/NotFound";
 
 function Client({
   handleLogout,
