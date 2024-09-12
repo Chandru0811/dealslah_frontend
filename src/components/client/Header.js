@@ -2,17 +2,15 @@ import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import { Dropdown } from "react-bootstrap";
 import Logo from "../../assets/Logo.png";
-import { PiShoppingCartSimpleFill } from "react-icons/pi";
-import { FiHeart } from "react-icons/fi";
-import { HiOutlineShoppingBag } from "react-icons/hi2";
-import { Form, FormControl, Button } from 'react-bootstrap';
+import { Form, Button } from 'react-bootstrap';
 import { FaSearch, FaMapMarkerAlt, FaStore } from 'react-icons/fa';
 import { BiLogIn } from "react-icons/bi";
 import { RiUserAddFill } from "react-icons/ri";
+import { GrAnnounce } from "react-icons/gr";
 
 function Header() {
   const expand = "xl";
@@ -20,6 +18,8 @@ function Header() {
   const [showExpandedSearch, setShowExpandedSearch] = useState(false);
   const [showOffcanvas, setShowOffcanvas] = useState(false);
   const [showAdditionalSearch, setShowAdditionalSearch] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -50,26 +50,28 @@ function Header() {
   return (
     <section>
       {/* Topbar */}
-      <div className="top-bar">
+      <div className="top-bar bg-dark">
         <div className="container d-flex justify-content-between align-items-center bg-dark text-white p-2">
           <div className="d-flex align-items-center flex-grow-1">
             {/* Hidden on small screens */}
             {!showExpandedSearch && (
               <div className="d-none d-md-flex align-items-center flex-grow-1">
-                <Form className="d-flex me-3 align-items-center flex-grow-1 w-100">
+                <Form className="search-buttons d-flex me-3 align-items-center flex-grow-1 w-100">
                   <FaMapMarkerAlt className="me-2" style={{ color: "#676868" }} />
-                  <FormControl
+                  <input
                     type="text"
                     placeholder="Location (Alabama, Colorado...)"
                     className="search me-2"
+                    style={{ width: "400px",height: "40px",border: "1px solid #676868"}}
                   />
                 </Form>
-                <Form className="d-flex align-items-center flex-grow-1">
+                <Form className="search-buttons d-flex align-items-center flex-grow-1 w-100">
                   <FaStore className="me-2" style={{ color: "#676868" }} />
-                  <FormControl
+                  <input
                     type="text"
                     placeholder="Store (Acerit, Drennus...)"
                     className="search me-2"
+                    style={{ width: "400px",height: "40px",border: "1px solid #676868"}}
                   />
                 </Form>
               </div>
@@ -87,11 +89,12 @@ function Header() {
 
               {/* On larger screens, show expandable search */}
               {showExpandedSearch && (
-                <Form className="d-flex align-items-center flex-grow-1 ms-3">
-                  <FormControl
+                <Form className="search-buttons d-flex align-items-center flex-grow-1 ms-3">
+                  <input
                     type="text"
                     placeholder="Search for... (20% off, great deal,...)"
-                    className="me-2 flex-grow-1"
+                    className="search me-2 flex-grow-1"
+                    style={{height: "40px",border: "1px solid #676868"}}
                   />
                   <Button variant="bg-light" onClick={toggleSearchInput}>
                     <FaSearch style={{ color: "#676868", border: "none" }} />
@@ -113,86 +116,67 @@ function Header() {
           </div>
 
           <div className="d-flex align-items-center">
-            {/* Other content like LOGIN, REGISTER, etc. */}
             <div style={{ borderLeft: "1px solid #676868" }}>
-              <Button variant="link" className="text-white" style={{ textDecoration: "none" }}>
-                <BiLogIn style={{ color: "#676868", fontSize: "20px" }} />{" "}
-                <span style={{ color: "#676868" }}>LOGIN</span>
-              </Button>
+              <Link to='/login'>
+                <Button variant="link" className="text-white" style={{ textDecoration: "none" }}>
+                  <BiLogIn style={{ color: "#676868", fontSize: "20px" }} />{" "}
+                  <span style={{ color: "#676868" }}>LOGIN</span>
+                </Button>
+              </Link>
             </div>
 
             <div style={{ borderLeft: "1px solid #676868", borderRight: "1px solid #676868" }}>
-              <Button variant="link" className="text-white ms-3" style={{ textDecoration: "none" }}>
+              <Button variant="link" className="text-white " style={{ textDecoration: "none" }}
+                onClick={() => navigate('/login', { state: { showSignUp: true } })}
+              >
                 <RiUserAddFill style={{ color: "#676868", fontSize: "20px" }} />{" "}
                 <span style={{ color: "#676868" }}>REGISTER</span>
               </Button>
             </div>
 
-            {/* Icons like Wishlist, Cart, etc. */}
-            <Nav.Link as={NavLink} className="ms-3 d-flex align-items-center position-relative">
-              <FiHeart size={25} style={{ color: "#676868" }} />
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light"
-                style={{ color: "black" }}
-              >
-                0
-              </span>
-            </Nav.Link>
+            <div style={{ borderLeft: "1px solid #676868" }}>
+              <Button variant="link" className="text-white" style={{ textDecoration: "none" }}>
+                <GrAnnounce style={{ color: "#676868", fontSize: "20px" }} />{" "}
+                <span style={{ color: "#676868" }}>ADVERTISE</span>
+              </Button>
+            </div>
 
-            <Nav.Link as={NavLink} className="ms-3 d-flex align-items-center position-relative">
-              <PiShoppingCartSimpleFill size={25} style={{ color: "#676868" }} />
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light"
-                style={{ color: "black" }}
-              >
-                0
-              </span>
-            </Nav.Link>
-
-            <Nav.Link as={NavLink} className="ms-3 d-flex align-items-center position-relative">
-              <HiOutlineShoppingBag size={25} style={{ color: "#676868" }} />
-              <span
-                className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-light"
-                style={{ color: "black" }}
-              >
-                0
-              </span>
-            </Nav.Link>
           </div>
 
           {/* Offcanvas for search inputs */}
           <Offcanvas show={showOffcanvas} onHide={handleCloseOffcanvas} placement="top" className="bg-dark text-white">
             <Offcanvas.Header closeButton />
             <Offcanvas.Body>
-              {/* Default inputs */}
               {!showAdditionalSearch && (
                 <>
                   <Form className="d-flex align-items-center mb-3 search-buttons">
                     <FaMapMarkerAlt className="me-2" style={{ color: "#676868" }} />
-                    <FormControl
+                    <input
                       type="text"
                       placeholder="Location (Alabama, Colorado...)"
-                      className="me-2"
+                      className="search me-2"
+                      style={{ width: "400px",height: "40px",border: "1px solid #676868",backgroundColor: "#676868"}}
                     />
                   </Form>
                   <Form className="d-flex align-items-center search-buttons">
                     <FaStore className="me-2" style={{ color: "#676868" }} />
-                    <FormControl
+                    <input
                       type="text"
                       placeholder="Store (Acerit, Drennus...)"
-                      className="me-2"
+                      className="search me-2"
+                      style={{ width: "400px",height: "40px",border: "1px solid #676868",backgroundColor: "#676868"}}
                     />
                   </Form>
                 </>
               )}
 
-              {/* Additional single search input */}
               {showAdditionalSearch && (
                 <Form className="d-flex align-items-center mb-3 search-buttons">
-                  <FormControl
+                  <input
                     type="text"
                     placeholder="Search for... (20% off, great deal,...)"
-                    className="me-2 flex-grow-1"
+                    className="search me-2 flex-grow-1"
+                    style={{height: "40px",border: "1px solid #676868",backgroundColor: "#676868"}}
                   />
                 </Form>
               )}
@@ -210,11 +194,6 @@ function Header() {
               </Form>
             </Offcanvas.Body>
           </Offcanvas>
-
-          {/* Trigger button to open the offcanvas */}
-          <Button variant="bg-light" onClick={handleShowOffcanvas} className="d-md-none">
-            <FaSearch style={{ color: "#676868", border: "none" }} />
-          </Button>
         </div>
       </div>
       {/* Header */}
@@ -239,42 +218,40 @@ function Header() {
             <Offcanvas.Body>
               <div className="d-flex flex-column flex-lg-row justify-content-end w-100 align-items-stretch">
                 <div className="col-lg-9 col-md-6 d-flex flex-column flex-lg-row justify-content-end align-items-stretch gap-4">
-                  <Nav.Link className="d-flex align-items-center nav-link">
-                    <Dropdown className="withoutDropdownArrow">
-                      <Dropdown.Toggle
-                        id="dropdown-basic"
-                        style={{ background: "none", border: "none", color: "#000" }}
-                        className="ps-0"
-                      >
-                        Deals
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu className="custom-dropdown-menu" style={{ width: 'fit-content' }} >
-                        <Dropdown.Item>
-                          <p className="fw-bold text-center">Top Categories</p>
-                        </Dropdown.Item>
-                        <Dropdown.Item>Computer & Laptop</Dropdown.Item>
-                        <Dropdown.Item>Computer Accessories</Dropdown.Item>
-                        <Dropdown.Item>SmartPhone</Dropdown.Item>
-                        <Dropdown.Item>Headphone</Dropdown.Item>
-                        <Dropdown.Item>Mobile Accessories</Dropdown.Item>
-                        <Dropdown.Item>Gaming Console</Dropdown.Item>
-                        <Dropdown.Item>Camera & Photo</Dropdown.Item>
-                        <Dropdown.Item>TV & Homes Appliances</Dropdown.Item>
-                        <Dropdown.Item>Watches & Accessories</Dropdown.Item>
-                        <Dropdown.Item>Wearable Technology</Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </Nav.Link>
-                  <Nav.Link className="d-flex align-items-center nav-link">
+                  <Dropdown className="withoutDropdownArrow">
+                    <Dropdown.Toggle
+                      id="dropdown-basic"
+                      style={{ background: "none", border: "none", color: "#000" }}
+                      className="ps-0 nav-link text-center"
+                    >
+                      Deals
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu className="custom-dropdown-menu" style={{ width: 'fit-content' }} >
+                      <Dropdown.Item>
+                        <p className="fw-bold text-center">Top Categories</p>
+                      </Dropdown.Item>
+                      <Dropdown.Item>Computer & Laptop</Dropdown.Item>
+                      <Dropdown.Item>Computer Accessories</Dropdown.Item>
+                      <Dropdown.Item>SmartPhone</Dropdown.Item>
+                      <Dropdown.Item>Headphone</Dropdown.Item>
+                      <Dropdown.Item>Mobile Accessories</Dropdown.Item>
+                      <Dropdown.Item>Gaming Console</Dropdown.Item>
+                      <Dropdown.Item>Camera & Photo</Dropdown.Item>
+                      <Dropdown.Item>TV & Homes Appliances</Dropdown.Item>
+                      <Dropdown.Item>Watches & Accessories</Dropdown.Item>
+                      <Dropdown.Item>Wearable Technology</Dropdown.Item>
+                    </Dropdown.Menu>
+                  </Dropdown>
+                  <Nav.Link className="d-flex align-items-center nav-link" style={{color: "#000"}}>
                     Stores
                   </Nav.Link>
-                  <Nav.Link className="d-flex align-items-center nav-link">
+                  <Nav.Link className="d-flex align-items-center nav-link" style={{color: "#000"}}>
                     Categories
                   </Nav.Link>
                 </div>
               </div>
             </Offcanvas.Body>
-
+            
           </Navbar.Offcanvas>
         </Container>
       </Navbar>
