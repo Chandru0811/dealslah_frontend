@@ -18,14 +18,14 @@ function Client({
     <div>
       <div>
         <BrowserRouter>
-          <Header />
+          {/* <Header /> */}
           <Routes>
-            <Route path="/" element={<Home  />} />
+            {/* <Route path="/" element={<Home  />} /> */}
             <Route path="*" element={<NotFound />} />
-            <Route path="/login" element={<Registration handleLogin={handleLogin} />} />
+            <Route path="/" element={<Registration handleLogin={handleLogin} />} />
             <Route path="/forgot" element={<ForgotPage />} />
           </Routes>
-          <Footer />
+          {/* <Footer /> */}
         </BrowserRouter>
       </div>
     </div>
