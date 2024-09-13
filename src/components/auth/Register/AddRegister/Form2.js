@@ -34,7 +34,7 @@ const Form2 = forwardRef(
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
-        navigate("/")
+        navigate("/vendorlogin")
         handleNext();
       },
     });
