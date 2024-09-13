@@ -9,10 +9,6 @@ import CategoryGroups from "../pages/admin/CategoryGroups/CategoryGroups";
 import CategoryGroupAdd from "../pages/admin/CategoryGroups/CategoryGroupAdd";
 import CategoryGroupEdit from "../pages/admin/CategoryGroups/CategoryGroupEdit";
 import CategoryGroupView from "../pages/admin/CategoryGroups/CategoryGroupView";
-// import CategoriesIndex from "../pages/admin/Categories/CategoriesIndex";
-// import CategoriesAdd from "../pages/admin/Categories/CategoriesAdd";
-// import CategoriesView from "../pages/admin/Categories/CategoriesView";
-// import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
 import Banner from "../pages/admin/Banner/Banner";
 import BannerAdd from "../pages/admin/Banner/BannerAdd";
 import BannerEdit from "../pages/admin/Banner/BannerEdit";
@@ -21,6 +17,11 @@ import Slider from "../pages/admin/Slider/Slider";
 import SliderAdd from "../pages/admin/Slider/SliderAdd";
 import SliderEdit from "../pages/admin/Slider/SliderEdit";
 import SliderView from "../pages/admin/Slider/SliderView"
+import CategoriesIndex from "../pages/admin/categories/CategoriesIndex";
+import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
+import CategoriesView from "../pages/admin/categories/CategoriesView";
+import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
+// import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
 
 function Admin({ handleLogout }) {
   return (
@@ -42,10 +43,10 @@ function Admin({ handleLogout }) {
                   <Route path="/categorygroup/view" element={<CategoryGroupView />} />
 
                   {/* Categories */}
-                  {/* <Route path="/categories" element={<CategoriesIndex />} />
+                  <Route path="/categories" element={<CategoriesIndex />} />
                   <Route path="/category/add" element={<CategoriesAdd />} />
                   <Route path="/category/view" element={<CategoriesView />} />
-                  <Route path="/category/edit" element={<CategoriesEdit />} /> */}
+                  <Route path="/category/edit" element={<CategoriesEdit />} />
 
                   {/* {/ Banner /} */}
                   <Route path="/banner" element={<Banner />} />

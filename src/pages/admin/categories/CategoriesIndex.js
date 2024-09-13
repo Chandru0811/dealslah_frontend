@@ -5,7 +5,7 @@ import $ from "jquery";
 import { Link } from "react-router-dom";
 import DeleteModel from '../../../components/admin/DeleteModel';
 
-const Categories = () => {
+const CategoriesIndex = () => {
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -136,4 +136,4 @@ const Categories = () => {
   );
 };
 
-export default Categories;
+export default CategoriesIndex;
