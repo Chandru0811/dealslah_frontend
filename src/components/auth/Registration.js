@@ -43,7 +43,8 @@ function Registration({ handleLogin, handleVendorLogin }) {
             </Link>
             <Link to="/vendorlogin">
               <button
-                className="btn btn-secondary"
+                className="btn btn-white"
+                style={{color:"#9c54ff" ,border:"1px solid #9c54ff" }}
                 onClick={() => handleRoleSelect("vendor")}
               >
                 Vendor

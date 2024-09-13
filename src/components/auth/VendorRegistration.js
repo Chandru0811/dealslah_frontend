@@ -35,7 +35,7 @@ export default function VendorRegistration() {
 
   return (
     <div
-      className="container-fluid minHeight d-flex justify-content-center align-items-center"
+      className="container minHeight d-flex justify-content-center align-items-center"
       style={{ minHeight: "100vh" }}
     >
       <div className="container">
@@ -43,7 +43,7 @@ export default function VendorRegistration() {
           className="d-flex justify-content-center"
           style={{ color: "#771bf8" }}
         >
-         Registration
+          Registration
         </h2>
         <Stepper className="mt-5" activeStep={activeStep} alternativeLabel>
           {steps.map((step, index) => (
@@ -54,7 +54,7 @@ export default function VendorRegistration() {
         </Stepper>
         <div
           className="container-fluid card shadow border-0 mb-4 d-flex justify-content-center align-items-center"
-          style={{ minHeight: "70vh" }}
+          style={{ minHeight: "70vh", width:"70%"}}
         >
           <React.Fragment>
             {activeStep === 0 && (
@@ -80,7 +80,7 @@ export default function VendorRegistration() {
                   onClick={handleButtonClick}
                   className="btn border-danger text-danger btn-sm mb-3"
                 >
-                 <IoMdArrowBack /> Login
+                  <IoMdArrowBack /> Login
                 </button>
               </Link>
 
