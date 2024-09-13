@@ -20,8 +20,7 @@ import SliderView from "../pages/admin/Slider/SliderView"
 import CategoriesIndex from "../pages/admin/categories/CategoriesIndex";
 import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
 import CategoriesView from "../pages/admin/categories/CategoriesView";
-import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
-// import CategoriesEdit from "../pages/admin/Categories/CategoriesEdit";
+import CategoriesEdits from "../pages/admin/categories/CategoriesEdits";
 
 function Admin({ handleLogout }) {
   return (
@@ -46,7 +45,7 @@ function Admin({ handleLogout }) {
                   <Route path="/categories" element={<CategoriesIndex />} />
                   <Route path="/category/add" element={<CategoriesAdd />} />
                   <Route path="/category/view" element={<CategoriesView />} />
-                  <Route path="/category/edit" element={<CategoriesEdit />} />
+                  <Route path="/category/edit" element={<CategoriesEdits />} />
 
                   {/* {/ Banner /} */}
                   <Route path="/banner" element={<Banner />} />
