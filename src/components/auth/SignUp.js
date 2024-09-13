@@ -33,7 +33,7 @@ function SignUp() {
   return (
     <div style={{ maxWidth: "400px", margin: "auto" }}>
       <Form onSubmit={formik.handleSubmit}>
-        <Form.Group controlId="formName">
+        <Form.Group controlId="formName" className="mb-3">
           <Form.Label>Name</Form.Label>
           <Form.Control
             type="text"
@@ -48,7 +48,7 @@ function SignUp() {
           ) : null}
         </Form.Group>
 
-        <Form.Group controlId="formEmail">
+        <Form.Group controlId="formEmail" className="mb-3">
           <Form.Label>Email Address</Form.Label>
           <Form.Control
             type="email"
@@ -63,7 +63,7 @@ function SignUp() {
           ) : null}
         </Form.Group>
 
-        <Form.Group controlId="formPassword">
+        <Form.Group controlId="formPassword" className="mb-3">
           <Form.Label>Password</Form.Label>
           <div style={{ position: "relative" }}>
             <Form.Control
@@ -94,7 +94,7 @@ function SignUp() {
           </div>
         </Form.Group>
 
-        <Form.Group controlId="formConfirmPassword">
+        <Form.Group controlId="formConfirmPassword" className="mb-3">
           <Form.Label>Confirm Password</Form.Label>
           <div style={{ position: "relative" }}>
             <Form.Control
