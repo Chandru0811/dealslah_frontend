@@ -22,7 +22,7 @@ function AdminLogin({ handleLogin, handleVendorLogin }) {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100 my-5">
+    <div className="container d-flex justify-content-center align-items-center vh-100">
       <div
         className="card shadow-lg py-3 mb-5 bg-body rounded"
         style={{ width: "100%", maxWidth: "400px" }}

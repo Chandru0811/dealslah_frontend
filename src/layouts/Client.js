@@ -21,7 +21,7 @@ function Client({
 }) {
   return (
     <div>
-      <div>
+      <div style={{background:""}}>
         <BrowserRouter>
           {/* <Header /> */}
           <Routes>
