@@ -414,3 +414,9 @@
   color: var(--client-text-color);
 }
 /* Sub Banner */
+.css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-active {
+  color: #771bf8 !important;
+}
+.css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
+  color: #771bf8 !important;
+}
