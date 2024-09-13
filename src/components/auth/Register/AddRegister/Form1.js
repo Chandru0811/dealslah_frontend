@@ -52,9 +52,9 @@ const Form1 = forwardRef(
     return (
       <form onSubmit={formik.handleSubmit}>
         <div className="row d-flex justify-content-center">
-          <div className="col-md-12 col-12">
+          <div className="col-md-6 col-12">
             <div className="row">
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Name<span className="text-danger">*</span>
@@ -78,7 +78,7 @@ const Form1 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     E-mail<span className="text-danger">*</span>
@@ -102,7 +102,7 @@ const Form1 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Password<span className="text-danger">*</span>
@@ -136,7 +136,7 @@ const Form1 = forwardRef(
                 </div>
               </div>
 
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Confirm Password<span className="text-danger">*</span>

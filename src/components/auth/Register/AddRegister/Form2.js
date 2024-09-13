@@ -46,9 +46,9 @@ const Form2 = forwardRef(
     return (
       <form onSubmit={formik.handleSubmit}>
         <div className="row d-flex justify-content-center mt-5">
-          <div className="col-md-12 col-12">
+          <div className="col-md-6 col-12">
             <div className="row">
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Name<span className="text-danger">*</span>
@@ -72,7 +72,7 @@ const Form2 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Legal Name<span className="text-danger">*</span>
@@ -96,7 +96,7 @@ const Form2 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Slug<span className="text-danger">*</span>
@@ -120,7 +120,7 @@ const Form2 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     E-mail<span className="text-danger">*</span>
@@ -144,7 +144,7 @@ const Form2 = forwardRef(
                   )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     External Url<span className="text-danger">*</span>
@@ -169,7 +169,7 @@ const Form2 = forwardRef(
                     )}
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              <div className="col-12">
                 <div className="mb-3">
                   <label className="form-label">
                     Address<span className="text-danger">*</span>
