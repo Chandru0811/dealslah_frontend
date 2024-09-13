@@ -1,126 +1,82 @@
 import React, { useState } from "react";
-import { Form, Button } from "react-bootstrap";
-import { FcGoogle } from "react-icons/fc";
-import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { useNavigate, Link } from "react-router-dom";
+import { Step, StepLabel, Stepper } from "@mui/material";
+import Form1 from "./Register/AddRegister/Form1";
+import Form2 from "./Register/AddRegister/Form2";
 
-function VendorRegistration({ handleLogin }) {
-  const [showPassword, setShowPassword] = useState(false);
-  const navigate = useNavigate();
+const steps = [
+  "",""
+];
 
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: "",
-    },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
-    onSubmit: (values) => {
-      console.log("SignIn Values:", values);
-      handleLogin(values);
-      navigate('/')
-    },
-  });
+export default function VendorRegistration() {
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({});
+  const childRef = React.useRef();
 
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const handleNext = () => {
+    setActiveStep((prevStep) => prevStep + 1);
+  };
+  
+  const handleButtonClick = () => {
+    switch (activeStep.toString()) {
+      case "0":
+        if (childRef.current) {
+          childRef.current.form1();
+        }
+        break;
+      case "1":
+        if (childRef.current) {
+          childRef.current.form2();
+        }
+        break;
+      default:
+        break;
+    }
   };
 
   return (
-    <div className="vh-150" style={{ maxWidth: "400px", margin: "auto" }}>
-      <Form onSubmit={formik.handleSubmit}>
-        <Form.Group controlId="formEmail" className="mb-3 pt-4">
-          <Form.Label>Email Address</Form.Label>
-          <Form.Control
-            type="email"
-            placeholder="Enter email"
-            {...formik.getFieldProps("email")}
-            isInvalid={formik.touched.email && formik.errors.email}
-          />
-          {formik.touched.email && formik.errors.email ? (
-            <Form.Control.Feedback type="invalid">
-              {formik.errors.email}
-            </Form.Control.Feedback>
-          ) : null}
-        </Form.Group>
-
-        <div className="d-flex justify-content-between align-items-center py-2">
-          <Form.Label>Password</Form.Label>
-          <Link
-            to='/forgot'
-            className="ml-auto"
-            style={{ fontSize: "0.9em", textDecoration: "none" }}
-          >
-            Forgot Password?
-          </Link>
-        </div>
-        <Form.Group controlId="formPassword" className="mb-3">
-          <div style={{ position: "relative" }}>
-            <Form.Control
-              type={showPassword ? "text" : "password"}
-              placeholder="Enter password"
-              {...formik.getFieldProps("password")}
-              isInvalid={formik.touched.password && formik.errors.password}
-            />
-            {formik.values.password && (
-              <span
-                onClick={togglePasswordVisibility}
-                style={{
-                  position: "absolute",
-                  right: "10px",
-                  top: "50%",
-                  transform: "translateY(-50%)",
-                  cursor: "pointer",
-                }}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </span>
+    <div className="container-fluid minHeight d-flex justify-content-center align-items-center" style={{ minHeight: "100vh" }}>
+      <div className="container">
+        <h2 className="d-flex justify-content-center"style={{color:"#771bf8"}}>Registration</h2>
+        <Stepper className="mt-5" activeStep={activeStep} alternativeLabel>
+          {steps.map((step, index) => (
+            <Step key={index}>
+                <StepLabel ></StepLabel>
+            </Step>
+          ))}
+        </Stepper>
+        <div
+          className="container-fluid card shadow border-0 mb-4 d-flex justify-content-center align-items-center"
+          style={{ minHeight: "70vh" }}
+        >
+          <React.Fragment>
+            {activeStep === 0 && (
+              <Form1
+                formData={formData}
+                ref={childRef}
+                setFormData={setFormData}
+                handleNext={handleNext}
+              />
             )}
-            {formik.touched.password && formik.errors.password ? (
-              <Form.Control.Feedback type="invalid">
-                {formik.errors.password}
-              </Form.Control.Feedback>
-            ) : null}
-          </div>
-        </Form.Group>
-
-        <Button type="submit" className="w-100 mt-4 common-button">
-          SIGN IN
-        </Button>
-
-        <div className="text-center mt-4">
-          <p className="mb-3">or</p>
-
-          <Button
-            variant="light"
-            className="w-100 border shadow-none"
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <div
-              style={{
-                position: "absolute",
-                left: "15px",
-              }}
-            >
-              <FcGoogle />
+            {activeStep === 1 && (
+              <Form2
+                formData={formData}
+                ref={childRef}
+                setFormData={setFormData}
+                handleNext={handleNext}
+              />
+            )}
+            <div className="container-fluid p-1 d-flex align-items-center justify-content-end">
+              <button
+                type="submit"
+                onClick={handleButtonClick}
+                className="btn btn-button btn-sm mb-3"
+              >
+                {activeStep === steps.length - 1 ? "Submit" : "Save And Next"}
+              </button>
             </div>
-            Sign In with Google
-          </Button>
+          </React.Fragment>
         </div>
-      </Form>
+      </div>
     </div>
   );
 }
-
-export default VendorRegistration;
