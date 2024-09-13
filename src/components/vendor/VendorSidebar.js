@@ -50,7 +50,7 @@ function VendorSidebar({ handleLogout }) {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/product">
-                <BiSolidCategory />Product
+                <BiSolidCategory />Products
               </NavLink>
             </li>
             {/* <li className="nav-item">

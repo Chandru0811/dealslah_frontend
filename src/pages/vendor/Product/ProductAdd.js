@@ -7,24 +7,48 @@ function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
 
   const validationSchema = Yup.object({
-    title: Yup.string().required("*Title is required"),
-    order: Yup.string().required("*Select an Order"),
-    image: Yup.string().required("*Image is required"),
-    description: Yup.string().required("*Description is required"),
-    link: Yup.string().required("*Link is required"),
-    link_label: Yup.string().required("*Link Label is required"),
-    bg_color: Yup.string().required("*Color is required"),
+    shop_id: Yup.string().required("Shop Id is required"),
+    category_id: Yup.string().required("Category Id is required"),
+    brand: Yup.string().required("Brand is required"),
+    slug: Yup.string().required("Slug is required"),
+    original_price: Yup.number()
+      .required("Original Price is required")
+      .min(1, "Original Price must be greater than zero"),
+    discounted_price: Yup.number()
+      .required("Discounted Price is required")
+      .lessThan(
+        Yup.ref("original_price"),
+        "Discounted Price must be less than Original Price"
+      ),
+    start_date: Yup.date().required("Start Date is required").nullable(),
+    end_date: Yup.date()
+      .required("End Date is required")
+      .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
+      .nullable(),
+    stock: Yup.number()
+      .required("Stock is required")
+      .min(0, "Stock cannot be negative"),
+    sku: Yup.string().required("SKU is required"),
+    file: Yup.mixed().required("Image is required"),
+    description: Yup.string()
+      .required("Description is required")
+      .min(10, "Description must be at least 10 characters long"),
   });
 
   const formik = useFormik({
     initialValues: {
-      title: "",
-      order: "",
-      image: "",
+      shop_id: "",
+      category_id: "",
+      brand: "",
+      slug: "",
+      original_price: "",
+      discounted_price: "",
+      start_date: "",
+      end_date: "",
+      stock: "",
+      sku: "",
+      file: null,
       description: "",
-      link: "",
-      link_label: "",
-      bg_color: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -38,9 +62,9 @@ function ProductAdd() {
         <div className="card shadow border-0 mb-3">
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h1 className="h4 ls-tight">Add Slider</h1>
+              <h1 className="h4 ls-tight">Add Products</h1>
               <div className="hstack gap-2 justify-content-end">
-                <Link to="/slider">
+                <Link to="/product">
                   <button type="button" className="btn btn-light btn-sm">
                     <span>Back</span>
                   </button>
@@ -65,18 +89,187 @@ function ProductAdd() {
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Title<span className="text-danger">*</span>
+                Shop Id<span className="text-danger">*</span>
+              </label>
+              <select
+                type="text"
+                className={`form-select ${
+                  formik.touched.shop_id && formik.errors.shop_id
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("shop_id")}
+              >
+                <option></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+              {formik.touched.shop_id && formik.errors.shop_id && (
+                <div className="invalid-feedback">{formik.errors.shop_id}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Category Id<span className="text-danger">*</span>
+              </label>
+              <select
+                type="text"
+                className={`form-select ${
+                  formik.touched.category_id && formik.errors.category_id
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("category_id")}
+              >
+                <option></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+              </select>
+              {formik.touched.category_id && formik.errors.category_id && (
+                <div className="invalid-feedback">
+                  {formik.errors.category_id}
+                </div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Brand<span className="text-danger">*</span>
               </label>
               <input
                 type="text"
-                className={`form-control ${formik.touched.title && formik.errors.title
-                  ? "is-invalid"
-                  : ""
-                  }`}
-                {...formik.getFieldProps("title")}
+                className={`form-control ${
+                  formik.touched.brand && formik.errors.brand
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("brand")}
               />
-              {formik.touched.title && formik.errors.title && (
-                <div className="invalid-feedback">{formik.errors.title}</div>
+              {formik.touched.brand && formik.errors.brand && (
+                <div className="invalid-feedback">{formik.errors.brand}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Slug<span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${
+                  formik.touched.slug && formik.errors.slug ? "is-invalid" : ""
+                }`}
+                {...formik.getFieldProps("slug")}
+              />
+              {formik.touched.slug && formik.errors.slug && (
+                <div className="invalid-feedback">{formik.errors.slug}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Original Price<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.original_price && formik.errors.original_price
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("original_price")}
+              />
+              {formik.touched.original_price &&
+                formik.errors.original_price && (
+                  <div className="invalid-feedback">
+                    {formik.errors.original_price}
+                  </div>
+                )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Discounted Price<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.discounted_price &&
+                  formik.errors.discounted_price
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("discounted_price")}
+              />
+              {formik.touched.discounted_price &&
+                formik.errors.discounted_price && (
+                  <div className="invalid-feedback">
+                    {formik.errors.discounted_price}
+                  </div>
+                )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Start Date<span className="text-danger">*</span>
+              </label>
+              <input
+                type="date"
+                className={`form-control ${
+                  formik.touched.start_date && formik.errors.start_date
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("start_date")}
+              />
+              {formik.touched.start_date && formik.errors.start_date && (
+                <div className="invalid-feedback">
+                  {formik.errors.start_date}
+                </div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                End Date<span className="text-danger">*</span>
+              </label>
+              <input
+                type="date"
+                className={`form-control ${
+                  formik.touched.end_date && formik.errors.end_date
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("end_date")}
+              />
+              {formik.touched.end_date && formik.errors.end_date && (
+                <div className="invalid-feedback">{formik.errors.end_date}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Stock<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.stock && formik.errors.stock
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("stock")}
+              />
+              {formik.touched.stock && formik.errors.stock && (
+                <div className="invalid-feedback">{formik.errors.stock}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                SKU<span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control ${
+                  formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
+                }`}
+                {...formik.getFieldProps("sku")}
+              />
+              {formik.touched.sku && formik.errors.sku && (
+                <div className="invalid-feedback">{formik.errors.sku}</div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
@@ -85,113 +278,29 @@ function ProductAdd() {
               </label>
               <input
                 type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${formik.touched.image && formik.errors.image
-                  ? "is-invalid"
-                  : ""
-                  }`}
-                  {...formik.getFieldProps("image")}
+                className={`form-control ${
+                  formik.touched.file && formik.errors.file ? "is-invalid" : ""
+                }`}
+                onChange={(event) => {
+                  formik.setFieldValue("file", event.target.files[0]);
+                }}
+                {...formik.getFieldProps("file")}
               />
-              {formik.touched.image && formik.errors.image && (
-                <div className="invalid-feedback">{formik.errors.image}</div>
+              {formik.touched.file && formik.errors.file && (
+                <div className="invalid-feedback">{formik.errors.file}</div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Link<span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                className={`form-control ${formik.touched.link && formik.errors.link ? "is-invalid" : ""
-                  }`}
-                {...formik.getFieldProps("link")}
-              />
-              {formik.touched.link && formik.errors.link && (
-                <div className="invalid-feedback">{formik.errors.link}</div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Link Label<span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                className={`form-control ${formik.touched.link_label && formik.errors.link_label
-                  ? "is-invalid"
-                  : ""
-                  }`}
-                {...formik.getFieldProps("link_label")}
-              />
-              {formik.touched.link_label && formik.errors.link_label && (
-                <div className="invalid-feedback">
-                  {formik.errors.link_label}
-                </div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Order<span className="text-danger">*</span>
-              </label>
-              <select
-                aria-label="Default select example"
-                className={`form-select ${formik.touched.order && formik.errors.order
-                  ? "is-invalid"
-                  : ""
-                  }`}
-                {...formik.getFieldProps("order")}
-              >
-                <option value="">Select an order</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-              </select>
-              {formik.touched.order && formik.errors.order && (
-                <div className="invalid-feedback">{formik.errors.order}</div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3 bannerAdd">
-              <label className="form-label">Color Code</label><span className="text-danger">*</span>
-              <div className="input-group mb-3">
-                <div className="input-group-text inputGroup">
-                  <input
-                    type="color"
-                    {...formik.getFieldProps("bg_color")}
-                    className="form-control-color form-control circle"
-                  />
-                </div>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.bg_color && formik.errors.bg_color
-                    ? "is-invalid"
-                    : ""
-                    }`}
-                  value={formik.values.bg_color}
-                  placeholder=""
-                />
-              </div>
-              {formik.errors.bg_color ? (
-                <div className="error text-danger ">
-                  <small>{formik.errors.bg_color}</small>
-                </div>
-              ) : null}
-            </div>
-            <div className="col-md-12 col-12 mb-3">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
               </label>
               <textarea
-                rows={5}
-                className={`form-control ${formik.touched.description && formik.errors.description
-                  ? "is-invalid"
-                  : ""
-                  }`}
+                type="text"
+                className={`form-control ${
+                  formik.touched.description && formik.errors.description
+                    ? "is-invalid"
+                    : ""
+                }`}
                 {...formik.getFieldProps("description")}
               />
               {formik.touched.description && formik.errors.description && (

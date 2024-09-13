@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 
@@ -9,9 +9,9 @@ function ProductView() {
       <div className="card shadow border-0 mb-3">
         <div className="row p-3">
           <div className="d-flex justify-content-between align-items-center">
-            <h1 className="h4 ls-tight">View Slider</h1>
+            <h1 className="h4 ls-tight">View Products</h1>
             <div>
-              <Link to="/slider">
+              <Link to="/product">
                 <button type="button" className="btn btn-light btn-sm">
                   <span>Back</span>
                 </button>
@@ -29,11 +29,11 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Title</b>
+                  <b>Shop Id</b>
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: title</p>
+                <p className="text-muted text-sm">: 1</p>
               </div>
             </div>
           </div>
@@ -41,7 +41,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Order</b>
+                  <b>category Id</b>
                 </p>
               </div>
               <div className="col-6">
@@ -53,11 +53,11 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Link</b>
+                  <b>Brand</b>
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: Link</p>
+                <p className="text-muted text-sm">: Apple</p>
               </div>
             </div>
           </div>
@@ -65,11 +65,11 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Link Label</b>
+                  <b>Slug</b>
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: Link Label</p>
+                <p className="text-muted text-sm">: Slug</p>
               </div>
             </div>
           </div>
@@ -77,11 +77,71 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Color</b>
+                  <b>Orginal Price</b>
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: #000000</p>
+                <p className="text-muted text-sm">: 100</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>Discounted Price</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: 10</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>Start Date</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: 10/09/2024</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>End Date</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: 11/09/2024</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>Stock</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: 1000</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>SKU</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: --</p>
               </div>
             </div>
           </div>

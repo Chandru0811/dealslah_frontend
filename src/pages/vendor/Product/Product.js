@@ -25,11 +25,11 @@ const Product = () => {
     <section className="px-4">
       <div className="card shadow border-0" style={{ minHeight: "90vh" }}>
         <div className="card-header d-flex align-items-center">
-          <h3 className="mb-0">Slider</h3>
+          <h3 className="mb-0">Products</h3>
           <div className="container-fluid d-flex justify-content-end">
-            <Link to="/slider/add">
+            <Link to="/product/add">
               <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                Add Slider
+                Add 
               </button>
             </Link>
           </div>
@@ -68,10 +68,10 @@ const Product = () => {
                 <td className="text-center">2</td>
                 <td className="text-center">
                   <div className="d-flex justify-content-center">
-                    <Link to="/slider/view">
+                    <Link to="/product/view">
                       <button className="button-btn btn-sm m-2">View</button>
                     </Link>
-                    <Link to="/slider/edit">
+                    <Link to="/product/edit">
                       <button className="button-btn btn-sm m-2">Edit</button>
                     </Link>
                     <DeleteModel />
