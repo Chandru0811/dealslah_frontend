@@ -11,6 +11,7 @@ import Registration from "../components/auth/Registration";
 function Client({
   handleLogout,
   handleLogin,
+  handleVendorLogin,
   handleClientLogin,
   isClientLogin,
 }) {
@@ -22,8 +23,9 @@ function Client({
           <Routes>
             {/* <Route path="/" element={<Home  />} /> */}
             {/* <Route path="*" element={<NotFound />} /> */}
-            <Route path="/" element={<Registration handleLogin={handleLogin} />} />
+            <Route path="/" element={<Registration handleLogin={handleLogin} handleVendorLogin={handleVendorLogin} />} />
             <Route path="/forgot" element={<ForgotPage />} />
+            
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>

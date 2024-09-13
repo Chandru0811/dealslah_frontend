@@ -6,7 +6,7 @@ import VendorLogin from "./VendorLogin";
 import VendorRegistration from "./VendorRegistration";
 import Logo from "../../assets/Header_logo.png";
 
-function Registration({ handleLogin }) {
+function Registration({ handleLogin ,handleVendorLogin}) {
   const location = useLocation();
   const initialSignInState = location.state?.showSignUp ? false : true;
   const [isSignIn, setIsSignIn] = useState(initialSignInState);
@@ -131,7 +131,7 @@ function Registration({ handleLogin }) {
                 </div>
                 <div className="p-3">
                   {isSignIn ? (
-                    <VendorLogin handleLogin={handleLogin} />
+                    <VendorLogin handleVendorLogin={handleVendorLogin} />
                   ) : (
                     <VendorRegistration />
                   )}

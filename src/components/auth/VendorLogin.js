@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 
-function VendorLogin({ handleLogin }) {
+function VendorLogin({ handleVendorLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -22,7 +22,7 @@ function VendorLogin({ handleLogin }) {
     }),
     onSubmit: (values) => {
       console.log("SignIn Values:", values);
-      handleLogin(values);
+      handleVendorLogin(values);
       navigate('/')
     },
   });
@@ -95,7 +95,7 @@ function VendorLogin({ handleLogin }) {
 
         <div className="text-center mt-4">
           <p className="mb-3">or</p>
-
+          <Link to="/vendorregistration">
           <Button
             variant="light"
             className="w-100 border shadow-none"
@@ -108,6 +108,7 @@ function VendorLogin({ handleLogin }) {
           >
             Registration
           </Button>
+          </Link>
         </div>
       </Form>
     </div>
