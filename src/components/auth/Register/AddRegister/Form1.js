@@ -46,7 +46,7 @@ const Form1 = forwardRef(
         rating: 0,
         shop_type: "",
       },
-      // validationSchema: validationSchema,
+      validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
         handleNext();

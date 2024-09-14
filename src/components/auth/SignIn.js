@@ -5,6 +5,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
 
 function SignIn({ handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -21,10 +22,32 @@ function SignIn({ handleLogin }) {
         .required("Email is required"),
       password: Yup.string().required("Password is required"),
     }),
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("SignIn Values:", values);
-      handleLogin(values);
-      navigate('/')
+      // handleLogin(values);
+      // navigate('/')
+      const payload = {
+        ...values,
+        password: parseInt(values.password),
+      };
+      try {
+        const response = await axios.post(
+          `https://sgitjobs.com/dealslah/public/api/login`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          alert("successfuly login");
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("error login");
+      }
     },
   });
 
@@ -53,7 +76,7 @@ function SignIn({ handleLogin }) {
         <div className="d-flex justify-content-between align-items-center py-2">
           <Form.Label>Password</Form.Label>
           <Link
-            to='/forgot'
+            to="/forgot"
             className="ml-auto"
             style={{ fontSize: "0.9em", textDecoration: "none" }}
           >

@@ -39,7 +39,7 @@ const Form2 = forwardRef(
         account_address: "",
         bank_code: "",
       },
-      // validationSchema: validationSchema,
+      validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
         handleNext();
