@@ -9,6 +9,7 @@ import { MdAccessTime } from "react-icons/md";
 import Store from "./Store";
 import Location from "./Location";
 import StorePolicy from "./StorePolicy";
+import StoreHours from "./StoreHours";
 
 function Settings() {
     const [selectedItem, setSelectedItem] = useState("Store");
@@ -54,7 +55,7 @@ function Settings() {
                             {selectedItem === "Location" && <Location />}
                             {selectedItem === "Payment" && <h3>Payment</h3>}
                             {selectedItem === "Store Policies" && <StorePolicy />}
-                            {selectedItem === "Store Hours" && <h3>Store Hours</h3>}
+                            {selectedItem === "Store Hours" && <StoreHours />}
                         </div>
                     </div>
                 </div>
