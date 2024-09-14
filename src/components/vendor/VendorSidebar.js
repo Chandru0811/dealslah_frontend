@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Logo from "../../assets/Header_logo.png";
-import { BsBarChartFill } from "react-icons/bs";
-import { BiSolidCategory, BiLogOut } from "react-icons/bi";
+import { BsBarChartFill, BsHouseDoorFill } from "react-icons/bs";
+import { BiSolidCategory, BiLogOut, BiCart } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 
 function VendorSidebar({ handleLogout }) {
@@ -34,40 +34,60 @@ function VendorSidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${leadMenuOpen || activeSubmenu ? "active" : ""
-            }`}
+          className={`navbar-brand logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${
+            leadMenuOpen || activeSubmenu ? "active" : ""
+          }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
-          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"170px",height:"50px"}} />
+          <img
+            src={Logo}
+            alt="Logo"
+            className="img-fluid sidebar-logo"
+            style={{
+              background: "#fff",
+              padding: "5px",
+              borderRadius: "5px",
+              width: "170px",
+              height: "50px",
+            }}
+          />
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">
+            {/* Dashboard */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
-                <BsBarChartFill />Dashboard
+                <BsBarChartFill /> Dashboard
               </NavLink>
             </li>
+
+            {/* Home */}
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/home">
+                <BsHouseDoorFill /> Home
+              </NavLink>
+            </li>
+
+            {/* Products */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/product">
-                <BiSolidCategory />Products
+                <BiSolidCategory /> Products
               </NavLink>
             </li>
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/banner">
-                <BiSolidCategory />Banner
-              </NavLink>
-            </li>
+
+            {/* Orders */}
             <li className="nav-item">
-              <NavLink className="nav-link" to="/categorygroup">
-                <MdCategory />Category Groups
+              <NavLink className="nav-link" to="/orders">
+                <BiCart /> Orders
               </NavLink>
             </li>
+
+            {/* Category */}
             <li className="nav-item">
-              <NavLink className="nav-link" to="/categories">
-                <BiSolidCategory />Categories
+              <NavLink className="nav-link" to="/category">
+                <MdCategory /> Category
               </NavLink>
-            </li> */}
+            </li>
           </ul>
           <div className="mt-auto logutBtn">
             <div className="navbar-nav">
@@ -78,7 +98,8 @@ function VendorSidebar({ handleLogout }) {
                   className="nav-link ps-6"
                   onClick={handelLogOutClick}
                 >
-                  <BiLogOut />&nbsp;&nbsp; Logout
+                  <BiLogOut />
+                  &nbsp;&nbsp; Logout
                 </button>
               </div>
             </div>
