@@ -118,7 +118,7 @@ function VendorLogin({ handleVendorLogin }) {
 
           <div className="text-center mt-4">
             <p className="mb-3">or</p>
-            <Link to="/vendorregistration">
+            <Link to="/wellcomepage">
               <Button
                 variant="light"
                 className="w-100 border shadow-none"
