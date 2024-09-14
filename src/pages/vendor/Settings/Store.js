@@ -4,7 +4,7 @@ function Store() {
     return (
         <section>
             <div className='container'>
-                <h3 className='py-3' style={{ color: "#9C54FF" }}>Generat Settings</h3>
+                <h3 className='text-primary py-3'>Generat Settings</h3>
 
                 <div className='row'>
                     <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
