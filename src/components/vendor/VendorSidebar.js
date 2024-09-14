@@ -4,6 +4,7 @@ import Logo from "../../assets/Header_logo.png";
 import { BsBarChartFill, BsHouseDoorFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut, BiCart } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
+import { IoSettings } from "react-icons/io5";
 
 function VendorSidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -34,9 +35,8 @@ function VendorSidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${
-            leadMenuOpen || activeSubmenu ? "active" : ""
-          }`}
+          className={`navbar-brand logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${leadMenuOpen || activeSubmenu ? "active" : ""
+            }`}
           to="/"
         >
           <img
@@ -86,6 +86,13 @@ function VendorSidebar({ handleLogout }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/category">
                 <MdCategory /> Category
+              </NavLink>
+            </li>
+
+            {/* Settings */}
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/settings">
+                <IoSettings /> Settings
               </NavLink>
             </li>
           </ul>
