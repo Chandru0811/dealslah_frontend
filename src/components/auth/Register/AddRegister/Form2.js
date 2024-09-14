@@ -46,7 +46,7 @@ const Form2 = forwardRef(
     return (
       <form onSubmit={formik.handleSubmit}>
         <div className="row d-flex justify-content-center mt-5">
-          <div className="col-md-6 col-12">
+          <div className="col-md-12 col-12">
             <div className="row">
               <div className="col-12">
                 <div className="mb-3">

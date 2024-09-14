@@ -37,15 +37,12 @@ function VendorLogin({ handleVendorLogin }) {
         className="card shadow-lg p-3 mb-5 bg-body rounded"
         style={{ width: "100%", maxWidth: "400px" }}
       >
-        <Link to="/" style={{ height: "25px"}}>
-            <button
-              className="btn btn-link text-start shadow-none h-0"
-            >
-              <IoMdArrowBack />
-            </button>
-          </Link>
+        <Link to="/" style={{ height: "25px" }}>
+          <button className="btn btn-link text-start shadow-none h-0">
+            <IoMdArrowBack />
+          </button>
+        </Link>
         <div className="d-flex justify-content-around ">
-        
           <h3
             className={`cursor-pointer py-2`}
             style={{
@@ -53,7 +50,7 @@ function VendorLogin({ handleVendorLogin }) {
               paddingBottom: "5px",
               width: "100%",
               textAlign: "center",
-              color: "#771bf8"
+              color: "#771bf8",
             }}
           >
             Login

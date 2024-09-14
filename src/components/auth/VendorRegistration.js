@@ -4,8 +4,9 @@ import Form1 from "./Register/AddRegister/Form1";
 import Form2 from "./Register/AddRegister/Form2";
 import { Link } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
+import Form3 from "./Register/AddRegister/Form3";
 
-const steps = ["", ""];
+const steps = ["Store", "Payment" , "Ready!"];
 
 export default function VendorRegistration() {
   const [activeStep, setActiveStep] = useState(0);
@@ -26,6 +27,11 @@ export default function VendorRegistration() {
       case "1":
         if (childRef.current) {
           childRef.current.form2();
+        }
+        break;
+      case "2":
+        if (childRef.current) {
+          childRef.current.from3();
         }
         break;
       default:
@@ -54,7 +60,7 @@ export default function VendorRegistration() {
         </Stepper>
         <div
           className="container-fluid card shadow border-0 mb-4 d-flex justify-content-center align-items-center"
-          style={{ minHeight: "70vh", width:"70%"}}
+          style={{ minHeight: "70vh", width: "70%" }}
         >
           <React.Fragment>
             {activeStep === 0 && (
@@ -67,6 +73,14 @@ export default function VendorRegistration() {
             )}
             {activeStep === 1 && (
               <Form2
+                formData={formData}
+                ref={childRef}
+                setFormData={setFormData}
+                handleNext={handleNext}
+              />
+            )}
+            {activeStep === 2 && (
+              <Form3
                 formData={formData}
                 ref={childRef}
                 setFormData={setFormData}

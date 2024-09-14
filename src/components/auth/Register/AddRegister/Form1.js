@@ -50,129 +50,131 @@ const Form1 = forwardRef(
     }));
 
     return (
-      <form onSubmit={formik.handleSubmit}>
-        <div className="row d-flex justify-content-center">
-          <div className="col-md-6 col-12">
-            <div className="row">
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Name<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="name"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                  />
-                  {formik.touched.name && formik.errors.name && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.name}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    E-mail<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    className={`form-control ${
-                      formik.touched.email && formik.errors.email
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="email"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.email}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Password<span className="text-danger">*</span>
-                  </label>
-                  <div className="input-group">
+      <div className="container-fluid">
+        <form onSubmit={formik.handleSubmit} className="w-100">
+          <div className="row d-flex justify-content-center">
+            <div className="col-md-12 col-12">
+              <div className="row">
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Name<span className="text-danger">*</span>
+                    </label>
                     <input
-                      type={showPassword ? "text" : "password"}
+                      type="text"
                       className={`form-control ${
-                        formik.touched.password && formik.errors.password
+                        formik.touched.name && formik.errors.name
                           ? "is-invalid"
                           : ""
                       }`}
-                      name="password"
+                      name="name"
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
-                      value={formik.values.password}
+                      value={formik.values.name}
                     />
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      onClick={togglePasswordVisibility}
-                    >
-                      {showPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
+                    {formik.touched.name && formik.errors.name && (
+                      <div className="error text-danger ">
+                        <small>{formik.errors.name}</small>
+                      </div>
+                    )}
                   </div>
-                  {formik.touched.password && formik.errors.password && (
-                    <div className="error text-danger">
-                      <small>{formik.errors.password}</small>
-                    </div>
-                  )}
                 </div>
-              </div>
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      E-mail<span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      className={`form-control ${
+                        formik.touched.email && formik.errors.email
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      name="email"
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                      value={formik.values.email}
+                    />
+                    {formik.touched.email && formik.errors.email && (
+                      <div className="error text-danger ">
+                        <small>{formik.errors.email}</small>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Password<span className="text-danger">*</span>
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        className={`form-control ${
+                          formik.touched.password && formik.errors.password
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        name="password"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.password}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={togglePasswordVisibility}
+                      >
+                        {showPassword ? <FaEyeSlash /> : <FaEye />}
+                      </button>
+                    </div>
+                    {formik.touched.password && formik.errors.password && (
+                      <div className="error text-danger">
+                        <small>{formik.errors.password}</small>
+                      </div>
+                    )}
+                  </div>
+                </div>
 
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Confirm Password<span className="text-danger">*</span>
-                  </label>
-                  <div className="input-group">
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      className={`form-control ${
-                        formik.touched.cpassword && formik.errors.cpassword
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      name="cpassword"
-                      onChange={formik.handleChange}
-                      onBlur={formik.handleBlur}
-                      value={formik.values.cpassword}
-                    />
-                    <button
-                      type="button"
-                      className="btn btn-outline-secondary"
-                      onClick={toggleConfirmPasswordVisibility}
-                    >
-                      {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
-                    </button>
-                  </div>
-                  {formik.touched.cpassword && formik.errors.cpassword && (
-                    <div className="error text-danger">
-                      <small>{formik.errors.cpassword}</small>
+                <div className="col-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Confirm Password<span className="text-danger">*</span>
+                    </label>
+                    <div className="input-group">
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        className={`form-control ${
+                          formik.touched.cpassword && formik.errors.cpassword
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        name="cpassword"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.cpassword}
+                      />
+                      <button
+                        type="button"
+                        className="btn btn-outline-secondary"
+                        onClick={toggleConfirmPasswordVisibility}
+                      >
+                        {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
+                      </button>
                     </div>
-                  )}
+                    {formik.touched.cpassword && formik.errors.cpassword && (
+                      <div className="error text-danger">
+                        <small>{formik.errors.cpassword}</small>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </div>
     );
   }
 );
