@@ -18,7 +18,7 @@ function StorePolicy() {
   return (
     <div className="row m-0">
       {/* <div className="col-md-3 col-12"></div> */}
-      <div className="col-md-9 col-12 ">
+      <div className="col-md-12 col-12 ">
         <h3 className="text-primary mb-4">Policies Setting</h3>
 
         <div className="form-group mb-3 d-flex justify-content-between ">

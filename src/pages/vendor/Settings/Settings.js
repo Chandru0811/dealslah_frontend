@@ -23,8 +23,8 @@ function Settings() {
                 <div className="card-header d-flex align-items-center">
                     <h3 className="mb-0">Settings</h3>
                 </div>
-                <div className="row mt-5 p-3">
-                    <div className="col-3 card shadow h-50"
+                <div className="row mt-5">
+                    <div className="col-md-3 col-12 card shadow h-50"
                         style={{ backgroundColor: "#1c2b36" }}>
                         <div className="dropdown-item">
                             <div className="dropdown-item items" onClick={() => handleItemClick("Store")}>
@@ -48,7 +48,7 @@ function Settings() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-9">
+                    <div className="col-md-9 col-12 ">
                         <div className="">
                             {selectedItem === "Store" && <Store />}
                             {selectedItem === "Location" && <Location />}
