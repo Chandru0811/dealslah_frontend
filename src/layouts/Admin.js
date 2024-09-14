@@ -21,6 +21,7 @@ import CategoriesIndex from "../pages/admin/categories/CategoriesIndex";
 import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
 import CategoriesView from "../pages/admin/categories/CategoriesView";
 import CategoriesEdits from "../pages/admin/categories/CategoriesEdits";
+import AdminHeader from "../components/admin/AdminHeader";
 
 function Admin({ handleLogout }) {
   return (
@@ -29,39 +30,8 @@ function Admin({ handleLogout }) {
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <Sidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">
-            <header class="bg-surface-primary border-bottom py-3 sticky-top-header">
-              <div class="container-fluid">
-                <div class="mb-npx">
-                  <div class="row align-items-center">
-                    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
-                      <span>
-                        <i class="bi bi-gear"></i> Settings
-                      </span>
-                    </div>
-                    <div class="col-sm-6 col-12 text-sm-end">
-                      <div class="mx-n1">
-                        <span class="position-relative">
-                          <i class="bi bi-bell"></i>
-                        </span>{" "}
-                        &nbsp;&nbsp;&nbsp;
-                        <span>
-                          <i class="bi bi-question-circle"></i>
-                        </span>{" "}
-                        &nbsp;&nbsp;&nbsp;
-                        <span>
-                          <i class="bi bi-journal"></i>
-                        </span>{" "}
-                        &nbsp;&nbsp;&nbsp;
-                        <span style={{ fontSize: "24px" }}>
-                          <i class="bi bi-person-circle"></i>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </header>
-            <main className="pt-3 bg-surface-secondary">
+            <AdminHeader />
+            <main className="pt-2" style={{ backgroundColor: "#f2f2f2" }}>
               <div style={{ minHeight: "90vh" }}>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
