@@ -20,9 +20,9 @@ const validationSchema = Yup.object().shape({
   bank_name: Yup.string().required("Bank Name is required"),
   account_address: Yup.string().required("Bank Address is required"),
   bank_code: Yup.string().required("Bank Code is required"),
-  check_account: Yup.boolean()
-    .oneOf([true], "You must agree to the terms")
-    .required("Agreement to terms is required"),
+  // check_account: Yup.boolean()
+  //   .oneOf([true], "You must agree to the terms")
+  //   .required("Agreement to terms is required"),
 });
 
 const Form2 = forwardRef(
@@ -39,7 +39,7 @@ const Form2 = forwardRef(
         account_address: "",
         bank_code: "",
       },
-      // validationSchema: validationSchema,
+      validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
         handleNext();
