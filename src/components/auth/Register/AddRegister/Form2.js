@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -34,7 +34,6 @@ const Form2 = forwardRef(
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
-        navigate("/vendorlogin")
         handleNext();
       },
     });
@@ -44,7 +43,7 @@ const Form2 = forwardRef(
     }));
 
     return (
-      <form onSubmit={formik.handleSubmit}>
+      <form onSubmit={formik.handleSubmit} className="py-5">
         <div className="row d-flex justify-content-center mt-5">
           <div className="col-md-12 col-12">
             <div className="row">

@@ -1,7 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Success from "../../../../assets/Success2.png";
 
 // Define the validation schema to match form fields
 const validationSchema = Yup.object().shape({
@@ -18,7 +19,7 @@ const validationSchema = Yup.object().shape({
   description: Yup.string().required("Description is required"),
 });
 
-const Form3= forwardRef(
+const Form3 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
     const navigate = useNavigate();
     const formik = useFormik({
@@ -34,7 +35,7 @@ const Form3= forwardRef(
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
-        navigate("/vendorlogin")
+        navigate("/vendorlogin");
         handleNext();
       },
     });
@@ -45,9 +46,27 @@ const Form3= forwardRef(
 
     return (
       <form onSubmit={formik.handleSubmit}>
-        <div className="row d-flex justify-content-center mt-5">
-          <div className="col-md-12 col-12">
-           
+        <div className="row  mt-5">
+          <div className="col-md-12 col-12 d-flex flex-column align-items-center justify-content-center">
+            <img
+              className="img-fluid"
+              src={Success}
+              alt="Success"
+              width={220}
+            />
+            <h2 className="py-5">Your Store is Ready !</h2>
+            <Link to={"/vendorlogin"} className=" mt-4">
+              <button className="btn btn-primary">
+                Go to your store Dashboard !
+              </button>
+            </Link>
+            <Link
+              to={"/vendorlogin"}
+              className="pt-5"
+              style={{ textDecoration: "underline" }}
+            >
+              <p>Return to the Marketplace</p>
+            </Link>
           </div>
         </div>
       </form>

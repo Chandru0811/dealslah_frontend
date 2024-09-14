@@ -17,9 +17,9 @@ function Registration({ handleLogin, handleVendorLogin }) {
   };
 
   return (
-    <div className="container d-flex justify-content-center align-items-center vh-100 ">
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 " style={{ backgroundColor: "#f2f2f2" }}>
       <div
-        className="card shadow-lg py-3 mb-5 bg-body rounded"
+        className="card shadow-lg py-3 mb-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}
       >
         <div className="d-flex flex-column justify-content-around align-items-center">

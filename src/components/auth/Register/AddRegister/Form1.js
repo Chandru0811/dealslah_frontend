@@ -50,7 +50,7 @@ const Form1 = forwardRef(
     }));
 
     return (
-      <div className="container-fluid">
+      <div className="container-fluid py-5">
         <form onSubmit={formik.handleSubmit} className="w-100">
           <div className="row d-flex justify-content-center">
             <div className="col-md-12 col-12">

@@ -94,7 +94,7 @@ function SignIn({ handleLogin }) {
           SIGN IN
         </Button>
 
-        <div className="text-center mt-4">
+        {/* <div className="text-center mt-4">
           <p className="mb-3">or</p>
 
           <Button
@@ -117,7 +117,7 @@ function SignIn({ handleLogin }) {
             </div>
             Sign In with Google
           </Button>
-        </div>
+        </div> */}
       </Form>
     </div>
   );
