@@ -15,7 +15,7 @@
 
 /* Sidebar */
 .navbar-vertical.navbar-light {
-  background-color: var(--admin-primary-color) !important;
+  background-color:#1c2b36 !important;
 }
 .navbar-vertical.navbar-light .navbar-nav .nav-link i,
 .navbar-vertical.navbar-light .navbar-nav .nav-link svg {
@@ -35,12 +35,12 @@
   color: var(--admin-primary-color) !important;
 }
 .navbar-vertical.navbar-light .navbar-nav > .nav-item > .nav-link.active {
-  background-color: var(--admin-secondary-color) !important;
+  background-color: #295879 !important;
   color: var(--admin-text-color) !important;
 }
 
 .navbar-vertical.navbar-light .navbar-nav > .nav-item > .nav-link:hover {
-  background-color: var(--admin-teritary-color) !important;
+  background-color:#4290c7 !important;
   color: var(--admin-text-color) !important;
 }
 
@@ -48,7 +48,7 @@
   position: sticky;
   top: 0;
   z-index: 200;
-  background-color: var(--admin-primary-color);
+  background-color:#1c2b36;
 }
 
 @media (max-width: 991px) {

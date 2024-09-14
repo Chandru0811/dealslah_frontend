@@ -177,6 +177,19 @@ function ProductView() {
             </div>
           </div>
         </div>
+
+        <div className="row mt-5 p-3">
+          <div className="col-3">
+            <div class="dropdown-menu">
+              <a class="dropdown-item" href="#">Action</a>
+              <a class="dropdown-item" href="#">Another action</a>
+              <a class="dropdown-item" href="#">Something else here</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="#">Separated link</a>
+            </div>
+          </div>
+          <div className="col-9"></div>
+        </div>
       </div>
     </section>
   );
