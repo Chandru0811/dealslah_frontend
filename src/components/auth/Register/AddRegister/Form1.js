@@ -392,13 +392,15 @@ const Form1 = forwardRef(
                           }`}
                           onClick={() => handleStarClick(star)}
                         />
+                        
                       ))}
-                    </div>
-                    {formik.touched.rating && formik.errors.rating && (
+                         {formik.touched.rating && formik.errors.rating && (
                       <div className="error text-danger">
                         <small>{formik.errors.rating}</small>
                       </div>
                     )}
+                    </div>
+                 
                   </div>
                 </div>
               </div>
