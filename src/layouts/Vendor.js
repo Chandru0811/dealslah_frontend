@@ -10,7 +10,7 @@ import ProductView from "../pages/vendor/Product/ProductView";
 import DashboardV from "../pages/vendor/DashboardV";
 import VendorSidebar from "../components/vendor/VendorSidebar";
 import Settings from "../pages/vendor/Settings/Settings";
-import StorePolicy from "../pages/vendor/StorePolicy";
+import StorePolicy from "../pages/vendor/Settings/StorePolicy";
 
 function Vendor({ handleLogout }) {
   return (

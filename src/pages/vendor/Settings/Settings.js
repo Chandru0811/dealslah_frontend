@@ -8,6 +8,7 @@ import { PiVanFill } from "react-icons/pi";
 import { MdAccessTime } from "react-icons/md";
 import Store from "./Store";
 import Location from "./Location";
+import StorePolicy from "./StorePolicy";
 
 function Settings() {
     const [selectedItem, setSelectedItem] = useState("Store");
@@ -23,7 +24,7 @@ function Settings() {
                     <h3 className="mb-0">Settings</h3>
                 </div>
                 <div className="row mt-5 p-3">
-                    <div className="col-3 card shadow"
+                    <div className="col-3 card shadow h-50"
                         style={{ backgroundColor: "#1c2b36" }}>
                         <div className="dropdown-item">
                             <div className="dropdown-item items" onClick={() => handleItemClick("Store")}>
@@ -52,7 +53,7 @@ function Settings() {
                             {selectedItem === "Store" && <Store />}
                             {selectedItem === "Location" && <Location />}
                             {selectedItem === "Payment" && <h3>Payment</h3>}
-                            {selectedItem === "Store Policies" && <h3>Store Policies</h3>}
+                            {selectedItem === "Store Policies" && <StorePolicy />}
                             {selectedItem === "Store Hours" && <h3>Store Hours</h3>}
                         </div>
                     </div>
