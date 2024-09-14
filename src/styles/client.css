@@ -427,3 +427,7 @@
 .items:hover{
   color: #09afd8;
 }
+.setting-card{
+  position: sticky !important;
+  top: 30px;
+}

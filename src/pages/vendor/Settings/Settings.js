@@ -10,6 +10,7 @@ import Store from "./Store";
 import Location from "./Location";
 import StorePolicy from "./StorePolicy";
 import StoreHours from "./StoreHours";
+import Payment from "./Payment";
 
 function Settings() {
     const [selectedItem, setSelectedItem] = useState("Store");
@@ -25,7 +26,7 @@ function Settings() {
                     <h3 className="mb-0">Settings</h3>
                 </div>
                 <div className="row mt-5">
-                    <div className="col-md-3 col-12 card shadow h-50"
+                    <div className="col-md-3 col-12 card shadow h-50 setting-card"
                         style={{ backgroundColor: "#1c2b36" }}>
                         <div className="dropdown-item">
                             <div className="dropdown-item items" onClick={() => handleItemClick("Store")}>
@@ -53,7 +54,7 @@ function Settings() {
                         <div className="">
                             {selectedItem === "Store" && <Store />}
                             {selectedItem === "Location" && <Location />}
-                            {selectedItem === "Payment" && <h3>Payment</h3>}
+                            {selectedItem === "Payment" && <Payment />}
                             {selectedItem === "Store Policies" && <StorePolicy />}
                             {selectedItem === "Store Hours" && <StoreHours />}
                         </div>

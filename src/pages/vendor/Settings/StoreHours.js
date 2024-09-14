@@ -47,12 +47,46 @@ function StoreHours() {
 
   return (
     <div className="container mt-4">
-        <h4 className="text-primary">Store Hours Settings</h4>
-        <div className="d-flex justify-content-around">
-            <label>Enable Store Hourse</label>
-            <input type="checkbox" className="form-control" />
+      <div className="row">
+        <div className="col-md-6 col-12 mb-5 d-flex justify-content-start">
+          <label className="form-label fw-bold">Enable Store Hours</label>
         </div>
-      <h4 className="text-primary mb-4">Daily Basis Opening & Closing Hours</h4>
+        <div className="col-md-6 col-12 mb-5">
+          <input
+            type="checkbox"
+            className="form-check"
+            name="hideEmail"
+          />
+        </div>
+        <div className="col-md-6 col-12 mb-5 d-flex justify-content-start">
+          <label className="form-label fw-bold">Enable Purchase During OFF Time</label>
+        </div>
+        <div className="col-md-6 col-12 mb-5">
+          <input
+            type="checkbox"
+            className="form-check"
+            name="hidePhone"
+          />
+        </div>
+        <div className="form-group mb-3 d-flex justify-content-between ">
+          <label className="fw-bold">
+            Set Week OFF
+          </label>
+          <select
+            type="text"
+            className='form-select w-50'>
+            <option selected></option>
+            <option value="Monday">Monday</option>
+            <option value="Tuesday">Tuesday</option>
+            <option value="Wednesday">Wednesday</option>
+            <option value="Thursday">Thursday</option>
+            <option value="Friday">Friday</option>
+            <option value="Saturday">Saturday</option>
+          </select>
+        </div>
+      </div>
+
+      <h4 className="text-primary my-5">Daily Basis Opening & Closing Hours</h4>
 
       {timeSlots.map((day, dayIndex) => (
         <Card key={dayIndex} className="mb-3">
@@ -61,42 +95,42 @@ function StoreHours() {
             {day.slots.map((slot, slotIndex) => (
               <div key={slotIndex} className="row">
                 <div className="col-md-5 co-12">
-                <input
-                  type="time"
-                  value={slot.opening}
-                  onChange={(e) =>
-                    handleTimeChange(dayIndex, slotIndex, "opening", e.target.value)
-                  }
-                  className="form-control me-2 mb-3"
-                  placeholder="Opening"
-                />
+                  <input
+                    type="time"
+                    value={slot.opening}
+                    onChange={(e) =>
+                      handleTimeChange(dayIndex, slotIndex, "opening", e.target.value)
+                    }
+                    className="form-control me-2 mb-3"
+                    placeholder="Opening"
+                  />
                 </div>
                 <div className="col-md-5 co-12">
-                <input
-                  type="time"
-                  value={slot.closing}
-                  onChange={(e) =>
-                    handleTimeChange(dayIndex, slotIndex, "closing", e.target.value)
-                  }
-                  className="form-control me-2"
-                  placeholder="Closing"
-                />
+                  <input
+                    type="time"
+                    value={slot.closing}
+                    onChange={(e) =>
+                      handleTimeChange(dayIndex, slotIndex, "closing", e.target.value)
+                    }
+                    className="form-control me-2"
+                    placeholder="Closing"
+                  />
                 </div>
                 <div className="col-md-2 col-12 d-lg-flex mt-3">
-                <button
-                  className="btn btn-sm rounded"
-                  onClick={() => handleAddSlot(dayIndex)}
-                >
-                  <FaPlus />
-                </button>
-                {slotIndex > 0 && (
                   <button
-                    className="btn btn-outline-danger ms-2 btn-sm"
-                    onClick={() => handleRemoveSlot(dayIndex, slotIndex)}
+                    className="btn btn-sm rounded"
+                    onClick={() => handleAddSlot(dayIndex)}
                   >
-                    <FaTrash />
+                    <FaPlus />
                   </button>
-                )}
+                  {slotIndex > 0 && (
+                    <button
+                      className="btn btn-outline-danger ms-2 btn-sm"
+                      onClick={() => handleRemoveSlot(dayIndex, slotIndex)}
+                    >
+                      <FaTrash />
+                    </button>
+                  )}
                 </div>
               </div>
             ))}
