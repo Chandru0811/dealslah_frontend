@@ -34,12 +34,12 @@ function Sidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${leadMenuOpen || activeSubmenu ? "active" : ""
+          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${leadMenuOpen || activeSubmenu ? "active" : ""
             }`}
           to="/"
         >
           <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
-          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"170px",height:"50px"}} />
+          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"160px",height:"45px"}} />
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">

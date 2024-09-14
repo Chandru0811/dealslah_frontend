@@ -16,7 +16,7 @@ import BannerView from "../pages/admin/Banner/BannerView";
 import Slider from "../pages/admin/Slider/Slider";
 import SliderAdd from "../pages/admin/Slider/SliderAdd";
 import SliderEdit from "../pages/admin/Slider/SliderEdit";
-import SliderView from "../pages/admin/Slider/SliderView"
+import SliderView from "../pages/admin/Slider/SliderView";
 import CategoriesIndex from "../pages/admin/categories/CategoriesIndex";
 import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
 import CategoriesView from "../pages/admin/categories/CategoriesView";
@@ -29,6 +29,38 @@ function Admin({ handleLogout }) {
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <Sidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">
+            <header class="bg-surface-primary border-bottom py-3 sticky-top-header">
+              <div class="container-fluid">
+                <div class="mb-npx">
+                  <div class="row align-items-center">
+                    <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+                      <span>
+                        <i class="bi bi-gear"></i> Settings
+                      </span>
+                    </div>
+                    <div class="col-sm-6 col-12 text-sm-end">
+                      <div class="mx-n1">
+                        <span class="position-relative">
+                          <i class="bi bi-bell"></i>
+                        </span>{" "}
+                        &nbsp;&nbsp;&nbsp;
+                        <span>
+                          <i class="bi bi-question-circle"></i>
+                        </span>{" "}
+                        &nbsp;&nbsp;&nbsp;
+                        <span>
+                          <i class="bi bi-journal"></i>
+                        </span>{" "}
+                        &nbsp;&nbsp;&nbsp;
+                        <span style={{ fontSize: "24px" }}>
+                          <i class="bi bi-person-circle"></i>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </header>
             <main className="pt-3 bg-surface-secondary">
               <div style={{ minHeight: "90vh" }}>
                 <Routes>
@@ -37,9 +69,18 @@ function Admin({ handleLogout }) {
 
                   {/* Category Groups */}
                   <Route path="/categorygroup" element={<CategoryGroups />} />
-                  <Route path="/categorygroup/add" element={<CategoryGroupAdd />} />
-                  <Route path="/categorygroup/edit" element={<CategoryGroupEdit />} />
-                  <Route path="/categorygroup/view" element={<CategoryGroupView />} />
+                  <Route
+                    path="/categorygroup/add"
+                    element={<CategoryGroupAdd />}
+                  />
+                  <Route
+                    path="/categorygroup/edit"
+                    element={<CategoryGroupEdit />}
+                  />
+                  <Route
+                    path="/categorygroup/view"
+                    element={<CategoryGroupView />}
+                  />
 
                   {/* Categories */}
                   <Route path="/categories" element={<CategoriesIndex />} />
