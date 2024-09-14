@@ -5,25 +5,51 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
+import toast from "react-hot-toast";
+import axios from "axios";
 
 function VendorLogin({ handleVendorLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("Invalid email address")
+      .required("Email is required"),
+    password: Yup.string().required("Password is required"),
+  });
 
   const formik = useFormik({
     initialValues: {
       email: "",
       password: "",
     },
-    validationSchema: Yup.object({
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
-      password: Yup.string().required("Password is required"),
-    }),
-    onSubmit: (values) => {
+    validationSchema: validationSchema,
+    onSubmit: async (values) => {
       console.log("SignIn Values:", values);
-      handleVendorLogin(values);
+      const payload = {
+        ...values,
+        password: parseInt(values.password),
+      };
+      try {
+        const response = await axios.post(
+          `https://sgitjobs.com/dealslah/public/api/register`,
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        if (response.status === 200) {
+          toast("successfuly login");
+
+        } else {
+          console.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("error login");
+      }
     },
   });
 
@@ -32,7 +58,7 @@ function VendorLogin({ handleVendorLogin }) {
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100" style={{  backgroundColor: "#f2f2f2" }}>
+    <div className="container-fluid d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f2f2f2" }}>
       <div
         className="card shadow-lg p-3 mb-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}

@@ -7,12 +7,31 @@ import {
 import { Button } from "react-bootstrap";
 
 function Store() {
-    const [store, setStore] = useState(
-        
-    );
+    const [store, setStore] = useState({
+        name: '',
+        slug: '',
+        email: '',
+        phone: '',
+        shopType: '',
+        logo: null,
+        bannerType: '',
+        banner: null,
+        description: '',
+    });
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setStore({ ...store, [name]: value });
+    };
+
+    const handleFileChange = (e) => {
+        const { name, files } = e.target;
+        setStore({ ...store, [name]: files[0] });
+    };
+
     const handleSave = () => {
         console.log("Store:", store);
     };
+
     return (
         <section>
             <div className='container'>
@@ -27,9 +46,11 @@ function Store() {
                     <div className="col-md-6 col-12 mb-5">
                         <input
                             type="text"
-                            className='form-control'>
-
-                        </input>
+                            name="name"
+                            value={store.name}
+                            onChange={handleInputChange}
+                            className='form-control'
+                        />
                     </div>
                     <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
                         <label className="form-label fw-bold">
@@ -39,9 +60,11 @@ function Store() {
                     <div className="col-md-6 col-12 mb-5">
                         <input
                             type="text"
-                            className='form-control'>
-
-                        </input>
+                            name="slug"
+                            value={store.slug}
+                            onChange={handleInputChange}
+                            className='form-control'
+                        />
                     </div>
                     <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
                         <label className="form-label fw-bold">
@@ -50,10 +73,12 @@ function Store() {
                     </div>
                     <div className="col-md-6 col-12 mb-5">
                         <input
-                            type="text"
-                            className='form-control'>
-
-                        </input>
+                            type="email"
+                            name="email"
+                            value={store.email}
+                            onChange={handleInputChange}
+                            className='form-control'
+                        />
                     </div>
                     <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
                         <label className="form-label fw-bold">
@@ -63,9 +88,11 @@ function Store() {
                     <div className="col-md-6 col-12 mb-5">
                         <input
                             type="text"
-                            className='form-control'>
-
-                        </input>
+                            name="phone"
+                            value={store.phone}
+                            onChange={handleInputChange}
+                            className='form-control'
+                        />
                     </div>
 
                     <h3 className='text-primary py-3'>Store Brand Setup</h3>
@@ -76,9 +103,12 @@ function Store() {
                     </div>
                     <div className="col-md-6 col-12 mb-5">
                         <select
-                            type="text"
-                            className='form-select'>
-                            <option selected></option>
+                            name="shopType"
+                            value={store.shopType}
+                            onChange={handleInputChange}
+                            className='form-select'
+                        >
+                            <option value="" disabled>Select shop type</option>
                             <option value="Servicebased">Service based</option>
                             <option value="Productbased">Product based</option>
                         </select>
@@ -91,9 +121,10 @@ function Store() {
                     <div className="col-md-6 col-12 mb-5">
                         <input
                             type="file"
-                            className='form-control'>
-
-                        </input>
+                            name="logo"
+                            onChange={handleFileChange}
+                            className='form-control'
+                        />
                     </div>
                     <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
                         <label className="form-label fw-bold">
@@ -102,10 +133,13 @@ function Store() {
                     </div>
                     <div className="col-md-6 col-12 mb-5">
                         <select
-                            type="text"
-                            className='form-select'>
-                            <option selected></option>
-                            <option value="LogoIamge">Logo Iamge</option>
+                            name="bannerType"
+                            value={store.bannerType}
+                            onChange={handleInputChange}
+                            className='form-select'
+                        >
+                            <option value="" disabled>Select banner type</option>
+                            <option value="LogoIamge">Logo Image</option>
                             <option value="StaticImage">Static Image</option>
                         </select>
                     </div>
@@ -117,8 +151,10 @@ function Store() {
                     <div className="col-md-6 col-12 mb-5">
                         <input
                             type="file"
-                            className='form-control'>
-                        </input>
+                            name="banner"
+                            onChange={handleFileChange}
+                            className='form-control'
+                        />
                     </div>
 
                     <div className="mb-3">
