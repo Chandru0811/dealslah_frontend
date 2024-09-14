@@ -249,30 +249,30 @@ const Form2 = forwardRef(
                             <input
                               type="checkbox"
                               className={`form-check-input ${
-                                formik.touched.account_holder &&
-                                formik.errors.account_holder
+                                formik.touched.check_account &&
+                                formik.errors.check_account
                                   ? "is-invalid"
                                   : ""
                               }`}
-                              id="account_holder"
-                              name="account_holder"
+                              id="check_account"
+                              name="check_account"
                               onChange={formik.handleChange}
                               onBlur={formik.handleBlur}
-                              // checked={formik.values.account_holder}
+                              // checked={formik.values.check_account}
                             />
                             <label
                               className="form-check-label"
-                              htmlFor="account_holder"
+                              htmlFor="check_account"
                             >
                               I attest i am the owner and have full
                               authorization to this bank account
                             </label>
-                            {formik.touched.account_holder &&
-                              formik.errors.account_holder && (
+                            {/* {formik.touched.check_account &&
+                              formik.errors.check_account && (
                                 <div className="error text-danger">
-                                  <small>{formik.errors.account_holder}</small>
+                                  <small>{formik.errors.check_account}</small>
                                 </div>
-                              )}
+                              )} */}
                           </div>
                         </div>
                       </div>

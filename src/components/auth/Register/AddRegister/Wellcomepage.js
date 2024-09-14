@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function WelcomeWizard() {
   return (
-    <section className=""style={{marginTop:"40px"}}>
+    <section className="d-flex flex-column align-items-center justify-content-center " style={{backgroundColor: "#f2f2f2",minHeight: '100vh'}}>
       <h2
         className="d-flex justify-content-center mb-5"
         style={{ color: "#771bf8" }}
