@@ -16,11 +16,12 @@ import BannerView from "../pages/admin/Banner/BannerView";
 import Slider from "../pages/admin/Slider/Slider";
 import SliderAdd from "../pages/admin/Slider/SliderAdd";
 import SliderEdit from "../pages/admin/Slider/SliderEdit";
-import SliderView from "../pages/admin/Slider/SliderView"
+import SliderView from "../pages/admin/Slider/SliderView";
 import CategoriesIndex from "../pages/admin/categories/CategoriesIndex";
 import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
 import CategoriesView from "../pages/admin/categories/CategoriesView";
 import CategoriesEdits from "../pages/admin/categories/CategoriesEdits";
+import AdminHeader from "../components/admin/AdminHeader";
 
 function Admin({ handleLogout }) {
   return (
@@ -29,7 +30,8 @@ function Admin({ handleLogout }) {
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <Sidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">
-            <main className="pt-3 bg-surface-secondary">
+            <AdminHeader />
+            <main className="pt-2" style={{ backgroundColor: "#f2f2f2" }}>
               <div style={{ minHeight: "90vh" }}>
                 <Routes>
                   <Route path="/" element={<Dashboard />} />
@@ -37,9 +39,18 @@ function Admin({ handleLogout }) {
 
                   {/* Category Groups */}
                   <Route path="/categorygroup" element={<CategoryGroups />} />
-                  <Route path="/categorygroup/add" element={<CategoryGroupAdd />} />
-                  <Route path="/categorygroup/edit" element={<CategoryGroupEdit />} />
-                  <Route path="/categorygroup/view" element={<CategoryGroupView />} />
+                  <Route
+                    path="/categorygroup/add"
+                    element={<CategoryGroupAdd />}
+                  />
+                  <Route
+                    path="/categorygroup/edit"
+                    element={<CategoryGroupEdit />}
+                  />
+                  <Route
+                    path="/categorygroup/view"
+                    element={<CategoryGroupView />}
+                  />
 
                   {/* Categories */}
                   <Route path="/categories" element={<CategoriesIndex />} />

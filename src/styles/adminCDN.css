@@ -196,6 +196,13 @@
   }
 }
 
+.sticky-top-header{
+    position: sticky;
+    top: 0;
+    z-index: 99;
+    box-shadow: 2px 2px 4px #bdbdbd;
+}
+
 body {
   margin: 0;
   font-family: var(--x-body-font-family);

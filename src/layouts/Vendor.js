@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "../styles/adminCDN.css";
 import "../styles/admin.css";
+import "../styles/Vendor.css";
 import AdminFooter from "../components/admin/AdminFooter";
 import Product from "../pages/vendor/Product/Product";
 import ProductAdd from "../pages/vendor/Product/ProductAdd";
@@ -11,6 +12,7 @@ import DashboardV from "../pages/vendor/DashboardV";
 import VendorSidebar from "../components/vendor/VendorSidebar";
 import Settings from "../pages/vendor/Settings/Settings";
 import StorePolicy from "../pages/vendor/Settings/StorePolicy";
+import VendorHeader from "../components/vendor/VendorHeader";
 
 function Vendor({ handleLogout }) {
   return (
@@ -19,6 +21,7 @@ function Vendor({ handleLogout }) {
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <VendorSidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">
+            <VendorHeader />
             <main className="pt-3 bg-surface-secondary">
               <div style={{ minHeight: "90vh" }}>
                 <Routes>

@@ -1,21 +1,28 @@
-import React, { forwardRef, useEffect, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
+import { FaInfoCircle } from "react-icons/fa";
 
 // Define the validation schema to match form fields
 const validationSchema = Yup.object().shape({
-  name: Yup.string()
-    .min(2, "Name must be at least 2 characters")
-    .required("Name is required"),
   email: Yup.string()
     .email("Invalid email address")
     .required("Email is required"),
-  legal_name: Yup.string().required("Legal Name is required"),
-  slug: Yup.string().required("Slug is required"),
-  external_url: Yup.string().required("External URL is required"),
-  address: Yup.string().required("Address is required"),
-  description: Yup.string().required("Description is required"),
+  account_holder: Yup.string().required("Account Holder is required"),
+  account_type: Yup.string().required("Account Type is required"),
+  account_number: Yup.string().required("Account Number is required"),
+  bank_name: Yup.string().required("Bank Name is required"),
+  account_address: Yup.string().required("Bank Address is required"),
+  bank_code: Yup.string().required("Bank Code is required"),
+  check_account: Yup.boolean()
+    .oneOf([true], "You must agree to the terms")
+    .required("Agreement to terms is required"),
 });
 
 const Form2 = forwardRef(
@@ -23,15 +30,16 @@ const Form2 = forwardRef(
     const navigate = useNavigate();
     const formik = useFormik({
       initialValues: {
-        name: "",
         email: "",
-        legal_name: "",
-        slug: "",
-        external_url: "",
-        address: "",
-        description: "",
+        account_holder: "",
+        account_type: "",
+        check_account: false,
+        account_number: "",
+        bank_name: "",
+        account_address: "",
+        bank_code: "",
       },
-      validationSchema: validationSchema,
+      // validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
         handleNext();
@@ -43,181 +51,252 @@ const Form2 = forwardRef(
     }));
 
     return (
-      <form onSubmit={formik.handleSubmit} className="py-5">
-        <div className="row d-flex justify-content-center mt-5">
-          <div className="col-md-12 col-12">
-            <div className="row">
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Name<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="name"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.name}
-                  />
-                  {formik.touched.name && formik.errors.name && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.name}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Legal Name<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.legal_name && formik.errors.legal_name
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="legal_name"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.legal_name}
-                  />
-                  {formik.touched.legal_name && formik.errors.legal_name && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.legal_name}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Slug<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.slug && formik.errors.slug
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="slug"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.slug}
-                  />
-                  {formik.touched.slug && formik.errors.slug && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.slug}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    E-mail<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    className={`form-control ${
-                      formik.touched.email && formik.errors.email
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="email"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.email}
-                  />
-                  {formik.touched.email && formik.errors.email && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.email}</small>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    External Url<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.external_url && formik.errors.external_url
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="external_url"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.external_url}
-                  />
-                  {formik.touched.external_url &&
-                    formik.errors.external_url && (
-                      <div className="error text-danger ">
-                        <small>{formik.errors.external_url}</small>
+      <section className="container-fluid my-5">
+        <form onSubmit={formik.handleSubmit} className="">
+          <h4 className="text-primary mb-5">Payment setup</h4>
+          <div className="row d-flex justify-content-center">
+            <div className="col-md-12 col-12">
+              <div className="row">
+                <div className="col-12">
+                  <div className="mb-3 row align-items-center">
+                    <label className="col-md-4 form-label">
+                      PayPal<span className="text-danger">*</span>
+                    </label>
+                    <div className="col-md-8 col-12">
+                      <div className="mb-3">
+                        <label className="form-label">
+                          E-mail<span className="text-danger">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          className={`form-control ${
+                            formik.touched.email && formik.errors.email
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          name="email"
+                          onChange={formik.handleChange}
+                          onBlur={formik.handleBlur}
+                          value={formik.values.email}
+                        />
+                        {formik.touched.email && formik.errors.email && (
+                          <div className="error text-danger">
+                            <small>{formik.errors.email}</small>
+                          </div>
+                        )}
                       </div>
-                    )}
-                </div>
-              </div>
-              <div className="col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Address<span className="text-danger">*</span>
-                  </label>
-                  <textarea
-                    className={`form-control ${
-                      formik.touched.address && formik.errors.address
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="address"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.address}
-                  />
-                  {formik.touched.address && formik.errors.address && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.address}</small>
                     </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-              <div className="col-md-12 col-12">
-                <div className="mb-3">
-                  <label className="form-label">
-                    Description<span className="text-danger">*</span>
-                  </label>
-                  <textarea
-                    className={`form-control ${
-                      formik.touched.description && formik.errors.description
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    name="description"
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    value={formik.values.description}
-                  />
-                  {formik.touched.description && formik.errors.description && (
-                    <div className="error text-danger ">
-                      <small>{formik.errors.description}</small>
+                <div className="col-12 mb-5">
+                  <div className="row">
+                    <div className="col-md-4 col-12 mb-3">
+                      <label className=" form-label">
+                        Bank Transfer<span className="text-danger">*</span>
+                      </label>
                     </div>
-                  )}
+                    <div className="col-md-8 col-12 border">
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Account Holder</label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              formik.touched.account_holder &&
+                              formik.errors.account_holder
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="account_holder"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.account_holder}
+                          />
+                          {formik.touched.account_holder &&
+                            formik.errors.account_holder && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.account_holder}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Account Type</label>
+                          <select
+                            type="text"
+                            className={`form-select ${
+                              formik.touched.account_type &&
+                              formik.errors.account_type
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="account_type"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.account_type}
+                          >
+                            <option />
+                            <option value="savings">savings</option>
+                          </select>
+                          {formik.touched.account_type &&
+                            formik.errors.account_type && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.account_type}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Account Number</label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              formik.touched.account_number &&
+                              formik.errors.account_number
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="account_number"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.account_number}
+                          />
+                          {formik.touched.account_number &&
+                            formik.errors.account_number && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.account_number}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Bank Name</label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              formik.touched.bank_name &&
+                              formik.errors.bank_name
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="bank_name"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.bank_name}
+                          />
+                          {formik.touched.bank_name &&
+                            formik.errors.bank_name && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.bank_name}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Bank Address</label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              formik.touched.account_address &&
+                              formik.errors.account_address
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="account_address"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.account_address}
+                          />
+                          {formik.touched.account_address &&
+                            formik.errors.account_address && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.account_address}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <label className="form-label">Bank Code</label>
+                          <input
+                            type="text"
+                            className={`form-control ${
+                              formik.touched.bank_code &&
+                              formik.errors.bank_code
+                                ? "is-invalid"
+                                : ""
+                            }`}
+                            name="bank_code"
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            value={formik.values.bank_code}
+                          />
+                          {formik.touched.bank_code &&
+                            formik.errors.bank_code && (
+                              <div className="error text-danger">
+                                <small>{formik.errors.bank_code}</small>
+                              </div>
+                            )}
+                        </div>
+                      </div>
+                      <div className="col-md-12">
+                        <div className="mb-3">
+                          <div className="form-check">
+                            <input
+                              type="checkbox"
+                              className={`form-check-input ${
+                                formik.touched.account_holder &&
+                                formik.errors.account_holder
+                                  ? "is-invalid"
+                                  : ""
+                              }`}
+                              id="account_holder"
+                              name="account_holder"
+                              onChange={formik.handleChange}
+                              onBlur={formik.handleBlur}
+                              // checked={formik.values.account_holder}
+                            />
+                            <label
+                              className="form-check-label"
+                              htmlFor="account_holder"
+                            >
+                              I attest i am the owner and have full
+                              authorization to this bank account
+                            </label>
+                            {formik.touched.account_holder &&
+                              formik.errors.account_holder && (
+                                <div className="error text-danger">
+                                  <small>{formik.errors.account_holder}</small>
+                                </div>
+                              )}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="notification-container mb-3">
+                        <div className="icon">
+                          <FaInfoCircle color="#F39C12" size={24} />
+                        </div>
+                        <div className="message">
+                          <strong>
+                            Please double-check your account information!
+                          </strong>
+                          <br />
+                          Incorrect or mismatched account name and number can
+                          result in withdrawal delays and fees.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </section>
     );
   }
 );
