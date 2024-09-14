@@ -9,6 +9,8 @@ import ProductEdit from "../pages/vendor/Product/ProductEdit";
 import ProductView from "../pages/vendor/Product/ProductView";
 import DashboardV from "../pages/vendor/DashboardV";
 import VendorSidebar from "../components/vendor/VendorSidebar";
+import Settings from "../pages/vendor/Settings/Settings";
+import StorePolicy from "../pages/vendor/StorePolicy";
 
 function Vendor({ handleLogout }) {
   return (
@@ -28,6 +30,8 @@ function Vendor({ handleLogout }) {
                   <Route path="/product/add" element={<ProductAdd />} />
                   <Route path="/product/edit" element={<ProductEdit />} />
                   <Route path="/product/view" element={<ProductView />} />
+                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/product/view" element={<StorePolicy />} />
                 </Routes>
               </div>
               <AdminFooter />

@@ -420,3 +420,10 @@
 .css-15rfbsb-MuiSvgIcon-root-MuiStepIcon-root.Mui-completed {
   color: #771bf8 !important;
 }
+.items{
+  color: #ffff;
+  
+}
+.items:hover{
+  color: #09afd8;
+}
