@@ -24,7 +24,6 @@ const validationSchema = Yup.object().shape({
     .max(5, "Maximum rating is 5")
     .required("Rating is required"),
   shop_type: Yup.string()
-    .oneOf(["product", "service"], "Invalid Shop Type")
     .required("Shop Type is required"),
 });
 
@@ -373,6 +372,36 @@ const Form1 = forwardRef(
                       {formik.touched.state && formik.errors.state && (
                         <div className="error text-danger">
                           <small>{formik.errors.state}</small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="mb-3 row align-items-center">
+                    <label className="col-md-4 form-label">
+                      Shop Type<span className="text-danger">*</span>
+                    </label>
+                    <div className="col-md-8">
+                      <select
+                        type="text"
+                        className={`form-select ${
+                          formik.touched.shop_type && formik.errors.shop_type
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        name="shop_type"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.shop_type}
+                      >
+                        <option></option>
+                        <option value="product">product</option>
+                        <option value="service">service</option>
+                      </select>
+                      {formik.touched.shop_type && formik.errors.shop_type && (
+                        <div className="error text-danger">
+                          <small>{formik.errors.shop_type}</small>
                         </div>
                       )}
                     </div>
