@@ -5,7 +5,7 @@ import $ from "jquery";
 import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
-import { PiIntersectSquareFill } from "react-icons/pi";
+import { PiPlusSquareFill } from "react-icons/pi";
 
 const Products = () => {
     const tableRef = useRef(null);
@@ -33,7 +33,7 @@ const Products = () => {
                                 <h3 className="mb-0">Products</h3>
                                 <Link to="/products/add">
                                     <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                                        <PiIntersectSquareFill size={20} /> Add Product
+                                        <PiPlusSquareFill size={20} /> Add Product
                                     </button>
                                 </Link>
                             </div>
