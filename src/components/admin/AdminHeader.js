@@ -1,32 +1,38 @@
 import React from "react";
+import user from '../../assets/user.webp'
 
 function AdminHeader() {
   return (
-    <header class="bg-surface-primary border-bottom py-3 sticky-top-header">
+    <header class="border-bottom py-3 sticky-top-header">
       <div class="container-fluid">
         <div class="mb-npx">
           <div class="row align-items-center">
-            <div class="col-sm-6 col-12 mb-4 mb-sm-0">
+            <div class="col-sm-6 col-12 mb-4 mb-sm-0 admin-settings">    
               <span>
-                <i class="bi bi-gear"></i> Settings
+                <i class="bi bi-gear admin-icons"></i> Settings
               </span>
             </div>
             <div class="col-sm-6 col-12 text-sm-end">
               <div class="mx-n1">
                 <span class="position-relative">
-                  <i class="bi bi-bell"></i>
+                  <i class="bi bi-bell admin-icons"></i>
                 </span>{" "}
                 &nbsp;&nbsp;&nbsp;
                 <span>
-                  <i class="bi bi-question-circle"></i>
+                  <i class="bi bi-question-circle admin-icons"></i>
                 </span>{" "}
                 &nbsp;&nbsp;&nbsp;
                 <span>
-                  <i class="bi bi-journal"></i>
+                <i class="bi bi-megaphone admin-icons"></i>
+
+                </span>{" "}
+                &nbsp;&nbsp;&nbsp;
+                <span>
+                  <i class="bi bi-journal admin-icons"></i>
                 </span>{" "}
                 &nbsp;&nbsp;&nbsp;
                 <span style={{ fontSize: "24px" }}>
-                  <i class="bi bi-person-circle"></i>
+                  <img src={user} className="img-fluid header-user" alt="img" />
                 </span>
               </div>
             </div>

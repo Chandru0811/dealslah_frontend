@@ -41,7 +41,8 @@ function SignIn({ handleLogin }) {
           }
         );
         if (response.status === 200) {
-          alert("successfuly login");
+          handleLogin(values);
+          navigate("/")
         } else {
           console.error(response.data.message);
         }
