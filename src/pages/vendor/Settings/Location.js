@@ -30,7 +30,7 @@ function Location() {
         <section>
             <form onSubmit={formik.handleSubmit} className="w-100">
                 <div className='container'>
-                    <h3 className='text-primary py-3'>Store Address</h3>
+                    {/* <h3 className='text-primary py-3'>Shop Address</h3> */}
 
                     <div className='row'>
                         <div className="col-md-4 col-12 mb-5">
@@ -202,7 +202,7 @@ function Location() {
                                 aria-hidden="true"
                             ></span>
                         )} */}
-                        Save
+                        Update
                     </button>
                 </div>
             </form>

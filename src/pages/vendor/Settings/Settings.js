@@ -13,7 +13,7 @@ import StoreHours from "./StoreHours";
 import Payment from "./Payment";
 
 function Settings() {
-    const [selectedItem, setSelectedItem] = useState("Store");
+    const [selectedItem, setSelectedItem] = useState("");
 
     const handleItemClick = (item) => {
         setSelectedItem(item);
@@ -23,14 +23,19 @@ function Settings() {
         <section className="px-4">
             <div className="container card shadow border-0" style={{ minHeight: "90vh" }}>
                 <div className="card-header d-flex align-items-center">
-                    <h3 className="mb-0">Settings</h3>
+                    {!selectedItem && <h3 className="mb-0">Settings</h3>}
+                    {selectedItem === "Shop" && <h3>Generat Settings</h3>}
+                    {selectedItem === "Location" && <h3>Shop Address</h3>}
+                    {selectedItem === "Payment" && <h3>Payment Settings</h3>}
+                    {selectedItem === "Shop Policies" && <h3>Policies Settings</h3>}
+                    {selectedItem === "Shop Hours" && <h3>Hours Settings</h3>}
                 </div>
                 <div className="row mt-5">
                     <div className="col-md-3 col-12 card shadow h-50"
                         style={{ backgroundColor: "#1c2b36" }}>
                         <div className="dropdown-item">
-                            <div className="dropdown-item items" onClick={() => handleItemClick("Store")}>
-                                <BsHandbag /> Store
+                            <div className="dropdown-item items" onClick={() => handleItemClick("Shop")}>
+                                <BsHandbag /> Shop
                             </div>
                             <div className="dropdown-divider"></div>
                             <div className="dropdown-item items" onClick={() => handleItemClick("Location")}>
@@ -41,22 +46,22 @@ function Settings() {
                                 <GrCurrency /> Payment
                             </div>
                             <div className="dropdown-divider"></div>
-                            <div className="dropdown-item items" onClick={() => handleItemClick("Store Policies")}>
-                                <PiVanFill /> Store Policies
+                            <div className="dropdown-item items" onClick={() => handleItemClick("Shop Policies")}>
+                                <PiVanFill /> Shop Policies
                             </div>
                             <div className="dropdown-divider"></div>
-                            <div className="dropdown-item items" onClick={() => handleItemClick("Store Hours")}>
-                                <MdAccessTime /> Store Hours
+                            <div className="dropdown-item items" onClick={() => handleItemClick("Shop Hours")}>
+                                <MdAccessTime /> Shop Hours
                             </div>
                         </div>
                     </div>
                     <div className="col-md-9 col-12 ">
                         <div className="">
-                            {selectedItem === "Store" && <Store />}
+                            {selectedItem === "Shop" && <Store />}
                             {selectedItem === "Location" && <Location />}
                             {selectedItem === "Payment" && <Payment />}
-                            {selectedItem === "Store Policies" && <StorePolicy />}
-                            {selectedItem === "Store Hours" && <StoreHours />}
+                            {selectedItem === "Shop Policies" && <StorePolicy />}
+                            {selectedItem === "Shop Hours" && <StoreHours />}
                         </div>
                     </div>
                 </div>

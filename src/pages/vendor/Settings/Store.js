@@ -3,7 +3,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const validationSchema = Yup.object({
-    storeName: Yup.string().required('Store Name is required!'),
+    shopName: Yup.string().required('Shop Name is required!'),
     LegalName: Yup.string().required('Legal Name is required!'),
     email: Yup.string().email('Invalid email format').required('Email is required'),
     phone: Yup.string()
@@ -20,7 +20,7 @@ const Store = () => {
 
     const formik = useFormik({
         initialValues: {
-            storeName: '',
+            shopName: '',
             LegalName: '',
             email: '',
             phone: '',
@@ -40,36 +40,36 @@ const Store = () => {
         <section>
             <form onSubmit={formik.handleSubmit} className="w-100">
                 <div className='container'>
-                    <h3 className='text-primary py-3'>Generat Settings</h3>
+                    {/* <h3 className='text-primary py-3'>Generat Settings</h3> */}
 
                     <div className='row'>
                         <div className="col-md-4 col-12 mb-5 ">
                             <label className="form-label fw-bold">
-                                Store Name<span className="text-danger">*</span>
+                                Shop Name<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
                             <input
                                 type="text"
-                                className={`form-control ${formik.touched.storeName && formik.errors.storeName
+                                className={`form-control ${formik.touched.shopName && formik.errors.shopName
                                     ? "is-invalid"
                                     : ""
                                     }`}
-                                name="storeName"
+                                name="shopName"
                                 onChange={formik.handleChange}
                                 onBlur={formik.handleBlur}
-                                value={formik.values.storeName}
+                                value={formik.values.shopName}
                             />
-                            {formik.touched.storeName &&
-                                formik.errors.storeName && (
+                            {formik.touched.shopName &&
+                                formik.errors.shopName && (
                                     <div className="error text-danger">
-                                        <small>{formik.errors.storeName}</small>
+                                        <small>{formik.errors.shopName}</small>
                                     </div>
                                 )}
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Legal Name<span className="text-danger">*</span>
+                                Shop Legal Name<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -93,7 +93,7 @@ const Store = () => {
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Email<span className="text-danger">*</span>
+                                Shop Email<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -116,7 +116,7 @@ const Store = () => {
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Phone<span className="text-danger">*</span>
+                                Shop Phone<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -138,10 +138,10 @@ const Store = () => {
                             )}
                         </div>
 
-                        <h3 className='text-primary py-3'>Store Brand Setup</h3>
+                        <h3 className='text-primary py-3'>Shop Brand Setup</h3>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Shop Type<span className="text-danger">*</span>
+                                Shop Shop Type<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -168,7 +168,7 @@ const Store = () => {
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Logo<span className="text-danger">*</span>
+                                Shop Logo<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -191,7 +191,7 @@ const Store = () => {
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Banner Type<span className="text-danger">*</span>
+                                Shop Banner Type<span className="text-danger">*</span>
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -218,7 +218,7 @@ const Store = () => {
                         </div>
                         <div className="col-md-4 col-12 mb-5">
                             <label className="form-label fw-bold">
-                                Store Bannenr
+                                Shop Bannenr
                             </label>
                         </div>
                         <div className="col-md-8 col-12 mb-5">
@@ -278,7 +278,7 @@ const Store = () => {
                                 aria-hidden="true"
                             ></span>
                         )} */}
-                        Save
+                        Update
                     </button>
                 </div>
             </form>

@@ -7,7 +7,7 @@ import Vendor from "./layouts/Vendor";
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isClientLogin, setIsClientLogin] = useState(false);
-  const [isVendorLogin, setIsVendorLogin] = useState(false);
+  const [isVendorLogin, setIsVendorLogin] = useState(true);
 
   const handleLogin = () => {
     sessionStorage.setItem("isAuthenticated", true);
