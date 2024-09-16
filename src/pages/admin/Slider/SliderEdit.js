@@ -39,22 +39,11 @@ function SliderEdit() {
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
               <h1 className="h4 ls-tight">Edit Slider</h1>
-              <div  className="hstack gap-2 justify-content-end">
-                <Link to="/slider">
-                  <button type="button" className="btn btn-light btn-sm">
-                    <span>Back</span>
-                  </button>
-                </Link>
-                <button type="submit" className="btn btn-sm btn-button">
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Update
+              <Link to="/slider">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
                 </button>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -90,7 +79,7 @@ function SliderEdit() {
                   ? "is-invalid"
                   : ""
                   }`}
-                  {...formik.getFieldProps("image")}
+                {...formik.getFieldProps("image")}
               />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
@@ -163,7 +152,7 @@ function SliderEdit() {
                   <input
                     type="color"
                     {...formik.getFieldProps("bg_color")}
-                    className="form-control-color form-control circle"
+                    className="form-control-color form-control circle circle"
                   />
                 </div>
                 <input
@@ -201,6 +190,18 @@ function SliderEdit() {
               )}
             </div>
           </div>
+        </div>
+        <div className="hstack gap-2 justify-content-end p-2">
+
+          <button type="submit" className="btn btn-sm btn-button">
+            {loadIndicator && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Update
+          </button>
         </div>
       </form>
     </section>

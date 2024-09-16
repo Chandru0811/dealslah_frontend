@@ -5,6 +5,7 @@ import $ from "jquery";
 import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
+import { PiIntersectSquareFill } from "react-icons/pi";
 
 const Product = () => {
   const tableRef = useRef(null);
@@ -22,19 +23,30 @@ const Product = () => {
   }, []);
 
   return (
+
     <section className="px-4">
-      <div className="card shadow border-0" style={{ minHeight: "90vh" }}>
-        <div className="card-header d-flex align-items-center">
-          <h3 className="mb-0">Products</h3>
-          <div className="container-fluid d-flex justify-content-end">
-            <Link to="/product/add">
-              <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                Add 
-              </button>
-            </Link>
+      <div className="card shadow border-0 mb-2 top-header">
+        <div className="container-fluid">
+          <div className="row align-items-center">
+            <div className="col p-2">
+              <div className="d-flex justify-content-between align-items-center">
+                <h3 className="mb-0">Products</h3>
+                <Link to="/product/add">
+                  <button className="btn btn-sm btn-button shadow-none border-none py-3">
+                    <PiIntersectSquareFill size={20} /> Add Product
+                  </button>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
-        <div className="table-responsive minHeight p-2">
+      </div>
+
+      <div
+        className="container card shadow border-0"
+
+      >
+        <div className="table-responsive p-2">
           <table
             ref={tableRef}
             className="display table nowrap"

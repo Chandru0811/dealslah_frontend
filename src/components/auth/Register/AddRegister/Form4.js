@@ -17,17 +17,21 @@ const Form4 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
     const formik = useFormik({
       initialValues: {
-        street: "",
-        street2: "",
-        city: "",
-        zip_code: "",
-        country: "",
-        state: "",
+        street: formData.street,
+        street2:formData.street2,
+        city:formData.city,
+        zip_code: formData.zip_code,
+        country:formData.country,
+        state: formData.state,
 
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
+        setFormData((prev) => ({
+          ...prev,
+          ...data,
+        }));
         handleNext();
       },
     });
