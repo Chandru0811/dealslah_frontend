@@ -183,7 +183,7 @@
   --x-body-line-height: 1.625;
   --x-body-color: #525f7f;
   --x-body-bg: #fff;
-  --header-setting-color:#3449ca;
+  --header-setting-color:#667afc;
 }
 
 *,
@@ -209,12 +209,22 @@
 }
 .admin-settings{
   color: var(--header-setting-color);
+
 }
 .admin-icons{
   color: var(--x-body-bg);
+  padding-right: 10px;
+  cursor: pointer;
+}
+.admin-icons2{
+  background-color: var( --admin-submenu-color);
 }
 .header-user{
   width: 40px;
+}
+.icon-badge{
+  padding: 4px !important;
+  height: 20px;
 }
 
 body {

@@ -15,28 +15,39 @@ const validationSchema = Yup.object().shape({
     .url("Invalid URL")
     .required("Website URL is required"),
 
-  rating: Yup.number()
-    .required("Rating is required"),
-  shop_type: Yup.string()
-    .required("Shop Type is required"),
+  rating: Yup.number().required("Rating is required"),
+  shop_type: Yup.string().required("Shop Type is required"),
+  description: Yup.string().required("Description is required"),
 });
 
 const Form1 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
     const formik = useFormik({
       initialValues: {
-        name: "",
-        legal_name: "",
-        // slug: "",
-        email: "",
-        mobile: "",
-        external_url: "",
-        rating: "",
-        shop_type: "",
+        name: formData.name || "",
+        legal_name: formData.legal_name || "",
+        email: formData.email || "",
+        mobile: formData.mobile || "",
+        external_url: formData.external_url || "",
+        rating: formData.rating || "",
+        shop_type: formData.shop_type || "",
+        description:formData.description ||"",
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         console.log("Form Data", data);
+        const transformedSlug = data.legal_name
+          .toLowerCase()
+          .replace(/\s+/g, "_");
+        const formDataWithSlug = {
+          ...data,
+          slug: transformedSlug,
+          owner_id: 5,
+        };
+        setFormData((prev) => ({
+          ...prev,
+          ...formDataWithSlug,
+        }));
         handleNext();
       },
     });
@@ -52,7 +63,6 @@ const Form1 = forwardRef(
     return (
       <div className="container-fluid py-5">
         <form onSubmit={formik.handleSubmit} className="w-100">
-
           <div className="row d-flex justify-content-center mt-5">
             <div className="col-md-12 col-12">
               <div className="row">
@@ -65,21 +75,21 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.name && formik.errors.name
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.name && formik.errors.name
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="name"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.name}
                       />
-                      {formik.touched.name &&
-                        formik.errors.name && (
-                          <div className="error text-danger">
-                            <small>{formik.errors.name}</small>
-                          </div>
-                        )}
+                      {formik.touched.name && formik.errors.name && (
+                        <div className="error text-danger">
+                          <small>{formik.errors.name}</small>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -91,10 +101,11 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.legal_name && formik.errors.legal_name
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.legal_name && formik.errors.legal_name
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="legal_name"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -147,10 +158,11 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="email"
-                        className={`form-control ${formik.touched.email && formik.errors.email
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.email && formik.errors.email
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="email"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -174,10 +186,11 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.mobile && formik.errors.mobile
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.mobile && formik.errors.mobile
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="mobile"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -201,11 +214,12 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.external_url &&
+                        className={`form-control ${
+                          formik.touched.external_url &&
                           formik.errors.external_url
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="external_url"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -221,17 +235,6 @@ const Form1 = forwardRef(
                   </div>
                 </div>
 
-
-
-
-
-
-
-
-
-
-
-
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
@@ -240,18 +243,19 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <select
                         type="text"
-                        className={`form-select ${formik.touched.shop_type && formik.errors.shop_type
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-select ${
+                          formik.touched.shop_type && formik.errors.shop_type
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="shop_type"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                         value={formik.values.shop_type}
                       >
                         <option></option>
-                        <option value="product">Product</option>
-                        <option value="service">Service</option>
+                        <option value="1">Product</option>
+                        <option value="2">Service</option>
                       </select>
                       {formik.touched.shop_type && formik.errors.shop_type && (
                         <div className="error text-danger">
@@ -269,10 +273,11 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="text"
-                        className={`form-control ${formik.touched.rating && formik.errors.rating
-                          ? "is-invalid"
-                          : ""
-                          }`}
+                        className={`form-control ${
+                          formik.touched.rating && formik.errors.rating
+                            ? "is-invalid"
+                            : ""
+                        }`}
                         name="rating"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
@@ -284,7 +289,32 @@ const Form1 = forwardRef(
                         </div>
                       )}
                     </div>
-
+                  </div>
+                </div>
+                <div className="col-12">
+                  <div className="mb-3 row align-items-center">
+                    <label className="col-md-4 form-label ">
+                      Description<span className="text-danger">*</span>
+                    </label>
+                    <div className="col-md-8">
+                      <textarea
+                        type="text"
+                        className={`form-control ${
+                          formik.touched.description && formik.errors.description
+                            ? "is-invalid"
+                            : ""
+                        }`}
+                        name="description"
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.description}
+                      />
+                      {formik.touched.description && formik.errors.description && (
+                        <div className="error text-danger">
+                          <small>{formik.errors.description}</small>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
