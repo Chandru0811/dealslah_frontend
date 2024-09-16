@@ -3,10 +3,11 @@ import { Step, StepLabel, Stepper } from "@mui/material";
 import Form1 from "./Register/AddRegister/Form1";
 import Form2 from "./Register/AddRegister/Form2";
 import Form3 from "./Register/AddRegister/Form3";
+import Form4 from "./Register/AddRegister/Form4";
 
-const steps = ["Store", "Payment", "Ready!"];
+const steps = ["Store", "Location", "Payment", "Ready!"];
 
-export default function VendorRegistration({handleVendorLogin}) {
+export default function VendorRegistration({ handleVendorLogin }) {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState({});
   const childRef = React.useRef();
@@ -24,10 +25,15 @@ export default function VendorRegistration({handleVendorLogin}) {
         break;
       case "1":
         if (childRef.current) {
-          childRef.current.form2();
+          childRef.current.form4();
         }
         break;
       case "2":
+        if (childRef.current) {
+          childRef.current.form2();
+        }
+        break;
+      case "3":
         if (childRef.current) {
           childRef.current.form3();
         }
@@ -70,7 +76,7 @@ export default function VendorRegistration({handleVendorLogin}) {
               />
             )}
             {activeStep === 1 && (
-              <Form2
+              <Form4
                 formData={formData}
                 ref={childRef}
                 setFormData={setFormData}
@@ -78,6 +84,14 @@ export default function VendorRegistration({handleVendorLogin}) {
               />
             )}
             {activeStep === 2 && (
+              <Form2
+                formData={formData}
+                ref={childRef}
+                setFormData={setFormData}
+                handleNext={handleNext}
+              />
+            )}
+            {activeStep === 3 && (
               <Form3
                 formData={formData}
                 ref={childRef}

@@ -6,7 +6,7 @@ import Success from "../../../../assets/Success2.png";
 
 
 const Form3 = forwardRef(
-  ({ formData, setFormData, handleNext, setLoadIndicators,handleVendorLogin }, ref) => {
+  ({ formData, setFormData, handleNext, setLoadIndicators, handleVendorLogin }, ref) => {
     // const navigate = useNavigate();
     const formik = useFormik({
       // validationSchema: validationSchema,
@@ -33,9 +33,15 @@ const Form3 = forwardRef(
             />
             <h2 className="py-5">Your Store is Ready !</h2>
             <Link to={"/vendorlogin"} className=" mt-4">
-              <button className="btn btn-primary" onClick={handleVendorLogin}>
-                Go to your store Dashboard !
+              <button
+                className="btn"
+                style={{ backgroundColor: "#771bf8", color: "white" }}
+                onClick={handleVendorLogin}
+              >
+                Go to your store Dashboard!
               </button>
+
+
             </Link>
             <Link
               to={"/vendorlogin"}
