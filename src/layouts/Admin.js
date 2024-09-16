@@ -22,6 +22,14 @@ import CategoriesAdd from "../pages/admin/categories/CategoriesAdd";
 import CategoriesView from "../pages/admin/categories/CategoriesView";
 import CategoriesEdits from "../pages/admin/categories/CategoriesEdits";
 import AdminHeader from "../components/admin/AdminHeader";
+import Products from "../pages/admin/Product/Products";
+import ProductsAdd from "../pages/admin/Product/ProductsAdd";
+import ProductsEdit from "../pages/admin/Product/ProductsEdit";
+import ProductsView from "../pages/admin/Product/ProductsView";
+import Shop from "../pages/admin/Shop/Shop";
+import ShopView from "../pages/admin/Shop/ShopView";
+import Stores from "../pages/admin/Shop/Stores";
+import Locations from "../pages/admin/Shop/Locations";
 
 function Admin({ handleLogout }) {
   return (
@@ -69,6 +77,18 @@ function Admin({ handleLogout }) {
                   <Route path="/slider/add" element={<SliderAdd />} />
                   <Route path="/slider/edit" element={<SliderEdit />} />
                   <Route path="/slider/view" element={<SliderView />} />
+                  {/* {/ Product /} */}
+                  <Route path="/products" element={<Products />} />
+                  <Route path="/products/add" element={<ProductsAdd />} />
+                  <Route path="/products/edit" element={<ProductsEdit />} />
+                  <Route path="/products/view" element={<ProductsView />} />
+
+                  <Route path="/shop" element={<Shop />} />
+                  <Route path="/shop/view" element={<ShopView />} />
+                  <Route path="/stores" element={<Stores />} />
+                  <Route path="/locations" element={<Locations />} />
+
+
                 </Routes>
               </div>
               <AdminFooter />

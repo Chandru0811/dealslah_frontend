@@ -57,19 +57,7 @@ function CategoriesEdits() {
                       Back
                     </button>
                   </Link>
-                  <button
-                    type="submit"
-                    className="btn btn-sm btn-button"
-                    disabled={loadIndicator}
-                  >
-                    {loadIndicator && (
-                      <span
-                        className="spinner-border spinner-border-sm me-2"
-                        aria-hidden="true"
-                      ></span>
-                    )}
-                    Save
-                  </button>
+
                 </div>
               </div>
             </div>
@@ -87,11 +75,10 @@ function CategoriesEdits() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${
-                    formik.touched.groupId && formik.errors.groupId
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-select ${formik.touched.groupId && formik.errors.groupId
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("groupId")}
                 >
                   <option value="">Select an group</option>
@@ -118,11 +105,10 @@ function CategoriesEdits() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.name && formik.errors.name
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.name && formik.errors.name
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -135,11 +121,10 @@ function CategoriesEdits() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.slug && formik.errors.slug
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.slug && formik.errors.slug
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("slug")}
                 />
                 {formik.touched.slug && formik.errors.slug && (
@@ -152,11 +137,10 @@ function CategoriesEdits() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${
-                    formik.touched.activeStatus && formik.errors.activeStatus
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-select ${formik.touched.activeStatus && formik.errors.activeStatus
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("activeStatus")}
                 >
                   <option value="">Select an option</option>
@@ -175,11 +159,10 @@ function CategoriesEdits() {
                 </label>
                 <textarea
                   rows={5}
-                  className={`form-control ${
-                    formik.touched.description && formik.errors.description
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.description && formik.errors.description
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("description")}
                 />
                 {formik.touched.description && formik.errors.description && (
@@ -189,6 +172,24 @@ function CategoriesEdits() {
                 )}
               </div>
             </div>
+          </div>
+        </div>
+        <div className="col-auto">
+          <div className="hstack gap-2 justify-content-end">
+
+            <button
+              type="submit"
+              className="btn btn-sm btn-button"
+              disabled={loadIndicator}
+            >
+              {loadIndicator && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                ></span>
+              )}
+              Update
+            </button>
           </div>
         </div>
       </form>

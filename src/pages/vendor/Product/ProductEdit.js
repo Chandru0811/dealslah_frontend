@@ -63,22 +63,11 @@ function ProductEdit() {
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
               <h1 className="h4 ls-tight">Edit Products</h1>
-              <div className="hstack gap-2 justify-content-end">
-                <Link to="/product">
-                  <button type="button" className="btn btn-light btn-sm">
-                    <span>Back</span>
-                  </button>
-                </Link>
-                <button type="submit" className="btn btn-sm btn-button">
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Update
+              <Link to="/product">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
                 </button>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -93,11 +82,10 @@ function ProductEdit() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.shop_id && formik.errors.shop_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.shop_id && formik.errors.shop_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("shop_id")}
               >
                 <option></option>
@@ -114,11 +102,10 @@ function ProductEdit() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.category_id && formik.errors.category_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("category_id")}
               >
                 <option></option>
@@ -137,11 +124,10 @@ function ProductEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.brand && formik.errors.brand
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.brand && formik.errors.brand
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("brand")}
               />
               {formik.touched.brand && formik.errors.brand && (
@@ -154,9 +140,8 @@ function ProductEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.slug && formik.errors.slug ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("slug")}
               />
               {formik.touched.slug && formik.errors.slug && (
@@ -169,11 +154,10 @@ function ProductEdit() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.original_price && formik.errors.original_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.original_price && formik.errors.original_price
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("original_price")}
               />
               {formik.touched.original_price &&
@@ -189,12 +173,11 @@ function ProductEdit() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.discounted_price &&
+                className={`form-control ${formik.touched.discounted_price &&
                   formik.errors.discounted_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("discounted_price")}
               />
               {formik.touched.discounted_price &&
@@ -210,11 +193,10 @@ function ProductEdit() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.start_date && formik.errors.start_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("start_date")}
               />
               {formik.touched.start_date && formik.errors.start_date && (
@@ -229,11 +211,10 @@ function ProductEdit() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.end_date && formik.errors.end_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("end_date")}
               />
               {formik.touched.end_date && formik.errors.end_date && (
@@ -246,11 +227,10 @@ function ProductEdit() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.stock && formik.errors.stock
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.stock && formik.errors.stock
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("stock")}
               />
               {formik.touched.stock && formik.errors.stock && (
@@ -263,9 +243,8 @@ function ProductEdit() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("sku")}
               />
               {formik.touched.sku && formik.errors.sku && (
@@ -278,9 +257,8 @@ function ProductEdit() {
               </label>
               <input
                 type="file"
-                className={`form-control ${
-                  formik.touched.file && formik.errors.file ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.file && formik.errors.file ? "is-invalid" : ""
+                  }`}
                 onChange={(event) => {
                   formik.setFieldValue("file", event.target.files[0]);
                 }}
@@ -296,11 +274,10 @@ function ProductEdit() {
               </label>
               <textarea
                 type="text"
-                className={`form-control ${
-                  formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.description && formik.errors.description
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("description")}
               />
               {formik.touched.description && formik.errors.description && (
@@ -310,6 +287,18 @@ function ProductEdit() {
               )}
             </div>
           </div>
+        </div>
+        <div className="hstack gap-2 justify-content-end p-2">
+
+          <button type="submit" className="btn btn-sm btn-button">
+            {loadIndicator && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Update
+          </button>
         </div>
       </form>
     </section>

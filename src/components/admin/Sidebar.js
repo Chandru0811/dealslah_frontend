@@ -4,6 +4,8 @@ import Logo from "../../assets/CRMLogo.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
+import { TbShoppingCartFilled } from "react-icons/tb";
+
 
 function Sidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -38,9 +40,8 @@ function Sidebar({ handleLogout }) {
             }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
-          style={{background:"#fff", borderRadius:"5px",width:"50px",height:"50px"}} />
-          <p className="text-white">Dealslash</p>
+          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
+          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"160px",height:"45px"}} />
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">
@@ -68,6 +69,17 @@ function Sidebar({ handleLogout }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/categories">
                 <BiSolidCategory />Categories
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/products">
+                <BiSolidCategory />Product
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/shop">
+                <TbShoppingCartFilled />
+                Shop
               </NavLink>
             </li>
           </ul>

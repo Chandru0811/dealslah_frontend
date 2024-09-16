@@ -39,22 +39,11 @@ function BannerEdit() {
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
               <h1 className="h4 ls-tight">Edit Banner</h1>
-              <div className="hstack gap-2 justify-content-end">
-                <Link to="/banner">
-                  <button type="button" className="btn btn-light btn-sm">
-                    <span>Back</span>
-                  </button>
-                </Link>
-                <button type="submit" className="btn btn-sm btn-button">
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Update
+              <Link to="/banner">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
                 </button>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -70,8 +59,8 @@ function BannerEdit() {
               <input
                 type="text"
                 className={`form-control ${formik.touched.title && formik.errors.title
-                    ? "is-invalid"
-                    : ""
+                  ? "is-invalid"
+                  : ""
                   }`}
                 {...formik.getFieldProps("title")}
               />
@@ -87,8 +76,8 @@ function BannerEdit() {
                 type="file"
                 accept=".png, .jpg, .jpeg, .gif, .svg"
                 className={`form-control ${formik.touched.image && formik.errors.image
-                    ? "is-invalid"
-                    : ""
+                  ? "is-invalid"
+                  : ""
                   }`}
                 {...formik.getFieldProps("image")}
               />
@@ -117,8 +106,8 @@ function BannerEdit() {
               <input
                 type="text"
                 className={`form-control ${formik.touched.link_label && formik.errors.link_label
-                    ? "is-invalid"
-                    : ""
+                  ? "is-invalid"
+                  : ""
                   }`}
                 {...formik.getFieldProps("link_label")}
               />
@@ -135,8 +124,8 @@ function BannerEdit() {
               <select
                 aria-label="Default select example"
                 className={`form-select ${formik.touched.order && formik.errors.order
-                    ? "is-invalid"
-                    : ""
+                  ? "is-invalid"
+                  : ""
                   }`}
                 {...formik.getFieldProps("order")}
               >
@@ -189,8 +178,8 @@ function BannerEdit() {
               <textarea
                 rows={5}
                 className={`form-control ${formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
+                  ? "is-invalid"
+                  : ""
                   }`}
                 {...formik.getFieldProps("description")}
               />
@@ -201,6 +190,18 @@ function BannerEdit() {
               )}
             </div>
           </div>
+        </div>
+        <div className="hstack gap-2 justify-content-end p-2">
+
+          <button type="submit" className="btn btn-sm btn-button">
+            {loadIndicator && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Update
+          </button>
         </div>
       </form>
     </section>
