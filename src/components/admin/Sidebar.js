@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../../assets/Header_logo.png";
+import Logo from "../../assets/CRMLogo.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
@@ -34,12 +34,13 @@ function Sidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center ${leadMenuOpen || activeSubmenu ? "active" : ""
+          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${leadMenuOpen || activeSubmenu ? "active" : ""
             }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
-          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"160px",height:"45px"}} />
+          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
+          style={{background:"#fff", borderRadius:"5px",width:"50px",height:"50px"}} />
+          <p className="text-white">Dealslash</p>
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">
