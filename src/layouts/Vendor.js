@@ -13,11 +13,13 @@ import VendorSidebar from "../components/vendor/VendorSidebar";
 import Settings from "../pages/vendor/Settings/Settings";
 import StorePolicy from "../pages/vendor/Settings/StorePolicy";
 import VendorHeader from "../components/vendor/VendorHeader";
+import ApprovePopup from "../components/auth/ApprovePopup";
 
 function Vendor({ handleLogout }) {
   return (
     <div>
       <BrowserRouter>
+        <ApprovePopup />
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <VendorSidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">

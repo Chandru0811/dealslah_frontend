@@ -266,7 +266,7 @@ function Payment() {
                                 aria-hidden="true"
                             ></span>
                         )} */}
-                        Save
+                        Update
                     </button>
                 </div>
             </form>

@@ -68,11 +68,33 @@
   font-size: 16px;
 }
 
-.items {
-  color: #ffff;
-
+.dropdown-menu {
+  display: flex;
+  flex-direction: column;
 }
 
-.items:hover {
+.dropdown-item {
+  background: none;
+  border: none;
+  color: #fff;
+  padding: 10px;
+  text-align: left;
+  cursor: pointer;
+  outline: none;
+}
+
+.dropdown-item:hover {
   color: #5dbfd8;
+}
+
+.dropdown-item:focus {
+  width: 20px;
+  height: 9px;
+  background-color: #5dbfd8;
+  color: #fff;
+}
+
+.modal-backdrop {
+  filter: blur(10px);
+  box-shadow: none;
 }
