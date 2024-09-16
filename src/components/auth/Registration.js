@@ -17,7 +17,10 @@ function Registration({ handleLogin, handleVendorLogin }) {
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100 " style={{ backgroundColor: "#f2f2f2" }}>
+    <div
+      className="container-fluid d-flex justify-content-center align-items-center vh-100 "
+      style={{ backgroundColor: "#f2f2f2" }}
+    >
       <div
         className="card shadow-lg py-3 mb-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}
@@ -33,7 +36,7 @@ function Registration({ handleLogin, handleVendorLogin }) {
 
           {/* Buttons Section */}
           <div className="d-flex justify-content-between w-100 px-2">
-            <Link to="/adminlogin">
+            <Link to="/login">
               <button
                 className="btn common-button"
                 onClick={() => handleRoleSelect("admin")}
@@ -41,10 +44,10 @@ function Registration({ handleLogin, handleVendorLogin }) {
                 Admin
               </button>
             </Link>
-            <Link to="/vendorlogin">
+            <Link to="/login">
               <button
                 className="btn btn-white"
-                style={{color:"#9c54ff" ,border:"1px solid #9c54ff" }}
+                style={{ color: "#9c54ff", border: "1px solid #9c54ff" }}
                 onClick={() => handleRoleSelect("vendor")}
               >
                 Vendor

@@ -8,7 +8,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import toast from "react-hot-toast";
 import axios from "axios";
 
-function VendorLogin({ handleVendorLogin }) {
+function VendorLogin({ handleVendorLogin, handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -26,26 +26,41 @@ function VendorLogin({ handleVendorLogin }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("SignIn Values:", values);
-      const payload = {
-        ...values,
-        password: parseInt(values.password),
-      };
       try {
         const response = await axios.post(
-          `https://sgitjobs.com/dealslah/public/api/register`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          `https://sgitjobs.com/dealslah/public/api/login`,
+          values
         );
         if (response.status === 200) {
-          toast("successfuly login");
+          toast.success(response.data.message);
 
+          sessionStorage.setItem("token", response.data.data.token);
+          sessionStorage.setItem("name", response.data.data.userDetails.name);
+          sessionStorage.setItem("id", response.data.data.userDetails.id);
+          sessionStorage.setItem("email", response.data.data.userDetails.email);
+          sessionStorage.setItem("role", response.data.data.userDetails.role);
+          sessionStorage.setItem(
+            "active",
+            response.data.data.userDetails.active
+          );
+          navigate("/");
+          if (response.data.data.userDetails.role === "1") {
+            handleLogin(values);
+          } else if (response.data.data.userDetails.role === "2") {
+            handleVendorLogin(values);
+          } else {
+            toast(
+              "Oops! You don't have access to this page, but feel free to check out our amazing website! 😊",
+              {
+                icon: "😊",
+              }
+            );
+            setTimeout(() => {
+              window.location.href = "https://ecsaio.com";
+            }, 5000);
+          }
         } else {
-          console.error(response.data.message);
+          toast.error(response.data.message);
         }
       } catch (error) {
         console.error("error login");
@@ -58,7 +73,10 @@ function VendorLogin({ handleVendorLogin }) {
   };
 
   return (
-    <div className="container-fluid d-flex justify-content-center align-items-center vh-100" style={{ backgroundColor: "#f2f2f2" }}>
+    <div
+      className="container-fluid d-flex justify-content-center align-items-center vh-100"
+      style={{ backgroundColor: "#f2f2f2" }}
+    >
       <div
         className="card shadow-lg p-3 mb-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}
@@ -155,7 +173,7 @@ function VendorLogin({ handleVendorLogin }) {
                   justifyContent: "center",
                 }}
               >
-                Registration
+                Became a Vendor
               </Button>
             </Link>
           </div>

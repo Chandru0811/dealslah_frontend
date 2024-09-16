@@ -22,20 +22,31 @@ function Client({
 }) {
   return (
     <div>
-      <div style={{background:""}}>
+      <div style={{ background: "" }}>
         <BrowserRouter>
           {/* <Header /> */}
           <Routes>
             {/* <Route path="/" element={<Home  />} /> */}
             {/* <Route path="*" element={<NotFound />} /> */}
             <Route path="/" element={<Registration />} />
-            <Route path="/adminlogin" element={<AdminLogin handleLogin={handleLogin} />} />
             {/* <Route path="/vendorregistration" element={<VendorRegistration />} /> */}
-            <Route path="/vendorlogin" element={<VendorLogin handleVendorLogin={handleVendorLogin} />} />
+            <Route
+              path="/login"
+              element={
+                <VendorLogin
+                  handleVendorLogin={handleVendorLogin}
+                  handleLogin={handleLogin}
+                />
+              }
+            />
             <Route path="/wellcomepage" element={<Wellcomepage />} />
-            <Route path="/vendorregistration" element={<VendorRegistration handleVendorLogin={handleVendorLogin} />} />
+            <Route
+              path="/vendorregistration"
+              element={
+                <VendorRegistration handleVendorLogin={handleVendorLogin} />
+              }
+            />
             <Route path="/forgot" element={<ForgotPage />} />
-            
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>

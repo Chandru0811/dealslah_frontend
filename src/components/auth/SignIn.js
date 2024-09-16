@@ -30,18 +30,25 @@ function SignIn({ handleLogin }) {
           values
         );
         if (response.status === 200) {
-          toast.success(response.data.message);
-          handleLogin(values);
-          navigate("/");
-          sessionStorage.setItem("token", response.data.data.token);
-          sessionStorage.setItem("name", response.data.data.userDetails.name);
-          sessionStorage.setItem("id", response.data.data.userDetails.id);
-          sessionStorage.setItem("email", response.data.data.userDetails.email);
-          sessionStorage.setItem("role", response.data.data.userDetails.role);
-          sessionStorage.setItem(
-            "active",
-            response.data.data.userDetails.active
-          );
+          if (response.data.data.userDetails.role === "1") {
+            toast.success(response.data.message);
+            handleLogin(values);
+            navigate("/");
+            sessionStorage.setItem("token", response.data.data.token);
+            sessionStorage.setItem("name", response.data.data.userDetails.name);
+            sessionStorage.setItem("id", response.data.data.userDetails.id);
+            sessionStorage.setItem(
+              "email",
+              response.data.data.userDetails.email
+            );
+            sessionStorage.setItem("role", response.data.data.userDetails.role);
+            sessionStorage.setItem(
+              "active",
+              response.data.data.userDetails.active
+            );
+          } else {
+            toast.error("Your are not a Vendor");
+          }
         } else {
           toast.error(response.data.message);
         }
