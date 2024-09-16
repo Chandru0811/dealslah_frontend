@@ -65,7 +65,7 @@ function Payment() {
                                 )}
                         </div>
                         <div className="col-md-4 col-12 mb-3">
-                            <label className=" form-label">
+                            <label className=" form-label fw-bold">
                                 Bank Transfer<span className="text-danger">*</span>
                             </label>
                         </div>
