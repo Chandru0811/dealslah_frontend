@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { FcGoogle } from "react-icons/fc";
+// import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 function SignIn({ handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -23,28 +24,23 @@ function SignIn({ handleLogin }) {
       password: Yup.string().required("Password is required"),
     }),
     onSubmit: async (values) => {
-      console.log("SignIn Values:", values);
-      // handleLogin(values);
-      // navigate('/')
-      const payload = {
-        ...values,
-        password: parseInt(values.password),
-      };
       try {
         const response = await axios.post(
           `https://sgitjobs.com/dealslah/public/api/login`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          values
         );
         if (response.status === 200) {
+          toast.error(response.data.message);
+          sessionStorage.setItem("token", response.data.token);
+          sessionStorage.setItem("name", response.data.userDetails.name);
+          sessionStorage.setItem("id", response.data.userDetails.id);
+          sessionStorage.setItem("email", response.data.userDetails.email);
+          sessionStorage.setItem("role", response.data.userDetails.role);
+          sessionStorage.setItem("active", response.data.userDetails.active);
           handleLogin(values);
-          navigate("/")
+          navigate("/");
         } else {
-          console.error(response.data.message);
+          toast.error(response.data.message);
         }
       } catch (error) {
         console.error("error login");
