@@ -1,102 +1,211 @@
-import React, { useState } from 'react'
+import React from 'react'
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 function Location() {
-    const [locatiion, setLocation] = useState(
-        
-    );
-    const handleSave = () => {
-        console.log("Location:", locatiion);
-    };
+    const validationSchema = Yup.object({
+        street: Yup.string().required("Street 1 is required"),
+        street2: Yup.string().required("Street 2 is required"),
+        city: Yup.string().required("City is required"),
+        zip_code: Yup.string().required("Zip Code is required"),
+        country: Yup.string().required("Country is required"),
+        state: Yup.string().required("State is required"),
+    });
+
+    const formik = useFormik({
+        initialValues: {
+            street: "",
+            street2: "",
+            city: "",
+            zip_code: "",
+            country: "",
+            state: "",
+        },
+        validationSchema: validationSchema,
+        onSubmit: async (data) => {
+            console.log("Form Data", data);
+        },
+    });
     return (
         <section>
-            <div className='container'>
-                <h3 className='text-primary py-3'>Store Address</h3>
+            <form onSubmit={formik.handleSubmit} className="w-100">
+                <div className='container'>
+                    <h3 className='text-primary py-3'>Store Address</h3>
 
-                <div className='row'>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            Street
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <input
-                            type="text"
-                            className='form-control'>
-
-                        </input>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            Street2
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <input
-                            type="text"
-                            className='form-control'>
-
-                        </input>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            City/Town
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <input
-                            type="text"
-                            className='form-control'>
-
-                        </input>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            Postcode/Zip
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <input
-                            type="text"
-                            className='form-control'>
-
-                        </input>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            Country
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <select
-                            type="text"
-                            className='form-select'>
-                            <option selected></option>
-                            <option value="india">India</option>
-                            <option value="singapore">Singapore</option>
-                        </select>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5 d-flex justify-content-center">
-                        <label className="form-label fw-bold">
-                            State/Country
-                        </label>
-                    </div>
-                    <div className="col-md-6 col-12 mb-5">
-                        <select
-                            type="text"
-                            className='form-select'>
-                            <option selected></option>
-                            <option value="TamilNadu">TamilNadu</option>
-                            <option value="Karnataka">Krnataka</option>
-                        </select>
+                    <div className='row'>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                Street
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <input
+                                type="text"
+                                className={`form-control ${formik.touched.street &&
+                                    formik.errors.street
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="street"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.street}
+                            />
+                            {formik.touched.street &&
+                                formik.errors.street && (
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.street}</small>
+                                    </div>
+                                )}
+                        </div>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                Street2
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <input
+                                type="text"
+                                className={`form-control ${formik.touched.street2 &&
+                                    formik.errors.street2
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="street2"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.street2}
+                            />
+                            {formik.touched.street2 &&
+                                formik.errors.street2 && (
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.street2}</small>
+                                    </div>
+                                )}
+                        </div>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                City
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <input
+                                type="text"
+                                className={`form-control ${formik.touched.city &&
+                                    formik.errors.city
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="city"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.city}
+                            />
+                            {formik.touched.city &&
+                                formik.errors.city && (
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.city}</small>
+                                    </div>
+                                )}
+                        </div>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                Zip Code
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <input
+                                type="text"
+                                className={`form-control ${formik.touched.zip_code &&
+                                    formik.errors.zip_code
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="zip_code"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.zip_code}
+                            />
+                            {formik.touched.zip_code &&
+                                formik.errors.zip_code && (
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.zip_code}</small>
+                                    </div>
+                                )}
+                        </div>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                State
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <select
+                                type="text"
+                                className={`form-select ${formik.touched.state && formik.errors.state
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="state"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.state}
+                            >
+                                <option></option>
+                                <option value="TamilNadu">TamilNadu</option>
+                                <option value="Karnataka">Krnataka</option>
+                            </select>
+                            {formik.touched.state && formik.errors.state && (
+                                <div className="error text-danger">
+                                    <small>{formik.errors.state}</small>
+                                </div>
+                            )}
+                        </div>
+                        <div className="col-md-4 col-12 mb-5">
+                            <label className="form-label fw-bold">
+                                Country
+                            </label>
+                        </div>
+                        <div className="col-md-8 col-12 mb-5">
+                            <select
+                                type="text"
+                                className={`form-select ${formik.touched.country && formik.errors.country
+                                    ? "is-invalid"
+                                    : ""
+                                    }`}
+                                name="country"
+                                onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
+                                value={formik.values.country}
+                            >
+                                <option></option>
+                                <option value="india">India</option>
+                                <option value="singapore">Singapore</option>
+                            </select>
+                            {formik.touched.country && formik.errors.country && (
+                                <div className="error text-danger">
+                                    <small>{formik.errors.country}</small>
+                                </div>
+                            )}
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="text-end mt-4 mb-3">
-                <button onClick={handleSave} className="btn btn-sm btn-outline-primary" >
-                    Save
-                </button>
-            </div>
+                <div className="text-end mt-4 mb-3">
+                    <button
+                        type="submit"
+                        className="btn btn-sm btn-outline-primary"
+                    // disabled={loadIndicator}
+                    >
+                        {/* {loadIndicator && (
+                            <span
+                                className="spinner-border spinner-border-sm me-2"
+                                aria-hidden="true"
+                            ></span>
+                        )} */}
+                        Save
+                    </button>
+                </div>
+            </form>
         </section >
     )
 }

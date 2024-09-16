@@ -26,7 +26,7 @@ function Settings() {
                     <h3 className="mb-0">Settings</h3>
                 </div>
                 <div className="row mt-5">
-                    <div className="col-md-3 col-12 card shadow h-50 setting-card"
+                    <div className="col-md-3 col-12 card shadow h-50"
                         style={{ backgroundColor: "#1c2b36" }}>
                         <div className="dropdown-item">
                             <div className="dropdown-item items" onClick={() => handleItemClick("Store")}>
