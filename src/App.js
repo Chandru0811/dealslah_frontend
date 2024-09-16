@@ -33,14 +33,20 @@ function App() {
       sessionStorage.removeItem("isAuthenticated");
       sessionStorage.removeItem("isClientLogin");
       sessionStorage.removeItem("isVendorLogin");
-
+      sessionStorage.removeItem("token");
+      sessionStorage.removeItem("name");
+      sessionStorage.removeItem("id");
+      sessionStorage.removeItem("email");
+      sessionStorage.removeItem("role");
+      sessionStorage.removeItem("active");
     } catch (error) {
       toast.error("Logout Unsuccessfull");
     }
   };
 
   useEffect(() => {
-    const isAuthenticatedFromStorage = sessionStorage.getItem("isAuthenticated");
+    const isAuthenticatedFromStorage =
+      sessionStorage.getItem("isAuthenticated");
     const isClientLoginFromStorage = sessionStorage.getItem("isClientLogin");
     const isVendorLoginFromStorage = sessionStorage.getItem("isVendorLogin");
     if (isAuthenticatedFromStorage === "true") {
