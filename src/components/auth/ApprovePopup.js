@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Modal from 'react-bootstrap/Modal';
 
 function ApprovePopup() {
-    const [show, setShow] = useState(true);
+    const [show, setShow] = useState(false);
 
     return (
         <Modal show={show} keyboard={false}>
