@@ -5,6 +5,7 @@ import $ from "jquery";
 import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
+import { PiPlusSquareFill } from "react-icons/pi";
 
 const Banner = () => {
   const tableRef = useRef(null);
@@ -23,17 +24,28 @@ const Banner = () => {
 
   return (
     <section className="px-4">
-      <div className="card shadow border-0" style={{ minHeight: "90vh" }}>
-        <div className="card-header d-flex align-items-center">
-          <h3 className="mb-0">Banners</h3>
-          <div className="container-fluid d-flex justify-content-end">
-            <Link to="/banner/add">
-              <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                Add Banner
-              </button>
-            </Link>
+      <div className="card shadow border-0 mb-2 top-header">
+        <div className="container-fluid">
+          <div className="row align-items-center">
+            <div className="col p-2">
+              <div className="d-flex justify-content-between align-items-center">
+                <h3 className="mb-0">Banners</h3>
+                <div className="container-fluid d-flex justify-content-end">
+                  <Link to="/banner/add">
+                    <button className="btn btn-sm btn-button shadow-none border-none py-3">
+                      <PiPlusSquareFill size={20} /> Add Banner
+                    </button>
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
+      <div
+        className="container card shadow border-0"
+
+      >
         <div className="table-responsive minHeight p-2">
           <table
             ref={tableRef}

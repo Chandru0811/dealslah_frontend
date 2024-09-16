@@ -39,22 +39,11 @@ function SliderAdd() {
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
               <h1 className="h4 ls-tight">Add Slider</h1>
-              <div className="hstack gap-2 justify-content-end">
-                <Link to="/slider">
-                  <button type="button" className="btn btn-light btn-sm">
-                    <span>Back</span>
-                  </button>
-                </Link>
-                <button type="submit" className="btn btn-sm btn-button">
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Save
+              <Link to="/slider">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
                 </button>
-              </div>
+              </Link>
             </div>
           </div>
         </div>
@@ -90,7 +79,7 @@ function SliderAdd() {
                   ? "is-invalid"
                   : ""
                   }`}
-                  {...formik.getFieldProps("image")}
+                {...formik.getFieldProps("image")}
               />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
@@ -156,32 +145,34 @@ function SliderAdd() {
                 <div className="invalid-feedback">{formik.errors.order}</div>
               )}
             </div>
+
             <div className="col-md-6 col-12 mb-3 bannerAdd">
               <label className="form-label">Color Code</label><span className="text-danger">*</span>
               <div className="input-group mb-3">
-                <div className="input-group-text inputGroup">
+                <div className="input-group-text" style={{ padding: "0.375rem", borderRadius: "50%" }}>
                   <input
                     type="color"
                     {...formik.getFieldProps("bg_color")}
-                    className="form-control-color form-control circle"
+                    className="form-control-color circle"
+                    style={{ width: "30px", height: "30px", borderRadius: "50%", padding: "0", border: "none" }}
                   />
                 </div>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.bg_color && formik.errors.bg_color
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control iconInput`}
                   value={formik.values.bg_color}
                   placeholder=""
+                  readOnly
                 />
               </div>
               {formik.errors.bg_color ? (
-                <div className="error text-danger ">
+                <div className="error text-danger">
                   <small>{formik.errors.bg_color}</small>
                 </div>
               ) : null}
             </div>
+
+
             <div className="col-md-12 col-12 mb-3">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
@@ -201,6 +192,18 @@ function SliderAdd() {
               )}
             </div>
           </div>
+        </div>
+        <div className="hstack gap-2 justify-content-end p-2">
+
+          <button type="submit" className="btn btn-sm btn-button">
+            {loadIndicator && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Submit
+          </button>
         </div>
       </form>
     </section>

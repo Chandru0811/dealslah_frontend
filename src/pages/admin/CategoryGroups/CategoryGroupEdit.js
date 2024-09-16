@@ -48,15 +48,7 @@ function CategoryGroupEdit() {
                                             Back
                                         </button>
                                     </Link>
-                                    <button type="submit" className="btn btn-button btn-sm">
-                                        {loadIndicator && (
-                                            <span
-                                                className="spinner-border spinner-border-sm me-2"
-                                                aria-hidden="true"
-                                            ></span>
-                                        )}
-                                        Update
-                                    </button>
+
                                 </div>
                             </div>
                         </div>
@@ -168,6 +160,20 @@ function CategoryGroupEdit() {
                                 />
                             </div>
                         </div>
+                    </div>
+                </div>
+                <div className="col-auto">
+                    <div className="hstack gap-2 justify-content-end">
+
+                        <button type="submit" className="btn btn-button btn-sm">
+                            {loadIndicator && (
+                                <span
+                                    className="spinner-border spinner-border-sm me-2"
+                                    aria-hidden="true"
+                                ></span>
+                            )}
+                            Update
+                        </button>
                     </div>
                 </div>
             </form>
