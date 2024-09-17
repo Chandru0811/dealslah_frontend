@@ -12,11 +12,11 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Category Group Id</b>
+                                        <b>PayPal Email</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: 1</p>
+                                    <p className="text-muted text-sm">: Abcd@gmail.com</p>
                                 </div>
                             </div>
                         </div>
@@ -24,11 +24,11 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Name</b>
+                                        <b>Account Holder</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Vivo</p>
+                                    <p className="text-muted text-sm">: Major</p>
                                 </div>
                             </div>
                         </div>
@@ -36,11 +36,11 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Slug</b>
+                                        <b>Account Type</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: vivo</p>
+                                    <p className="text-muted text-sm">: Bussiness</p>
                                 </div>
                             </div>
                         </div>
@@ -48,11 +48,11 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Active</b>
+                                        <b>Account Number</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: In active</p>
+                                    <p className="text-muted text-sm">: 3612345678</p>
                                 </div>
                             </div>
                         </div>
@@ -60,11 +60,35 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-3 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Description</b>
+                                        <b>Bank Name</b>
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: Test</p>
+                                    <p className="text-muted text-sm">: SBI</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <div className="row mb-3">
+                                <div className="col-3 d-flex justify-content-start align-items-center">
+                                    <p className="text-sm">
+                                        <b>Bank Address</b>
+                                    </p>
+                                </div>
+                                <div className="col-9">
+                                    <p className="text-muted text-sm">: Chennai</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <div className="row mb-3">
+                                <div className="col-3 d-flex justify-content-start align-items-center">
+                                    <p className="text-sm">
+                                        <b>Bank Code</b>
+                                    </p>
+                                </div>
+                                <div className="col-9">
+                                    <p className="text-muted text-sm">: 652411</p>
                                 </div>
                             </div>
                         </div>

@@ -12,11 +12,11 @@ function Locations() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Category Group Id</b>
+                                        <b>Street</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: 1</p>
+                                    <p className="text-muted text-sm">: Anna Salai</p>
                                 </div>
                             </div>
                         </div>
@@ -24,11 +24,11 @@ function Locations() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Name</b>
+                                        <b>Street 2</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Vivo</p>
+                                    <p className="text-muted text-sm">: porur</p>
                                 </div>
                             </div>
                         </div>
@@ -36,11 +36,11 @@ function Locations() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Slug</b>
+                                        <b>City</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: vivo</p>
+                                    <p className="text-muted text-sm">: Chennai</p>
                                 </div>
                             </div>
                         </div>
@@ -48,11 +48,11 @@ function Locations() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Active</b>
+                                        <b>Zip Code</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: In active</p>
+                                    <p className="text-muted text-sm">: 621711</p>
                                 </div>
                             </div>
                         </div>
@@ -60,11 +60,23 @@ function Locations() {
                             <div className="row mb-3">
                                 <div className="col-3 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Description</b>
+                                        <b>State</b>
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: Test</p>
+                                    <p className="text-muted text-sm">: Kerala</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-12">
+                            <div className="row mb-3">
+                                <div className="col-3 d-flex justify-content-start align-items-center">
+                                    <p className="text-sm">
+                                        <b>Country</b>
+                                    </p>
+                                </div>
+                                <div className="col-9">
+                                    <p className="text-muted text-sm">: India</p>
                                 </div>
                             </div>
                         </div>
