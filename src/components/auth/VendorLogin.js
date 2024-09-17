@@ -26,45 +26,45 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      // try {
-      //   const response = await axios.post(
-      //     `https://sgitjobs.com/dealslah/public/api/login`,
-      //     values
-      //   );
-      //   if (response.status === 200) {
-      //     toast.success(response.data.message);
+      try {
+        const response = await axios.post(
+          `https://sgitjobs.com/dealslah/public/api/login`,
+          values
+        );
+        if (response.status === 200) {
+          toast.success(response.data.message);
 
-      //     sessionStorage.setItem("token", response.data.data.token);
-      //     sessionStorage.setItem("name", response.data.data.userDetails.name);
-      //     sessionStorage.setItem("id", response.data.data.userDetails.id);
-      //     sessionStorage.setItem("email", response.data.data.userDetails.email);
-      //     sessionStorage.setItem("role", response.data.data.userDetails.role);
-      //     sessionStorage.setItem(
-      //       "active",
-      //       response.data.data.userDetails.active
-      //     );
-      //     navigate("/");
-      //     if (response.data.data.userDetails.role === "1") {
-      //       handleLogin(values);
-      //     } else if (response.data.data.userDetails.role === "2") {
-      //       handleVendorLogin(values);
-      //     } else {
-      //       toast(
-      //         "Oops! You don't have access to this page, but feel free to check out our amazing website! 😊",
-      //         {
-      //           icon: "😊",
-      //         }
-      //       );
-      //       setTimeout(() => {
-      //         window.location.href = "https://ecsaio.com";
-      //       }, 5000);
-      //     }
-      //   } else {
-      //     toast.error(response.data.message);
-      //   }
-      // } catch (error) {
-      //   console.error("error login");
-      // }
+          sessionStorage.setItem("token", response.data.data.token);
+          sessionStorage.setItem("name", response.data.data.userDetails.name);
+          sessionStorage.setItem("id", response.data.data.userDetails.id);
+          sessionStorage.setItem("email", response.data.data.userDetails.email);
+          sessionStorage.setItem("role", response.data.data.userDetails.role);
+          sessionStorage.setItem(
+            "active",
+            response.data.data.userDetails.active
+          );
+          navigate("/");
+          if (response.data.data.userDetails.role === "1") {
+            handleLogin(values);
+          } else if (response.data.data.userDetails.role === "2") {
+            handleVendorLogin(values);
+          } else {
+            toast(
+              "Oops! You don't have access to this page, but feel free to check out our amazing website! 😊",
+              {
+                icon: "😊",
+              }
+            );
+            setTimeout(() => {
+              window.location.href = "https://ecsaio.com";
+            }, 5000);
+          }
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        console.error("error login");
+      }
       handleVendorLogin(values);
     },
   });
