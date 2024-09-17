@@ -14,6 +14,10 @@ import Settings from "../pages/vendor/Settings/Settings";
 import StorePolicy from "../pages/vendor/Settings/StorePolicy";
 import VendorHeader from "../components/vendor/VendorHeader";
 import ApprovePopup from "../components/auth/ApprovePopup";
+import Category from "../pages/vendor/Category/Category";
+import CategoryAdd from "../pages/vendor/Category/CategoryAdd";
+import CategoryEdit from "../pages/vendor/Category/CategoryEdit";
+import CategoryView from "../pages/vendor/Category/CategoryView";
 
 function Vendor({ handleLogout }) {
   return (
@@ -37,6 +41,10 @@ function Vendor({ handleLogout }) {
                   <Route path="/product/view" element={<ProductView />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/product/view" element={<StorePolicy />} />
+                  <Route path="/category" element={<Category />} />
+                  <Route path="/categorys/add" element={<CategoryAdd />} />
+                  <Route path="/categorys/edit" element={<CategoryEdit />} />
+                  <Route path="/categorys/view" element={<CategoryView />} />
                 </Routes>
               </div>
               <AdminFooter />

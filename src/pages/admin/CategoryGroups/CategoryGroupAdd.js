@@ -1,15 +1,22 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { FiAlertTriangle } from "react-icons/fi";
+import toast from "react-hot-toast";
+import api from "../../../config/URL";
 
 function CategoryGroupAdd() {
     const [loadIndicator, setLoadIndicator] = useState(false);
+    const [logo, setLogo] = useState(null); // this is the file
+    const navigate = useNavigate();
+
+    console.log("logo", logo);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
         slug: Yup.string().required("*Slug is required"),
-        icon: Yup.string().required("*Image is required"),
+        // icon: Yup.mixed().required("*Icon is required"), // ensuring it's validated as a file
         order: Yup.string().required("*Select an order"),
         active: Yup.string().required("*Select an active"),
     });
@@ -25,8 +32,52 @@ function CategoryGroupAdd() {
         },
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
-            console.log("Category Group Datas:", values);
-            resetForm();
+            console.log("Category Group Data:", values);
+
+            const formData = new FormData();
+            formData.append("name", values.name);
+            formData.append("slug", values.slug);
+            formData.append("icon", logo); // adding the logo file to FormData
+            formData.append("order", values.order);
+            formData.append("active", values.active);
+            formData.append("description", values.description);
+
+            setLoadIndicator(true);
+
+            try {
+                const response = await api.post(`admin/categoryGroup`, formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data", // make sure this is multipart/form-data
+                    },
+                });
+                console.log("Response", response);
+
+                if (response.status === 200) {
+                    toast.success(response.data.message);
+                    navigate("/categorygroup");
+                    resetForm();
+                } else {
+                    toast.error(response.data.message);
+                }
+            } catch (error) {
+                if (error.response && error.response.status === 422) {
+                    const errors = error.response.data.error;
+                    if (errors) {
+                        Object.keys(errors).forEach((key) => {
+                            errors[key].forEach((errorMsg) => {
+                                toast(errorMsg, {
+                                    icon: <FiAlertTriangle className="text-warning" />,
+                                });
+                            });
+                        });
+                    }
+                } else {
+                    console.error("API Error", error);
+                    toast.error("An unexpected error occurred.");
+                }
+            } finally {
+                setLoadIndicator(false);
+            }
         },
     });
 
@@ -48,13 +99,12 @@ function CategoryGroupAdd() {
                                             Back
                                         </button>
                                     </Link>
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div className="card shadow border-0 my-2" style={{ height: "78vh" }}>
+                <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
                     <div className="row mt-3 me-2">
                         <div className="col-12 text-end"></div>
                     </div>
@@ -66,10 +116,7 @@ function CategoryGroupAdd() {
                                 </label>
                                 <input
                                     type="text"
-                                    className={`form-control ${formik.touched.name && formik.errors.name
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
+                                    className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("name")}
                                 />
                                 {formik.touched.name && formik.errors.name && (
@@ -82,10 +129,7 @@ function CategoryGroupAdd() {
                                 </label>
                                 <input
                                     type="text"
-                                    className={`form-control ${formik.touched.slug && formik.errors.slug
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
+                                    className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("slug")}
                                 />
                                 {formik.touched.slug && formik.errors.slug && (
@@ -97,12 +141,13 @@ function CategoryGroupAdd() {
                                     Icon<span className="text-danger">*</span>
                                 </label>
                                 <input
+                                    name="icon"
                                     type="file"
-                                    className={`form-control ${formik.touched.icon && formik.errors.icon
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
-                                    {...formik.getFieldProps("icon")}
+                                    className={`form-control`}
+                                    onChange={(event) => {
+                                        const file = event.currentTarget.files[0];
+                                        setLogo(file); // setting the selected file
+                                    }}
                                 />
                                 {formik.touched.icon && formik.errors.icon && (
                                     <div className="invalid-feedback">{formik.errors.icon}</div>
@@ -114,10 +159,7 @@ function CategoryGroupAdd() {
                                 </label>
                                 <select
                                     aria-label="Default select example"
-                                    className={`form-select ${formik.touched.order && formik.errors.order
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
+                                    className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("order")}
                                 >
                                     <option value="">Select an order</option>
@@ -135,10 +177,7 @@ function CategoryGroupAdd() {
                                 </label>
                                 <select
                                     aria-label="Default select example"
-                                    className={`form-select ${formik.touched.active && formik.errors.active
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
+                                    className={`form-select ${formik.touched.active && formik.errors.active ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("active")}
                                 >
                                     <option value="">Select an active</option>
@@ -150,9 +189,7 @@ function CategoryGroupAdd() {
                                 )}
                             </div>
                             <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Description
-                                </label>
+                                <label className="form-label">Description</label>
                                 <textarea
                                     rows={4}
                                     className={`form-control`}
@@ -164,13 +201,9 @@ function CategoryGroupAdd() {
                 </div>
                 <div className="col-auto">
                     <div className="hstack gap-2 justify-content-end">
-
                         <button type="submit" className="btn btn-button btn-sm">
                             {loadIndicator && (
-                                <span
-                                    className="spinner-border spinner-border-sm me-2"
-                                    aria-hidden="true"
-                                ></span>
+                                <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
                             )}
                             Submit
                         </button>
