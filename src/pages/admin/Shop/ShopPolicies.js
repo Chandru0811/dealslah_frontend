@@ -12,7 +12,7 @@ function ShopPolicies() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Category Group Id</b>
+                                        <b>Shipping Policy</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
@@ -24,7 +24,7 @@ function ShopPolicies() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Name</b>
+                                        <b>Refund Policy</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
@@ -36,7 +36,7 @@ function ShopPolicies() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>Slug</b>
+                                        <b>Cancellation/Return/Exchange Policy</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
@@ -44,30 +44,7 @@ function ShopPolicies() {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Active</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: In active</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-12">
-                            <div className="row mb-3">
-                                <div className="col-3 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Description</b>
-                                    </p>
-                                </div>
-                                <div className="col-9">
-                                    <p className="text-muted text-sm">: Test</p>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
                 </div>
             </div>
