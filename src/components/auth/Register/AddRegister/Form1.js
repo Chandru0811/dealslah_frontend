@@ -35,6 +35,7 @@ const Form1 = forwardRef(
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
+        setLoadIndicators(true)
         console.log("Form Data", data);
         const transformedSlug = data.legal_name
           .toLowerCase()
@@ -49,7 +50,9 @@ const Form1 = forwardRef(
           ...formDataWithSlug,
         }));
         handleNext();
+        setLoadIndicators(false);
       },
+
     });
 
     const handleStarClick = (rating) => {

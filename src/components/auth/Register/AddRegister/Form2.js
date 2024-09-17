@@ -12,20 +12,15 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 
-// Define the validation schema to match form fields
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+  paypal_id: Yup.string()
+    .required("paypal  is required"),
   account_holder: Yup.string().required("Account Holder is required"),
   account_type: Yup.string().required("Account Type is required"),
   account_number: Yup.string().required("Account Number is required"),
   bank_name: Yup.string().required("Bank Name is required"),
   account_address: Yup.string().required("Bank Address is required"),
   bank_code: Yup.string().required("Bank Code is required"),
-  // check_account: Yup.boolean()
-  //   .oneOf([true], "You must agree to the terms")
-  //   .required("Agreement to terms is required"),
 });
 
 const Form2 = forwardRef(
@@ -33,10 +28,9 @@ const Form2 = forwardRef(
     const navigate = useNavigate();
     const formik = useFormik({
       initialValues: {
-        email: "",
+        paypal_id: "",
         account_holder: "",
         account_type: "",
-        check_account: false,
         account_number: "",
         bank_name: "",
         account_address: "",
@@ -44,6 +38,7 @@ const Form2 = forwardRef(
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
+        setLoadIndicators(true)
         console.log("Form Data", data);
         const completeFormData = { ...formData, ...data };
         try {
@@ -84,6 +79,9 @@ const Form2 = forwardRef(
             toast.error("An unexpected error occurred.");
           }
         }
+        finally{
+          setLoadIndicators(false)
+        }
       },
     });
 
@@ -109,20 +107,20 @@ const Form2 = forwardRef(
                           E-mail<span className="text-danger">*</span>
                         </label> */}
                         <input
-                          type="email"
+                          type="text"
                           className={`form-control ${
-                            formik.touched.email && formik.errors.email
+                            formik.touched.paypal_id && formik.errors.paypal_id
                               ? "is-invalid"
                               : ""
                           }`}
-                          name="email"
+                          name="paypal_id"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.email}
+                          value={formik.values.paypal_id}
                         />
-                        {formik.touched.email && formik.errors.email && (
+                        {formik.touched.paypal_id && formik.errors.paypal_id && (
                           <div className="error text-danger">
-                            <small>{formik.errors.email}</small>
+                            <small>{formik.errors.paypal_id}</small>
                           </div>
                         )}
                       </div>
@@ -279,39 +277,6 @@ const Form2 = forwardRef(
                                 <small>{formik.errors.bank_code}</small>
                               </div>
                             )}
-                        </div>
-                      </div>
-                      <div className="col-md-12">
-                        <div className="mb-3">
-                          <div className="form-check">
-                            <input
-                              type="checkbox"
-                              className={`form-check-input ${
-                                formik.touched.check_account &&
-                                formik.errors.check_account
-                                  ? "is-invalid"
-                                  : ""
-                              }`}
-                              id="check_account"
-                              name="check_account"
-                              onChange={formik.handleChange}
-                              onBlur={formik.handleBlur}
-                              // checked={formik.values.check_account}
-                            />
-                            <label
-                              className="form-check-label"
-                              htmlFor="check_account"
-                            >
-                              I attest i am the owner and have full
-                              authorization to this bank account
-                            </label>
-                            {/* {formik.touched.check_account &&
-                              formik.errors.check_account && (
-                                <div className="error text-danger">
-                                  <small>{formik.errors.check_account}</small>
-                                </div>
-                              )} */}
-                          </div>
                         </div>
                       </div>
                       <div className="notification-container mb-3">

@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaStar } from "react-icons/fa";
 
 const validationSchema = Yup.object().shape({
   street: Yup.string().required("Street 1 is required"),

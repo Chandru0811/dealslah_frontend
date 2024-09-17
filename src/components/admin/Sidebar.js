@@ -40,8 +40,9 @@ function Sidebar({ handleLogout }) {
             }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo"
-          style={{background:"#fff",padding:"5px", borderRadius:"5px",width:"160px",height:"45px"}} />
+          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
+          style={{background:"#fff", borderRadius:"5px",width:"50px",height:"50px"}} />
+          <p className="text-white">Dealslash</p>
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">

@@ -9,11 +9,15 @@ const steps = ["Store", "Location", "Payment", "Ready!"];
 
 export default function VendorRegistration({ handleVendorLogin }) {
   const [activeStep, setActiveStep] = useState(0);
+  const [loadIndicator, setLoadIndicator] = useState(false);
   const [formData, setFormData] = useState({});
   const childRef = React.useRef();
 
   const handleNext = () => {
     setActiveStep((prevStep) => prevStep + 1);
+  };
+  const handleBack = () => {
+    setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
   const handleButtonClick = () => {
@@ -73,6 +77,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 ref={childRef}
                 setFormData={setFormData}
                 handleNext={handleNext}
+                setLoadIndicators={setLoadIndicator}
               />
             )}
             {activeStep === 1 && (
@@ -81,6 +86,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 ref={childRef}
                 setFormData={setFormData}
                 handleNext={handleNext}
+                setLoadIndicators={setLoadIndicator}
               />
             )}
             {activeStep === 2 && (
@@ -89,6 +95,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 ref={childRef}
                 setFormData={setFormData}
                 handleNext={handleNext}
+                setLoadIndicators={setLoadIndicator}
               />
             )}
             {activeStep === 3 && (
@@ -97,17 +104,34 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 ref={childRef}
                 setFormData={setFormData}
                 // handleNext={handleNext}
+                setLoadIndicators={setLoadIndicator}
                 handleVendorLogin={handleVendorLogin}
               />
             )}
-            <div className="container-fluid p-1 d-flex align-items-center justify-content-center">
+            <div className="container-fluid p-1 d-flex align-items-center justify-content-center gap-2">
+              {activeStep !== 0 && activeStep !== 3 && (
+                <button
+                  className="btn btn-button-register mb-3 w-50"
+                  onClick={handleBack}
+                >
+                  Back
+                </button>
+              )}
+
               {activeStep !== steps.length - 1 && (
                 <>
                   <button
                     type="submit"
                     onClick={handleButtonClick}
                     className="btn btn-button mb-3 w-50"
+                    disabled={loadIndicator}
                   >
+                    {loadIndicator && (
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        aria-hidden="true"
+                      ></span>
+                    )}
                     {activeStep === steps.length - 2 ? "Submit" : "Continue"}
                   </button>
                 </>

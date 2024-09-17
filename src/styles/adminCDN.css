@@ -225,7 +225,7 @@
 }
 .icon-badge{
   padding: 4px !important;
-  height: 20px;
+  height: 20px !important;
 }
 
 body {

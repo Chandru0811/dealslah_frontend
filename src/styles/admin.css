@@ -42,7 +42,7 @@
 }
 
 .navbar-vertical.navbar-light .navbar-nav>.nav-item>.nav-link.active {
-  background-color: #295879 !important;
+  background-color: var( --sidber-menu-color)!important;
   color: var(--admin-text-color) !important;
 }
 
@@ -103,7 +103,17 @@
   /* border-color: var(--admin-primary-color) !important; */
   font-weight: 600 !important;
 }
+.btn-button-register{
+  color: var(--admin-accent-color) !important;
+  background-color:var(--admin-teritary-color) !important;
+  font-weight: 600 !important;
+}
 
+.btn-button-register:hover {
+  color: var(--admin-text-color) !important;
+  background-color: #1c2b36 !important;
+  /* border-color: var(--admin-primary-color) !important; */
+}
 .btn-button:hover {
   color: var(--admin-text-color) !important;
   background-color: var(--admin-teritary-color) !important;

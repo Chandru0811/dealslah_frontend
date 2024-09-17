@@ -10,6 +10,7 @@ import axios from "axios";
 
 function VendorLogin({ handleVendorLogin, handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
+  const [loadIndicator, setLoadIndicator] = useState(false);
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
@@ -27,6 +28,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
+        setLoadIndicator(true);
         const response = await axios.post(
           `https://sgitjobs.com/dealslah/public/api/login`,
           values
@@ -64,6 +66,8 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
         }
       } catch (error) {
         console.error("error login");
+      } finally {
+        setLoadIndicator(false);
       }
       handleVendorLogin(values);
     },
@@ -157,7 +161,17 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
             </div>
           </Form.Group>
 
-          <Button type="submit" className="w-100 mt-4 common-button">
+          <Button
+            type="submit"
+            className="w-100 mt-4 common-button"
+            disabled={loadIndicator}
+          >
+            {loadIndicator && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
             Login
           </Button>
 
