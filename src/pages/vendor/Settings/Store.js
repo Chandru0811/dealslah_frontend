@@ -1,6 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const validationSchema = Yup.object({
     shopName: Yup.string().required('Shop Name is required!'),
@@ -17,6 +19,7 @@ const validationSchema = Yup.object({
 });
 
 const Store = () => {
+    const [data, setData] = useState([]);
 
     const formik = useFormik({
         initialValues: {
@@ -35,6 +38,18 @@ const Store = () => {
             console.log("Form Data", data);
         },
     });
+
+    useEffect(() => {
+        const getData = async () => {
+          try {
+           const response = await axios.get(`https://sgitjobs.com/dealslah/public/api/vendor/shop/{id}`)
+            setData(response.data);
+          } catch (error) {
+            toast.error("Error Fetching Data ", error);
+          }
+        };
+        getData();
+      }, []);
 
     return (
         <section>

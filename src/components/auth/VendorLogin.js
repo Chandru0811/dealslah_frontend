@@ -65,6 +65,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
       } catch (error) {
         console.error("error login");
       }
+      handleVendorLogin(values);
     },
   });
 

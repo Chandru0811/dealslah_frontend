@@ -41,20 +41,44 @@
   color: var(--admin-accent-color) !important;
 }
 
-.navbar-light .navbar-nav .nav-link.active,
-.navbar-light .navbar-nav .nav-link:hover {
-  color: var(--admin-primary-color) !important;
-}
-
 .navbar-vertical.navbar-light .navbar-nav>.nav-item>.nav-link.active {
   background-color: #295879 !important;
   color: var(--admin-text-color) !important;
 }
 
 .navbar-vertical.navbar-light .navbar-nav>.nav-item>.nav-link:hover {
-  background-color: #4290c7 !important;
-  color: var(--admin-text-color) !important;
+  background-color: var(--admin-header-color);
+  /* color:var( --sidber-menu-color)!important; */
 }
+
+.navbar-vertical.navbar-light .navbar-nav .nav-link i,
+.navbar-vertical.navbar-light .navbar-nav .nav-link svg {
+  color: var(--admin-accent-color) !important;
+}
+
+.navbar-vertical.navbar-light .navbar-nav .nav-link:hover i,
+.navbar-vertical.navbar-light .navbar-nav .nav-link:hover svg,
+.navbar-vertical.navbar-light .navbar-nav .nav-link:hover {
+  color:var( --sidber-menu-color)!important;
+  position: relative;
+}
+
+.navbar-vertical.navbar-light .navbar-nav .nav-link.active i,
+.navbar-vertical.navbar-light .navbar-nav .nav-link.active svg,
+.navbar-vertical.navbar-light .navbar-nav .nav-link.active {
+  color: var(--admin-accent-color) !important;
+}
+
+.navbar-vertical.navbar-light .navbar-nav .nav-link:hover::after {
+  content: '\25C0'; /* Right arrow icon Unicode */
+  font-size: 1.5rem;
+  color:var( --sidber-menu-color)!important;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
 
 .navbar-vertical.navbar-expand-lg .navbar-brand {
   position: sticky;
@@ -135,13 +159,13 @@
   height: 40px;
   border: none;
   cursor: pointer;
-  background-color: #fff;
+  background-color:var(--admin-accent-color) !important;
 }
 
 .inputGroup {
   padding-top: 0px;
   padding-bottom: 0px;
-  background-color: #fff;
+  background-color:var(--admin-accent-color) !important;
 }
 
 .bannerAdd .circle::-webkit-color-swatch {

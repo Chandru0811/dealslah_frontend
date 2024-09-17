@@ -5,7 +5,7 @@ function ApprovePopup() {
     const [show, setShow] = useState(false);
 
     return (
-        <Modal show={show} keyboard={false}>
+        <Modal show={show}backdrop="static" keyboard={false}>
             <Modal.Header>
                 <Modal.Title>Approval Restricted</Modal.Title>
             </Modal.Header>
