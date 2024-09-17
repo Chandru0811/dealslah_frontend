@@ -1,5 +1,6 @@
 import React from "react";
 import user from '../../assets/user.webp'
+import { Link } from "react-router-dom";
 function VendorHeader() {
   return (
     <header className="border-bottom py-3 sticky-top-header">
@@ -39,7 +40,9 @@ function VendorHeader() {
                 </span>
                 &nbsp;&nbsp;&nbsp;
                 <span style={{ fontSize: "24px" }}>
-                  <img src={user} className="img-fluid header-user" alt="img" />
+                  <Link to={"/settings"}>
+                    <img src={user} className="img-fluid header-user" alt="img" />
+                  </Link>
                 </span>
               </div>
             </div>
