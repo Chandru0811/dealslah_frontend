@@ -53,11 +53,11 @@ function VendorSidebar({ handleLogout }) {
             </li>
 
             {/* Home */}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/home">
                 <BsHouseDoorFill /> Home
               </NavLink>
-            </li>
+            </li> */}
 
             {/* Products */}
             <li className="nav-item">
@@ -81,11 +81,11 @@ function VendorSidebar({ handleLogout }) {
             </li>
 
             {/* Settings */}
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/settings">
                 <IoSettings /> Settings
               </NavLink>
-            </li>
+            </li> */}
           </ul>
           <div className="mt-auto logutBtn">
             <div className="navbar-nav">

@@ -1,6 +1,4 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import Image from "../../../assets/tv.png";
 import { BsHandbag } from "react-icons/bs";
 import { CiGlobe } from "react-icons/ci";
 import { GrCurrency } from "react-icons/gr";
@@ -13,7 +11,7 @@ import StoreHours from "./StoreHours";
 import Payment from "./Payment";
 
 function Settings() {
-    const [selectedItem, setSelectedItem] = useState("");
+    const [selectedItem, setSelectedItem] = useState("Shop");
 
     const handleItemClick = (item) => {
         setSelectedItem(item);

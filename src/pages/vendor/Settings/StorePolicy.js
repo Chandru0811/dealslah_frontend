@@ -1,37 +1,78 @@
-import React, { useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import JoditEditor from "jodit-react";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
+import toast from "react-hot-toast";
+import api from "../../../config/URL";
+import { Component } from 'react';
+import ReactQuill from 'react-quill';
+import { withFormik } from 'formik';
 
 const validationSchema = Yup.object({
-  shippingPolicy: Yup.string().required('Shipping Policy is required'),
-  refundPolicy: Yup.string().required('Refund Policy is required'),
-  cancelationPolicy: Yup.string().required('Cancelation Policy is required'),
+  shipping_policy: Yup.string().required('Shipping Policy is required'),
+  refund_policy: Yup.string().required('Refund Policy is required'),
+  cancellation_policy: Yup.string().required('Cancelation Policy is required'),
 });
 function StorePolicy() {
+
+  // const id = sessionStorage.getItem("id");
+  const id = 2;
+  const [loading, setLoading] = useState(false);
   const editor = useRef(null);
-  const [content, setContent] = useState("");
 
   const formik = useFormik({
     initialValues: {
-      shippingPolicy: '',
-      refundPolicy: '',
-      cancelationPolicy: '',
+      shop_id: 2,
+      shipping_policy: '',
+      refund_policy: '',
+      cancellation_policy: '',
     },
     validationSchema: validationSchema,
-    onSubmit: async (data) => {
-      const plainTextValues = {
-        shippingPolicy: stripHtmlTags(data.shippingPolicy),
-        refundPolicy: stripHtmlTags(data.refundPolicy),
-        cancelationPolicy: stripHtmlTags(data.cancelationPolicy),
-      };
-      console.log("Plain text values:", plainTextValues);
+    onSubmit: async (values) => {
+      setLoading(true);
+      values.shop_id = 2;
+      try {
+        let response;
+        if (id) {
+          response = await api.put(`vendor/shopPolicy/update/${id}`,
+            values,
+          );
+        } else {
+
+          response = await api.post(`vendor/shopPolicy`,
+            values);
+        }
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error.message || 'An error occurred');
+      } finally {
+        setLoading(false);
+      }
     },
   });
-  const stripHtmlTags = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
-    return doc.body.textContent || '';
-  };
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`vendor/shopPolicy/${id}`);
+        console.log("getpolicy", response.data.data)
+        formik.setValues({
+          shop_id: 2,
+          shipping_policy: response.data.data.shipping_policy || "",
+          refund_policy: response.data.data.refund_policy || "",
+          cancellation_policy: response.data.data.cancellation_policy || "",
+        });
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getData();
+  }, [id]);
 
 
   return (
@@ -45,16 +86,15 @@ function StorePolicy() {
             </label>
             <JoditEditor
               ref={editor}
-              value={formik.values.shippingPolicy}
+              value={formik.values.shipping_policy}
               tabIndex={3}
-              config={{ removeButtons: ["about"] }}  // This removes the "Powered by Jodit" branding
-              onChange={(newContent) => formik.setFieldValue('shippingPolicy', newContent)}
+              onChange={(newContent) => formik.setFieldValue('shipping_policy', newContent)}
               onBlur={formik.handleBlur}
             />
 
-            {formik.touched.shippingPolicy && formik.errors.shippingPolicy && (
+            {formik.touched.shipping_policy && formik.errors.shipping_policy && (
               <div className="error text-danger">
-                <small>{formik.errors.shippingPolicy}</small>
+                <small>{formik.errors.shipping_policy}</small>
               </div>
             )}
           </div>
@@ -64,14 +104,14 @@ function StorePolicy() {
             </label>
             <JoditEditor
               ref={editor}
-              value={formik.values.refundPolicy}
+              value={formik.values.refund_policy}
               tabIndex={3}
-              onChange={(newContent) => formik.setFieldValue('refundPolicy', newContent)}
+              onChange={(newContent) => formik.setFieldValue('refund_policy', newContent)}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.refundPolicy && formik.errors.refundPolicy && (
+            {formik.touched.refund_policy && formik.errors.refund_policy && (
               <div className="error text-danger">
-                <small>{formik.errors.refundPolicy}</small>
+                <small>{formik.errors.refund_policy}</small>
               </div>
             )}
           </div>
@@ -81,29 +121,29 @@ function StorePolicy() {
             </label>
             <JoditEditor
               ref={editor}
-              value={formik.values.cancelationPolicy}
+              value={formik.values.cancellation_policy}
               tabIndex={3}
-              onChange={(newContent) => formik.setFieldValue('cancelationPolicy', newContent)}
+              onChange={(newContent) => formik.setFieldValue('cancellation_policy', newContent)}
               onBlur={formik.handleBlur}
             />
-            {formik.touched.cancelationPolicy && formik.errors.cancelationPolicy && (
+            {formik.touched.cancellation_policy && formik.errors.cancellation_policy && (
               <div className="error text-danger">
-                <small>{formik.errors.cancelationPolicy}</small>
+                <small>{formik.errors.cancellation_policy}</small>
               </div>
             )}
           </div>
           <div className="text-end mt-4 mb-3">
             <button
               type="submit"
-              className="btn btn-sm btn-outline-primary"
-            // disabled={loadIndicator}
+              className="btn btn-button btn-sm"
+              disabled={loading}
             >
-              {/* {loadIndicator && (
-                            <span
-                                className="spinner-border spinner-border-sm me-2"
-                                aria-hidden="true"
-                            ></span>
-                        )} */}
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                ></span>
+              )}
               Update
             </button>
           </div>
