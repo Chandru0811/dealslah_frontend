@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
@@ -8,43 +8,41 @@ import cat2 from "../../../assets/category4.png";
 import cat3 from "../../../assets/category8.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
+import api from "../../../config/URL";
 
 
 function CategoryGroups() {
+    const [datas, setDatas] = useState([]);
+    const [loading, setLoading] = useState(false);
 
+    console.log("first", datas);
     const tableRef = useRef(null);
 
-    const datas = [
-        {
-            id: 1,
-            icon: cat1,
-            name: "Electronics",
-            slug: "electronics",
-            order: 1,
-            active: "Active",
-        },
-        {
-            id: 2,
-            icon: cat2,
-            name: "Beauty",
-            slug: "beauty",
-            order: 2,
-            active: "Inactive",
-        },
-        {
-            id: 3,
-            icon: cat3,
-            name: "Logistics",
-            slug: "logistics",
-            order: 3,
-            active: "Active",
-        }
-    ];
-
     useEffect(() => {
-        const table = $(tableRef.current).DataTable();
+        const fetchData = async () => {
+            setLoading(true);
+
+            try {
+                const response = await api.get('/admin/categoryGroup');
+                setDatas(response.data.data);
+
+                // Initialize DataTable
+                if (tableRef.current) {
+                    $(tableRef.current).DataTable();
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+            setLoading(false);
+        };
+
+        fetchData();
+
+        // Cleanup DataTable on component unmount
         return () => {
-            table.destroy();
+            if (tableRef.current) {
+                $(tableRef.current).DataTable().destroy();
+            }
         };
     }, []);
 
@@ -65,13 +63,8 @@ function CategoryGroups() {
                 </div>
             </div>
 
-
-
-            <div
-                className="container card shadow border-0"
-
-            >
-                <div className="table-responsive minHeight p-2">
+            <div className="container card shadow border-0">
+                <div className="table-responsive p-2" style={{ minHeight: "80vh" }}>
                     <table ref={tableRef} className="display table">
                         <thead className="thead-light">
                             <tr>
@@ -88,18 +81,11 @@ function CategoryGroups() {
                             </tr>
                         </thead>
                         <tbody>
-                            {datas.map((data, index) => (
+                            {datas?.map((data, index) => (
                                 <tr key={data.id}>
                                     <td className="text-start align-middle">{index + 1}</td>
-                                    <td className="align-middle">
-                                        <img
-                                            src={data.icon}
-                                            alt={data.name}
-                                            className="img-fluid"
-                                            width={50}
-                                            height={50}
-                                        />
-                                        <span className="ms-2">{data.name}</span>
+                                    <td
+                                        className="ms-2">{data.name}
                                     </td>
                                     <td className="align-middle">{data.slug}</td>
                                     <td className="align-middle text-start">{data.order}</td>
@@ -119,9 +105,8 @@ function CategoryGroups() {
                     </table>
                 </div>
             </div>
-
         </section>
-    )
+    );
 }
 
 export default CategoryGroups;
