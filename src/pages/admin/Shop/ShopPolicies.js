@@ -1,55 +1,72 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 function ShopPolicies() {
-    return (
-        <div className="container-fluid ">
+  const id = sessionStorage.getItem("id");
+  const [data, SetData] = useState(null);
+  console.log("object", data);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/shop/${id}/policy`);
+        SetData(response.data.data);
+      } catch (error) {
+        toast.error(error.message);
+      }
+    };
+    getData();
+  }, []);
 
-            <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
-                <div className="container">
-                    <div className="row mt-5 p-3">
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Shipping Policy</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: 1</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Refund Policy</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: Vivo</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Cancellation/Return/Exchange Policy</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: vivo</p>
-                                </div>
-                            </div>
-                        </div>
-
-                    </div>
-                </div>
+  return (
+    <div className="container">
+      <div className="row mt-5 pb-3">
+        <div className="col-md-6 col-12">
+          <div className="row  mb-2">
+            <div className="col-6  ">
+              <p className="fw-medium">Shipping Policy </p>
             </div>
+            <div className="col-6">
+              <p
+              className="text-muted text-sm"
+              dangerouslySetInnerHTML={{ __html: data?.shipping_policy }}
+              >
+              </p>
+            </div>
+          </div>
         </div>
-    );
+        <div className="col-md-6 col-12">
+          <div className="row  mb-2">
+            <div className="col-6  ">
+              <p className="fw-medium">Refund Policy</p>
+            </div>
+            <div className="col-6">
+              <p
+              className="text-muted text-sm"
+              dangerouslySetInnerHTML={{ __html: data?.refund_policy }}
+              >
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row  mb-2">
+            <div className="col-6  ">
+              <p className="fw-medium">Cancellation/Return/Exchange Policy</p>
+            </div>
+            <div className="col-6">
+              <p
+              className="text-muted text-sm"
+              dangerouslySetInnerHTML={{ __html: data?.cancellation_policy }}
+              >
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default ShopPolicies;

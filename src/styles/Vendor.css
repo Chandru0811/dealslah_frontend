@@ -71,10 +71,10 @@
 .dropdown-menu {
   display: flex;
   flex-direction: column;
+  background: #1c2b36 !important;
 }
 
 .dropdown-item {
-  background: none;
   border: none;
   color: #fff;
   padding: 10px;
@@ -87,11 +87,8 @@
   color: #5dbfd8;
 }
 
-.dropdown-item:focus {
-  width: 20px;
-  height: 9px;
-  background-color: #5dbfd8;
-  color: #fff;
+.dropdown-item.active {
+  color: #5dbfd8;
 }
 
 .modal-backdrop {

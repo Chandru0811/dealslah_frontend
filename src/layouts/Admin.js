@@ -84,7 +84,7 @@ function Admin({ handleLogout }) {
                   <Route path="/products/view" element={<ProductsView />} />
 
                   <Route path="/shop" element={<Shop />} />
-                  <Route path="/shop/view" element={<ShopView />} />
+                  <Route path="/shop/view/:id" element={<ShopView />} />
                   <Route path="/stores" element={<Stores />} />
                   <Route path="/locations" element={<Locations />} />
 

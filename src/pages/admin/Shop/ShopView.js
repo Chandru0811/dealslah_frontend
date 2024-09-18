@@ -76,7 +76,7 @@ function ShopView() {
                     </div>
                     <div className="col-md-9 col-12">
                         <div>
-                            {selectedItem === "Shop" && <Stores />} {/* Show Stores by default */}
+                            {selectedItem === "Shop" && <Stores />}
                             {selectedItem === "Location" && <Locations />}
                             {selectedItem === "Payment" && <Payments />}
                             {selectedItem === "Shop Policies" && <ShopPolicies />}
