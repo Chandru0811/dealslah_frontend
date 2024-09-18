@@ -1,12 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
-import JoditEditor from "jodit-react";
 import { useFormik } from "formik";
 import * as Yup from 'yup';
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
-import { Component } from 'react';
 import ReactQuill from 'react-quill';
-import { withFormik } from 'formik';
+import 'react-quill/dist/quill.snow.css';
 
 const validationSchema = Yup.object({
   shipping_policy: Yup.string().required('Shipping Policy is required'),
@@ -15,8 +13,8 @@ const validationSchema = Yup.object({
 });
 function StorePolicy() {
 
-  // const id = sessionStorage.getItem("id");
-  const id = 2;
+  const id = sessionStorage.getItem("id");
+  // const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
   const editor = useRef(null);
 
@@ -34,15 +32,13 @@ function StorePolicy() {
       try {
         let response;
         if (id) {
-          response = await api.put(`vendor/shopPolicy/update/${id}`,
-            values,
-          );
+          response = await api.put(`vendor/shopPolicy/update/${id}`, values);
         } else {
-
-          response = await api.post(`vendor/shopPolicy`,
-            values);
+          response = await api.post(`vendor/shopPolicy`, values);
+          if (response.status === 200 && response.data.id) {
+            sessionStorage.setItem("id", response.data.id);
+          }
         }
-
         if (response.status === 200) {
           toast.success(response.data.message);
         } else {
@@ -74,6 +70,26 @@ function StorePolicy() {
     getData();
   }, [id]);
 
+  const Editor = {
+    modules: {
+      toolbar: [
+        [{ header: '1' }, { header: '2' }, { font: [] }],
+        [{ size: [] }],
+        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        [
+          { list: 'ordered' },
+          { list: 'bullet' },
+          { indent: '-1' },
+          { indent: '+1' }
+        ],
+        ['link', 'image', 'video'],
+        ['clean']
+      ],
+      clipboard: {
+        matchVisual: false // Disables extra line breaks when pasting HTML
+      }
+    }
+  }
 
   return (
     <div className="row m-0">
@@ -84,14 +100,13 @@ function StorePolicy() {
             <label className="form-label">
               <h5 className="fw-bold">Shipping Policy</h5>
             </label>
-            <JoditEditor
+            <ReactQuill
               ref={editor}
               value={formik.values.shipping_policy}
-              tabIndex={3}
               onChange={(newContent) => formik.setFieldValue('shipping_policy', newContent)}
-              onBlur={formik.handleBlur}
+              onBlur={() => formik.setFieldTouched('shipping_policy', true)}
+              modules={Editor.modules}
             />
-
             {formik.touched.shipping_policy && formik.errors.shipping_policy && (
               <div className="error text-danger">
                 <small>{formik.errors.shipping_policy}</small>
@@ -102,12 +117,12 @@ function StorePolicy() {
             <label className="form-label">
               <h5 className="fw-bold">Refund Policy</h5>
             </label>
-            <JoditEditor
+            <ReactQuill
               ref={editor}
               value={formik.values.refund_policy}
-              tabIndex={3}
               onChange={(newContent) => formik.setFieldValue('refund_policy', newContent)}
-              onBlur={formik.handleBlur}
+              onBlur={() => formik.setFieldTouched('refund_policy', true)}
+              modules={Editor.modules}
             />
             {formik.touched.refund_policy && formik.errors.refund_policy && (
               <div className="error text-danger">
@@ -119,12 +134,12 @@ function StorePolicy() {
             <label className="form-label">
               <h5 className="fw-bold">Cancellation/Return/Exchange Policy</h5>
             </label>
-            <JoditEditor
+            <ReactQuill
               ref={editor}
               value={formik.values.cancellation_policy}
-              tabIndex={3}
               onChange={(newContent) => formik.setFieldValue('cancellation_policy', newContent)}
-              onBlur={formik.handleBlur}
+              onBlur={() => formik.setFieldTouched('cancellation_policy', true)}
+              modules={Editor.modules}
             />
             {formik.touched.cancellation_policy && formik.errors.cancellation_policy && (
               <div className="error text-danger">

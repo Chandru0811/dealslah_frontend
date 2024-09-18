@@ -40,8 +40,8 @@ const validationSchema = Yup.object({
 
 function StoreHours() {
 
-  // const id = sessionStorage.getItem("id");
-  const id = 5;
+  const id = sessionStorage.getItem("id");
+  // const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
@@ -61,12 +61,12 @@ function StoreHours() {
       try {
         let response;
         if (id) {
-          response = await api.put(`/vendor/shopHour/update/${id}`,
-            values);
+          response = await api.put(`/vendor/shopHour/update/${id}`, values);
         } else {
-
-          response = await api.post(`/vendor/shopHour`,
-            values);
+          response = await api.post(`/vendor/shopHour`, values);
+          if (response.status === 200 && response.data.id) {
+            sessionStorage.setItem("id", response.data.id);
+          }
         }
 
         if (response.status === 200) {
