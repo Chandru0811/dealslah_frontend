@@ -1,12 +1,15 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
-import DeleteModel from '../../../components/admin/DeleteModel';
+import DeleteModel from "../../../components/admin/DeleteModel";
 import { PiPlusSquareFill } from "react-icons/pi";
+import api from "../../../config/URL";
 
 const CategoriesIndex = () => {
+  const [datas, setDatas] = useState();
+  const [loading, setLoading] = useState(false);
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -21,43 +24,33 @@ const CategoriesIndex = () => {
     };
   }, []);
 
-  const datas = [
-    {
-      category_group_id: 1,
-      name: "Electronics",
-      slug: "electronics",
-      description: "All electronic items",
-      active: true,
-    },
-    {
-      category_group_id: 2,
-      name: "Fashion",
-      slug: "fashion",
-      description: "Clothing and accessories",
-      active: true,
-    },
-    {
-      category_group_id: 3,
-      name: "Home Appliances",
-      slug: "home-appliances",
-      description: "Appliances for home use",
-      active: false,
-    },
-    {
-      category_group_id: 4,
-      name: "Books",
-      slug: "books",
-      description: "Collection of books",
-      active: true,
-    },
-    {
-      category_group_id: 5,
-      name: "Sports",
-      slug: "sports",
-      description: "Sports equipment and accessories",
-      active: true,
-    },
-  ];
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await api.get("/admin/categoryGroup");
+        setDatas(response.data.data);
+
+        // Initialize DataTable
+        if (tableRef.current) {
+          $(tableRef.current).DataTable();
+        }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+
+    // Cleanup DataTable on component unmount
+    return () => {
+      if (tableRef.current) {
+        $(tableRef.current).DataTable().destroy();
+      }
+    };
+  }, []);
 
   return (
     <section className="px-4">
@@ -68,21 +61,20 @@ const CategoriesIndex = () => {
               <h3 class="mb-0">Categories</h3>
               <div class="container-fluid d-flex justify-content-end">
                 <Link to="/category/add">
-                  <button type="submit" className="btn btn-sm btn-button shadow-none border-0 py-3">
-                    <PiPlusSquareFill size={20} />Add category
+                  <button
+                    type="submit"
+                    className="btn btn-sm btn-button shadow-none border-0 py-3"
+                  >
+                    <PiPlusSquareFill size={20} />
+                    Add category
                   </button>
                 </Link>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
-      <div
-        className="container card shadow border-0"
-
-      >
+      <div className="container card shadow border-0">
         <div className="table-responsive minHeight p-2">
           <div className="table-responsive">
             <table
@@ -106,7 +98,7 @@ const CategoriesIndex = () => {
                 </tr>
               </thead>
               <tbody>
-                {datas.map((data, index) => (
+                {datas?.map((data, index) => (
                   <tr key={data.category_group_id}>
                     <td className="text-center">{index + 1}</td>
                     {/* <td>
@@ -130,11 +122,15 @@ const CategoriesIndex = () => {
                     </td>
                     <td className="text-center">
                       <div>
-                        <Link to={`/category/view`}>
-                          <button className="button-btn btn-sm m-2">View</button>
+                        <Link to={`/category/view/${data.id}`}>
+                          <button className="button-btn btn-sm m-2">
+                            View
+                          </button>
                         </Link>
-                        <Link to={`/category/edit`}>
-                          <button className="button-btn btn-sm m-2">Edit</button>
+                        <Link to={`/category/edit/${data.id}`}>
+                          <button className="button-btn btn-sm m-2">
+                            Edit
+                          </button>
                         </Link>
                         <DeleteModel />
                       </div>

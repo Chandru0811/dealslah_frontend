@@ -63,8 +63,14 @@ function Admin({ handleLogout }) {
                   {/* Categories */}
                   <Route path="/categories" element={<CategoriesIndex />} />
                   <Route path="/category/add" element={<CategoriesAdd />} />
-                  <Route path="/category/view" element={<CategoriesView />} />
-                  <Route path="/category/edit" element={<CategoriesEdits />} />
+                  <Route
+                    path="/category/view/:id"
+                    element={<CategoriesView />}
+                  />
+                  <Route
+                    path="/category/edit/:id"
+                    element={<CategoriesEdits />}
+                  />
 
                   {/* {/ Banner /} */}
                   <Route path="/banner" element={<Banner />} />
@@ -87,8 +93,6 @@ function Admin({ handleLogout }) {
                   <Route path="/shop/view/:id" element={<ShopView />} />
                   <Route path="/stores" element={<Stores />} />
                   <Route path="/locations" element={<Locations />} />
-
-
                 </Routes>
               </div>
               <AdminFooter />

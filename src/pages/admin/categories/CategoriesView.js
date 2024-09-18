@@ -1,7 +1,39 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 function CategoriesView() {
+  const [data, setData] = useState([]);
+  console.log("first", data.id);
+  const { id } = useParams();
+  const [datas, setDatas] = useState([]);
+  console.log("fihgghrst", datas);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/categories/${id}`);
+        setData(response.data.data);
+      } catch (error) {
+        toast.error("Error Fetching Data ", error);
+      }
+    };
+    getData();
+  }, [id]);
+  useEffect(() => {
+    const fetchData = async () => {
+      // setLoading(true);
+      try {
+        const response = await api.get("/admin/categoryGroup");
+        setDatas(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
   return (
     <div className="container-fluid ">
       <div className="card shadow border-0 mb-2 top-header ">
@@ -35,7 +67,15 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: 1</p>
+                  <p className="text-muted text-sm">
+                    :{" "}
+                    {datas &&
+                      datas.map((category) =>
+                        parseInt(data.id) === category.id
+                          ? category.name || "--"
+                          : ""
+                      )}
+                  </p>
                 </div>
               </div>
             </div>
@@ -47,7 +87,7 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: Vivo</p>
+                  <p className="text-muted text-sm">: {data.name}</p>
                 </div>
               </div>
             </div>
@@ -59,7 +99,7 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: vivo</p>
+                  <p className="text-muted text-sm">: {data.slug}</p>
                 </div>
               </div>
             </div>
@@ -71,7 +111,7 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: In active</p>
+                  <p className="text-muted text-sm">: {data.active}</p>
                 </div>
               </div>
             </div>
@@ -83,7 +123,7 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-9">
-                  <p className="text-muted text-sm">: Test</p>
+                  <p className="text-muted text-sm">: {data.description}</p>
                 </div>
               </div>
             </div>

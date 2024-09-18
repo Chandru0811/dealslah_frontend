@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 function CategoriesAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
+  const navigate = useNavigate();
+  const [datas, setDatas] = useState([]);
 
   const validationSchema = Yup.object({
-    groupId: Yup.string().required("*Select an groupId"),
+    category_group_id: Yup.string().required("*Select an groupId"),
     activeStatus: Yup.string().required("*Select an Status"),
     description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
@@ -16,18 +20,48 @@ function CategoriesAdd() {
 
   const formik = useFormik({
     initialValues: {
-      groupId: "",
+      category_group_id: "",
       activeStatus: "",
       description: "",
       name: "",
       slug: "",
     },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
+    // validationSchema: validationSchema,
+    onSubmit: async (values) => {
       console.log("Form Data:", values);
+      setLoadIndicator(true);
+      try {
+        const response = await api.post(`/admin/categories`, values, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          navigate("/categories");
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        toast.error(error.message || "An error occurred");
+      } finally {
+        setLoadIndicator(false);
+      }
     },
   });
+  useEffect(() => {
+    const fetchData = async () => {
+      // setLoading(true);
+      try {
+        const response = await api.get("/admin/categoryGroup");
+        setDatas(response.data.data);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
 
+    fetchData();
+  }, []);
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -44,7 +78,6 @@ function CategoriesAdd() {
                       Back
                     </button>
                   </Link>
-
                 </div>
               </div>
             </div>
@@ -62,29 +95,28 @@ function CategoriesAdd() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${formik.touched.groupId && formik.errors.groupId
-                    ? "is-invalid"
-                    : ""
-                    }`}
-                  {...formik.getFieldProps("groupId")}
+                  className={`form-select ${
+                    formik.touched.category_group_id &&
+                    formik.errors.category_group_id
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  {...formik.getFieldProps("category_group_id")}
                 >
-                  <option value="">Select an group</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+                  <option value=""></option>
+                  {datas &&
+                    datas.map((category) => (
+                      <option key={category.id} value={category.id}>
+                        {category.name}
+                      </option>
+                    ))}
                 </select>
-                {formik.touched.groupId && formik.errors.groupId && (
-                  <div className="invalid-feedback">
-                    {formik.errors.groupId}
-                  </div>
-                )}
+                {formik.touched.category_group_id &&
+                  formik.errors.category_group_id && (
+                    <div className="invalid-feedback">
+                      {formik.errors.category_group_id}
+                    </div>
+                  )}
               </div>
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
@@ -92,10 +124,11 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.name && formik.errors.name
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.name && formik.errors.name
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -108,10 +141,11 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.slug && formik.errors.slug
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.slug && formik.errors.slug
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("slug")}
                 />
                 {formik.touched.slug && formik.errors.slug && (
@@ -124,10 +158,11 @@ function CategoriesAdd() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${formik.touched.activeStatus && formik.errors.activeStatus
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-select ${
+                    formik.touched.activeStatus && formik.errors.activeStatus
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("activeStatus")}
                 >
                   <option value="">Select an option</option>
@@ -146,10 +181,11 @@ function CategoriesAdd() {
                 </label>
                 <textarea
                   rows={5}
-                  className={`form-control ${formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.description && formik.errors.description
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("description")}
                 />
                 {formik.touched.description && formik.errors.description && (
@@ -163,7 +199,6 @@ function CategoriesAdd() {
         </div>
         <div className="col-auto">
           <div className="hstack gap-2 justify-content-end">
-
             <button
               type="submit"
               className="btn btn-sm btn-button"
