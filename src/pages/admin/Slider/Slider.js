@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
@@ -6,21 +6,41 @@ import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
+import api from "../../../config/URL";
 
 const Slider = () => {
   const tableRef = useRef(null);
+  const [datas, setDatas] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const table = $(tableRef.current).DataTable({
-      responsive: true,
-      destroy: true,
-      columnDefs: [{ targets: [0, 3], orderable: false }],
-    });
+    const fetchData = async () => {
+      setLoading(true);
 
+      try {
+        const response = await api.get('admin/sliders');
+        setDatas(response.data.data);
+
+        // Initialize DataTable
+        if (tableRef.current) {
+          $(tableRef.current).DataTable();
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+
+    // Cleanup DataTable on component unmount
     return () => {
-      table.destroy();
+      if (tableRef.current) {
+        $(tableRef.current).DataTable().destroy();
+      }
     };
   }, []);
+
 
   return (
     <section className="px-4">
@@ -66,30 +86,39 @@ const Slider = () => {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="text-center">1</td>
-                <td className="text-center">
-                  <img
-                    src={Image}
-                    alt="Image"
-                    className="img-fluid"
-                    width={50}
-                  ></img>
-                </td>
-                <td className="text-center">title</td>
-                <td className="text-center">2</td>
-                <td className="text-center">
-                  <div className="d-flex justify-content-center">
-                    <Link to="/slider/view">
-                      <button className="button-btn btn-sm m-2">View</button>
-                    </Link>
-                    <Link to="/slider/edit">
-                      <button className="button-btn btn-sm m-2">Edit</button>
-                    </Link>
-                    <DeleteModel />
-                  </div>
-                </td>
-              </tr>
+              {datas?.map((data, index) => (
+                <tr key={data.id}>
+
+                  <td className="text-start align-middle">{index + 1}</td>
+                  <td
+                    className="ms-2">{data.name}
+                  </td>
+                  <td className="align-middle">{data.slug}</td>
+
+
+                  <td className="text-center">
+                    <img
+                      src={Image}
+                      alt="Image"
+                      className="img-fluid"
+                      width={50}
+                    ></img>
+                  </td>
+                  <td className="text-center">title</td>
+                  <td className="text-center">2</td>
+                  <td className="text-center">
+                    <div className="d-flex justify-content-center">
+                      <Link to="/slider/view">
+                        <button className="button-btn btn-sm m-2">View</button>
+                      </Link>
+                      <Link to="/slider/edit">
+                        <button className="button-btn btn-sm m-2">Edit</button>
+                      </Link>
+                      <DeleteModel />
+                    </div>
+                  </td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

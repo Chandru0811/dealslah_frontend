@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 function ShopHours() {
-  const id = sessionStorage.getItem("id");
+  const { id } = useParams();
   const [data, setData] = useState(null);
 
   useEffect(() => {

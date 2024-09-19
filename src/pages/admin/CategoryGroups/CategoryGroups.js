@@ -102,10 +102,10 @@ function CategoryGroups() {
                                         <td className="align-middle text-start">{data.order}</td>
                                         <td className="align-middle">{data.active}</td>
                                         <td className="align-middle text-center">
-                                            <Link to={`/categorygroup/view`}>
+                                            <Link to={`/categorygroup/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>
                                             </Link>
-                                            <Link to={`/categorygroup/edit`}>
+                                            <Link to={`/categorygroup/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
                                             </Link>
                                             <DeleteModel />

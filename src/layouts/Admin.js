@@ -52,11 +52,11 @@ function Admin({ handleLogout }) {
                     element={<CategoryGroupAdd />}
                   />
                   <Route
-                    path="/categorygroup/edit"
+                    path="/categorygroup/edit/:id"
                     element={<CategoryGroupEdit />}
                   />
                   <Route
-                    path="/categorygroup/view"
+                    path="/categorygroup/view/:id"
                     element={<CategoryGroupView />}
                   />
 
