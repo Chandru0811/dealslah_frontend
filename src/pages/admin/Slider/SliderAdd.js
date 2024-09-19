@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
+import { FiAlertTriangle } from "react-icons/fi";
+
 
 function SliderAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
+  const [logo, setLogo] = useState(null);
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
@@ -16,9 +22,56 @@ function SliderAdd() {
       order: "",
       image: "",
     },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
+    // validationSchema: validationSchema,
+    onSubmit: async (values, { resetForm }) => {
       console.log("Form Data:", values);
+      const formData = new FormData();
+      formData.append("name", values.order);
+      formData.append("image", values.logo);
+
+      setLoadIndicator(true);
+
+      try {
+        const response = await api.post(`admin/slider`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure multipart/form-data
+          },
+        });
+        console.log("Response", response);
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          navigate("/categorygroup");
+          resetForm();
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        if (error.response) {
+          // If we receive a validation error (422)
+          if (error.response.status === 422) {
+            const errors = error.response.data.error;
+            if (errors) {
+              Object.keys(errors).forEach((key) => {
+                errors[key].forEach((errorMsg) => {
+                  toast(errorMsg, {
+                    icon: <FiAlertTriangle className="text-warning" />,
+                  });
+                });
+              });
+            }
+          } else {
+            // Other error responses
+            toast.error(error.response.data.message || "An unexpected error occurred.");
+          }
+        } else {
+          console.error("API Error", error);
+          toast.error("An unexpected error occurred.");
+        }
+      } finally {
+        setLoadIndicator(false); // Always disable loading indicator
+      }
+
     },
   });
 
@@ -49,12 +102,14 @@ function SliderAdd() {
               <input
                 type="file"
                 accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${
-                  formik.touched.image && formik.errors.image
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("image")}
+                className={`form-control ${formik.touched.image && formik.errors.image
+                  ? "is-invalid"
+                  : ""
+                  }`}
+                onChange={(event) => {
+                  const file = event.currentTarget.files[0];
+                  setLogo(file); // setting the selected file
+                }}
               />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
@@ -66,11 +121,10 @@ function SliderAdd() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${
-                  formik.touched.order && formik.errors.order
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.order && formik.errors.order
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>

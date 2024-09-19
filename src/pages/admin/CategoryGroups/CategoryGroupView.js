@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import cat1 from "../../../assets/category5.png";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 
 function CategoryGroupView() {
-  const id = sessionStorage.getItem("id");
+  const { id } = useParams();
   const [data, setData] = useState([]);
   console.log("first", data.icon)
   useEffect(() => {
@@ -114,7 +114,7 @@ function CategoryGroupView() {
                   </p>
                 </div>
                 <div className="col-12">
-                  <p>
+                  <p>:
                     {/* <img src={data.icon} alt="icon" className="img-fluid" width={100} /> */}
                     {data.icon ? (
                       <img

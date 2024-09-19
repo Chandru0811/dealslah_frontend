@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../../../config/URL";
@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 
 function CategoryGroupEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
-    const id = sessionStorage.getItem("id");
+    const { id } = useParams();
     const [logo, setLogo] = useState(null); // this is the file
     const navigate = useNavigate();
 
@@ -148,7 +148,7 @@ function CategoryGroupEdit() {
                                     className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("order")}
                                 >
-                                    <option value="">Select an order</option>
+                                    <option value=""></option>
                                     <option value="1">1</option>
                                     <option value="2">2</option>
                                     <option value="3">3</option>
@@ -166,7 +166,7 @@ function CategoryGroupEdit() {
                                     className={`form-select ${formik.touched.active && formik.errors.active ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("active")}
                                 >
-                                    <option value="">Select an active status</option>
+                                    <option value=""></option>
                                     <option value="1">Active</option>
                                     <option value="0">Inactive</option>
                                 </select>

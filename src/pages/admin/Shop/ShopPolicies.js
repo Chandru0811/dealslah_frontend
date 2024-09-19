@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 
 function ShopPolicies() {
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { id } = useParams();
   const [data, SetData] = useState(null);
   console.log("object", data);
   useEffect(() => {
@@ -29,8 +30,8 @@ function ShopPolicies() {
             </div>
             <div className="col-6">
               <p
-              className="text-muted text-sm"
-              dangerouslySetInnerHTML={{ __html: data?.shipping_policy }}
+                className="text-muted text-sm"
+                dangerouslySetInnerHTML={{ __html: data?.shipping_policy }}
               >
               </p>
             </div>
@@ -43,8 +44,8 @@ function ShopPolicies() {
             </div>
             <div className="col-6">
               <p
-              className="text-muted text-sm"
-              dangerouslySetInnerHTML={{ __html: data?.refund_policy }}
+                className="text-muted text-sm"
+                dangerouslySetInnerHTML={{ __html: data?.refund_policy }}
               >
               </p>
             </div>
@@ -57,8 +58,8 @@ function ShopPolicies() {
             </div>
             <div className="col-6">
               <p
-              className="text-muted text-sm"
-              dangerouslySetInnerHTML={{ __html: data?.cancellation_policy }}
+                className="text-muted text-sm"
+                dangerouslySetInnerHTML={{ __html: data?.cancellation_policy }}
               >
               </p>
             </div>
