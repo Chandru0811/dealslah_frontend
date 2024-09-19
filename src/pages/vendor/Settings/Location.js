@@ -30,7 +30,7 @@ function Location() {
       console.log("Form Data", data);
       try {
         setLoadIndicator(true);
-        const response = await api.put(`vendor/shop/update/${id}`, data, {
+        const response = await api.put(`vendor/shop/${id}/update/location`, data, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -49,7 +49,7 @@ function Location() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get(`vendor/shop/${id}`);
+        const response = await api.get(`vendor/shop/location/${id}`);
         const shopData = response.data.data;
         console.log("object", shopData);
         formik.setValues({

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import axios from "axios";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Shop Name is required!"),
@@ -25,6 +25,9 @@ const Store = () => {
   const [data, setData] = useState([]);
   const [loadIndicator, setLoadIndicator] = useState(false);
   const id = sessionStorage.getItem("id");
+  const convertToSlug = (name) => {
+    return name.toLowerCase().replace(/\s+/g, "_");
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -37,22 +40,62 @@ const Store = () => {
       external_url: "",
       banner: null,
       description: "",
+      shop_ratings: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (data) => {
       setLoadIndicator(true);
       console.log("Form Data", data);
+      const formdata = new FormData();
+      formdata.append("_method", "PUT");
+      formdata.append("name", data.name);
+      formdata.append("legal_name", data.legal_name);
+      formdata.append("email", data.email);
+      formdata.append("mobile", data.mobile);
+      formdata.append("shop_type", data.shopType);
+      formdata.append("external_url", data.external_url);
+      formdata.append("description", data.description);
+      formdata.append("shop_ratings", data.shop_ratings);
+      const slug = convertToSlug(data.legal_name);
+      formdata.append("slug", slug);
+      if (data.logo) {
+        formdata.append("logo", data.logo);
+      }
+      if (data.banner) {
+        formdata.append("banner", data.banner);
+      }
       try {
-        const response = await api.put(`vendor/shop/update/${id}`, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await api.post(
+          `vendor/shop/${id}/update/details`,
+          formdata,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         if (response.status === 200) {
           toast.success(response.data.message);
         }
       } catch (error) {
-        toast.error(error.message);
+        if (error.response.status === 422) {
+          console.log("Full error response:", error.response);
+
+          const errors = error.response.data.error;
+
+          if (errors) {
+            Object.keys(errors).map((key) => {
+              errors[key].map((errorMsg) => {
+                toast(errorMsg, {
+                  icon: <FiAlertTriangle className="text-warning" />,
+                });
+              });
+            });
+          }
+        } else {
+          console.error("API Error", error);
+          toast.error("An unexpected error occurred.");
+        }
       } finally {
         setLoadIndicator(false);
       }
@@ -62,7 +105,7 @@ const Store = () => {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get(`vendor/shop/${id}`);
+        const response = await api.get(`vendor/shop/details/${id}`);
         setData(response.data);
         const shopData = response.data.data;
         formik.setValues({
@@ -73,6 +116,9 @@ const Store = () => {
           shopType: shopData.shop_type === "1" ? "product" : "service",
           description: shopData.description || "",
           external_url: shopData.external_url || "",
+          logo: shopData.logo || "",
+          banner: shopData.banner || "",
+          shop_ratings: shopData.shop_ratings || "",
         });
       } catch (error) {
         toast.error("Error Fetching Data ", error);
@@ -186,7 +232,7 @@ const Store = () => {
             <h3 className="text-primary py-3">Shop Brand Setup</h3>
             <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">
-                Shop Shop Type<span className="text-danger">*</span>
+                Shop Type<span className="text-danger">*</span>
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">
@@ -218,15 +264,27 @@ const Store = () => {
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">
+              {/* Display the logo if it exists */}
+              {formik.values.logo && typeof formik.values.logo === "string" && (
+                <div className="mb-3">
+                  <img
+                    src={formik.values.logo}
+                    alt="Shop Logo"
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                  />
+                </div>
+              )}
+
+              {/* File input for uploading a new logo */}
               <input
                 type="file"
-                className={`form-control ${
-                  formik.touched.logo && formik.errors.logo ? "is-invalid" : ""
-                }`}
-                name="logo"
-                onChange={formik.handleChange}
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,svg"
+                className="form-control"
+                onChange={(event) => {
+                  formik.setFieldValue("logo", event.target.files[0]);
+                }}
                 onBlur={formik.handleBlur}
-                value={formik.values.logo}
               />
               {formik.touched.logo && formik.errors.logo && (
                 <div className="error text-danger">
@@ -259,20 +317,42 @@ const Store = () => {
               )}
             </div>
             <div className="col-md-4 col-12 mb-5">
+              <label className="form-label fw-bold">
+                Shop Rating<span className="text-danger">*</span>
+              </label>
+            </div>
+            <div className="col-md-8 col-12 mb-5">
+              <input
+                type="text"
+                className={`form-control ${
+                  formik.touched.shop_ratings && formik.errors.shop_ratings
+                    ? "is-invalid"
+                    : ""
+                }`}
+                name="shop_ratings"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                value={formik.values.shop_ratings}
+              />
+              {formik.touched.shop_ratings && formik.errors.shop_ratings && (
+                <div className="error text-danger">
+                  <small>{formik.errors.shop_ratings}</small>
+                </div>
+              )}
+            </div>
+            <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">Shop Bannenr</label>
             </div>
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="file"
-                className={`form-control ${
-                  formik.touched.banner && formik.errors.banner
-                    ? "is-invalid"
-                    : ""
-                }`}
-                name="banner"
-                onChange={formik.handleChange}
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,svg"
+                className="form-control"
+                onChange={(event) => {
+                  formik.setFieldValue("banner", event.target.files[0]);
+                }}
                 onBlur={formik.handleBlur}
-                value={formik.values.banner}
               />
               {formik.touched.banner && formik.errors.banner && (
                 <div className="error text-danger">

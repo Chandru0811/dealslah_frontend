@@ -1,73 +1,64 @@
 import React, { useEffect, useState } from "react";
 import { Card } from "react-bootstrap";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 
 const validationSchema = Yup.object({
   daily_timing: Yup.object({
     monday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     tuesday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     wednesday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     thursday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     friday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     saturday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
     }),
     sunday: Yup.object({
-      opening: Yup.string().notRequired('Opening time is required'),
-      closing: Yup.string().notRequired('Closing time is required')
-    })
-  })
+      opening: Yup.string().notRequired("Opening time is required"),
+      closing: Yup.string().notRequired("Closing time is required"),
+    }),
+  }),
 });
 
 function StoreHours() {
-
-  const id = sessionStorage.getItem("id");
   // const shop_id = sessionStorage.getItem("shop_id");
+  const shop_id = 5;
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({
     daily_timing: {
-      monday: { opening: '', closing: '' },
-      tuesday: { opening: '', closing: '' },
-      wednesday: { opening: '', closing: '' },
-      thursday: { opening: '', closing: '' },
-      friday: { opening: '', closing: '' },
-      saturday: { opening: '', closing: '' },
-      sunday: { opening: '', closing: '' }
+      monday: { opening: "", closing: "" },
+      tuesday: { opening: "", closing: "" },
+      wednesday: { opening: "", closing: "" },
+      thursday: { opening: "", closing: "" },
+      friday: { opening: "", closing: "" },
+      saturday: { opening: "", closing: "" },
+      sunday: { opening: "", closing: "" },
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
       values.shop_id = 5;
       try {
-        let response;
-        if (id) {
-          response = await api.put(`/vendor/shopHour/update/${id}`, values);
-        } else {
-          response = await api.post(`/vendor/shopHour`, values);
-          if (response.status === 200 && response.data.id) {
-            sessionStorage.setItem("id", response.data.id);
-          }
-        }
+        const response = await api.post(`vendor/shop/hour/update`, values);
 
         if (response.status === 200) {
           toast.success(response.data.message);
@@ -75,7 +66,7 @@ function StoreHours() {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error.message || 'An error occurred');
+        toast.error(error.message || "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -85,18 +76,17 @@ function StoreHours() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get(`vendor/shopHour/${id}`);
-        console.log("getHours", response.data.data)
+        const response = await api.get(`vendor/shop/hour/${shop_id}`);
+        console.log("getHours", response.data.data);
         formik.setValues({
-          shop_id: 5,
           daily_timing: response.data.data.daily_timing || {
-            monday: { opening: '', closing: '' },
-            tuesday: { opening: '', closing: '' },
-            wednesday: { opening: '', closing: '' },
-            thursday: { opening: '', closing: '' },
-            friday: { opening: '', closing: '' },
-            saturday: { opening: '', closing: '' },
-            sunday: { opening: '', closing: '' }
+            monday: { opening: "", closing: "" },
+            tuesday: { opening: "", closing: "" },
+            wednesday: { opening: "", closing: "" },
+            thursday: { opening: "", closing: "" },
+            friday: { opening: "", closing: "" },
+            saturday: { opening: "", closing: "" },
+            sunday: { opening: "", closing: "" },
           },
         });
       } catch (error) {
@@ -104,7 +94,7 @@ function StoreHours() {
       }
     };
     getData();
-  }, [id]);
+  }, [shop_id]);
 
   return (
     <div className="container mt-4">
@@ -125,11 +115,14 @@ function StoreHours() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
-                    {formik.touched.daily_timing?.monday?.opening && formik.errors.daily_timing?.monday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.monday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.monday?.opening &&
+                      formik.errors.daily_timing?.monday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.monday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -142,11 +135,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.monday.closing")}
                     />
-                    {formik.touched.daily_timing?.monday?.closing && formik.errors.daily_timing?.monday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.monday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.monday?.closing &&
+                      formik.errors.daily_timing?.monday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.monday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -168,11 +164,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.tuesday.opening")}
                     />
-                    {formik.touched.daily_timing?.tuesday?.opening && formik.errors.daily_timing?.tuesday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.tuesday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.tuesday?.opening &&
+                      formik.errors.daily_timing?.tuesday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.tuesday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -185,11 +184,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.tuesday.closing")}
                     />
-                    {formik.touched.daily_timing?.tuesday?.closing && formik.errors.daily_timing?.tuesday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.tuesday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.tuesday?.closing &&
+                      formik.errors.daily_timing?.tuesday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.tuesday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -209,13 +211,18 @@ function StoreHours() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       className="form-control"
-                      {...formik.getFieldProps("daily_timing.wednesday.opening")}
+                      {...formik.getFieldProps(
+                        "daily_timing.wednesday.opening"
+                      )}
                     />
-                    {formik.touched.daily_timing?.wednesday?.opening && formik.errors.daily_timing?.wednesday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.wednesday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.wednesday?.opening &&
+                      formik.errors.daily_timing?.wednesday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.wednesday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -226,13 +233,18 @@ function StoreHours() {
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                       className="form-control"
-                      {...formik.getFieldProps("daily_timing.wednesday.closing")}
+                      {...formik.getFieldProps(
+                        "daily_timing.wednesday.closing"
+                      )}
                     />
-                    {formik.touched.daily_timing?.wednesday?.closing && formik.errors.daily_timing?.wednesday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.wednesday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.wednesday?.closing &&
+                      formik.errors.daily_timing?.wednesday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.wednesday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -254,11 +266,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.thursday.opening")}
                     />
-                    {formik.touched.daily_timing?.thursday?.opening && formik.errors.daily_timing?.thursday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.thursday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.thursday?.opening &&
+                      formik.errors.daily_timing?.thursday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.thursday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -271,11 +286,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.thursday.closing")}
                     />
-                    {formik.touched.daily_timing?.thursday?.closing && formik.errors.daily_timing?.thursday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.thursday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.thursday?.closing &&
+                      formik.errors.daily_timing?.thursday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.thursday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -297,11 +315,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.friday.opening")}
                     />
-                    {formik.touched.daily_timing?.friday?.opening && formik.errors.daily_timing?.friday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.friday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.friday?.opening &&
+                      formik.errors.daily_timing?.friday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.friday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -314,11 +335,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.friday.closing")}
                     />
-                    {formik.touched.daily_timing?.friday?.closing && formik.errors.daily_timing?.friday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.friday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.friday?.closing &&
+                      formik.errors.daily_timing?.friday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.friday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
@@ -340,11 +364,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.saturday.opening")}
                     />
-                    {formik.touched.daily_timing?.saturday?.opening && formik.errors.daily_timing?.saturday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.saturday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.saturday?.opening &&
+                      formik.errors.daily_timing?.saturday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.saturday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -357,17 +384,19 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.saturday.closing")}
                     />
-                    {formik.touched.daily_timing?.saturday?.closing && formik.errors.daily_timing?.saturday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.saturday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.saturday?.closing &&
+                      formik.errors.daily_timing?.saturday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.saturday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
             </Card.Body>
           </Card>
-
         </div>
         <div className="row mb-4">
           <Card>
@@ -384,11 +413,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.sunday.opening")}
                     />
-                    {formik.touched.daily_timing?.sunday?.opening && formik.errors.daily_timing?.sunday?.opening && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.sunday?.opening}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.sunday?.opening &&
+                      formik.errors.daily_timing?.sunday?.opening && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.sunday?.opening}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
                 <div className="col-md-6 col-12">
@@ -401,11 +433,14 @@ function StoreHours() {
                       className="form-control"
                       {...formik.getFieldProps("daily_timing.sunday.closing")}
                     />
-                    {formik.touched.daily_timing?.sunday?.closing && formik.errors.daily_timing?.sunday?.closing && (
-                      <div className="error text-danger">
-                        <small>{formik.errors.daily_timing?.sunday?.closing}</small>
-                      </div>
-                    )}
+                    {formik.touched.daily_timing?.sunday?.closing &&
+                      formik.errors.daily_timing?.sunday?.closing && (
+                        <div className="error text-danger">
+                          <small>
+                            {formik.errors.daily_timing?.sunday?.closing}
+                          </small>
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>

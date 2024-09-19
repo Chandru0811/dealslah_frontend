@@ -13,14 +13,14 @@ const validationSchema = Yup.object({
 });
 function StorePolicy() {
 
-  const id = sessionStorage.getItem("id");
   // const shop_id = sessionStorage.getItem("shop_id");
+  const shop_id = 5;
   const [loading, setLoading] = useState(false);
   const editor = useRef(null);
 
   const formik = useFormik({
     initialValues: {
-      shop_id: 2,
+      shop_id: shop_id,
       shipping_policy: '',
       refund_policy: '',
       cancellation_policy: '',
@@ -28,17 +28,8 @@ function StorePolicy() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
-      values.shop_id = 2;
       try {
-        let response;
-        if (id) {
-          response = await api.put(`vendor/shopPolicy/update/${id}`, values);
-        } else {
-          response = await api.post(`vendor/shopPolicy`, values);
-          if (response.status === 200 && response.data.id) {
-            sessionStorage.setItem("id", response.data.id);
-          }
-        }
+        const response = await api.post(`vendor/shop/policy/update`,values)
         if (response.status === 200) {
           toast.success(response.data.message);
         } else {
@@ -55,7 +46,7 @@ function StorePolicy() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get(`vendor/shopPolicy/${id}`);
+        const response = await api.get(`vendor/shop/policy/${shop_id}`);
         console.log("getpolicy", response.data.data)
         formik.setValues({
           shop_id: 2,
@@ -68,7 +59,7 @@ function StorePolicy() {
       }
     };
     getData();
-  }, [id]);
+  }, [shop_id]);
 
   const Editor = {
     modules: {

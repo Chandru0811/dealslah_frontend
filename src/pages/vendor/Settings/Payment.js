@@ -6,9 +6,8 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 
 const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Invalid email address")
-    .required("Email is required"),
+  payment_id: Yup.string()
+    .required("payment id is required"),
   account_holder: Yup.string().required("Account Holder is required"),
   account_type: Yup.string().required("Account Type is required"),
   account_number: Yup.string().required("Account Number is required"),
@@ -25,10 +24,9 @@ function Payment() {
   const id = sessionStorage.getItem("id");
   const formik = useFormik({
     initialValues: {
-      email: "",
+      payment_id: "",
       account_holder: "",
       account_type: "",
-      // check_account: false,
       account_number: "",
       bank_name: "",
       bank_address: "",
@@ -39,7 +37,7 @@ function Payment() {
       setLoadIndicator(true);
       console.log("Form Data", data);
       try {
-        const response = await api.put(`vendor/shop/update/${id}`, data, {
+        const response = await api.put(`vendor/shop/${id}/update/payment`, data, {
           headers: {
             "Content-Type": "application/json",
           },
@@ -57,16 +55,17 @@ function Payment() {
   useEffect(() => {
     const getData = async () => {
       try {
-        const response = await api.get(`vendor/shop/${id}`);
+        const response = await api.get(`vendor/shop/payment/${id}`);
         const shopData = response.data.data;
         console.log("object", shopData);
         formik.setValues({
           account_holder: shopData.account_holder || "",
           account_type: shopData.account_type || "",
+          account_number: shopData.account_number || "",
           bank_name: shopData.bank_name || "",
           bank_address: shopData.bank_address || "",
           bank_code: shopData.bank_code || "",
-          email: shopData.email || "",
+          payment_id: shopData.payment_id || "",
         });
       } catch (error) {
         toast.error("Error Fetching Data ", error);
@@ -82,25 +81,25 @@ function Payment() {
             <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">
                 <span className="text-danger">*</span>
-                Paypal Email
+                Paypal 
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="text"
                 className={`form-control ${
-                  formik.touched.email && formik.errors.email
+                  formik.touched.payment_id && formik.errors.payment_id
                     ? "is-invalid"
                     : ""
                 }`}
-                name="email"
+                name="payment_id"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
-                value={formik.values.email}
+                value={formik.values.payment_id}
               />
-              {formik.touched.email && formik.errors.email && (
+              {formik.touched.payment_id && formik.errors.payment_id && (
                 <div className="error text-danger">
-                  <small>{formik.errors.email}</small>
+                  <small>{formik.errors.payment_id}</small>
                 </div>
               )}
             </div>
