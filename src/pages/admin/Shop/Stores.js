@@ -1,108 +1,118 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import Image from "../../../assets/tv.png";
+import React, { useEffect, useState } from "react";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 function Stores() {
+  const [data, setData] = useState(null);
+  const id = sessionStorage.getItem("id");
 
-    return (
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/shop/${id}/details`);
+        setData(response.data.data);
+      } catch (error) {
+        toast.error(error.data.message);
+      }
+    };
+    getData();
+  }, []);
 
-
-        <div
-            className="container card shadow border-0"
-            style={{ minHeight: "80vh" }}
-        >
-            <div className="row mt-5 p-3">
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Name</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: Ecs</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Legal Name</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: store</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Email</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: Abc@gmail.com</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Phone</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: 9232198745</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Type</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: stationary</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Banner Type</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: flex</p>
-                        </div>
-                    </div>
-                </div>
-                <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">
-                                <b>Shop Description</b>
-                            </p>
-                        </div>
-                        <div className="col-6">
-                            <p className="text-muted text-sm">: test</p>
-                        </div>
-                    </div>
-                </div>
-
+  return (
+    <div
+      className="container card shadow border-0"
+      style={{ minHeight: "80vh" }}
+    >
+      <div className="row mt-5 p-3">
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Name</b>
+              </p>
             </div>
-
-
+            <div className="col-6">
+              <p className="text-muted text-sm">: {data?.name}</p>
+            </div>
+          </div>
         </div>
-
-    );
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Legal Name</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: {data?.legal_name}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Email</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm ">: {data?.email}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Phone</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: {data?.mobile}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Type</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: {data?.shopType}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Banner Logo</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p>
+                :<img src={data?.bannerLogo} alt="logo" className="img-fluid" />
+              </p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Description</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: {data?.description}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Stores;
