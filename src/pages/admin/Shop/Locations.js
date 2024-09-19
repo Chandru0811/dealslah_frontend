@@ -1,7 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
+import { Link, useParams } from "react-router-dom";
+import api from "../../../config/URL";
 
 function Locations() {
+    const [data, setData] = useState([]);
+    const { id } = useParams();
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await api.get(`admin/shop/${id}/location`);
+                setData(response.data.data);
+            } catch (error) {
+                toast.error("Error Fetching Data ", error);
+            }
+        };
+        getData();
+    }, [id]);
     return (
         <div className="container-fluid ">
 
@@ -16,7 +32,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Anna Salai</p>
+                                    <p className="text-muted text-sm">: {data.street}</p>
                                 </div>
                             </div>
                         </div>
@@ -28,7 +44,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: porur</p>
+                                    <p className="text-muted text-sm">: {data.street2}</p>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +56,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Chennai</p>
+                                    <p className="text-muted text-sm">:  {data.city}</p>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +68,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: 621711</p>
+                                    <p className="text-muted text-sm">:  {data.zip_code}</p>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +80,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: Kerala</p>
+                                    <p className="text-muted text-sm">: {data.state}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +92,7 @@ function Locations() {
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: India</p>
+                                    <p className="text-muted text-sm">: {data.country}</p>
                                 </div>
                             </div>
                         </div>

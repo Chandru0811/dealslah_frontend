@@ -1,7 +1,23 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 function Payments() {
+    const [data, setData] = useState([]);
+    const { id } = useParams();
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const response = await api.get(`admin/shop/${id}/payment`);
+                setData(response.data.data);
+            } catch (error) {
+                toast.error("Error Fetching Data ", error);
+            }
+        };
+        getData();
+    }, [id]);
     return (
         <div className="container-fluid ">
 
@@ -12,11 +28,11 @@ function Payments() {
                             <div className="row mb-3">
                                 <div className="col-6 d-flex justify-content-start align-items-center">
                                     <p className="text-sm">
-                                        <b>PayPal Email</b>
+                                        <b>PayPal</b>
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Abcd@gmail.com</p>
+                                    <p className="text-muted text-sm">: --</p>
                                 </div>
                             </div>
                         </div>
@@ -28,7 +44,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Major</p>
+                                    <p className="text-muted text-sm">: {data.account_holder}</p>
                                 </div>
                             </div>
                         </div>
@@ -40,7 +56,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: Bussiness</p>
+                                    <p className="text-muted text-sm">: {data.account_type}</p>
                                 </div>
                             </div>
                         </div>
@@ -52,7 +68,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: 3612345678</p>
+                                    <p className="text-muted text-sm">: {data.account_number}</p>
                                 </div>
                             </div>
                         </div>
@@ -64,7 +80,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: SBI</p>
+                                    <p className="text-muted text-sm">: {data.bank_name}</p>
                                 </div>
                             </div>
                         </div>
@@ -76,7 +92,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: Chennai</p>
+                                    <p className="text-muted text-sm">: {data.bank_address}</p>
                                 </div>
                             </div>
                         </div>
@@ -88,7 +104,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-9">
-                                    <p className="text-muted text-sm">: 652411</p>
+                                    <p className="text-muted text-sm">: {data.bank_code}</p>
                                 </div>
                             </div>
                         </div>
