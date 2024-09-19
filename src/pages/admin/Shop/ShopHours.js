@@ -29,7 +29,7 @@ function ShopHours() {
                   <div className="row">
                     <div className="col-6 d-flex justify-content-start align-items-center">
                       <p className="text-sm">
-                        <b>{day.charAt(0).toUpperCase() + day.slice(1)}:</b>
+                        <b>{day}:</b>
                       </p>
                     </div>
                     <div className="col-6">

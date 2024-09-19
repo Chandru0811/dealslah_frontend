@@ -154,7 +154,7 @@ function BannerAdd() {
                   <input
                     type="color"
                     {...formik.getFieldProps("bg_color")}
-                    className="form-control-color form-control circle"
+                    className="form-control form-control circle"
                   />
                 </div>
                 <input
