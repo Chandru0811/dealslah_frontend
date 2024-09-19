@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 function Stores() {
   const [data, setData] = useState(null);
-  const id = sessionStorage.getItem("id");
+  // const id = sessionStorage.getItem("id");
+  const { id } = useParams();
 
   useEffect(() => {
     const getData = async () => {
@@ -107,6 +109,30 @@ function Stores() {
             </div>
             <div className="col-6">
               <p className="text-muted text-sm">: {data?.description}</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>Shop Rating</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: --</p>
+            </div>
+          </div>
+        </div>
+        <div className="col-md-6 col-12">
+          <div className="row mb-3">
+            <div className="col-6 d-flex justify-content-start align-items-center">
+              <p className="text-sm">
+                <b>External URL</b>
+              </p>
+            </div>
+            <div className="col-6">
+              <p className="text-muted text-sm">: --</p>
             </div>
           </div>
         </div>
