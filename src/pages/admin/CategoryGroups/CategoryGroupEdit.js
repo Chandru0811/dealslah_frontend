@@ -35,7 +35,7 @@ function CategoryGroupEdit() {
 
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", logo); // Adding the logo file to FormData as binary data
+            formData.append("icon", logo);
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
@@ -43,7 +43,7 @@ function CategoryGroupEdit() {
             try {
                 const response = await api.post(`admin/categoryGroup/update/${id}`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data", // Set Content-Type to multipart/form-data
+                        "Content-Type": "multipart/form-data",
                     },
                 });
                 if (response.status === 200) {

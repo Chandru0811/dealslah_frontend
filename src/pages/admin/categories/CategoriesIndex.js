@@ -9,7 +9,7 @@ import api from "../../../config/URL";
 
 const CategoriesIndex = () => {
   const [datas, setDatas] = useState();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const tableRef = useRef(null);
 
   useEffect(() => {
@@ -29,7 +29,7 @@ const CategoriesIndex = () => {
       setLoading(true);
 
       try {
-        const response = await api.get("/admin/categoryGroup");
+        const response = await api.get("/admin/categories");
         setDatas(response.data.data);
 
         // Initialize DataTable
@@ -74,9 +74,19 @@ const CategoriesIndex = () => {
           </div>
         </div>
       </div>
-      <div className="container card shadow border-0">
-        <div className="table-responsive minHeight p-2">
-          <div className="table-responsive">
+      <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
+        {loading ? (
+          <div className="loader-container">
+            <div class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        ) : (
+          <div className="table-responsive p-2">
             <table
               ref={tableRef}
               className="display table"
@@ -140,7 +150,7 @@ const CategoriesIndex = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        )}
       </div>
     </section>
   );

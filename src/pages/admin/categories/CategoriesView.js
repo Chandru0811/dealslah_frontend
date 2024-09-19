@@ -71,7 +71,7 @@ function CategoriesView() {
                     :{" "}
                     {datas &&
                       datas.map((category) =>
-                        parseInt(data.id) === category.id
+                        parseInt(data.category_group_id) === category.id
                           ? category.name || "--"
                           : ""
                       )}

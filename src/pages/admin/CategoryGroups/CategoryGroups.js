@@ -63,47 +63,59 @@ function CategoryGroups() {
                 </div>
             </div>
 
-            <div className="container card shadow border-0">
-                <div className="table-responsive p-2" style={{ minHeight: "80vh" }}>
-                    <table ref={tableRef} className="display table">
-                        <thead className="thead-light">
-                            <tr>
-                                <th scope="col" className='text-start' style={{ whiteSpace: "nowrap" }}>
-                                    S.NO
-                                </th>
-                                <th scope="col">Name</th>
-                                <th scope="col">Slug</th>
-                                <th scope="col" className='text-start'>Order</th>
-                                <th scope="col">Active</th>
-                                <th scope="col" className="text-center">
-                                    ACTION
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {datas?.map((data, index) => (
-                                <tr key={data.id}>
-                                    <td className="text-start align-middle">{index + 1}</td>
-                                    <td
-                                        className="ms-2">{data.name}
-                                    </td>
-                                    <td className="align-middle">{data.slug}</td>
-                                    <td className="align-middle text-start">{data.order}</td>
-                                    <td className="align-middle">{data.active}</td>
-                                    <td className="align-middle text-center">
-                                        <Link to={`/categorygroup/view`}>
-                                            <button className="button-btn btn-sm m-2">View</button>
-                                        </Link>
-                                        <Link to={`/categorygroup/edit`}>
-                                            <button className="button-btn btn-sm m-2">Edit</button>
-                                        </Link>
-                                        <DeleteModel />
-                                    </td>
+            <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
+                {loading ? (
+                    <div className="loader-container">
+                        <div class="loading">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="table-responsive p-2">
+                        <table ref={tableRef} className="display table">
+                            <thead className="thead-light">
+                                <tr>
+                                    <th scope="col" className='text-start' style={{ whiteSpace: "nowrap" }}>
+                                        S.NO
+                                    </th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Slug</th>
+                                    <th scope="col" className='text-start'>Order</th>
+                                    <th scope="col">Active</th>
+                                    <th scope="col" className="text-center">
+                                        ACTION
+                                    </th>
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
+                            </thead>
+                            <tbody>
+                                {datas?.map((data, index) => (
+                                    <tr key={data.id}>
+                                        <td className="text-start align-middle">{index + 1}</td>
+                                        <td
+                                            className="ms-2">{data.name}
+                                        </td>
+                                        <td className="align-middle">{data.slug}</td>
+                                        <td className="align-middle text-start">{data.order}</td>
+                                        <td className="align-middle">{data.active}</td>
+                                        <td className="align-middle text-center">
+                                            <Link to={`/categorygroup/view`}>
+                                                <button className="button-btn btn-sm m-2">View</button>
+                                            </Link>
+                                            <Link to={`/categorygroup/edit`}>
+                                                <button className="button-btn btn-sm m-2">Edit</button>
+                                            </Link>
+                                            <DeleteModel />
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                )}
             </div>
         </section>
     );

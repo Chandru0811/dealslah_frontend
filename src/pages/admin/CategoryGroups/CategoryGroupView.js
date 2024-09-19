@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 function CategoryGroupView() {
   const id = sessionStorage.getItem("id");
   const [data, setData] = useState([]);
-
+  console.log("first", data.icon)
   useEffect(() => {
     const getData = async () => {
       try {
@@ -55,7 +55,7 @@ function CategoryGroupView() {
           </div>
         </div>
       </div>
-      <div className="card shadow border-0 my-2" style={{ height: "78vh" }}>
+      <div className="card shadow border-0 my-2" style={{ height: "80vh" }}>
         <div className="container">
           <div className="row mt-5 p-3">
             <div className="col-md-6 col-12">
@@ -115,7 +115,16 @@ function CategoryGroupView() {
                 </div>
                 <div className="col-12">
                   <p>
-                    <img src={data.icon} alt="" className="img-fluid" width={100} />
+                    {/* <img src={data.icon} alt="icon" className="img-fluid" width={100} /> */}
+                    {data.icon ? (
+                      <img
+                        src={data.icon}
+                        className="img-fluid ms-2 w-100 rounded"
+                        alt="icon"
+                      />
+                    ) : (
+                      <></>
+                    )}
                   </p>
                 </div>
               </div>
