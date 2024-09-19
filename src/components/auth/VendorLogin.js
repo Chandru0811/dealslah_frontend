@@ -45,6 +45,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
             "active",
             response.data.data.userDetails.active
           );
+          sessionStorage.setItem("shop_id", response.data.data.userDetails.shop_id);
           navigate("/");
           if (response.data.data.userDetails.role === "1") {
             handleLogin(values);

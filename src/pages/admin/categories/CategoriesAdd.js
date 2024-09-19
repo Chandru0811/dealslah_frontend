@@ -9,41 +9,53 @@ function CategoriesAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const navigate = useNavigate();
   const [datas, setDatas] = useState([]);
+  const [logo, setLogo] = useState(null);
 
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
-    activeStatus: Yup.string().required("*Select an Status"),
+    active: Yup.string().required("*Select an Status"),
     description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
     slug: Yup.string().required("*name Label is required"),
+    icon: Yup.string().required("*Icon is required"),
   });
 
   const formik = useFormik({
     initialValues: {
       category_group_id: "",
-      activeStatus: "",
+      active: "",
       description: "",
       name: "",
       slug: "",
+      icon: null,
     },
     // validationSchema: validationSchema,
     onSubmit: async (values) => {
       console.log("Form Data:", values);
+      const formData = new FormData();
+      formData.append("category_group_id", values.category_group_id);
+      formData.append("active", values.active);
+      formData.append("description", values.description);
+      formData.append("name", values.name);
+      formData.append("slug", values.slug);
+      formData.append("icon", logo);
+
       setLoadIndicator(true);
       try {
-        const response = await api.post(`/admin/categories`, values, {
+        const response = await api.post(`admin/categories`, formData, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
         });
+
         if (response.status === 200) {
           toast.success(response.data.message);
           navigate("/categories");
-        } else {
+        } else if (response.status === 422) {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error.message || "An error occurred");
+        toast.error(error.response?.data?.message || error.message || "An error occurred");
       } finally {
         setLoadIndicator(false);
       }
@@ -53,7 +65,7 @@ function CategoriesAdd() {
     const fetchData = async () => {
       // setLoading(true);
       try {
-        const response = await api.get("/admin/categoryGroup");
+        const response = await api.get("admin/categoryGroup");
         setDatas(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -95,12 +107,11 @@ function CategoriesAdd() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${
-                    formik.touched.category_group_id &&
+                  className={`form-select ${formik.touched.category_group_id &&
                     formik.errors.category_group_id
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("category_group_id")}
                 >
                   <option value=""></option>
@@ -124,11 +135,10 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.name && formik.errors.name
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.name && formik.errors.name
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -141,11 +151,10 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.slug && formik.errors.slug
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.slug && formik.errors.slug
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("slug")}
                 />
                 {formik.touched.slug && formik.errors.slug && (
@@ -158,21 +167,37 @@ function CategoriesAdd() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${
-                    formik.touched.activeStatus && formik.errors.activeStatus
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                  {...formik.getFieldProps("activeStatus")}
+                  className={`form-select ${formik.touched.active && formik.errors.active
+                    ? "is-invalid"
+                    : ""
+                    }`}
+                  {...formik.getFieldProps("active")}
                 >
-                  <option value="">Select an option</option>
+                  <option>Select an option</option>
                   <option value="1">active</option>
                   <option value="2">inactive</option>
                 </select>
-                {formik.touched.activeStatus && formik.errors.activeStatus && (
+                {formik.touched.active && formik.errors.active && (
                   <div className="invalid-feedback">
-                    {formik.errors.activeStatus}
+                    {formik.errors.active}
                   </div>
+                )}
+              </div>
+              <div className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Icon<span className="text-danger">*</span>
+                </label>
+                <input
+                  name="icon"
+                  type="file"
+                  className={`form-control`}
+                  onChange={(event) => {
+                    const file = event.currentTarget.files[0];
+                    setLogo(file);
+                  }}
+                />
+                {formik.touched.icon && formik.errors.icon && (
+                  <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}
               </div>
               <div className="col-md-12 col-12 mb-3">
@@ -181,11 +206,10 @@ function CategoriesAdd() {
                 </label>
                 <textarea
                   rows={5}
-                  className={`form-control ${
-                    formik.touched.description && formik.errors.description
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik.touched.description && formik.errors.description
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik.getFieldProps("description")}
                 />
                 {formik.touched.description && formik.errors.description && (
