@@ -1,12 +1,11 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { FaStar } from "react-icons/fa";
+import { useParams } from "react-router-dom";
 
 const validationSchema = Yup.object().shape({
   name: Yup.string().required("Name is required"),
   legal_name: Yup.string().required("Legal Name is required"),
-  // slug: Yup.string().required("Slug is required"),
   email: Yup.string()
     .email("Invalid email format")
     .required("E-mail is required"),
@@ -22,8 +21,11 @@ const validationSchema = Yup.object().shape({
 
 const Form1 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
+    const { id } = useParams();
+    // console.log("object", id);
     const formik = useFormik({
       initialValues: {
+        owner_id: id,
         name: formData.name || "",
         legal_name: formData.legal_name || "",
         email: formData.email || "",
@@ -31,11 +33,11 @@ const Form1 = forwardRef(
         external_url: formData.external_url || "",
         rating: formData.rating || "",
         shop_type: formData.shop_type || "",
-        description:formData.description ||"",
+        description: formData.description || "",
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
-        setLoadIndicators(true)
+        setLoadIndicators(true);
         console.log("Form Data", data);
         const transformedSlug = data.legal_name
           .toLowerCase()
@@ -43,7 +45,6 @@ const Form1 = forwardRef(
         const formDataWithSlug = {
           ...data,
           slug: transformedSlug,
-          owner_id: 5,
         };
         setFormData((prev) => ({
           ...prev,
@@ -52,12 +53,7 @@ const Form1 = forwardRef(
         handleNext();
         setLoadIndicators(false);
       },
-
     });
-
-    const handleStarClick = (rating) => {
-      formik.setFieldValue("rating", rating);
-    };
 
     useImperativeHandle(ref, () => ({
       form1: formik.handleSubmit,
@@ -69,7 +65,6 @@ const Form1 = forwardRef(
           <div className="row d-flex justify-content-center mt-5">
             <div className="col-md-12 col-12">
               <div className="row">
-                {/* Name */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
@@ -152,7 +147,6 @@ const Form1 = forwardRef(
                   </div>
                 </div> */}
 
-                {/* E-mail */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
@@ -179,8 +173,6 @@ const Form1 = forwardRef(
                     </div>
                   </div>
                 </div>
-
-                {/* Mobile */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
@@ -207,8 +199,6 @@ const Form1 = forwardRef(
                     </div>
                   </div>
                 </div>
-
-                {/* External URL */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
@@ -303,7 +293,8 @@ const Form1 = forwardRef(
                       <textarea
                         type="text"
                         className={`form-control ${
-                          formik.touched.description && formik.errors.description
+                          formik.touched.description &&
+                          formik.errors.description
                             ? "is-invalid"
                             : ""
                         }`}
@@ -312,11 +303,12 @@ const Form1 = forwardRef(
                         onBlur={formik.handleBlur}
                         value={formik.values.description}
                       />
-                      {formik.touched.description && formik.errors.description && (
-                        <div className="error text-danger">
-                          <small>{formik.errors.description}</small>
-                        </div>
-                      )}
+                      {formik.touched.description &&
+                        formik.errors.description && (
+                          <div className="error text-danger">
+                            <small>{formik.errors.description}</small>
+                          </div>
+                        )}
                     </div>
                   </div>
                 </div>

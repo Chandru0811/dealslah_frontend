@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import ImageURL from "../../../config/ImageURL";
 
 function Stores() {
   const [data, setData] = useState(null);
@@ -95,8 +96,13 @@ function Stores() {
             </div>
             <div className="col-6">
               <p>
-                :<img src={data?.bannerLogo} alt="logo" className="img-fluid" />
+                : <img
+                    src={`${ImageURL}${data?.icon}`}
+                    alt="Shop Logo"
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                  />
               </p>
+             
             </div>
           </div>
         </div>

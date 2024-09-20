@@ -7,6 +7,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 import toast from "react-hot-toast";
 import axios from "axios";
+import ApprovePopup from "./ApprovePopup";
 
 function VendorLogin({ handleVendorLogin, handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -43,14 +44,22 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
           sessionStorage.setItem("role", response.data.data.userDetails.role);
           sessionStorage.setItem(
             "active",
-            response.data.data.userDetails.active
+            "0"
           );
-          sessionStorage.setItem("shop_id", response.data.data.userDetails.shop_id);
-          navigate("/");
+          sessionStorage.setItem(
+            "shop_id",
+            response.data.data.userDetails.shop_id
+          );
+
           if (response.data.data.userDetails.role === "1") {
             handleLogin(values);
           } else if (response.data.data.userDetails.role === "2") {
-            handleVendorLogin(values);
+            if (response.data.data.userDetails.shop_id === null) {
+              navigate(`/wellcomepage/${response.data.data.userDetails.id}`);
+            } else {
+              navigate("/");
+              handleVendorLogin(values);
+            }
           } else {
             toast(
               "Oops! You don't have access to this page, but feel free to check out our amazing website! 😊",
@@ -70,7 +79,6 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
       } finally {
         setLoadIndicator(false);
       }
-      handleVendorLogin(values);
     },
   });
 
@@ -87,11 +95,6 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
         className="card shadow-lg p-3 mb-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}
       >
-        <Link to="/" style={{ height: "25px" }}>
-          <button className="btn btn-link text-start shadow-none h-0">
-            <IoMdArrowBack />
-          </button>
-        </Link>
         <div className="d-flex justify-content-around ">
           <h3
             className={`cursor-pointer py-2`}
@@ -178,7 +181,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
 
           <div className="text-center mt-4">
             <p className="mb-3">or</p>
-            <Link to="/wellcomepage">
+            <Link to="/register">
               <Button
                 variant="light"
                 className="w-100 border shadow-none"

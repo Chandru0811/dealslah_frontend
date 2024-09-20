@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function CategoriesView() {
   const [data, setData] = useState([]);
@@ -41,7 +42,7 @@ function CategoriesView() {
           <div className="row align-items-center">
             <div className="col">
               <div className="d-flex align-items-center gap-4">
-                <h1 className="h4 ls-tight headingColor">View Product</h1>
+                <h1 className="h4 ls-tight headingColor">View Category</h1>
               </div>
             </div>
             <div className="col-auto">
@@ -111,7 +112,9 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: {data.active}</p>
+                  <p className="text-muted text-sm">
+                    : {data.active == 0 ? 'Active' : data.active == 1 ? 'Inactive' : ''}
+                  </p>
                 </div>
               </div>
             </div>
@@ -123,9 +126,11 @@ function CategoriesView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: <img src={data.icon}
-                    alt="Icon"
-                    className="img-fluid"></img></p>
+                  <p className="text-muted text-sm">: <img
+                    src={`${ImageURL}${data.icon}`}
+                    alt="Shop Logo"
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                  /></p>
                 </div>
               </div>
             </div>

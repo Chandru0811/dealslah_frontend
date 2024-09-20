@@ -39,8 +39,7 @@ const validationSchema = Yup.object({
 });
 
 function StoreHours() {
-  // const shop_id = sessionStorage.getItem("shop_id");
-  const shop_id = 5;
+  const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
 
   const formik = useFormik({

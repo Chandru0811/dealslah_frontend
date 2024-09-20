@@ -127,7 +127,7 @@ const CategoriesIndex = () => {
                     </td>
                     <td className="text-center">
                       <div className="word-wrap">
-                        {data.active ? "Active" : "Inactive"}
+                        {data.active == 0 ? 'Active' : 'Inactive'}
                       </div>
                     </td>
                     <td className="text-center">

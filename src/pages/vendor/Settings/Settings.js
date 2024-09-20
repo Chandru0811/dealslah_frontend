@@ -42,45 +42,45 @@ function Settings() {
             className="col-md-3 col-12 card shadow h-50"
             style={{ zIndex: "0" }}
           >
-            <div className="dropdown-menu p-3">
+            <div className="dropdown-menu w-100 p-3">
               <div
-                className={`dropdown-item ${selectedItem === "Shop" ? "active" : ""
+                className={`dropdown-item ps-5 ms-5 ${selectedItem === "Shop" ? "active" : ""
                   }`}
                 onClick={() => handleItemClick("Shop")}
               >
-                <BsHandbag /> Shop
+                <BsHandbag />&nbsp;&nbsp; Shop
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${selectedItem === "Location" ? "active" : ""
+                className={`dropdown-item ps-5 ms-5 ${selectedItem === "Location" ? "active" : ""
                   }`}
                 onClick={() => handleItemClick("Location")}
               >
-                <CiGlobe /> Location
+                <CiGlobe /> &nbsp;&nbsp;Location
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${selectedItem === "Payment" ? "active" : ""
+                className={`dropdown-item ps-5 ms-5 ${selectedItem === "Payment" ? "active" : ""
                   }`}
                 onClick={() => handleItemClick("Payment")}
               >
-                <GrCurrency /> Payment
+                <GrCurrency /> &nbsp;&nbsp;Payment
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${selectedItem === "Shop Policies" ? "active" : ""
+                className={`dropdown-item ps-5 ms-5 ${selectedItem === "Shop Policies" ? "active" : ""
                   }`}
                 onClick={() => handleItemClick("Shop Policies")}
               >
-                <PiVanFill /> Shop Policies
+                <PiVanFill /> &nbsp;&nbsp;Shop Policies
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${selectedItem === "Shop Hours" ? "active" : ""
+                className={`dropdown-item ps-5 ms-5 ${selectedItem === "Shop Hours" ? "active" : ""
                   }`}
                 onClick={() => handleItemClick("Shop Hours")}
               >
-                <MdAccessTime /> Shop Hours
+                <MdAccessTime /> &nbsp;&nbsp;Shop Hours
               </div>
             </div>
           </div>

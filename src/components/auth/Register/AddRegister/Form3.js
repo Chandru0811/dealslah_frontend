@@ -44,7 +44,7 @@ const Form3 = forwardRef(
 
             </Link>
             <Link
-              to={"/vendorlogin"}
+              to={"/"}
               className="pt-5"
               style={{ textDecoration: "underline" }}
             >
