@@ -174,8 +174,8 @@ function CategoriesAdd() {
                   {...formik.getFieldProps("active")}
                 >
                   <option>Select an option</option>
-                  <option value="1">active</option>
-                  <option value="2">inactive</option>
+                  <option value="0">Active</option>
+                  <option value="1">InActive</option>
                 </select>
                 {formik.touched.active && formik.errors.active && (
                   <div className="invalid-feedback">

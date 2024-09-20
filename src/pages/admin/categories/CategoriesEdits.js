@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function CategoriesEdits() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -18,7 +19,7 @@ function CategoriesEdits() {
     description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
     slug: Yup.string().required("*name Label is required"),
-    icon: Yup.string().required("*Icon is required"),
+    // icon: Yup.string().required("*Icon is required"),
   });
 
   const formik = useFormik({
@@ -197,8 +198,8 @@ function CategoriesEdits() {
                   {...formik.getFieldProps("active")}
                 >
                   <option >Select an option</option>
-                  <option value="1">active</option>
-                  <option value="2">inactive</option>
+                  <option value="0">Active</option>
+                  <option value="1">InActive</option>
                 </select>
                 {formik.touched.active && formik.errors.active && (
                   <div className="invalid-feedback">
@@ -216,16 +217,20 @@ function CategoriesEdits() {
                   accept=".png"
                   className="form-control"
                   onChange={(event) => {
-                    const file = event.target.files[0];
-                    if (file) {
-                      formik.setFieldValue("icon", file);
-                    }
+                    formik.setFieldValue("icon", event.target.files[0]);
                   }}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}
+                {/* <div className="mb-3">
+                  <img
+                    src={`${ImageURL}${formik.values.icon}`}
+                    alt="Shop Logo"
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                  />
+                </div> */}
               </div>
               <div className="col-md-12 col-12 mb-3">
                 <label className="form-label">

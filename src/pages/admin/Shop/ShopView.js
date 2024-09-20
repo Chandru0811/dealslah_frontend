@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { BsHandbag } from "react-icons/bs";
 import { CiGlobe } from "react-icons/ci";
@@ -12,39 +12,73 @@ import ShopPolicies from "./ShopPolicies";
 import ShopHours from "./ShopHours";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
-import CancelPopup from "./CancelPopup";
+import Modal from 'react-bootstrap/Modal';
 
 function ShopView() {
     const { id } = useParams();
     const [selectedItem, setSelectedItem] = useState("Shop");
-    // const shop_id = sessionStorage.getItem("shop_id");
-    const shop_id = 1;
+    const [shopStatus, setShopStatus] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [showModal, setShowModal] = useState(false);
     const handleOpenModal = () => setShowModal(true);
-    const handleCloseModal = () => setShowModal(false);
-
+    const handleClose = () => setShowModal(false);
     const handleItemClick = (item) => {
         setSelectedItem(item);
     };
 
-    const handleActivate = async () => {
+    const handleDeActive = async () => {
+        setLoading(true);
         try {
-            const response = await api.post(`admin/shop/${id}/activate`);
-
+            const response = await api.post(`admin/shop/${id}/deactivate`);
             if (response.status === 200) {
-                toast.success('Shop activated successfully!');
+                handleClose();
+                getData();
+                toast.success('Shop deactivated successfully!');
             } else {
-                toast.error('Failed to activate shop.');
+                toast.error('Failed to deactivate shop.');
             }
         } catch (error) {
-            toast.error('An error occurred while activating the shop.');
-            console.error('Activation Error:', error);
+            toast.error('An error occurred while deactivating the shop.');
+            console.error('Deactivation Error:', error);
+        } finally {
+            setLoading(false);
         }
     };
 
+    const handleActivate = async () => {
+        setLoading(true);
+        try {
+            const response = await api.post(`admin/shop/${id}/activate`);
+            if (response.status === 200) {
+                getData();
+                toast.success("Shop activated successfully!");
+            } else {
+                toast.error("Failed to activate shop.");
+            }
+        } catch (error) {
+            toast.error("An error occurred while activating the shop.");
+            console.error("Activation Error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+    const getData = async () => {
+        try {
+            const response = await api.get(`admin/shop/${id}/details`);
+            setShopStatus(response.data.data.active);
+        } catch (error) {
+            toast.error(error.data.message);
+        }
+    };
+
+    useEffect(() => {
+
+        getData();
+    }, [id]);
 
     return (
+
         <section className="px-4">
             <div className="card shadow border-0 mb-3">
                 <div className="row p-3">
@@ -62,16 +96,23 @@ function ShopView() {
                                     <span>Back</span>
                                 </button>
                             </Link>
-                            {shop_id == 0 ? (
+                            {shopStatus == 0 ? (
                                 <button
+                                    type="button"
                                     onClick={handleActivate}
-                                    className="btn btn-success btn-sm me-2"
+                                    className="btn btn-success btn-sm me-2" disabled={loading}
                                 >
-                                    Active
+                                    {loading && (
+                                        <span
+                                            className="spinner-border spinner-border-sm me-2"
+                                            aria-hidden="true"
+                                        ></span>
+                                    )}
+                                    Activate
                                 </button>
                             ) : <></>}
 
-                            {shop_id === 1 ? (
+                            {shopStatus == 1 ? (
                                 <button
                                     onClick={handleOpenModal}
                                     className="btn btn-danger btn-sm me-2"
@@ -79,13 +120,10 @@ function ShopView() {
                                     Deactivate
                                 </button>
                             ) : <></>}
-
-                            <CancelPopup show={showModal} handleClose={handleCloseModal} id={id} />
                         </div>
                     </div>
                 </div>
             </div>
-
             <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
                 <div className="row mt-5">
                     <div className="col-md-3 col-12 card shadow h-50" style={{ backgroundColor: "#1c2b36" }}>
@@ -132,6 +170,7 @@ function ShopView() {
                             </div>
                         </div>
                     </div>
+
                     <div className="col-md-9 col-12">
                         <div>
                             {selectedItem === "Shop" && <Stores />}
@@ -143,7 +182,32 @@ function ShopView() {
                     </div>
                 </div>
             </div>
-        </section>
+            <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Deactivate Shop</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    Are you sure you want to deactivate this shop?
+                </Modal.Body>
+                <Modal.Footer>
+                    <button className='btn btn-sm btn-button' onClick={handleClose}>
+                        Close
+                    </button>
+                    <button className='btn-sm btn-danger'
+                        type="submit" onClick={handleDeActive}
+                        disabled={loading}
+                    >
+                        {loading && (
+                            <span
+                                className="spinner-border spinner-border-sm me-2"
+                                aria-hidden="true"
+                            ></span>
+                        )}
+                        Deactivate
+                    </button>
+                </Modal.Footer>
+            </Modal>
+        </section >
     );
 }
 
