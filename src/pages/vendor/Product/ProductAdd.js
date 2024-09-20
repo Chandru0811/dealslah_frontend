@@ -39,10 +39,12 @@ function ProductAdd() {
     initialValues: {
       shop_id: "",
       category_id: "",
+      deal_type: "",
       brand: "",
       slug: "",
       original_price: "",
       discounted_price: "",
+      discounted_percentage: "",
       start_date: "",
       end_date: "",
       stock: "",
@@ -78,7 +80,7 @@ function ProductAdd() {
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Shop Id<span className="text-danger">*</span>
+                Category<span className="text-danger">*</span>
               </label>
               <select
                 type="text"
@@ -98,7 +100,7 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Category Id<span className="text-danger">*</span>
+                Category Group<span className="text-danger">*</span>
               </label>
               <select
                 type="text"
@@ -118,6 +120,29 @@ function ProductAdd() {
                 </div>
               )}
             </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Deal Type<span className="text-danger">*</span>
+              </label>
+              <select
+                type="text"
+                className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                  ? "is-invalid"
+                  : ""
+                  }`}
+                {...formik.getFieldProps("deal_type")}
+              >
+                <option></option>
+                <option value="1">Product</option>
+                <option value="2">Service</option>
+              </select>
+              {formik.touched.deal_type && formik.errors.deal_type && (
+                <div className="invalid-feedback">
+                  {formik.errors.deal_type}
+                </div>
+              )}
+            </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Brand<span className="text-danger">*</span>
@@ -146,6 +171,23 @@ function ProductAdd() {
               />
               {formik.touched.slug && formik.errors.slug && (
                 <div className="invalid-feedback">{formik.errors.slug}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Image<span className="text-danger">*</span>
+              </label>
+              <input
+                type="file"
+                className={`form-control ${formik.touched.file && formik.errors.file ? "is-invalid" : ""
+                  }`}
+                onChange={(event) => {
+                  formik.setFieldValue("file", event.target.files[0]);
+                }}
+                {...formik.getFieldProps("file")}
+              />
+              {formik.touched.file && formik.errors.file && (
+                <div className="invalid-feedback">{formik.errors.file}</div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
@@ -187,6 +229,9 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
+
+
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Start Date<span className="text-danger">*</span>
@@ -223,6 +268,26 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
+                Discounted Percentage<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${formik.touched.discounted_percentage &&
+                  formik.errors.discounted_percentage
+                  ? "is-invalid"
+                  : ""
+                  }`}
+                {...formik.getFieldProps("discounted_percentage")}
+              />
+              {formik.touched.discounted_percentage &&
+                formik.errors.discounted_percentage && (
+                  <div className="invalid-feedback">
+                    {formik.errors.discounted_percentage}
+                  </div>
+                )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
                 Stock<span className="text-danger">*</span>
               </label>
               <input
@@ -251,23 +316,7 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.sku}</div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Image<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                className={`form-control ${formik.touched.file && formik.errors.file ? "is-invalid" : ""
-                  }`}
-                onChange={(event) => {
-                  formik.setFieldValue("file", event.target.files[0]);
-                }}
-                {...formik.getFieldProps("file")}
-              />
-              {formik.touched.file && formik.errors.file && (
-                <div className="invalid-feedback">{formik.errors.file}</div>
-              )}
-            </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Description<span className="text-danger">*</span>

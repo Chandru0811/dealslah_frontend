@@ -5,40 +5,36 @@ import * as Yup from "yup";
 import { FiAlertTriangle } from "react-icons/fi";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
-import DealCategory from "./DealCategory";
 
 function DealCategoryAdd() {
     const [loadIndicator, setLoadIndicator] = useState(false);
-    const [logo, setLogo] = useState(null); // this is the file
     const navigate = useNavigate();
-
-    console.log("logo", logo);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
         slug: Yup.string().required("*Slug is required"),
-        // icon: Yup.mixed().required("*Icon is required"), // ensuring it's validated as a file
         order: Yup.string().required("*Select an order"),
         active: Yup.string().required("*Select an active"),
+        image: Yup.mixed().required("*Image is required"), // Ensure image is required
     });
 
     const formik = useFormik({
         initialValues: {
             name: "",
             slug: "",
-            icon: null,
+            image: null, // Initial value for the image is null
             order: "",
             active: "",
             description: "",
         },
-        validationSchema: validationSchema,
+        // validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             console.log("Category Group Data:", values);
 
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", logo); // adding the logo file to FormData
+            formData.append("icon", values.image); // Send the image file as binary
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
@@ -46,9 +42,9 @@ function DealCategoryAdd() {
             setLoadIndicator(true);
 
             try {
-                const response = await api.post(`admin/categoryGroup`, formData, {
+                const response = await api.post(`admin/dealCategory`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data", // make sure this is multipart/form-data
+                        "Content-Type": "multipart/form-data", // Set the content type for binary data
                     },
                 });
                 console.log("Response", response);
@@ -173,7 +169,7 @@ function DealCategoryAdd() {
                                     className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
                                     onChange={(event) => {
                                         const file = event.currentTarget.files[0];
-                                        formik.setFieldValue("image", file);
+                                        formik.setFieldValue("image", file); // Set the image file for formik
                                     }}
                                 />
                                 {formik.touched.image && formik.errors.image && (

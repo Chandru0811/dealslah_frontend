@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import cat1 from "../../../assets/category5.png";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function CategoryGroupView() {
   const { id } = useParams();
@@ -102,30 +103,7 @@ function CategoryGroupView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: {data.active}</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 col-12">
-              <div className="row mb-3">
-                <div className="col-12 d-flex justify-content-start align-items-center">
-                  <p className="text-sm">
-                    <b>Icon</b>
-                  </p>
-                </div>
-                <div className="col-12">
-                  <p>:
-                    {/* <img src={data.icon} alt="icon" className="img-fluid" width={100} /> */}
-                    {data.icon ? (
-                      <img
-                        src={data.icon}
-                        className="img-fluid ms-2 w-100 rounded"
-                        alt="icon"
-                      />
-                    ) : (
-                      <></>
-                    )}
-                  </p>
+                  <p className="text-muted text-sm">:  {data.active == 0 ? 'Active' : data.active == 1 ? 'Inactive' : ''}</p>
                 </div>
               </div>
             </div>
@@ -133,10 +111,24 @@ function CategoryGroupView() {
               <div className="row mb-3">
                 <div className="col-6 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
-                    <b>Description</b>
+                    <b>Icon</b>
                   </p>
                 </div>
                 <div className="col-6">
+                  <p className="text-muted text-sm">: <img src={`${ImageURL}${data.icon}`}
+                    alt="icon"
+                    className="img-fluid"></img></p>
+                </div>
+              </div>
+            </div>
+            <div className="col-12">
+              <div className="row mb-3">
+                <div className="col-3 d-flex justify-content-start align-items-center">
+                  <p className="text-sm">
+                    <b>Description</b>
+                  </p>
+                </div>
+                <div className="col-9">
                   <p className="text-muted text-sm">: {data.description}</p>
                 </div>
               </div>

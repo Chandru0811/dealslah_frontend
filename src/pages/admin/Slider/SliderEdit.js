@@ -1,10 +1,14 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
+import api from "../../../config/URL";
 
 function SliderEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
+  const { id } = useParams();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
@@ -14,13 +18,44 @@ function SliderEdit() {
   const formik = useFormik({
     initialValues: {
       order: "3",
-      image: "",
+      image: null,
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       console.log("Form Data:", values);
+      const formData = new FormData();
+      formData.append("_method", "PUT");
+      formData.append("order", values.order);
+      formData.append("image", values.image);
+
+      try {
+        const response = await api.post(`admin/slider/update/${id}`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          navigate("/slider");
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
     },
   });
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/slider/${id}`);
+        formik.setValues(response.data.data);
+      } catch (error) {
+        toast.error("Error Fetching Data", error.message);
+      }
+    };
+    getData();
+  }, [id]);
+
 
   return (
     <section className="px-4">
@@ -49,13 +84,14 @@ function SliderEdit() {
               <input
                 type="file"
                 accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${
-                  formik.touched.image && formik.errors.image
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("image")}
-              />
+                className={`form-control ${formik.touched.image && formik.errors.image
+                  ? "is-invalid"
+                  : ""
+                  }`}
+                onChange={(event) => {
+                  const file = event.currentTarget.files[0];
+                  formik.setFieldValue("image", file);
+                }} />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
               )}
@@ -66,11 +102,10 @@ function SliderEdit() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${
-                  formik.touched.order && formik.errors.order
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.order && formik.errors.order
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>

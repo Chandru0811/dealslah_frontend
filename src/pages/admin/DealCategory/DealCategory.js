@@ -10,6 +10,7 @@ import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import Image from "../../../assets/tv.png";
+import ImageURL from '../../../config/ImageURL';
 
 
 function DealCategory() {
@@ -24,7 +25,7 @@ function DealCategory() {
             setLoading(true);
 
             try {
-                const response = await api.get('/admin/categoryGroup');
+                const response = await api.get('/admin/dealCategory');
                 setDatas(response.data.data);
 
                 // Initialize DataTable
@@ -54,11 +55,11 @@ function DealCategory() {
                     <div className="row">
                         <div className="col-12 p-2 d-flex justify-content-between align-items-center">
                             <h3 className="mb-0">Deal Category</h3>
-                            {/* <Link to="/dealcategories/add">
+                            <Link to="/dealcategories/add">
                                 <button className="btn btn-sm btn-button shadow-none border-0">
                                     <PiPlusSquareFill size={20} /> Add Deal Category
                                 </button>
-                            </Link> */}
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -97,12 +98,9 @@ function DealCategory() {
                                     <tr key={data.id}>
                                         <td className="text-start align-middle">{index + 1}</td>
                                         <td
-                                            className="ms-2"><img
-                                                src={Image}
-                                                alt="Image"
-                                                className="img-fluid"
-                                                width={50}
-                                            ></img>{data.name}
+                                            className="ms-2"><img src={`${ImageURL}${data.image_path}`}
+                                                alt="icon"
+                                                className="img-fluid"></img>{data.name}
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.description}</td>
@@ -111,9 +109,9 @@ function DealCategory() {
                                             <Link to={`/dealcategories/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>
                                             </Link>
-                                            {/* <Link to={`/dealcategories/edit/${data.id}`}>
+                                            <Link to={`/dealcategories/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
-                                            </Link> */}
+                                            </Link>
                                             <DeleteModel />
                                         </td>
                                     </tr>

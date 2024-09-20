@@ -1,8 +1,26 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 import Image from "../../../assets/tv.png";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function SliderView() {
+  const { id } = useParams();
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/slider/${id}`);
+        setData(response.data.data);
+      } catch (error) {
+        toast.error("Error Fetching Data ", error);
+      }
+    };
+    getData();
+
+  }, [id]);
   return (
     <section className="px-4">
       <div className="card shadow border-0 mb-3">
@@ -32,7 +50,7 @@ function SliderView() {
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: 2</p>
+                <p className="text-muted text-sm">: {data.order}</p>
               </div>
             </div>
           </div>
@@ -44,14 +62,17 @@ function SliderView() {
                 </p>
               </div>
               <div className="col-12 mt-3">
-                <p>
-                  <img
+                {/* <p> */}
+                {/* <img
                     src={Image}
                     alt="image"
                     className="img-fluid"
                     width={150}
-                  />
-                </p>
+                  /> */}
+                <p className="text-muted text-sm">: <img src={`${ImageURL}${data.image_path}`}
+                  alt="icon"
+                  className="img-fluid"></img></p>
+                {/* </p> */}
               </div>
             </div>
           </div>

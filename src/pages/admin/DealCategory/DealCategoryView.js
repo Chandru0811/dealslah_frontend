@@ -12,7 +12,7 @@ function DealCategoryView() {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await api.get(`admin/categoryGroup/${id}`);
+                const response = await api.get(`admin/dealCategory/${id}`);
                 setData(response.data.data);
             } catch (error) {
                 toast.error("Error Fetching Data ", error);

@@ -40,7 +40,7 @@ function VendorSidebar({ handleLogout }) {
           to="/"
         >
           <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
-          style={{background:"#fff", borderRadius:"5px",width:"50px",height:"50px"}} />
+            style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
           <p className="text-white">Dealslash</p>
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
@@ -79,6 +79,11 @@ function VendorSidebar({ handleLogout }) {
                 <MdCategory /> Category
               </NavLink>
             </li>
+            {/* <li className="nav-item">
+              <NavLink className="nav-link" to="/dealcategory">
+                <MdCategory /> Deal Category
+              </NavLink>
+            </li> */}
 
             {/* Settings */}
             {/* <li className="nav-item">

@@ -41,7 +41,7 @@ function DealCategoryEdit() {
             formData.append("description", values.description);
 
             try {
-                const response = await api.post(`admin/categoryGroup/update/${id}`, formData, {
+                const response = await api.post(`admin/dealCategory/update/${id}`, formData, {
                     headers: {
                         "Content-Type": "multipart/form-data",
                     },
@@ -59,7 +59,7 @@ function DealCategoryEdit() {
     useEffect(() => {
         const getData = async () => {
             try {
-                const response = await api.get(`admin/categoryGroup/${id}`);
+                const response = await api.get(`admin/dealCategory/${id}`);
                 formik.setValues(response.data.data);
             } catch (error) {
                 toast.error("Error Fetching Data", error.message);
