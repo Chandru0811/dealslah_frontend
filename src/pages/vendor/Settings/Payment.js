@@ -6,8 +6,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 
 const validationSchema = Yup.object().shape({
-  payment_id: Yup.string()
-    .required("payment id is required"),
+  payment_id: Yup.string().required("payment id is required"),
   account_holder: Yup.string().required("Account Holder is required"),
   account_type: Yup.string().required("Account Type is required"),
   account_number: Yup.string().required("Account Number is required"),
@@ -37,11 +36,15 @@ function Payment() {
       setLoadIndicator(true);
       console.log("Form Data", data);
       try {
-        const response = await api.put(`vendor/shop/${id}/update/payment`, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await api.put(
+          `vendor/shop/${id}/update/payment`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           toast.success(response.data.message);
         }
@@ -58,15 +61,7 @@ function Payment() {
         const response = await api.get(`vendor/shop/payment/${id}`);
         const shopData = response.data.data;
         console.log("object", shopData);
-        formik.setValues({
-          account_holder: shopData.account_holder || "",
-          account_type: shopData.account_type || "",
-          account_number: shopData.account_number || "",
-          bank_name: shopData.bank_name || "",
-          bank_address: shopData.bank_address || "",
-          bank_code: shopData.bank_code || "",
-          payment_id: shopData.payment_id || "",
-        });
+        formik.setValues(shopData);
       } catch (error) {
         toast.error("Error Fetching Data ", error);
       }
@@ -81,7 +76,7 @@ function Payment() {
             <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">
                 <span className="text-danger">*</span>
-                Paypal 
+                Paypal
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">

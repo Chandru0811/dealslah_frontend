@@ -1,18 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useFormik } from "formik";
-import * as Yup from 'yup';
+import * as Yup from "yup";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const validationSchema = Yup.object({
-  shipping_policy: Yup.string().required('Shipping Policy is required'),
-  refund_policy: Yup.string().required('Refund Policy is required'),
-  cancellation_policy: Yup.string().required('Cancelation Policy is required'),
+  shipping_policy: Yup.string().required("Shipping Policy is required"),
+  refund_policy: Yup.string().required("Refund Policy is required"),
+  cancellation_policy: Yup.string().required("Cancelation Policy is required"),
 });
 function StorePolicy() {
-
   // const shop_id = sessionStorage.getItem("shop_id");
   const shop_id = 5;
   const [loading, setLoading] = useState(false);
@@ -21,22 +20,22 @@ function StorePolicy() {
   const formik = useFormik({
     initialValues: {
       shop_id: shop_id,
-      shipping_policy: '',
-      refund_policy: '',
-      cancellation_policy: '',
+      shipping_policy: "",
+      refund_policy: "",
+      cancellation_policy: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
       try {
-        const response = await api.post(`vendor/shop/policy/update`,values)
+        const response = await api.post(`vendor/shop/policy/update`, values);
         if (response.status === 200) {
           toast.success(response.data.message);
         } else {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error.message || 'An error occurred');
+        toast.error(error.message || "An error occurred");
       } finally {
         setLoading(false);
       }
@@ -47,13 +46,8 @@ function StorePolicy() {
     const getData = async () => {
       try {
         const response = await api.get(`vendor/shop/policy/${shop_id}`);
-        console.log("getpolicy", response.data.data)
-        formik.setValues({
-          shop_id: 2,
-          shipping_policy: response.data.data.shipping_policy || "",
-          refund_policy: response.data.data.refund_policy || "",
-          cancellation_policy: response.data.data.cancellation_policy || "",
-        });
+        console.log("getpolicy", response.data.data);
+        formik.setValues(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -64,23 +58,23 @@ function StorePolicy() {
   const Editor = {
     modules: {
       toolbar: [
-        [{ header: '1' }, { header: '2' }, { font: [] }],
+        [{ header: "1" }, { header: "2" }, { font: [] }],
         [{ size: [] }],
-        ['bold', 'italic', 'underline', 'strike', 'blockquote'],
+        ["bold", "italic", "underline", "strike", "blockquote"],
         [
-          { list: 'ordered' },
-          { list: 'bullet' },
-          { indent: '-1' },
-          { indent: '+1' }
+          { list: "ordered" },
+          { list: "bullet" },
+          { indent: "-1" },
+          { indent: "+1" },
         ],
-        ['link', 'image', 'video'],
-        ['clean']
+        ["link", "image", "video"],
+        ["clean"],
       ],
       clipboard: {
-        matchVisual: false // Disables extra line breaks when pasting HTML
-      }
-    }
-  }
+        matchVisual: false, // Disables extra line breaks when pasting HTML
+      },
+    },
+  };
 
   return (
     <div className="row m-0">
@@ -94,15 +88,18 @@ function StorePolicy() {
             <ReactQuill
               ref={editor}
               value={formik.values.shipping_policy}
-              onChange={(newContent) => formik.setFieldValue('shipping_policy', newContent)}
-              onBlur={() => formik.setFieldTouched('shipping_policy', true)}
+              onChange={(newContent) =>
+                formik.setFieldValue("shipping_policy", newContent)
+              }
+              onBlur={() => formik.setFieldTouched("shipping_policy", true)}
               modules={Editor.modules}
             />
-            {formik.touched.shipping_policy && formik.errors.shipping_policy && (
-              <div className="error text-danger">
-                <small>{formik.errors.shipping_policy}</small>
-              </div>
-            )}
+            {formik.touched.shipping_policy &&
+              formik.errors.shipping_policy && (
+                <div className="error text-danger">
+                  <small>{formik.errors.shipping_policy}</small>
+                </div>
+              )}
           </div>
           <div className="mb-5">
             <label className="form-label">
@@ -111,8 +108,10 @@ function StorePolicy() {
             <ReactQuill
               ref={editor}
               value={formik.values.refund_policy}
-              onChange={(newContent) => formik.setFieldValue('refund_policy', newContent)}
-              onBlur={() => formik.setFieldTouched('refund_policy', true)}
+              onChange={(newContent) =>
+                formik.setFieldValue("refund_policy", newContent)
+              }
+              onBlur={() => formik.setFieldTouched("refund_policy", true)}
               modules={Editor.modules}
             />
             {formik.touched.refund_policy && formik.errors.refund_policy && (
@@ -128,15 +127,18 @@ function StorePolicy() {
             <ReactQuill
               ref={editor}
               value={formik.values.cancellation_policy}
-              onChange={(newContent) => formik.setFieldValue('cancellation_policy', newContent)}
-              onBlur={() => formik.setFieldTouched('cancellation_policy', true)}
+              onChange={(newContent) =>
+                formik.setFieldValue("cancellation_policy", newContent)
+              }
+              onBlur={() => formik.setFieldTouched("cancellation_policy", true)}
               modules={Editor.modules}
             />
-            {formik.touched.cancellation_policy && formik.errors.cancellation_policy && (
-              <div className="error text-danger">
-                <small>{formik.errors.cancellation_policy}</small>
-              </div>
-            )}
+            {formik.touched.cancellation_policy &&
+              formik.errors.cancellation_policy && (
+                <div className="error text-danger">
+                  <small>{formik.errors.cancellation_policy}</small>
+                </div>
+              )}
           </div>
           <div className="text-end mt-4 mb-3">
             <button

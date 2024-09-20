@@ -30,11 +30,15 @@ function Location() {
       console.log("Form Data", data);
       try {
         setLoadIndicator(true);
-        const response = await api.put(`vendor/shop/${id}/update/location`, data, {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await api.put(
+          `vendor/shop/${id}/update/location`,
+          data,
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
         if (response.status === 200) {
           toast.success(response.data.message);
         }
@@ -52,14 +56,7 @@ function Location() {
         const response = await api.get(`vendor/shop/location/${id}`);
         const shopData = response.data.data;
         console.log("object", shopData);
-        formik.setValues({
-          street: shopData.street || "",
-          street2: shopData.street2 || "",
-          city: shopData.city || "",
-          zip_code: shopData.zip_code || "",
-          state: shopData.state || "",
-          country: shopData.country || "",
-        });
+        formik.setValues(shopData);
       } catch (error) {
         toast.error("Error Fetching Data ", error);
       }

@@ -78,17 +78,7 @@ function StoreHours() {
       try {
         const response = await api.get(`vendor/shop/hour/${shop_id}`);
         console.log("getHours", response.data.data);
-        formik.setValues({
-          daily_timing: response.data.data.daily_timing || {
-            monday: { opening: "", closing: "" },
-            tuesday: { opening: "", closing: "" },
-            wednesday: { opening: "", closing: "" },
-            thursday: { opening: "", closing: "" },
-            friday: { opening: "", closing: "" },
-            saturday: { opening: "", closing: "" },
-            sunday: { opening: "", closing: "" },
-          },
-        });
+        formik.setValues(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }

@@ -4,6 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
 import { FiAlertTriangle } from "react-icons/fi";
+import ImageURL from "../../../config/ImageURL";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Shop Name is required!"),
@@ -108,18 +109,11 @@ const Store = () => {
         const response = await api.get(`vendor/shop/details/${id}`);
         setData(response.data);
         const shopData = response.data.data;
-        formik.setValues({
-          name: shopData.name || "",
-          legal_name: shopData.legal_name || "",
-          email: shopData.email || "",
-          mobile: shopData.mobile || "",
-          shopType: shopData.shop_type === "1" ? "product" : "service",
-          description: shopData.description || "",
-          external_url: shopData.external_url || "",
-          logo: shopData.logo || "",
-          banner: shopData.banner || "",
-          shop_ratings: shopData.shop_ratings || "",
-        });
+        formik.setValues(shopData);
+        formik.setFieldValue(
+          "shopType",
+          shopData.shop_type === "1" ? "product" : "service"
+        );
       } catch (error) {
         toast.error("Error Fetching Data ", error);
       }
@@ -264,18 +258,7 @@ const Store = () => {
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">
-              {/* Display the logo if it exists */}
-              {formik.values.logo && typeof formik.values.logo === "string" && (
-                <div className="mb-3">
-                  <img
-                    src={formik.values.logo}
-                    alt="Shop Logo"
-                    style={{ maxWidth: "100px", maxHeight: "100px" }}
-                  />
-                </div>
-              )}
-
-              {/* File input for uploading a new logo */}
+              
               <input
                 type="file"
                 name="file"
@@ -291,6 +274,13 @@ const Store = () => {
                   <small>{formik.errors.logo}</small>
                 </div>
               )}
+              <div className="mb-3">
+                <img
+                  src={`${ImageURL}${formik.values.logo}`}
+                  alt="Shop Logo"
+                  style={{ maxWidth: "100px", maxHeight: "100px" }}
+                />
+              </div>
             </div>
             <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">
