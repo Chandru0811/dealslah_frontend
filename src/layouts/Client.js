@@ -11,6 +11,7 @@ import VendorRegistration from "../components/auth/VendorRegistration";
 import SignIn from "../components/auth/SignIn";
 import AdminLogin from "../components/auth/AdminLogin";
 import Wellcomepage from "../components/auth/Register/AddRegister/Wellcomepage";
+import Register from "../components/auth/Register/AddRegister/Register";
 // import NotFound from "../components/common/NotFound";
 
 function Client({
@@ -28,10 +29,10 @@ function Client({
           <Routes>
             {/* <Route path="/" element={<Home  />} /> */}
             {/* <Route path="*" element={<NotFound />} /> */}
-            <Route path="/" element={<Registration />} />
+            {/* <Route path="/" element={<Registration />} /> */}
             {/* <Route path="/vendorregistration" element={<VendorRegistration />} /> */}
             <Route
-              path="/login"
+              path="/"
               element={
                 <VendorLogin
                   handleVendorLogin={handleVendorLogin}
@@ -39,9 +40,10 @@ function Client({
                 />
               }
             />
-            <Route path="/wellcomepage" element={<Wellcomepage />} />
+            <Route path="/wellcomepage/:id" element={<Wellcomepage />} />
+            <Route path="/register" element={<Register />} />
             <Route
-              path="/vendorregistration"
+              path="/vendorregistration/:id"
               element={
                 <VendorRegistration handleVendorLogin={handleVendorLogin} />
               }

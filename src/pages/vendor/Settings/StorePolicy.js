@@ -12,8 +12,7 @@ const validationSchema = Yup.object({
   cancellation_policy: Yup.string().required("Cancelation Policy is required"),
 });
 function StorePolicy() {
-  // const shop_id = sessionStorage.getItem("shop_id");
-  const shop_id = 5;
+  const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
   const editor = useRef(null);
 

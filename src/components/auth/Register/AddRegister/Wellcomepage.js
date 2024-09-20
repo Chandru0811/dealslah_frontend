@@ -1,9 +1,13 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 function WelcomeWizard() {
+  const { id } = useParams();
   return (
-    <section className="d-flex flex-column align-items-center justify-content-center" style={{ backgroundColor: "#f2f2f2", minHeight: '100vh' }}>
+    <section
+      className="d-flex flex-column align-items-center justify-content-center"
+      style={{ backgroundColor: "#f2f2f2", minHeight: "100vh" }}
+    >
       <h2
         className="d-flex justify-content-center mb-5"
         style={{ color: "#771bf8" }}
@@ -24,8 +28,10 @@ function WelcomeWizard() {
           skip and return to the Store!
         </p>
         <div className="button-group">
-          <Link to="/vendorregistration">
-            <button className="wellcome-btn" style={{ width: '250px' }}>Let's Go!</button>
+          <Link to={`/vendorregistration/${id}`}>
+            <button className="wellcome-btn" style={{ width: "250px" }}>
+              Let's Go!
+            </button>
           </Link>
         </div>
       </div>

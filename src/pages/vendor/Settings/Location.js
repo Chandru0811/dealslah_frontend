@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import api from "../../../config/URL";
 
 function Location() {
-  const id = sessionStorage.getItem("id");
+  const id = sessionStorage.getItem("shop_id");
   const [loadIndicator, setLoadIndicator] = useState(false);
   const validationSchema = Yup.object({
     street: Yup.string().required("Street 1 is required"),

@@ -1,20 +1,14 @@
-import React, {
-  forwardRef,
-  useEffect,
-  useImperativeHandle,
-  useState,
-} from "react";
+import React, { forwardRef, useImperativeHandle } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { FaInfoCircle } from "react-icons/fa";
-import axios from "axios";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
+import api from "../../../../config/URL";
 
 const validationSchema = Yup.object().shape({
-  paypal_id: Yup.string()
-    .required("paypal  is required"),
+  paypal_id: Yup.string().required("paypal  is required"),
   account_holder: Yup.string().required("Account Holder is required"),
   account_type: Yup.string().required("Account Type is required"),
   account_number: Yup.string().required("Account Number is required"),
@@ -25,7 +19,6 @@ const validationSchema = Yup.object().shape({
 
 const Form2 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
-    const navigate = useNavigate();
     const formik = useFormik({
       initialValues: {
         paypal_id: "",
@@ -38,23 +31,18 @@ const Form2 = forwardRef(
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
-        setLoadIndicators(true)
+        setLoadIndicators(true);
         console.log("Form Data", data);
         const completeFormData = { ...formData, ...data };
         try {
-          const token = `eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZDAxZTAyMy0zNDI0LTRhMjMtYjIxNS0yZGNhMWY4NzU3OTQiLCJqdGkiOiI2MzdlODMzZTRjNjU1MzRmYjBkM2NiNmUwNDk0OGNkZTc5Y2NjMzkwY2FlZTA0ZjkzNmMyMDFlMGUwNDRiOGJhZjRiMjMxMzBlMGEzY2Y0OCIsImlhdCI6MTcyNjQ4NzQyOC42ODI3NCwibmJmIjoxNzI2NDg3NDI4LjY4Mjc0NiwiZXhwIjoxNzU4MDIzNDI4LjY3NjA1Niwic3ViIjoiNSIsInNjb3BlcyI6W119.BTa1CBsCXTcKlgoGm9-cnmO6pX_tXdtoDOX62VE8hHES2A1l6_T7HuAxQLpjBxgpg-8d8eml6BTELPyRUJaKUTIvFrpdzuOnzhoPK_FwlZsOUMwhYKlQ0MagMqje2uyR-nb3kmIalj0hs0nLrCoC6o9fKElJg1rHxwkJUy0ZebGvX45FdTrOVux4V7S4exT1Q3Nom2snwUSvdhFiyq0f81hcP1rLi8uLPGGwGREzY8tkADWNWGMow493zLNeHEFQEfQrYAuTNAfdyxeG4n3sYAwwA4IP8KVzK0gPouZa3LdnJMNVkUC7Eh0rHxBb2xKjcvK_mEIHCI9OlEkIvkb_MypkjLkhJAHgfJU4UdSfeZmbhfPRao5yxTdxwYFl_QWbGgnNmBLzZV7oqrk1UmZwGbCe-ThnvcZyGzAJRziN10oMb73B_3UwhBoatLg-72XN4492i1-vRgFfbh4mQBCbb3Mrvj0EhqyMNShpx929-DugAFV26iIeBPC-9dpIgfPWnhEZsdr3AjI5rKoPwk-LC8qyGfoksPgwsn8tHeNWpqPZdZcNpGtW62BtoJkZD8puUFXEukcynxbQp-lvpT-MaHMeCm0ClG5c_62GvKXiv4PobVEOhKPh76bqOmTrW4SnPdM8DClFa9Trs6tjZM6lJvtKbiuLEO6hSF2PxM5dzPc`;
-          const response = await axios.post(
-            `https://sgitjobs.com/dealslah/public/api/vendor/shopregistration`,
-            completeFormData,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
+          const response = await api.post(
+            `vendor/shopregistration`,
+            completeFormData
           );
           console.log("Response", response);
           if (response.status === 200) {
             toast.success(response.data.message);
+            sessionStorage.setItem("shop_id", response.data.data.id);
           } else {
             toast.error(response.data.message);
           }
@@ -78,9 +66,8 @@ const Form2 = forwardRef(
             console.error("API Error", error);
             toast.error("An unexpected error occurred.");
           }
-        }
-        finally{
-          setLoadIndicators(false)
+        } finally {
+          setLoadIndicators(false);
         }
       },
     });
@@ -118,11 +105,12 @@ const Form2 = forwardRef(
                           onBlur={formik.handleBlur}
                           value={formik.values.paypal_id}
                         />
-                        {formik.touched.paypal_id && formik.errors.paypal_id && (
-                          <div className="error text-danger">
-                            <small>{formik.errors.paypal_id}</small>
-                          </div>
-                        )}
+                        {formik.touched.paypal_id &&
+                          formik.errors.paypal_id && (
+                            <div className="error text-danger">
+                              <small>{formik.errors.paypal_id}</small>
+                            </div>
+                          )}
                       </div>
                     </div>
                   </div>

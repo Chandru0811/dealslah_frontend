@@ -25,10 +25,10 @@ const validationSchema = Yup.object({
 const Store = () => {
   const [data, setData] = useState([]);
   const [loadIndicator, setLoadIndicator] = useState(false);
-  const id = sessionStorage.getItem("id");
-  const convertToSlug = (name) => {
-    return name.toLowerCase().replace(/\s+/g, "_");
-  };
+  const id = sessionStorage.getItem("shop_id");
+  // const convertToSlug = (name) => {
+  //   return name.toLowerCase().replace(/\s+/g, "_");
+  // };
 
   const formik = useFormik({
     initialValues: {
@@ -57,8 +57,8 @@ const Store = () => {
       formdata.append("external_url", data.external_url);
       formdata.append("description", data.description);
       formdata.append("shop_ratings", data.shop_ratings);
-      const slug = convertToSlug(data.legal_name);
-      formdata.append("slug", slug);
+      // const slug = convertToSlug(data.legal_name);
+      // formdata.append("slug", slug);
       if (data.logo) {
         formdata.append("logo", data.logo);
       }
@@ -258,14 +258,14 @@ const Store = () => {
               </label>
             </div>
             <div className="col-md-8 col-12 mb-5">
-              
               <input
                 type="file"
                 name="file"
-                accept=".png,.jpeg,.jpg,.gif,svg"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
                 onChange={(event) => {
-                  formik.setFieldValue("logo", event.target.files[0]);
+                  const file = event.target.files[0];
+                  formik.setFieldValue("logo", file);
                 }}
                 onBlur={formik.handleBlur}
               />
@@ -274,14 +274,26 @@ const Store = () => {
                   <small>{formik.errors.logo}</small>
                 </div>
               )}
-              <div className="mb-3">
-                <img
-                  src={`${ImageURL}${formik.values.logo}`}
-                  alt="Shop Logo"
-                  style={{ maxWidth: "100px", maxHeight: "100px" }}
-                />
-              </div>
+
+              {formik.values.logo && (
+                <div className="mb-3">
+                  {typeof formik.values.logo === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.logo)}
+                      alt="Shop logo"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.logo}`}
+                      alt="Shop logo"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
+
             <div className="col-md-4 col-12 mb-5">
               <label className="form-label fw-bold">
                 External Url<span className="text-danger">*</span>
@@ -344,13 +356,22 @@ const Store = () => {
                 }}
                 onBlur={formik.handleBlur}
               />
+
               {formik.touched.banner && formik.errors.banner && (
                 <div className="error text-danger">
                   <small>{formik.errors.banner}</small>
                 </div>
               )}
             </div>
-
+            {formik.values.banner &&
+              typeof formik.values.banner === "string" && (
+                <div className="col-12 mb-3">
+                  <img
+                    src={`${ImageURL}${formik.values.banner}`}
+                    alt="Shop Banner"
+                  />
+                </div>
+              )}
             <div className="mb-3">
               <h5 className="mb-4 fw-bold">Shop Description</h5>
             </div>
