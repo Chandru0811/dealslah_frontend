@@ -30,6 +30,10 @@ import Shop from "../pages/admin/Shop/Shop";
 import ShopView from "../pages/admin/Shop/ShopView";
 import Stores from "../pages/admin/Shop/Stores";
 import Locations from "../pages/admin/Shop/Locations";
+import DealCategory from "../pages/admin/DealCategory/DealCategory";
+import DealCategoryAdd from "../pages/admin/DealCategory/DealCategoryAdd";
+import DealCategoryEdit from "../pages/admin/DealCategory/DealCategoryEdit";
+import DealCategoryView from "../pages/admin/DealCategory/DealCategoryView";
 
 function Admin({ handleLogout }) {
   return (
@@ -78,11 +82,17 @@ function Admin({ handleLogout }) {
                   <Route path="/banner/edit" element={<BannerEdit />} />
                   <Route path="/banner/view" element={<BannerView />} />
 
+
+                  <Route path="/dealcategories" element={<DealCategory />} />
+                  <Route path="/dealcategories/add" element={<DealCategoryAdd />} />
+                  <Route path="/dealcategories/edit/:id" element={<DealCategoryEdit />} />
+                  <Route path="/dealcategories/view/:id" element={<DealCategoryView />} />
+
                   {/* {/ Slider /} */}
                   <Route path="/slider" element={<Slider />} />
                   <Route path="/slider/add" element={<SliderAdd />} />
-                  <Route path="/slider/edit" element={<SliderEdit />} />
-                  <Route path="/slider/view" element={<SliderView />} />
+                  <Route path="/slider/edit/:id" element={<SliderEdit />} />
+                  <Route path="/slider/view/:id" element={<SliderView />} />
                   {/* {/ Product /} */}
                   <Route path="/products" element={<Products />} />
                   <Route path="/products/add" element={<ProductsAdd />} />

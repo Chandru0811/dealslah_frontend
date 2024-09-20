@@ -41,7 +41,7 @@ function Sidebar({ handleLogout }) {
           to="/"
         >
           <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
-          style={{background:"#fff", borderRadius:"5px",width:"50px",height:"50px"}} />
+            style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
           <p className="text-white">Dealslash</p>
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
@@ -73,10 +73,15 @@ function Sidebar({ handleLogout }) {
               </NavLink>
             </li>
             <li className="nav-item">
+              <NavLink className="nav-link" to="/dealcategories">
+                <BiSolidCategory />Deal Categories
+              </NavLink>
+            </li>
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/products">
                 <BiSolidCategory />Product
               </NavLink>
-            </li>
+            </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/shop">
                 <TbShoppingCartFilled />
