@@ -77,11 +77,11 @@ function Sidebar({ handleLogout }) {
                 <BiSolidCategory />Deal Categories
               </NavLink>
             </li>
-            {/* <li className="nav-item">
+            <li className="nav-item">
               <NavLink className="nav-link" to="/products">
                 <BiSolidCategory />Product
               </NavLink>
-            </li> */}
+            </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/shop">
                 <TbShoppingCartFilled />
