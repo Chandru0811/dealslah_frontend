@@ -8,15 +8,15 @@ import toast from "react-hot-toast";
 function CategoryGroupEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const { id } = useParams();
-    const [logo, setLogo] = useState(null); // this is the file
+    const [logo, setLogo] = useState(null);
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        slug: Yup.string().required("*Slug is required"),
-        icon: Yup.mixed().required("*Image is required"), // Ensure Yup validation for file is handled with mixed()
+        // slug: Yup.string().required("*Slug is required"),
+        // icon: Yup.mixed().required("*Image is required"),
         order: Yup.string().required("*Select an order"),
-        active: Yup.string().required("*Select an active"),
+        // active: Yup.string().required("*Select an active"),
     });
 
     const formik = useFormik({
@@ -39,7 +39,7 @@ function CategoryGroupEdit() {
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
-
+            setLoadIndicator(true);
             try {
                 const response = await api.post(`admin/categoryGroup/update/${id}`, formData, {
                     headers: {
@@ -52,6 +52,8 @@ function CategoryGroupEdit() {
                 }
             } catch (error) {
                 toast.error(error.message);
+            } finally {
+                setLoadIndicator(false);
             }
         },
     });
@@ -67,6 +69,11 @@ function CategoryGroupEdit() {
         };
         getData();
     }, [id]);
+
+    useEffect(() => {
+        const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+        formik.setFieldValue("slug", slug);
+    }, [formik.values.name]);
 
     return (
         <div className="container-fluid minHeight m-">
@@ -108,19 +115,7 @@ function CategoryGroupEdit() {
                                 )}
                             </div>
 
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Slug<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""}`}
-                                    {...formik.getFieldProps("slug")}
-                                />
-                                {formik.touched.slug && formik.errors.slug && (
-                                    <div className="invalid-feedback">{formik.errors.slug}</div>
-                                )}
-                            </div>
+
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
@@ -158,22 +153,29 @@ function CategoryGroupEdit() {
                                 )}
                             </div>
 
+                            {/* 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Active<span className="text-danger">*</span>
                                 </label>
                                 <select
-                                    className={`form-select ${formik.touched.active && formik.errors.active ? "is-invalid" : ""}`}
+                                    aria-label="Default select example"
+                                    className={`form-select ${formik.touched.active && formik.errors.active
+                                        ? "is-invalid"
+                                        : ""
+                                        }`}
                                     {...formik.getFieldProps("active")}
                                 >
-                                    <option value=""></option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
+                                    <option >Select an option</option>
+                                    <option value="0">Active</option>
+                                    <option value="1">InActive</option>
                                 </select>
                                 {formik.touched.active && formik.errors.active && (
-                                    <div className="invalid-feedback">{formik.errors.active}</div>
+                                    <div className="invalid-feedback">
+                                        {formik.errors.active}
+                                    </div>
                                 )}
-                            </div>
+                            </div> */}
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">Description</label>
@@ -191,9 +193,16 @@ function CategoryGroupEdit() {
                 </div>
                 <div className="col-auto">
                     <div className="hstack gap-2 justify-content-end">
-                        <button type="submit" className="btn btn-button btn-sm">
+                        <button
+                            type="submit"
+                            className="btn btn-sm btn-button"
+                        // disabled={loadIndicator}
+                        >
                             {loadIndicator && (
-                                <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                <span
+                                    className="spinner-border spinner-border-sm me-2"
+                                    aria-hidden="true"
+                                ></span>
                             )}
                             Update
                         </button>

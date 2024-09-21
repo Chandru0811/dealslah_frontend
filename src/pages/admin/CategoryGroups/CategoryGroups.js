@@ -100,7 +100,16 @@ function CategoryGroups() {
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.order}</td>
-                                        <td className="align-middle">{data.active}</td>
+                                        <td className="align-middle">
+                                            {data.active ? (
+                                                <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                            ) : (
+                                                <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                            )}
+                                            {data.active ? ' Active' : ' Inactive'}
+                                        </td>
+
+
                                         <td className="align-middle text-center">
                                             <Link to={`/categorygroup/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>

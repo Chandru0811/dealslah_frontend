@@ -100,11 +100,25 @@ function DealCategory() {
                                         <td
                                             className="ms-2"><img src={`${ImageURL}${data.image_path}`}
                                                 alt="icon"
+
+                                                width={50}
                                                 className="img-fluid"></img>{data.name}
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.description}</td>
-                                        <td className="align-middle">{data.active}</td>
+                                        <td className="text-center">
+                                            <div className="word-wrap">
+                                                {data.active == 1 ? (
+                                                    <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                                ) : (
+                                                    <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                                )}
+                                                {data.active ? ' Active' : ' Inactive'}
+                                            </div>
+                                        </td>
+
+
+
                                         <td className="align-middle text-center">
                                             <Link to={`/dealcategories/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>

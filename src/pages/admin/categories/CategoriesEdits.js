@@ -15,7 +15,7 @@ function CategoriesEdits() {
 
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
-    active: Yup.string().required("*Select an Status"),
+    // active: Yup.string().required("*Select an Status"),
     description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
     slug: Yup.string().required("*name Label is required"),
@@ -31,7 +31,7 @@ function CategoriesEdits() {
       slug: "",
       icon: null,
     },
-    // validationSchema: validationSchema,
+    validationSchema: validationSchema,
     onSubmit: async (values) => {
       const formData = new FormData();
       formData.append("_method", "PUT");
@@ -97,6 +97,11 @@ function CategoriesEdits() {
     // formik.setValues(datas);
     setLoadIndicator(false);
   }, []);
+
+  useEffect(() => {
+    const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+    formik.setFieldValue("slug", slug);
+  }, [formik.values.name]);
 
   return (
     <section className="px-4">
@@ -169,23 +174,8 @@ function CategoriesEdits() {
                   <div className="invalid-feedback">{formik.errors.name}</div>
                 )}
               </div>
-              <div className="col-md-6 col-12 mb-3">
-                <label className="form-label">
-                  Slug<span className="text-danger">*</span>
-                </label>
-                <input
-                  type="text"
-                  className={`form-control ${formik.touched.slug && formik.errors.slug
-                    ? "is-invalid"
-                    : ""
-                    }`}
-                  {...formik.getFieldProps("slug")}
-                />
-                {formik.touched.slug && formik.errors.slug && (
-                  <div className="invalid-feedback">{formik.errors.slug}</div>
-                )}
-              </div>
-              <div className="col-md-6 col-12 mb-3">
+
+              {/* <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Active<span className="text-danger">*</span>
                 </label>
@@ -206,7 +196,7 @@ function CategoriesEdits() {
                     {formik.errors.active}
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Icon<span className="text-danger">*</span>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -15,10 +15,9 @@ function CategoryGroupAdd() {
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        slug: Yup.string().required("*Slug is required"),
         // icon: Yup.mixed().required("*Icon is required"), // ensuring it's validated as a file
         order: Yup.string().required("*Select an order"),
-        active: Yup.string().required("*Select an active"),
+        // active: Yup.string().required("*Select an active"),
     });
 
     const formik = useFormik({
@@ -80,6 +79,10 @@ function CategoryGroupAdd() {
             }
         },
     });
+    useEffect(() => {
+        const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+        formik.setFieldValue("slug", slug);
+    }, [formik.values.name]);
 
     return (
         <div className="container-fluid minHeight m-0">
@@ -123,19 +126,7 @@ function CategoryGroupAdd() {
                                     <div className="invalid-feedback">{formik.errors.name}</div>
                                 )}
                             </div>
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Slug<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""}`}
-                                    {...formik.getFieldProps("slug")}
-                                />
-                                {formik.touched.slug && formik.errors.slug && (
-                                    <div className="invalid-feedback">{formik.errors.slug}</div>
-                                )}
-                            </div>
+
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Icon<span className="text-danger">*</span>
@@ -171,7 +162,7 @@ function CategoryGroupAdd() {
                                     <div className="invalid-feedback">{formik.errors.order}</div>
                                 )}
                             </div>
-                            <div className="col-md-6 col-12 mb-3">
+                            {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Active<span className="text-danger">*</span>
                                 </label>
@@ -187,7 +178,7 @@ function CategoryGroupAdd() {
                                 {formik.touched.active && formik.errors.active && (
                                     <div className="invalid-feedback">{formik.errors.active}</div>
                                 )}
-                            </div>
+                            </div> */}
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">Description</label>
                                 <textarea
