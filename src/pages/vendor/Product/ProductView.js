@@ -29,7 +29,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Category</b>
+                  <b>Category Group</b>
                 </p>
               </div>
               <div className="col-6">
@@ -41,7 +41,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>category Group</b>
+                  <b>category </b>
                 </p>
               </div>
               <div className="col-6">
@@ -82,6 +82,18 @@ function ProductView() {
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: Slug</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>Name</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: name</p>
               </div>
             </div>
           </div>
@@ -169,15 +181,28 @@ function ProductView() {
               </div>
             </div>
           </div>
+
           <div className="col-md-6 col-12">
             <div className="row mb-3">
-              <div className="col-12 d-flex justify-content-start align-items-center">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm">
+                  <b>Description</b>
+                </p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm">: Combines style and performance for everyday computing.</p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
                   <b>Image</b>
                 </p>
               </div>
-              <div className="col-12 mt-3">
-                <p>
+              <div className="col-6">
+                <p className="text-muted text-sm"> :
                   <img
                     src={Image}
                     alt="image"
@@ -185,18 +210,6 @@ function ProductView() {
                     width={150}
                   />
                 </p>
-              </div>
-            </div>
-          </div>
-          <div className="col-md-6 col-12">
-            <div className="row mb-3">
-              <div className="col-12 d-flex justify-content-start align-items-center">
-                <p className="text-sm">
-                  <b>Description</b>
-                </p>
-              </div>
-              <div className="col-12 mt-1">
-                <p className="text-muted text-sm">Combines style and performance for everyday computing.</p>
               </div>
             </div>
           </div>
