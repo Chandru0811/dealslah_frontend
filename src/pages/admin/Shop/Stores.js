@@ -83,7 +83,7 @@ function Stores() {
               </p>
             </div>
             <div className="col-6">
-              <p className="text-muted text-sm">: {data?.shopType}</p>
+              <p className="text-muted text-sm">: {data?.shop_type == 1 ? 'Product' : data?.shop_type == 2 ? 'Service' : ''}</p>
             </div>
           </div>
         </div>
@@ -97,12 +97,12 @@ function Stores() {
             <div className="col-6">
               <p>
                 : <img
-                    src={`${ImageURL}${data?.icon}`}
-                    alt="Shop Logo"
-                    style={{ maxWidth: "100px", maxHeight: "100px" }}
-                  />
+                  src={`${ImageURL}${data?.icon}`}
+                  alt=""
+                  style={{ maxWidth: "100px", maxHeight: "100px" }}
+                />
               </p>
-             
+
             </div>
           </div>
         </div>
@@ -114,7 +114,7 @@ function Stores() {
               </p>
             </div>
             <div className="col-6">
-              <p className="text-muted text-sm">: {data?.description}</p>
+              <p className="text-muted text-sm">: {data?.shop_ratings}</p>
             </div>
           </div>
         </div>
@@ -126,7 +126,7 @@ function Stores() {
               </p>
             </div>
             <div className="col-6">
-              <p className="text-muted text-sm">: --</p>
+              <p className="text-muted text-sm">: {data?.shop_ratings}</p>
             </div>
           </div>
         </div>
@@ -138,7 +138,7 @@ function Stores() {
               </p>
             </div>
             <div className="col-6">
-              <p className="text-muted text-sm">: --</p>
+              <p className="text-muted text-sm">: {data?.external_url}</p>
             </div>
           </div>
         </div>

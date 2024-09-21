@@ -76,11 +76,10 @@ function Location() {
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.street && formik.errors.street
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.street && formik.errors.street
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="street"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -98,11 +97,10 @@ function Location() {
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.street2 && formik.errors.street2
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.street2 && formik.errors.street2
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="street2"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -120,9 +118,8 @@ function Location() {
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.city && formik.errors.city ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.city && formik.errors.city ? "is-invalid" : ""
+                  }`}
                 name="city"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -140,11 +137,10 @@ function Location() {
             <div className="col-md-8 col-12 mb-5">
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.zip_code && formik.errors.zip_code
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.zip_code && formik.errors.zip_code
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="zip_code"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
@@ -160,22 +156,17 @@ function Location() {
               <label className="form-label fw-bold">State</label>
             </div>
             <div className="col-md-8 col-12 mb-5">
-              <select
+              <input
                 type="text"
-                className={`form-select ${
-                  formik.touched.state && formik.errors.state
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.state && formik.errors.state
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="state"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.state}
-              >
-                <option></option>
-                <option value="TamilNadu">TamilNadu</option>
-                <option value="Karnataka">Krnataka</option>
-              </select>
+              />
               {formik.touched.state && formik.errors.state && (
                 <div className="error text-danger">
                   <small>{formik.errors.state}</small>
@@ -186,22 +177,17 @@ function Location() {
               <label className="form-label fw-bold">Country</label>
             </div>
             <div className="col-md-8 col-12 mb-5">
-              <select
+              <input
                 type="text"
-                className={`form-select ${
-                  formik.touched.country && formik.errors.country
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.country && formik.errors.country
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="country"
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
                 value={formik.values.country}
-              >
-                <option></option>
-                <option value="india">India</option>
-                <option value="singapore">Singapore</option>
-              </select>
+              />
               {formik.touched.country && formik.errors.country && (
                 <div className="error text-danger">
                   <small>{formik.errors.country}</small>

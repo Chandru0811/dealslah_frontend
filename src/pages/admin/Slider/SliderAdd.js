@@ -13,7 +13,7 @@ function SliderAdd() {
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
     image: Yup.mixed().required("*Image is required"),
-  })
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -59,7 +59,9 @@ function SliderAdd() {
               });
             }
           } else {
-            toast.error(error.response.data.message || "An unexpected error occurred.");
+            toast.error(
+              error.response.data.message || "An unexpected error occurred."
+            );
           }
         } else {
           console.error("API Error", error);
@@ -86,7 +88,10 @@ function SliderAdd() {
             </div>
           </div>
         </div>
-        <div className="container card shadow border-0" style={{ minHeight: "60vh" }}>
+        <div
+          className="container card shadow border-0"
+          style={{ minHeight: "60vh" }}
+        >
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -94,8 +99,12 @@ function SliderAdd() {
               </label>
               <input
                 type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
+                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                className={`form-control ${
+                  formik.touched.image && formik.errors.image
+                    ? "is-invalid"
+                    : ""
+                }`}
                 onChange={(event) => {
                   const file = event.currentTarget.files[0];
                   formik.setFieldValue("image", file);
@@ -111,7 +120,11 @@ function SliderAdd() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
+                className={`form-select ${
+                  formik.touched.order && formik.errors.order
+                    ? "is-invalid"
+                    : ""
+                }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>
@@ -130,7 +143,10 @@ function SliderAdd() {
         <div className="hstack gap-2 justify-content-end p-2">
           <button type="submit" className="btn btn-sm btn-button">
             {loadIndicator && (
-              <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
             )}
             Submit
           </button>

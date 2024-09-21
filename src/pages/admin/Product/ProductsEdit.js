@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -10,7 +10,6 @@ function ProductsEdit() {
         shop_id: Yup.string().required("Shop Id is required"),
         category_id: Yup.string().required("Category Id is required"),
         brand: Yup.string().required("Brand is required"),
-        slug: Yup.string().required("Slug is required"),
         original_price: Yup.number()
             .required("Original Price is required")
             .min(1, "Original Price must be greater than zero"),
@@ -55,6 +54,11 @@ function ProductsEdit() {
             console.log("Form Data:", values);
         },
     });
+
+    useEffect(() => {
+        const slug = formik.values.name?.toLowerCase().replace(/\s+/g, "_");
+        formik.setFieldValue("slug", slug);
+    }, [formik.values.name]);
 
     return (
         <section className="px-4">
@@ -154,20 +158,6 @@ function ProductsEdit() {
                             />
                             {formik.touched.brand && formik.errors.brand && (
                                 <div className="invalid-feedback">{formik.errors.brand}</div>
-                            )}
-                        </div>
-                        <div className="col-md-6 col-12 mb-3">
-                            <label className="form-label">
-                                Slug<span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="text"
-                                className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""
-                                    }`}
-                                {...formik.getFieldProps("slug")}
-                            />
-                            {formik.touched.slug && formik.errors.slug && (
-                                <div className="invalid-feedback">{formik.errors.slug}</div>
                             )}
                         </div>
                         <div className="col-md-6 col-12 mb-3">

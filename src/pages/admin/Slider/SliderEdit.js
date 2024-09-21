@@ -56,7 +56,6 @@ function SliderEdit() {
     getData();
   }, [id]);
 
-
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -83,15 +82,17 @@ function SliderEdit() {
               </label>
               <input
                 type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg"
-                className={`form-control ${formik.touched.image && formik.errors.image
-                  ? "is-invalid"
-                  : ""
-                  }`}
+                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                className={`form-control ${
+                  formik.touched.image && formik.errors.image
+                    ? "is-invalid"
+                    : ""
+                }`}
                 onChange={(event) => {
                   const file = event.currentTarget.files[0];
                   formik.setFieldValue("image", file);
-                }} />
+                }}
+              />
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
               )}
@@ -102,10 +103,11 @@ function SliderEdit() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${formik.touched.order && formik.errors.order
-                  ? "is-invalid"
-                  : ""
-                  }`}
+                className={`form-select ${
+                  formik.touched.order && formik.errors.order
+                    ? "is-invalid"
+                    : ""
+                }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>

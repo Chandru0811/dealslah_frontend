@@ -32,7 +32,7 @@ function Payments() {
                                     </p>
                                 </div>
                                 <div className="col-6">
-                                    <p className="text-muted text-sm">: --</p>
+                                    <p className="text-muted text-sm">: {data?.payment_id}</p>
                                 </div>
                             </div>
                         </div>
