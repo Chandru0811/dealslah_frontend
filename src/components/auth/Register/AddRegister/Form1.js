@@ -39,7 +39,7 @@ const Form1 = forwardRef(
       onSubmit: async (data) => {
         setLoadIndicators(true);
         console.log("Form Data", data);
-        const transformedSlug = data.legal_name
+        const transformedSlug = data.name
           .toLowerCase()
           .replace(/\s+/g, "_");
         const formDataWithSlug = {
