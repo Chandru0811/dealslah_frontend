@@ -12,8 +12,10 @@ function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
+  const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
+  const [modelCategory, setModelCategory] = useState(null);
   const [category, setCategory] = useState([]);
-
+  console.log("modelCategory", modelCategory);
   const id = sessionStorage.getItem("shop_id");
 
   const validationSchema = Yup.object({
@@ -43,6 +45,12 @@ function ProductAdd() {
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
+  });
+  const validationSchema1 = Yup.object({
+    catagory_group_id: Yup.string().required("Category Group is required"),
+    name: Yup.string().required("Name is required"),
+    icon: Yup.string().required("Imagei s required"),
+    description: Yup.string().required("Description is required"),
   });
 
   const formik = useFormik({
@@ -80,10 +88,9 @@ function ProductAdd() {
       formData.append("sku", values.sku);
       formData.append("image", values.image);
       formData.append("description", values.description);
-
-      // Generate the slug and append it
-      const transformedSlug = values.name.toLowerCase().replace(/\s+/g, "_");
-      formData.append("slug", transformedSlug);
+      const slug = values.name.toLowerCase().replace(/\s+/g, "_");
+      const finalSlug = `${slug}_${id}`;
+      formData.append("slug", finalSlug);
 
       console.log("Form Data:", formData);
       try {
@@ -120,10 +127,63 @@ function ProductAdd() {
       }
     },
   });
+  const formik1 = useFormik({
+    initialValues: {
+      catagory_group_id: "",
+      name: "",
+      icon: "",
+      description: "",
+    },
+    validationSchema: validationSchema1,
+    onSubmit: async (values) => {
+      const formData = new FormData();
+      formData.append("category_group_id", values.catagory_group_id);
+      formData.append("name", values.name);
+      formData.append("icon", values.icon);
+      formData.append("description", values.description);
+      const slug = values.name.toLowerCase().replace(/\s+/g, "_");
+      formData.append("slug", slug);
+      console.log("Form Data:", values);
+      try {
+        const response = await api.post(`vendor/categories/create`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("Response", response);
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          setShowModal(false);
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          const errors = error.response.data.errors;
+          if (errors) {
+            Object.keys(errors).forEach((key) => {
+              errors[key].forEach((errorMsg) => {
+                toast(errorMsg, {
+                  icon: <FiAlertTriangle className="text-warning" />,
+                });
+              });
+            });
+          }
+        } else {
+          console.error("API Error", error);
+          toast.error("An unexpected error occurred.");
+        }
+      } finally {
+        setLoadIndicator(false);
+      }
+    },
+  });
+
   useEffect(() => {
     const getData = async () => {
       try {
         const response = await api.get(`vendor/categorygroups`);
+
         setAllCategorgroup(response.data.data);
       } catch (error) {
         toast.error("Error Fetching Data ", error);
@@ -131,7 +191,8 @@ function ProductAdd() {
     };
     getData();
   }, []);
-  const fecthCategory = async (subjectId) => {
+
+  const fetchCategory = async (subjectId) => {
     try {
       const category = await api.get(
         `vendor/categories/categorygroups/${subjectId}`
@@ -142,20 +203,19 @@ function ProductAdd() {
     }
   };
   const handleCategorygroupChange = (event) => {
-    setCategory([]);
     const categoryGroup = event.target.value;
+    setCategory([]);
+
     formik.setFieldValue("shop_id", categoryGroup);
-    fecthCategory(categoryGroup);
+    formik1.setFieldValue("catagory_group_id", categoryGroup);
+
+    setSelectedCategoryGroup(categoryGroup);
+    fetchCategory(categoryGroup);
   };
 
-  // const handleCategoryGroupChange = (e) => {
-  //   const value = e.target.value;
-  //   formik.setFieldValue("category_id", value);
-
-  //   if (value === "3") {
-  //     setShowModal(true);
-  //   }
-  // };
+  const handleCategoryAdd = () => {
+    setShowModal(true);
+  };
 
   return (
     <section className="px-4">
@@ -182,7 +242,6 @@ function ProductAdd() {
                 Category Group<span className="text-danger">*</span>
               </label>
               <select
-                type="text"
                 className={`form-select ${
                   formik.touched.shop_id && formik.errors.shop_id
                     ? "is-invalid"
@@ -190,9 +249,10 @@ function ProductAdd() {
                 }`}
                 {...formik.getFieldProps("shop_id")}
                 onChange={handleCategorygroupChange}
+                value={formik.values.shop_id} // Ensure value is set from Formik state
               >
-                <option></option>
-                {Array.isArray(allCategorgroup) &&
+                <option value="">Select a category group</option>
+                {allCategorgroup &&
                   allCategorgroup.map((categorygroup) => (
                     <option key={categorygroup.id} value={categorygroup.id}>
                       {categorygroup.name}
@@ -203,6 +263,7 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.shop_id}</div>
               )}
             </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Category<span className="text-danger">*</span>
@@ -215,21 +276,32 @@ function ProductAdd() {
                     : ""
                 }`}
                 {...formik.getFieldProps("category_id")}
+                onChange={(event) => {
+                  const selectedValue = event.target.value;
+                  if (selectedValue === "add_new") {
+                    setShowModal(true);
+                  } else {
+                    formik.setFieldValue("category_id", selectedValue);
+                  }
+                }}
               >
                 <option></option>
-                {Array.isArray(category) &&
+                {category &&
                   category.map((cat) => (
                     <option key={cat.id} value={cat.id}>
                       {cat.name}
                     </option>
                   ))}
-                <option
-                  value="3"
-                  style={{ background: "#1c2b36", color: "#fff" }}
-                >
-                  <PiPlusSquareFill size={20} color="#fff" />
-                  Add New Category
-                </option>
+                {selectedCategoryGroup && (
+                  <option
+                    value="add_new"
+                    style={{ background: "#1c2b36", color: "#fff" }}
+                    onClick={handleCategoryAdd}
+                  >
+                    <PiPlusSquareFill size={20} color="#fff" />
+                    Add New Category
+                  </option>
+                )}
               </select>
               {formik.touched.category_id && formik.errors.category_id && (
                 <div className="invalid-feedback">
@@ -490,37 +562,37 @@ function ProductAdd() {
         </Modal.Header>
         <Modal.Body>
           {/* Form inside the modal */}
-          <form onSubmit={formik.handleSubmit}>
+          <form onSubmit={formik1.handleSubmit}>
             <div className="row py-4">
               <div className="col-12 mb-3">
                 <label className="form-label">
-                  Category Group Id<span className="text-danger">*</span>
+                  Category Group<span className="text-danger">*</span>
                 </label>
                 <select
-                  className={`form-select ${
-                    formik.touched.groupId && formik.errors.groupId
+                  type="text"
+                  className={`form-control ${
+                    formik1.touched.catagory_group_id &&
+                    formik1.errors.catagory_group_id
                       ? "is-invalid"
                       : ""
                   }`}
-                  {...formik.getFieldProps("groupId")}
+                  {...formik1.getFieldProps("catagory_group_id")}
+                  disabled
                 >
-                  <option value="">Select a group</option>
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
-                  <option value="4">4</option>
-                  <option value="5">5</option>
-                  <option value="6">6</option>
-                  <option value="7">7</option>
-                  <option value="8">8</option>
-                  <option value="9">9</option>
-                  <option value="10">10</option>
+                  <option></option>
+                  {allCategorgroup &&
+                    allCategorgroup.map((categorygroup) => (
+                      <option key={categorygroup.id} value={categorygroup.id}>
+                        {categorygroup.name}
+                      </option>
+                    ))}
                 </select>
-                {formik.touched.groupId && formik.errors.groupId && (
-                  <div className="invalid-feedback">
-                    {formik.errors.groupId}
-                  </div>
-                )}
+                {formik1.touched.catagory_group_id &&
+                  formik1.errors.catagory_group_id && (
+                    <div className="invalid-feedback">
+                      {formik1.errors.catagory_group_id}
+                    </div>
+                  )}
               </div>
 
               <div className="col-12 mb-3">
@@ -530,14 +602,14 @@ function ProductAdd() {
                 <input
                   type="text"
                   className={`form-control ${
-                    formik.touched.name && formik.errors.name
+                    formik1.touched.name && formik1.errors.name
                       ? "is-invalid"
                       : ""
                   }`}
-                  {...formik.getFieldProps("name")}
+                  {...formik1.getFieldProps("name")}
                 />
-                {formik.touched.name && formik.errors.name && (
-                  <div className="invalid-feedback">{formik.errors.name}</div>
+                {formik1.touched.name && formik1.errors.name && (
+                  <div className="invalid-feedback">{formik1.errors.name}</div>
                 )}
               </div>
               <div className="col-12 mb-3">
@@ -547,18 +619,18 @@ function ProductAdd() {
                 <input
                   type="file"
                   className={`form-control ${
-                    formik.touched.file && formik.errors.file
+                    formik1.touched.icon && formik1.errors.icon
                       ? "is-invalid"
                       : ""
                   }`}
-                  {...formik.getFieldProps("file")}
                   onChange={(event) => {
                     const file = event.target.files[0];
-                    formik.setFieldValue("file", file);
+                    formik1.setFieldValue("icon", file);
                   }}
+                  onBlur={formik1.handleBlur}
                 />
-                {formik.touched.file && formik.errors.file && (
-                  <div className="invalid-feedback">{formik.errors.file}</div>
+                {formik1.touched.icon && formik1.errors.icon && (
+                  <div className="invalid-feedback">{formik1.errors.icon}</div>
                 )}
               </div>
 
@@ -569,15 +641,15 @@ function ProductAdd() {
                 <textarea
                   rows={5}
                   className={`form-control ${
-                    formik.touched.description && formik.errors.description
+                    formik1.touched.description && formik1.errors.description
                       ? "is-invalid"
                       : ""
                   }`}
-                  {...formik.getFieldProps("description")}
+                  {...formik1.getFieldProps("description")}
                 />
-                {formik.touched.description && formik.errors.description && (
+                {formik1.touched.description && formik1.errors.description && (
                   <div className="invalid-feedback">
-                    {formik.errors.description}
+                    {formik1.errors.description}
                   </div>
                 )}
               </div>
@@ -591,6 +663,7 @@ function ProductAdd() {
                 type="submit"
                 className="btn btn-sm btn-button shadow-none border-0 ms-3"
                 disabled={loadIndicator}
+                onClick={formik1.handleSubmit}
               >
                 {loadIndicator && (
                   <span

@@ -104,10 +104,10 @@ const Product = () => {
                     <td>{data.product}</td>
                     <td>{data.active}</td>
                     <td className="d-flex">
-                      <Link to={`/course/view/`}>
+                      <Link to={`/product/view/${data.id}`}>
                         <button className="btn btn-sm">view</button>
                       </Link>
-                      <Link to={`/course/edit/`}>
+                      <Link to={`/product/edit/${data.id}`}>
                         <button className="btn btn-sm">Edit</button>
                       </Link>
                       {/* <Delete  /> */}

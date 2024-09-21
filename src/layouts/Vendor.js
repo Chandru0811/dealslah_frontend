@@ -37,8 +37,8 @@ function Vendor({ handleLogout }) {
                   {/* {/ Slider /} */}
                   <Route path="/product" element={<Product />} />
                   <Route path="/product/add" element={<ProductAdd />} />
-                  <Route path="/product/edit" element={<ProductEdit />} />
-                  <Route path="/product/view" element={<ProductView />} />
+                  <Route path="/product/edit/:id" element={<ProductEdit />} />
+                  <Route path="/product/view/:id" element={<ProductView />} />
                   <Route path="/settings" element={<Settings />} />
                   <Route path="/product/view" element={<StorePolicy />} />
                   <Route path="/category" element={<Category />} />

@@ -7,7 +7,7 @@ import api from "../../../config/URL";
 import { Modal, Button } from "react-bootstrap";
 import { PiPlusSquareFill } from "react-icons/pi";
 
-function CategoryAdd({ onClose }) {
+function CategoryAdd({ show, handleClose, selectedCategoryGroup }) {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [showModal, setShowModal] = useState(false);
 
@@ -86,10 +86,10 @@ function CategoryAdd({ onClose }) {
         </div>
       </div> */}
 
-      <Modal
+<Modal
         show={showModal}
         onHide={() => setShowModal(false)}
-        size="lg"
+        size="md"
         centered
       >
         <Modal.Header closeButton>
@@ -99,7 +99,7 @@ function CategoryAdd({ onClose }) {
           {/* Form inside the modal */}
           <form onSubmit={formik.handleSubmit}>
             <div className="row py-4">
-              <div className="col-md-6 col-12 mb-3">
+              <div className="col-12 mb-3">
                 <label className="form-label">
                   Category Group Id<span className="text-danger">*</span>
                 </label>
@@ -130,7 +130,7 @@ function CategoryAdd({ onClose }) {
                 )}
               </div>
 
-              <div className="col-md-6 col-12 mb-3">
+              <div className="col-12 mb-3">
                 <label className="form-label">
                   Name<span className="text-danger">*</span>
                 </label>
@@ -145,6 +145,27 @@ function CategoryAdd({ onClose }) {
                 />
                 {formik.touched.name && formik.errors.name && (
                   <div className="invalid-feedback">{formik.errors.name}</div>
+                )}
+              </div>
+              <div className="col-12 mb-3">
+                <label className="form-label">
+                  Image<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="file"
+                  className={`form-control ${
+                    formik.touched.file && formik.errors.file
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  {...formik.getFieldProps("file")}
+                  onChange={(event) => {
+                    const file = event.target.files[0];
+                    formik.setFieldValue("file", file);
+                  }}
+                />
+                {formik.touched.file && formik.errors.file && (
+                  <div className="invalid-feedback">{formik.errors.file}</div>
                 )}
               </div>
 
