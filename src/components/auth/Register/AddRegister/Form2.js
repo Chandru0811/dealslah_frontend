@@ -8,12 +8,12 @@ import { FiAlertTriangle } from "react-icons/fi";
 import api from "../../../../config/URL";
 
 const validationSchema = Yup.object().shape({
-  paypal_id: Yup.string().required("paypal  is required"),
+  payment_id: Yup.string().required("paypal  is required"),
   account_holder: Yup.string().required("Account Holder is required"),
   account_type: Yup.string().required("Account Type is required"),
   account_number: Yup.string().required("Account Number is required"),
   bank_name: Yup.string().required("Bank Name is required"),
-  account_address: Yup.string().required("Bank Address is required"),
+  bank_address: Yup.string().required("Bank Address is required"),
   bank_code: Yup.string().required("Bank Code is required"),
 });
 
@@ -21,12 +21,12 @@ const Form2 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
     const formik = useFormik({
       initialValues: {
-        paypal_id: "",
+        payment_id: "",
         account_holder: "",
         account_type: "",
         account_number: "",
         bank_name: "",
-        account_address: "",
+        bank_address: "",
         bank_code: "",
       },
       validationSchema: validationSchema,
@@ -95,20 +95,19 @@ const Form2 = forwardRef(
                         </label> */}
                         <input
                           type="text"
-                          className={`form-control ${
-                            formik.touched.paypal_id && formik.errors.paypal_id
+                          className={`form-control ${formik.touched.payment_id && formik.errors.payment_id
                               ? "is-invalid"
                               : ""
-                          }`}
-                          name="paypal_id"
+                            }`}
+                          name="payment_id"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          value={formik.values.paypal_id}
+                          value={formik.values.payment_id}
                         />
-                        {formik.touched.paypal_id &&
-                          formik.errors.paypal_id && (
+                        {formik.touched.payment_id &&
+                          formik.errors.payment_id && (
                             <div className="error text-danger">
-                              <small>{formik.errors.paypal_id}</small>
+                              <small>{formik.errors.payment_id}</small>
                             </div>
                           )}
                       </div>
@@ -128,12 +127,11 @@ const Form2 = forwardRef(
                           <label className="form-label">Account Holder</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.account_holder &&
-                              formik.errors.account_holder
+                            className={`form-control ${formik.touched.account_holder &&
+                                formik.errors.account_holder
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             name="account_holder"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -152,12 +150,11 @@ const Form2 = forwardRef(
                           <label className="form-label">Account Type</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.account_type &&
-                              formik.errors.account_type
+                            className={`form-control ${formik.touched.account_type &&
+                                formik.errors.account_type
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             name="account_type"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -176,12 +173,11 @@ const Form2 = forwardRef(
                           <label className="form-label">Account Number</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.account_number &&
-                              formik.errors.account_number
+                            className={`form-control ${formik.touched.account_number &&
+                                formik.errors.account_number
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             name="account_number"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -200,12 +196,11 @@ const Form2 = forwardRef(
                           <label className="form-label">Bank Name</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.bank_name &&
-                              formik.errors.bank_name
+                            className={`form-control ${formik.touched.bank_name &&
+                                formik.errors.bank_name
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             name="bank_name"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
@@ -224,21 +219,20 @@ const Form2 = forwardRef(
                           <label className="form-label">Bank Address</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.account_address &&
-                              formik.errors.account_address
+                            className={`form-control ${formik.touched.bank_address &&
+                                formik.errors.bank_address
                                 ? "is-invalid"
                                 : ""
-                            }`}
-                            name="account_address"
+                              }`}
+                            name="bank_address"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}
-                            value={formik.values.account_address}
+                            value={formik.values.bank_address}
                           />
-                          {formik.touched.account_address &&
-                            formik.errors.account_address && (
+                          {formik.touched.bank_address &&
+                            formik.errors.bank_address && (
                               <div className="error text-danger">
-                                <small>{formik.errors.account_address}</small>
+                                <small>{formik.errors.bank_address}</small>
                               </div>
                             )}
                         </div>
@@ -248,12 +242,11 @@ const Form2 = forwardRef(
                           <label className="form-label">Bank Code</label>
                           <input
                             type="text"
-                            className={`form-control ${
-                              formik.touched.bank_code &&
-                              formik.errors.bank_code
+                            className={`form-control ${formik.touched.bank_code &&
+                                formik.errors.bank_code
                                 ? "is-invalid"
                                 : ""
-                            }`}
+                              }`}
                             name="bank_code"
                             onChange={formik.handleChange}
                             onBlur={formik.handleBlur}

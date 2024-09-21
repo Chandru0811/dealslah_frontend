@@ -83,7 +83,7 @@ function Stores() {
               </p>
             </div>
             <div className="col-6">
-              <p className="text-muted text-sm">: {data?.shop_type}</p>
+              <p className="text-muted text-sm">: {data?.shop_type == 1 ? 'Product' : data?.shop_type == 2 ? 'Service' : ''}</p>
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ const validationSchema = Yup.object().shape({
     .url("Invalid URL")
     .required("Website URL is required"),
 
-  rating: Yup.number().required("Rating is required"),
+  shop_ratings: Yup.number().required("Shop Rating is required"),
   shop_type: Yup.string().required("Shop Type is required"),
   description: Yup.string().required("Description is required"),
 });
@@ -31,7 +31,7 @@ const Form1 = forwardRef(
         email: formData.email || "",
         mobile: formData.mobile || "",
         external_url: formData.external_url || "",
-        rating: formData.rating || "",
+        shop_ratings: formData.shop_ratings || "",
         shop_type: formData.shop_type || "",
         description: formData.description || "",
       },
@@ -267,18 +267,18 @@ const Form1 = forwardRef(
                       <input
                         type="text"
                         className={`form-control ${
-                          formik.touched.rating && formik.errors.rating
+                          formik.touched.shop_ratings && formik.errors.shop_ratings
                             ? "is-invalid"
                             : ""
                         }`}
-                        name="rating"
+                        name="shop_ratings"
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        value={formik.values.rating}
+                        value={formik.values.shop_ratings}
                       />
-                      {formik.touched.rating && formik.errors.rating && (
+                      {formik.touched.shop_ratings && formik.errors.shop_ratings && (
                         <div className="error text-danger">
-                          <small>{formik.errors.rating}</small>
+                          <small>{formik.errors.shop_ratings}</small>
                         </div>
                       )}
                     </div>

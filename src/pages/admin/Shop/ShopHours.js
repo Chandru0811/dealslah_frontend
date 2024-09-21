@@ -43,7 +43,7 @@ function ShopHours() {
                 </div>
               ))
             ) : (
-              <p>Loading shop hours...</p>
+              <p>No Shop Our Found!</p>
             )}
           </div>
         </div>
