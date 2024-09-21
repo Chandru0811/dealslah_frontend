@@ -11,11 +11,12 @@ import toast from "react-hot-toast";
 
 const Product = () => {
   const tableRef = useRef(null);
+  const [loading, setLoading] = useState(true);
   const [data, setData] = useState([]);
-  const id = sessionStorage.getItem("shop_id")
+  const id = sessionStorage.getItem("shop_id");
   useEffect(() => {
     const table = $(tableRef.current).DataTable({
-      responsive: true,
+      // responsive: true,
       destroy: true,
       columnDefs: [{ targets: [0, 3], orderable: false }],
     });
@@ -26,14 +27,25 @@ const Product = () => {
   }, []);
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       try {
         const response = await api.get(`vendor/product/${id}`);
         setData(response.data.data);
+        if (tableRef.current) {
+          $(tableRef.current).DataTable();
+        }
       } catch (error) {
         toast.error("Error Fetching Data ", error);
+      } finally {
+        setLoading(false);
       }
     };
     getData();
+    return () => {
+      if (tableRef.current) {
+        $(tableRef.current).DataTable().destroy();
+      }
+    };
   }, []);
 
   return (
@@ -55,52 +67,57 @@ const Product = () => {
         </div>
       </div>
 
-      <div className="container card shadow border-0">
-        <div className="table-responsive p-2">
-          <table
-            ref={tableRef}
-            className="display table nowrap"
-            style={{ width: "100%" }}
-          >
-            <thead className="thead-light">
-              <tr>
-                <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                  S.NO
-                </th>
-                <th className="text-center">Image</th>
-                <th className="text-center">Title</th>
-                <th className="text-center">Order</th>
-                <th className="text-center">ACTION</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td className="text-center">1</td>
-                <td className="text-center">
-                  <img
-                    src={Image}
-                    alt="Image"
-                    className="img-fluid"
-                    width={50}
-                  ></img>
-                </td>
-                <td className="text-center">title</td>
-                <td className="text-center">2</td>
-                <td className="text-center">
-                  <div className="d-flex justify-content-center">
-                    <Link to="/product/view">
-                      <button className="button-btn btn-sm m-2">View</button>
-                    </Link>
-                    <Link to="/product/edit">
-                      <button className="button-btn btn-sm m-2">Edit</button>
-                    </Link>
-                    <DeleteModel />
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+      <div
+        className="container card shadow border-0"
+        style={{ minHeight: "80vh" }}
+      >
+        {loading ? (
+          <div className="loader-container">
+            <div class="loading">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+        ) : (
+          <div className="table-responsive p-2">
+            <table ref={tableRef} className="display" style={{ width: "100%" }}>
+              <thead className="thead-light">
+                <tr>
+                  <th scope="col" style={{ whiteSpace: "nowrap" }}>
+                    S.NO
+                  </th>
+                  <th className="text-center">Title</th>
+                  <th className="text-center">Product</th>
+                  <th className="text-center">Active</th>
+                  <th className="text-center">ACTION</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data.map((data, index) => (
+                  <tr key={index}>
+                    <th scope="row">{index + 1}</th>
+                    {/* <td>{data.centerName}</td> */}
+                    <td>{data.name}</td>
+                    <td>{data.product}</td>
+                    <td>{data.active}</td>
+                    <td className="d-flex">
+                      <Link to={`/course/view/`}>
+                        <button className="btn btn-sm">view</button>
+                      </Link>
+                      <Link to={`/course/edit/`}>
+                        <button className="btn btn-sm">Edit</button>
+                      </Link>
+                      {/* <Delete  /> */}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
       </div>
     </section>
   );
