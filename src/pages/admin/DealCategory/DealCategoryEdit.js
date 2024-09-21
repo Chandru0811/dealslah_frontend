@@ -8,35 +8,31 @@ import toast from "react-hot-toast";
 function DealCategoryEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const { id } = useParams();
-    const [logo, setLogo] = useState(null); // this is the file
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        slug: Yup.string().required("*Slug is required"),
-        icon: Yup.mixed().required("*Image is required"), // Ensure Yup validation for file is handled with mixed()
-        order: Yup.string().required("*Select an order"),
-        active: Yup.string().required("*Select an active"),
+        image: Yup.mixed().nullable().required("*Image is required"),
+        active: Yup.string().required("*Select an active status"),
     });
 
     const formik = useFormik({
         initialValues: {
             name: "",
+            image: null,
             slug: "",
-            icon: null,
-            order: "",
             active: "",
             description: "",
         },
         validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
+            setLoadIndicator(true);
             const formData = new FormData();
             formData.append("_method", "PUT");
+            formData.append("slug", values.slug);
 
             formData.append("name", values.name);
-            formData.append("slug", values.slug);
-            formData.append("icon", logo);
-            formData.append("order", values.order);
+            formData.append("image", values.image);
             formData.append("active", values.active);
             formData.append("description", values.description);
 
@@ -48,10 +44,12 @@ function DealCategoryEdit() {
                 });
                 if (response.status === 200) {
                     toast.success(response.data.message);
-                    navigate("/categorygroup");
+                    navigate("/dealcategories");
                 }
             } catch (error) {
                 toast.error(error.message);
+            } finally {
+                setLoadIndicator(false);
             }
         },
     });
@@ -60,14 +58,23 @@ function DealCategoryEdit() {
         const getData = async () => {
             try {
                 const response = await api.get(`admin/dealCategory/${id}`);
-                formik.setValues(response.data.data);
+                formik.setValues({
+                    name: response.data.data.name || "",
+                    order: response.data.data.order || "",
+                    active: response.data.data.active || "",
+                    description: response.data.data.description || "",
+                    image: null, // Image needs to be set via file input
+                });
             } catch (error) {
                 toast.error("Error Fetching Data", error.message);
             }
         };
         getData();
     }, [id]);
-
+    useEffect(() => {
+        const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+        formik.setFieldValue("slug", slug);
+    }, [formik.values.name]);
     return (
         <div className="container-fluid minHeight m-">
             <form onSubmit={formik.handleSubmit}>
@@ -110,24 +117,6 @@ function DealCategoryEdit() {
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
-                                    Slug<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""}`}
-                                    {...formik.getFieldProps("slug")}
-                                />
-                                {formik.touched.slug && formik.errors.slug && (
-                                    <div className="invalid-feedback">{formik.errors.slug}</div>
-                                )}
-                            </div>
-
-
-
-
-
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
                                     Active<span className="text-danger">*</span>
                                 </label>
                                 <select
@@ -144,6 +133,24 @@ function DealCategoryEdit() {
                             </div>
 
                             <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label">
+                                    Image<span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .gif, .svg"
+                                    className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
+                                    onChange={(event) => {
+                                        const file = event.currentTarget.files[0];
+                                        formik.setFieldValue("image", file);
+                                    }}
+                                />
+                                {formik.touched.image && formik.errors.image && (
+                                    <div className="invalid-feedback">{formik.errors.image}</div>
+                                )}
+                            </div>
+
+                            <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">Description</label>
                                 <textarea
                                     rows={5}
@@ -152,25 +159,6 @@ function DealCategoryEdit() {
                                 />
                                 {formik.touched.description && formik.errors.description && (
                                     <div className="invalid-feedback">{formik.errors.description}</div>
-                                )}
-                            </div>
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Image<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="file"
-                                    accept=".png, .jpg, .jpeg, .gif, .svg"
-                                    className={`form-control ${formik.touched.image && formik.errors.image
-                                        ? "is-invalid"
-                                        : ""
-                                        }`}
-                                    onChange={(event) => {
-                                        const file = event.currentTarget.files[0];
-                                        formik.setFieldValue("image", file);
-                                    }} />
-                                {formik.touched.image && formik.errors.image && (
-                                    <div className="invalid-feedback">{formik.errors.image}</div>
                                 )}
                             </div>
                         </div>

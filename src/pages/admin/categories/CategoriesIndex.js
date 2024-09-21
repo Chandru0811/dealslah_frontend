@@ -125,11 +125,16 @@ const CategoriesIndex = () => {
                     <td>
                       <div className="word-wrap">{data.description}</div>
                     </td>
-                    <td className="text-center">
-                      <div className="word-wrap">
-                        {data.active == 0 ? 'Active' : 'Inactive'}
-                      </div>
+                    <td className="align-middle">
+                      {data.active ? (
+                        <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                      ) : (
+                        <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                      )}
+                      {data.active ? ' Active' : ' Inactive'}
                     </td>
+
+
                     <td className="text-center">
                       <div>
                         <Link to={`/category/view/${data.id}`}>

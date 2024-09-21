@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -12,8 +12,6 @@ function DealCategoryAdd() {
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        slug: Yup.string().required("*Slug is required"),
-        order: Yup.string().required("*Select an order"),
         active: Yup.string().required("*Select an active"),
         image: Yup.mixed().required("*Image is required"), // Ensure image is required
     });
@@ -22,20 +20,18 @@ function DealCategoryAdd() {
         initialValues: {
             name: "",
             slug: "",
-            image: null, // Initial value for the image is null
-            order: "",
+            image: null,
             active: "",
             description: "",
         },
-        // validationSchema: validationSchema,
+        validationSchema: validationSchema,
         onSubmit: async (values, { resetForm }) => {
             console.log("Category Group Data:", values);
 
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", values.image); // Send the image file as binary
-            formData.append("order", values.order);
+            formData.append("image", values.image);
             formData.append("active", values.active);
             formData.append("description", values.description);
 
@@ -44,11 +40,9 @@ function DealCategoryAdd() {
             try {
                 const response = await api.post(`admin/dealCategory`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data", // Set the content type for binary data
+                        "Content-Type": "multipart/form-data",
                     },
                 });
-                console.log("Response", response);
-
                 if (response.status === 200) {
                     toast.success(response.data.message);
                     navigate("/dealcategories");
@@ -77,6 +71,12 @@ function DealCategoryAdd() {
             }
         },
     });
+
+
+    useEffect(() => {
+        const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+        formik.setFieldValue("slug", slug);
+    }, [formik.values.name]);
 
     return (
         <div className="container-fluid minHeight m-0">
@@ -120,19 +120,6 @@ function DealCategoryAdd() {
                                     <div className="invalid-feedback">{formik.errors.name}</div>
                                 )}
                             </div>
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Slug<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    className={`form-control ${formik.touched.slug && formik.errors.slug ? "is-invalid" : ""}`}
-                                    {...formik.getFieldProps("slug")}
-                                />
-                                {formik.touched.slug && formik.errors.slug && (
-                                    <div className="invalid-feedback">{formik.errors.slug}</div>
-                                )}
-                            </div>
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
@@ -151,14 +138,7 @@ function DealCategoryAdd() {
                                     <div className="invalid-feedback">{formik.errors.active}</div>
                                 )}
                             </div>
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">Description</label>
-                                <textarea
-                                    rows={4}
-                                    className={`form-control`}
-                                    {...formik.getFieldProps("description")}
-                                />
-                            </div>
+
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Image<span className="text-danger">*</span>
@@ -175,6 +155,15 @@ function DealCategoryAdd() {
                                 {formik.touched.image && formik.errors.image && (
                                     <div className="invalid-feedback">{formik.errors.image}</div>
                                 )}
+                            </div>
+
+                            <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label">Description</label>
+                                <textarea
+                                    rows={4}
+                                    className={`form-control`}
+                                    {...formik.getFieldProps("description")}
+                                />
                             </div>
                         </div>
                     </div>

@@ -56,12 +56,12 @@ function Sidebar({ handleLogout }) {
                 <BiSolidCategory />Slider
               </NavLink>
             </li>
-            <li className="nav-item">
+            {/* <li className="nav-item">
               <NavLink className="nav-link" to="/banner">
                 <BiSolidCategory />Banner
-                {/* {/ <i className="bi bi-images"></i>Banners /} */}
+               
               </NavLink>
-            </li>
+            </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/categorygroup">
                 <MdCategory />Category Groups
@@ -79,7 +79,7 @@ function Sidebar({ handleLogout }) {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/products">
-                <BiSolidCategory />Product
+                <TbShoppingCartFilled />Product
               </NavLink>
             </li>
             <li className="nav-item">

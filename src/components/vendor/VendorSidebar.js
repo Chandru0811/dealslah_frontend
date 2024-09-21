@@ -58,7 +58,12 @@ function VendorSidebar({ handleLogout }) {
                 <BsHouseDoorFill /> Home
               </NavLink>
             </li> */}
-
+            {/* Category */}
+            {/* <li className="nav-item">
+              <NavLink className="nav-link" to="/category">
+                <MdCategory /> Category
+              </NavLink>
+            </li> */}
             {/* Products */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/product">
@@ -73,12 +78,7 @@ function VendorSidebar({ handleLogout }) {
               </NavLink>
             </li>
 
-            {/* Category */}
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/category">
-                <MdCategory /> Category
-              </NavLink>
-            </li>
+
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/dealcategory">
                 <MdCategory /> Deal Category
