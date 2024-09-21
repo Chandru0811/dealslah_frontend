@@ -1,15 +1,18 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
-import DeleteModel from '../../../components/admin/DeleteModel';
+import DeleteModel from "../../../components/admin/DeleteModel";
 import { PiIntersectSquareFill } from "react-icons/pi";
+import api from "../../../config/URL";
+import toast from "react-hot-toast";
 
 const Product = () => {
   const tableRef = useRef(null);
-
+  const [data, setData] = useState([]);
+  const id = sessionStorage.getItem("shop_id")
   useEffect(() => {
     const table = $(tableRef.current).DataTable({
       responsive: true,
@@ -21,9 +24,19 @@ const Product = () => {
       table.destroy();
     };
   }, []);
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`vendor/product/${id}`);
+        setData(response.data.data);
+      } catch (error) {
+        toast.error("Error Fetching Data ", error);
+      }
+    };
+    getData();
+  }, []);
 
   return (
-
     <section className="px-4">
       <div className="card shadow border-0 mb-2 top-header">
         <div className="container-fluid">
@@ -42,10 +55,7 @@ const Product = () => {
         </div>
       </div>
 
-      <div
-        className="container card shadow border-0"
-
-      >
+      <div className="container card shadow border-0">
         <div className="table-responsive p-2">
           <table
             ref={tableRef}
@@ -60,9 +70,7 @@ const Product = () => {
                 <th className="text-center">Image</th>
                 <th className="text-center">Title</th>
                 <th className="text-center">Order</th>
-                <th className="text-center">
-                  ACTION
-                </th>
+                <th className="text-center">ACTION</th>
               </tr>
             </thead>
             <tbody>
