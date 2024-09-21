@@ -42,7 +42,7 @@ function CategoriesView() {
   const handleDeActive = async () => {
     setLoading(true);
     try {
-      const response = await api.post(`admin/category/${id}/deactivate`);
+      const response = await api.delete(`admin/categories/${id}`);
       if (response.status === 200) {
         handleClose();
         getData();
@@ -61,7 +61,7 @@ function CategoriesView() {
   const handleActivate = async () => {
     setLoading(true);
     try {
-      const response = await api.post(`admin/category/${id}/activate`);
+      const response = await api.post(`admin/category/${id}/approve`);
       if (response.status === 200) {
         getData();
         toast.success("Category activated successfully!");
@@ -90,16 +90,17 @@ function CategoriesView() {
               <h3>View Category</h3>
             </div>
             <div>
-              <Link to="/category">
+              <Link to="/categories">
                 <button type="button" className="btn btn-light btn-sm me-2">
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus == 0 ? (
+              {shopStatus == 0 && (
                 <button
                   type="button"
                   onClick={handleActivate}
-                  className="btn btn-success btn-sm me-2" disabled={loading}
+                  className="btn btn-success btn-sm me-2"
+                  disabled={loading}
                 >
                   {loading && (
                     <span
@@ -109,17 +110,18 @@ function CategoriesView() {
                   )}
                   Activate
                 </button>
-              ) : <></>}
+              )}
 
-              {shopStatus == 1 ? (
+              {shopStatus == 1 && (
                 <button
                   onClick={handleOpenModal}
                   className="btn btn-danger btn-sm me-2"
                 >
                   Deactivate
                 </button>
-              ) : <></>}
+              )}
             </div>
+
           </div>
         </div>
       </div>

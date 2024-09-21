@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
@@ -6,21 +6,40 @@ import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
+import api from "../../../config/URL";
 
 const Products = () => {
+    const [datas, setDatas] = useState([]);
+    const [loading, setLoading] = useState(false);
     const tableRef = useRef(null);
-
     useEffect(() => {
-        const table = $(tableRef.current).DataTable({
-            responsive: true,
-            destroy: true,
-            columnDefs: [{ targets: [0, 3], orderable: false }],
-        });
+        const fetchData = async () => {
+            setLoading(true);
 
+            try {
+                const response = await api.get('/admin/products');
+                setDatas(response.data.data);
+
+                // Initialize DataTable
+                if (tableRef.current) {
+                    $(tableRef.current).DataTable();
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+            setLoading(false);
+        };
+
+        fetchData();
+
+        // Cleanup DataTable on component unmount
         return () => {
-            table.destroy();
+            if (tableRef.current) {
+                $(tableRef.current).DataTable().destroy();
+            }
         };
     }, []);
+
 
     return (
 
