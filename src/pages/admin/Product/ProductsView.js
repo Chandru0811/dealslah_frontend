@@ -10,6 +10,7 @@ function ProductsView() {
     const [data, setData] = useState([]);
 
     const [loading, setLoading] = useState(false);
+    const [datas, setDatas] = useState([]);
 
     const [shopStatus, setShopStatus] = useState("");
     const [showModal, setShowModal] = useState(false);
@@ -18,27 +19,27 @@ function ProductsView() {
 
     const handleDeActive = async () => {
         setLoading(true);
-        try {
-            const response = await api.post(`admin/dealCategory/${id}/deactivate`);
-            if (response.status === 200) {
-                handleClose();
-                getData();
-                toast.success('dealCategory deactivated successfully!');
-            } else {
-                toast.error('Failed to deactivate dealCategory.');
-            }
-        } catch (error) {
-            toast.error('An error occurred while deactivating the dealCategory.');
-            console.error('Deactivation Error:', error);
-        } finally {
-            setLoading(false);
-        }
+        // try {
+        //     const response = await api.post(`admin/deal/${id}/disapprove`);
+        //     if (response.status === 200) {
+        //         handleClose();
+        //         getData();
+        //         toast.success('dealCategory deactivated successfully!');
+        //     } else {
+        //         toast.error('Failed to deactivate dealCategory.');
+        //     }
+        // } catch (error) {
+        //     toast.error('An error occurred while deactivating the dealCategory.');
+        //     console.error('Deactivation Error:', error);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     const handleActivate = async () => {
         setLoading(true);
         try {
-            const response = await api.post(`admin/dealCategory/${id}/activate`);
+            const response = await api.post(`admin/deal/${id}/approve`);
             if (response.status === 200) {
                 getData();
                 toast.success("dealCategory activated successfully!");
@@ -56,8 +57,9 @@ function ProductsView() {
 
     const getData = async () => {
         try {
-            const response = await api.get(`admin/dealCategory/${id}`);
+            const response = await api.get(`admin/product/${id}`);
             setData(response.data.data);
+            setDatas(response.data.data);
             setShopStatus(response.data.data.active);
         } catch (error) {
             toast.error("Error Fetching Data ", error);
@@ -123,10 +125,19 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 1</p>
+                                <p className="text-muted text-sm">
+                                    :{" "}
+                                    {Array.isArray(datas) &&
+                                        datas.map((category) =>
+                                            parseInt(data.category_group_id) === category.id
+                                                ? category.name || "--"
+                                                : ""
+                                        )}
+                                </p>
                             </div>
                         </div>
                     </div>
+
                     <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
@@ -147,7 +158,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: Apple</p>
+                                <p className="text-muted text-sm">: {data.brand}</p>
                             </div>
                         </div>
                     </div>
@@ -159,7 +170,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: Slug</p>
+                                <p className="text-muted text-sm">: {data.slug}</p>
                             </div>
                         </div>
                     </div>
@@ -171,7 +182,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 100</p>
+                                <p className="text-muted text-sm">: {data.original_price}</p>
                             </div>
                         </div>
                     </div>
@@ -183,7 +194,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 10</p>
+                                <p className="text-muted text-sm">: {data.discounted_price}</p>
                             </div>
                         </div>
                     </div>
@@ -195,7 +206,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 10</p>
+                                <p className="text-muted text-sm">: {data.discount_percentage}</p>
                             </div>
                         </div>
                     </div>
@@ -207,7 +218,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 10/09/2024</p>
+                                <p className="text-muted text-sm">: {data.start_date}</p>
                             </div>
                         </div>
                     </div>
@@ -219,7 +230,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 11/09/2024</p>
+                                <p className="text-muted text-sm">: {data.end_date}</p>
                             </div>
                         </div>
                     </div>
@@ -231,7 +242,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 1000</p>
+                                <p className="text-muted text-sm">: {data.stock}</p>
                             </div>
                         </div>
                     </div>
@@ -243,7 +254,20 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: --</p>
+                                <p className="text-muted text-sm">: {data.sku}</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-12 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Description</b>
+                                </p>
+                            </div>
+                            <div className="col-12 mt-1">
+                                <p className="text-muted text-sm">{data.description}</p>
                             </div>
                         </div>
                     </div>
@@ -263,18 +287,6 @@ function ProductsView() {
                                         width={150}
                                     />
                                 </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="col-md-6 col-12">
-                        <div className="row mb-3">
-                            <div className="col-12 d-flex justify-content-start align-items-center">
-                                <p className="text-sm">
-                                    <b>Description</b>
-                                </p>
-                            </div>
-                            <div className="col-12 mt-1">
-                                <p className="text-muted text-sm">Combines style and performance for everyday computing.</p>
                             </div>
                         </div>
                     </div>

@@ -19,39 +19,39 @@ function CategoryGroupView() {
 
   const handleDeActive = async () => {
     setLoading(true);
-    try {
-      const response = await api.post(`admin/dealCategory/${id}/deactivate`);
-      if (response.status === 200) {
-        handleClose();
-        getData();
-        toast.success('dealCategory deactivated successfully!');
-      } else {
-        toast.error('Failed to deactivate dealCategory.');
-      }
-    } catch (error) {
-      toast.error('An error occurred while deactivating the dealCategory.');
-      console.error('Deactivation Error:', error);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const response = await api.post(`admin/dealCategory/${id}/deactivate`);
+    //   if (response.status === 200) {
+    //     handleClose();
+    //     getData();
+    //     toast.success('dealCategory deactivated successfully!');
+    //   } else {
+    //     toast.error('Failed to deactivate dealCategory.');
+    //   }
+    // } catch (error) {
+    //   toast.error('An error occurred while deactivating the dealCategory.');
+    //   console.error('Deactivation Error:', error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleActivate = async () => {
     setLoading(true);
-    try {
-      const response = await api.post(`admin/dealCategory/${id}/activate`);
-      if (response.status === 200) {
-        getData();
-        toast.success("dealCategory activated successfully!");
-      } else {
-        toast.error("Failed to activate dealCategory.");
-      }
-    } catch (error) {
-      toast.error("An error occurred while activating the dealCategory.");
-      console.error("Activation Error:", error);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const response = await api.post(`admin/dealCategory/${id}/activate`);
+    //   if (response.status === 200) {
+    //     getData();
+    //     toast.success("dealCategory activated successfully!");
+    //   } else {
+    //     toast.error("Failed to activate dealCategory.");
+    //   }
+    // } catch (error) {
+    //   toast.error("An error occurred while activating the dealCategory.");
+    //   console.error("Activation Error:", error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
 
@@ -83,7 +83,7 @@ function CategoryGroupView() {
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus == 0 ? (
+              {shopStatus == true ? (
                 <button
                   type="button"
                   onClick={handleActivate}
@@ -99,7 +99,7 @@ function CategoryGroupView() {
                 </button>
               ) : <></>}
 
-              {shopStatus == 1 ? (
+              {shopStatus == false ? (
                 <button
                   onClick={handleOpenModal}
                   className="btn btn-danger btn-sm me-2"
@@ -111,7 +111,7 @@ function CategoryGroupView() {
           </div>
         </div>
       </div>
-      <div className="card shadow border-0 my-2" style={{ height: "80vh" }}>
+      <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
         <div className="container">
           <div className="row mt-5 p-3">
             <div className="col-md-6 col-12">
