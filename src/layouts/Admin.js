@@ -97,7 +97,7 @@ function Admin({ handleLogout }) {
                   <Route path="/products" element={<Products />} />
                   <Route path="/products/add" element={<ProductsAdd />} />
                   <Route path="/products/edit" element={<ProductsEdit />} />
-                  <Route path="/products/view" element={<ProductsView />} />
+                  <Route path="/products/view/:id" element={<ProductsView />} />
 
                   <Route path="/shop" element={<Shop />} />
                   <Route path="/shop/view/:id" element={<ShopView />} />
