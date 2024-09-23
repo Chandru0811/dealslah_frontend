@@ -13,9 +13,7 @@ function ProductAdd() {
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
-  const [modelCategory, setModelCategory] = useState(null);
   const [category, setCategory] = useState([]);
-  console.log("modelCategory", modelCategory);
   const id = sessionStorage.getItem("shop_id");
 
   const validationSchema = Yup.object({
