@@ -14,8 +14,8 @@ function ProductAdd() {
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
-  console.log("modelCategory", modelCategory);
   const id = sessionStorage.getItem("shop_id");
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     shop_id: Yup.string().required("Shop Id is required"),
@@ -102,7 +102,7 @@ function ProductAdd() {
         if (response.status === 200) {
           toast.success(response.data.message);
           setShowModal(false);
-          navigate("/product");
+          navigate("/product")
         } else {
           toast.error(response.data.message);
         }
