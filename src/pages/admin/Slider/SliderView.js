@@ -9,56 +9,56 @@ import Modal from 'react-bootstrap/Modal';
 function SliderView() {
   const { id } = useParams();
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
 
-  const [shopStatus, setShopStatus] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const handleOpenModal = () => setShowModal(true);
-  const handleClose = () => setShowModal(false);
+  // const [shopStatus, setShopStatus] = useState("");
+  // const [showModal, setShowModal] = useState(false);
+  // const handleOpenModal = () => setShowModal(true);
+  // const handleClose = () => setShowModal(false);
 
-  const handleDeActive = async () => {
-    setLoading(true);
-    try {
-      const response = await api.post(`admin/slider/${id}/deactivate`);
-      if (response.status === 200) {
-        handleClose();
-        getData();
-        toast.success('Slider deactivated successfully!');
-      } else {
-        toast.error('Failed to deactivate Slider.');
-      }
-    } catch (error) {
-      toast.error('An error occurred while deactivating the Slider.');
-      console.error('Deactivation Error:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleDeActive = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await api.post(`admin/slider/${id}/deactivate`);
+  //     if (response.status === 200) {
+  //       handleClose();
+  //       getData();
+  //       toast.success('Slider deactivated successfully!');
+  //     } else {
+  //       toast.error('Failed to deactivate Slider.');
+  //     }
+  //   } catch (error) {
+  //     toast.error('An error occurred while deactivating the Slider.');
+  //     console.error('Deactivation Error:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
-  const handleActivate = async () => {
-    setLoading(true);
-    try {
-      const response = await api.post(`admin/slider/${id}/activate`);
-      if (response.status === 200) {
-        getData();
-        toast.success("Slider activated successfully!");
-      } else {
-        toast.error("Failed to activate Slider.");
-      }
-    } catch (error) {
-      toast.error("An error occurred while activating the Slider.");
-      console.error("Activation Error:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  // const handleActivate = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await api.post(`admin/slider/${id}/activate`);
+  //     if (response.status === 200) {
+  //       getData();
+  //       toast.success("Slider activated successfully!");
+  //     } else {
+  //       toast.error("Failed to activate Slider.");
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred while activating the Slider.");
+  //     console.error("Activation Error:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
 
 
   const getData = async () => {
     try {
       const response = await api.get(`admin/slider/${id}`);
       setData(response.data.data);
-      setShopStatus(response.data.data.active);
+      // setShopStatus(response.data.data.active);
     } catch (error) {
       toast.error("Error Fetching Data ", error);
     }
@@ -82,7 +82,7 @@ function SliderView() {
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus == 0 ? (
+              {/* {shopStatus == 0 ? (
                 <button
                   type="button"
                   onClick={handleActivate}
@@ -105,7 +105,7 @@ function SliderView() {
                 >
                   Deactivate
                 </button>
-              ) : <></>}
+              ) : <></>} */}
             </div>
           </div>
         </div>
@@ -151,7 +151,7 @@ function SliderView() {
           </div>
         </div>
       </div>
-      <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+      {/* <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Deactivate Shop</Modal.Title>
         </Modal.Header>
@@ -175,7 +175,7 @@ function SliderView() {
             Deactivate
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </section>
   );
 }

@@ -100,11 +100,10 @@ function SliderAdd() {
               <input
                 type="file"
                 accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                className={`form-control ${
-                  formik.touched.image && formik.errors.image
+                className={`form-control ${formik.touched.image && formik.errors.image
                     ? "is-invalid"
                     : ""
-                }`}
+                  }`}
                 onChange={(event) => {
                   const file = event.currentTarget.files[0];
                   formik.setFieldValue("image", file);
@@ -120,11 +119,10 @@ function SliderAdd() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${
-                  formik.touched.order && formik.errors.order
+                className={`form-select ${formik.touched.order && formik.errors.order
                     ? "is-invalid"
                     : ""
-                }`}
+                  }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>
@@ -141,7 +139,8 @@ function SliderAdd() {
           </div>
         </div>
         <div className="hstack gap-2 justify-content-end p-2">
-          <button type="submit" className="btn btn-sm btn-button">
+          <button type="submit" className="btn btn-sm btn-button"
+            disabled={loadIndicator}>
             {loadIndicator && (
               <span
                 className="spinner-border spinner-border-sm me-2"

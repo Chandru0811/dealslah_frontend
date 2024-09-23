@@ -41,21 +41,21 @@ function CategoriesView() {
 
   const handleDeActive = async () => {
     setLoading(true);
-    try {
-      const response = await api.delete(`admin/categories/${id}`);
-      if (response.status === 200) {
-        handleClose();
-        getData();
-        toast.success('Category deactivated successfully!');
-      } else {
-        toast.error('Failed to deactivate Category.');
-      }
-    } catch (error) {
-      toast.error('An error occurred while deactivating the Category.');
-      console.error('Deactivation Error:', error);
-    } finally {
-      setLoading(false);
-    }
+    // try {
+    //   const response = await api.delete(`admin/category/${id}/dispprove`);
+    //   if (response.status === 200) {
+    //     handleClose();
+    //     getData();
+    //     toast.success('Category deactivated successfully!');
+    //   } else {
+    //     toast.error('Failed to deactivate Category.');
+    //   }
+    // } catch (error) {
+    //   toast.error('An error occurred while deactivating the Category.');
+    //   console.error('Deactivation Error:', error);
+    // } finally {
+    //   setLoading(false);
+    // }
   };
 
   const handleActivate = async () => {

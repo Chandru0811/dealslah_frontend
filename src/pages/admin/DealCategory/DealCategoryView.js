@@ -22,42 +22,42 @@ function DealCategoryView() {
 
     const handleDeActive = async () => {
         setLoading(true);
-        try {
-            const response = await api.delete(`admin/dealCategory/remove/${id}`);
-            if (response.status === 200) {
-                // handleClose();
-                getData();
-                toast.success('Deal deactivated successfully!');
-                navigate("/dealcategories");
-            } else {
-                toast.error('Failed to deactivate Deal.');
-            }
-        } catch (error) {
-            toast.error('An error occurred while deactivating the Deal.');
-            console.error('Deactivation Error:', error);
-        } finally {
-            setLoading(false);
-        }
+        // try {
+        //     const response = await api.delete(`admin/dealCategory${id}/approve`);
+        //     if (response.status === 200) {
+        //         // handleClose();
+        //         getData();
+        //         toast.success('Deal deactivated successfully!');
+        //         navigate("/dealcategories");
+        //     } else {
+        //         toast.error('Failed to deactivate Deal.');
+        //     }
+        // } catch (error) {
+        //     toast.error('An error occurred while deactivating the Deal.');
+        //     console.error('Deactivation Error:', error);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
     const handleActivate = async () => {
         setLoading(true);
-        try {
-            const response = await api.post(`admin/deal/${id}/approve`);
-            if (response.status === 200) {
-                getData(); // Fetch updated data
-                setShopStatus(1); // Set status to 1 (Inactive) after activation
-                toast.success("Deal activated successfully!");
+        // try {
+        //     const response = await api.post(`admin/deal/${id}/approve`);
+        //     if (response.status === 200) {
+        //         getData();
+        //         setShopStatus(1);
+        //         toast.success("Deal activated successfully!");
 
-            } else {
-                toast.error("Failed to activate Deal.");
-            }
-        } catch (error) {
-            toast.error("An error occurred while activating the Deal.");
-            console.error("Activation Error:", error);
-        } finally {
-            setLoading(false);
-        }
+        //     } else {
+        //         toast.error("Failed to activate Deal.");
+        //     }
+        // } catch (error) {
+        //     toast.error("An error occurred while activating the Deal.");
+        //     console.error("Activation Error:", error);
+        // } finally {
+        //     setLoading(false);
+        // }
     };
 
 
@@ -138,7 +138,7 @@ function DealCategoryView() {
                         </div>
                     </div>
                 </div>
-                <div className="card shadow border-0 my-2" style={{ height: "80vh" }}>
+                <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
                     <div className="container">
                         <div className="row mt-5 p-3">
                             <div className="col-md-6 col-12">
