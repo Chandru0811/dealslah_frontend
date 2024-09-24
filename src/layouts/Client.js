@@ -24,7 +24,7 @@ function Client({
   return (
     <div>
       <div style={{ background: "" }}>
-        <BrowserRouter>
+        <BrowserRouter basename="/dealslahVendor">
           {/* <Header /> */}
           <Routes>
             {/* <Route path="/" element={<Home  />} /> */}
@@ -33,6 +33,15 @@ function Client({
             {/* <Route path="/vendorregistration" element={<VendorRegistration />} /> */}
             <Route
               path="/"
+              element={
+                <VendorLogin
+                  handleVendorLogin={handleVendorLogin}
+                  handleLogin={handleLogin}
+                />
+              }
+            />
+            <Route
+              path="*"
               element={
                 <VendorLogin
                   handleVendorLogin={handleVendorLogin}

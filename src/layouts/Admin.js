@@ -38,7 +38,7 @@ import DealCategoryView from "../pages/admin/DealCategory/DealCategoryView";
 function Admin({ handleLogout }) {
   return (
     <div>
-      <BrowserRouter>
+      <BrowserRouter basename="/dealslahVendor">
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <Sidebar handleLogout={handleLogout} />
           <div className="h-screen flex-grow-1 overflow-y-lg-auto">
@@ -82,11 +82,19 @@ function Admin({ handleLogout }) {
                   <Route path="/banner/edit" element={<BannerEdit />} />
                   <Route path="/banner/view" element={<BannerView />} />
 
-
                   <Route path="/dealcategories" element={<DealCategory />} />
-                  <Route path="/dealcategories/add" element={<DealCategoryAdd />} />
-                  <Route path="/dealcategories/edit/:id" element={<DealCategoryEdit />} />
-                  <Route path="/dealcategories/view/:id" element={<DealCategoryView />} />
+                  <Route
+                    path="/dealcategories/add"
+                    element={<DealCategoryAdd />}
+                  />
+                  <Route
+                    path="/dealcategories/edit/:id"
+                    element={<DealCategoryEdit />}
+                  />
+                  <Route
+                    path="/dealcategories/view/:id"
+                    element={<DealCategoryView />}
+                  />
 
                   {/* {/ Slider /} */}
                   <Route path="/slider" element={<Slider />} />
