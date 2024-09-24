@@ -21,31 +21,29 @@ function ShopHours() {
 
   return (
     <div className="container-fluid">
-      <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
-        <div className="container">
-          <div className="row mt-5 p-3">
-            {data && data.daily_timing ? (
-              Object.keys(data.daily_timing).map((day, index) => (
-                <div key={index} className="col-md-6 col-12 mb-3">
-                  <div className="row">
-                    <div className="col-6 d-flex justify-content-start align-items-center">
-                      <p className="text-sm">
-                        <b>{day}:</b>
-                      </p>
-                    </div>
-                    <div className="col-6">
-                      <p className="text-muted text-sm">:
-                        {data.daily_timing[day].opening} -{" "}
-                        {data.daily_timing[day].closing}
-                      </p>
-                    </div>
+      <div className="container">
+        <div className="row mt-5 p-3">
+          {data && data.daily_timing ? (
+            Object.keys(data.daily_timing).map((day, index) => (
+              <div key={index} className="col-md-6 col-12 mb-3">
+                <div className="row">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">
+                      <b>{day}:</b>
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">:
+                      {data.daily_timing[day].opening} -{" "}
+                      {data.daily_timing[day].closing}
+                    </p>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>No Shop Our Found!</p>
-            )}
-          </div>
+              </div>
+            ))
+          ) : (
+            <p>No Shop Our Found!</p>
+          )}
         </div>
       </div>
     </div>

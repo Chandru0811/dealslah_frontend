@@ -4,6 +4,7 @@ import Image from "../../../assets/tv.png";
 import Modal from 'react-bootstrap/Modal';
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function ProductsView() {
     const { id } = useParams();
@@ -261,32 +262,29 @@ function ProductsView() {
 
                     <div className="col-md-6 col-12">
                         <div className="row mb-3">
-                            <div className="col-12 d-flex justify-content-start align-items-center">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
                                     <b>Description</b>
                                 </p>
                             </div>
-                            <div className="col-12 mt-1">
-                                <p className="text-muted text-sm">{data.description}</p>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: {data.description}</p>
                             </div>
                         </div>
                     </div>
                     <div className="col-md-6 col-12">
                         <div className="row mb-3">
-                            <div className="col-12 d-flex justify-content-start align-items-center">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
                                     <b>Image</b>
                                 </p>
                             </div>
-                            <div className="col-12 mt-3">
-                                <p>
-                                    <img
-                                        src={Image}
-                                        alt="image"
-                                        className="img-fluid"
-                                        width={150}
-                                    />
-                                </p>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: <img
+                                    src={`${ImageURL}${data.image_url}`}
+                                    alt="icon"
+                                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                /></p>
                             </div>
                         </div>
                     </div>

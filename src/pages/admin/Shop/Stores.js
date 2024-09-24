@@ -23,7 +23,7 @@ function Stores() {
 
   return (
     <div
-      className="container card shadow border-0"
+      className="container"
       style={{ minHeight: "80vh" }}
     >
       <div className="row mt-5 p-3">
