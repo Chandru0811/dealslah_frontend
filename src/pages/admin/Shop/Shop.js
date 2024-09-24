@@ -117,7 +117,7 @@ const Shop = () => {
                                                     <Link to={`/shop/view/${data.id}`}>
                                                         <button className="button-btn btn-sm m-2">View</button>
                                                     </Link>
-                                                    <DeleteModel id={data.id} /> {/* Pass the ID or necessary props */}
+                                                    {/* <DeleteModel id={data.id} /> */}
                                                 </div>
                                             </td>
                                         </tr>

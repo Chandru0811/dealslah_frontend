@@ -3,46 +3,70 @@ import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
-import cat1 from "../../../assets/category5.png";
-import cat2 from "../../../assets/category4.png";
-import cat3 from "../../../assets/category8.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 
-
 function CategoryGroups() {
     const [datas, setDatas] = useState([]);
     const [loading, setLoading] = useState(false);
-
-    console.log("first", datas);
     const tableRef = useRef(null);
+
+    const initializeDataTable = () => {
+        if ($.fn.DataTable.isDataTable(tableRef.current)) {
+            return; // DataTable already initialized
+        }
+        $(tableRef.current).DataTable({
+            responsive: true,
+            pageLength: 10, // Set to show 10 entries per page
+            columnDefs: [{ orderable: false, targets: -1 }],
+            lengthChange: false, // Hide the page length change dropdown
+            destroy: true, // Ensure DataTable can be re-initialized correctly
+        });
+    };
+
+    const destroyDataTable = () => {
+        if ($.fn.DataTable.isDataTable(tableRef.current)) {
+            $(tableRef.current).DataTable().destroy();
+        }
+    };
+
+    const refreshData = async () => {
+        destroyDataTable(); // Clean up the old DataTable
+        setLoading(true);
+        try {
+            // Fetch paginated data; adjust URL parameters if server supports pagination
+            const response = await api.get('/admin/categoryGroup', {
+                params: { page: 1, limit: 10 }, // Example of requesting 10 entries per page
+            });
+            setDatas(response.data.data); // Update data state
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+        }
+        setLoading(false);
+        initializeDataTable(); // Reinitialize DataTable after data update
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-
             try {
-                const response = await api.get('/admin/categoryGroup');
+                // Initial data fetch with pagination
+                const response = await api.get('/admin/categoryGroup', {
+                    params: { page: 1, limit: 10 }, // Request the first 10 entries
+                });
                 setDatas(response.data.data);
-
-                // Initialize DataTable
-                if (tableRef.current) {
-                    $(tableRef.current).DataTable();
-                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
             setLoading(false);
+            initializeDataTable(); // Initialize DataTable with fetched data
         };
 
         fetchData();
 
-        // Cleanup DataTable on component unmount
         return () => {
-            if (tableRef.current) {
-                $(tableRef.current).DataTable().destroy();
-            }
+            destroyDataTable(); // Cleanup DataTable on component unmount
         };
     }, []);
 
@@ -117,7 +141,11 @@ function CategoryGroups() {
                                             <Link to={`/categorygroup/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
                                             </Link>
-                                            <DeleteModel />
+                                            <DeleteModel
+                                                onSuccess={refreshData}
+                                                path={`admin/categoryGroup/${data.id}`}
+                                                style={{ display: "inline-block" }}
+                                            />
                                         </td>
                                     </tr>
                                 ))}

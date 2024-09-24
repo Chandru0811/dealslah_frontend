@@ -120,7 +120,7 @@ const Products = () => {
                                             {/* <Link to={`/products/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
                                             </Link> */}
-                                            <DeleteModel />
+                                            {/* <DeleteModel /> */}
                                         </td>
                                     </tr>
                                 ))}

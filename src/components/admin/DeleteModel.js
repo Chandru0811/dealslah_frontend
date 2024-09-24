@@ -1,39 +1,93 @@
-import React, { useState } from "react";
-import { Button, Modal } from "react-bootstrap";
-import { MdDelete } from "react-icons/md";
+import React, { useEffect, useRef, useState } from "react";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import { FaTrash } from "react-icons/fa";
+import toast from "react-hot-toast";
+import api from "../../config/URL";
 
-const DeleteModel = () => {
+function DeleteModel({ onSuccess, path, staffmsg, teachermsg }) {
   const [show, setShow] = useState(false);
+
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const deleteButtonRef = useRef(null);
+
+  const handelDelete = async () => {
+    try {
+      const response = await api.delete(path);
+      if (response.status === 201 || response.status === 200) {
+        onSuccess();
+        handleClose();
+        if (staffmsg) {
+          toast.success(staffmsg);
+        } else if (teachermsg) {
+          toast.success(teachermsg);
+        } else {
+          toast.success(response.data.message);
+        }
+      } else if (response.status === 200) {
+        onSuccess();
+        handleClose();
+        toast.success(response.data.message);
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      if (error?.response?.status === 409) {
+        toast.warning(error?.response?.data?.message);
+        handleClose();
+      } else {
+        toast.error("Error deleting data:", error);
+      }
+    }
+  };
+  useEffect(() => {
+    if (show && deleteButtonRef.current) {
+      deleteButtonRef.current.focus();
+    }
+  }, [show]);
+
+  useEffect(() => {
+    const handleKeyPress = (event) => {
+      if (event.key === "Enter") {
+        if (show) {
+          handelDelete();
+        }
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyPress);
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [show]);
 
   return (
     <>
-      <button className="button-btn btn-sm m-2" onClick={handleShow}>
-        Delete
+      <button className="btn btn-sm" onClick={handleShow}>
+        <FaTrash />
       </button>
+
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Delete Confirmation</Modal.Title>
+          <Modal.Title>Delete</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          <p>Are you sure you want to delete?</p>
-        </Modal.Body>
+        <Modal.Body>Are you sure you want to delete?</Modal.Body>
         <Modal.Footer>
-          <Button
-            className="btn btn-sm btn-secondary"
-            onClick={handleClose}>
+          <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>
           <Button
-            className="btn btn-sm btn-danger"
-            onClick={handleClose}>
+            variant="danger"
+            onClick={handelDelete}
+            className={show ? "focused-button" : ""}
+          >
             Delete
           </Button>
         </Modal.Footer>
       </Modal>
     </>
   );
-};
+}
 
 export default DeleteModel;

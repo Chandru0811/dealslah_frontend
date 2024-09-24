@@ -12,39 +12,62 @@ import api from "../../../config/URL";
 import Image from "../../../assets/tv.png";
 import ImageURL from '../../../config/ImageURL';
 
-
 function DealCategory() {
     const [datas, setDatas] = useState([]);
     const [loading, setLoading] = useState(false);
-
     console.log("first", datas);
     const tableRef = useRef(null);
+    const initializeDataTable = () => {
+        if ($.fn.DataTable.isDataTable(tableRef.current)) {
+            return; // DataTable already initialized
+        }
+        $(tableRef.current).DataTable({
+            responsive: true,
+            pageLength: 10, // Set to show 10 entries per page
+            columnDefs: [{ orderable: false, targets: -1 }],
+            lengthChange: false, // Hide the page length change dropdown
+            destroy: true, // Ensure DataTable can be re-initialized correctly
+        });
+    };
+
+    const destroyDataTable = () => {
+        if ($.fn.DataTable.isDataTable(tableRef.current)) {
+            $(tableRef.current).DataTable().destroy();
+        }
+    };
+
+    const refreshData = async () => {
+        destroyDataTable(); // Clean up the old DataTable
+        setLoading(true);
+        try {
+            // Fetch paginated data; adjust URL parameters if server supports pagination
+            const response = await api.get('/admin/dealCategory');
+            setDatas(response.data.data); // Update data state
+        } catch (error) {
+            console.error('Error refreshing data:', error);
+        }
+        setLoading(false);
+        initializeDataTable(); // Reinitialize DataTable after data update
+    };
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
-
             try {
+                // Initial data fetch with pagination
                 const response = await api.get('/admin/dealCategory');
                 setDatas(response.data.data);
-
-                // Initialize DataTable
-                if (tableRef.current) {
-                    $(tableRef.current).DataTable();
-                }
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
             setLoading(false);
+            initializeDataTable(); // Initialize DataTable with fetched data
         };
 
         fetchData();
 
-        // Cleanup DataTable on component unmount
         return () => {
-            if (tableRef.current) {
-                $(tableRef.current).DataTable().destroy();
-            }
+            destroyDataTable(); // Cleanup DataTable on component unmount
         };
     }, []);
 
@@ -126,7 +149,11 @@ function DealCategory() {
                                             <Link to={`/dealcategories/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
                                             </Link>
-                                            <DeleteModel />
+                                            <DeleteModel
+                                                onSuccess={refreshData}
+                                                path={`admin/dealCategory/remove/${data.id}`}
+                                                style={{ display: "inline-block" }}
+                                            />
                                         </td>
                                     </tr>
                                 ))}
