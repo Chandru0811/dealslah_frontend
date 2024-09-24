@@ -126,7 +126,7 @@ function ShopView() {
             </div>
             <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
                 <div className="row mt-5">
-                    <div className="col-md-3 col-12 card shadow h-50" style={{ backgroundColor: "#1c2b36" }}>
+                    <div className="col-md-3 col-12">
                         <div className="dropdown-menu p-3"
                             style={{ zIndex: "1" }}>
                             <div

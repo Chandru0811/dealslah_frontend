@@ -20,92 +20,89 @@ function Payments() {
     }, [id]);
     return (
         <div className="container-fluid ">
-
-            <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
-                <div className="container">
-                    <div className="row mt-5 p-3">
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>PayPal</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: {data?.payment_id}</p>
-                                </div>
+            <div className="container">
+                <div className="row mt-5 p-3">
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>PayPal</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: {data?.payment_id}</p>
                             </div>
                         </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Account Holder</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: {data.account_holder}</p>
-                                </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Account Holder</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: {data.account_holder}</p>
                             </div>
                         </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Account Type</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: {data.account_type}</p>
-                                </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Account Type</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: {data.account_type}</p>
                             </div>
                         </div>
-                        <div className="col-md-6 col-12">
-                            <div className="row mb-3">
-                                <div className="col-6 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Account Number</b>
-                                    </p>
-                                </div>
-                                <div className="col-6">
-                                    <p className="text-muted text-sm">: {data.account_number}</p>
-                                </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Account Number</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: {data.account_number}</p>
                             </div>
                         </div>
-                        <div className="col-12">
-                            <div className="row mb-3">
-                                <div className="col-3 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Bank Name</b>
-                                    </p>
-                                </div>
-                                <div className="col-9">
-                                    <p className="text-muted text-sm">: {data.bank_name}</p>
-                                </div>
+                    </div>
+                    <div className="col-12">
+                        <div className="row mb-3">
+                            <div className="col-3 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Bank Name</b>
+                                </p>
+                            </div>
+                            <div className="col-9">
+                                <p className="text-muted text-sm">: {data.bank_name}</p>
                             </div>
                         </div>
-                        <div className="col-12">
-                            <div className="row mb-3">
-                                <div className="col-3 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Bank Address</b>
-                                    </p>
-                                </div>
-                                <div className="col-9">
-                                    <p className="text-muted text-sm">: {data.bank_address}</p>
-                                </div>
+                    </div>
+                    <div className="col-12">
+                        <div className="row mb-3">
+                            <div className="col-3 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Bank Address</b>
+                                </p>
+                            </div>
+                            <div className="col-9">
+                                <p className="text-muted text-sm">: {data.bank_address}</p>
                             </div>
                         </div>
-                        <div className="col-12">
-                            <div className="row mb-3">
-                                <div className="col-3 d-flex justify-content-start align-items-center">
-                                    <p className="text-sm">
-                                        <b>Bank Code</b>
-                                    </p>
-                                </div>
-                                <div className="col-9">
-                                    <p className="text-muted text-sm">: {data.bank_code}</p>
-                                </div>
+                    </div>
+                    <div className="col-12">
+                        <div className="row mb-3">
+                            <div className="col-3 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Bank Code</b>
+                                </p>
+                            </div>
+                            <div className="col-9">
+                                <p className="text-muted text-sm">: {data.bank_code}</p>
                             </div>
                         </div>
                     </div>

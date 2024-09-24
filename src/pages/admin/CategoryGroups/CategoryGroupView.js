@@ -170,9 +170,11 @@ function CategoryGroupView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">: <img src={`${ImageURL}${data.icon}`}
-                    alt="icon"
-                    className="img-fluid"></img></p>
+                  <p className="text-muted text-sm">: <img
+                    src={`${ImageURL}${data.icon}`}
+                    alt="Shop Logo"
+                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                  /></p>
                 </div>
               </div>
             </div>
