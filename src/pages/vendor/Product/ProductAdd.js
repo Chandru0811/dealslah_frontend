@@ -192,10 +192,10 @@ function ProductAdd() {
     getData();
   }, []);
 
-  const fetchCategory = async (subjectId) => {
+  const fetchCategory = async (categoryId) => {
     try {
       const category = await api.get(
-        `vendor/categories/categorygroups/${subjectId}`
+        `vendor/categories/categorygroups/${categoryId}`
       );
       setCategory(category.data.data);
     } catch (error) {

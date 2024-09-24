@@ -15,10 +15,10 @@ function ProductEdit() {
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
   const shop_id = sessionStorage.getItem("shop_id");
-  const {id} = useParams();
+  const { id } = useParams();
 
   const validationSchema = Yup.object({
-    shop_id: Yup.string().required("Shop Id is required"),
+    // shop_id: Yup.string().required("Shop Id is required"),
     name: Yup.string().required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
     brand: Yup.string().required("Brand is required"),
@@ -93,7 +93,7 @@ function ProductEdit() {
 
       console.log("Form Data:", formData);
       try {
-        const response = await api.post(`vendor/product`, formData, {
+        const response = await api.put(`vendor/product/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -195,7 +195,7 @@ function ProductEdit() {
     const getData = async () => {
       try {
         const response = await api.get(`vendor/product/${id}`);
-        formik.setValues(response.data.data)
+        formik.setValues(response.data.data);
       } catch (error) {
         toast.error("Error Fetching Data ", error.message);
       }
@@ -203,10 +203,10 @@ function ProductEdit() {
     getData();
   }, []);
 
-  const fetchCategory = async (subjectId) => {
+  const fetchCategory = async (categoryId) => {
     try {
       const category = await api.get(
-        `vendor/categories/categorygroups/${subjectId}`
+        `vendor/categories/categorygroups/${categoryId}`
       );
       setCategory(category.data.data);
     } catch (error) {
@@ -551,7 +551,11 @@ function ProductEdit() {
           </div>
         </div>
         <div className="hstack gap-2 justify-content-end p-2">
-          <button type="submit" className="btn btn-sm btn-button">
+          <button
+            type="submit"
+            className="btn btn-sm btn-button"
+            onClick={formik.handleSubmit}
+          >
             {loadIndicator && (
               <span
                 className="spinner-border spinner-border-sm me-2"
