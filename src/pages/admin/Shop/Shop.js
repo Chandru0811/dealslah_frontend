@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import api from "../../../config/URL";
+import ImageURL from "../../../config/ImageURL";
 
 const Shop = () => {
     const tableRef = useRef(null);
@@ -103,8 +104,8 @@ const Shop = () => {
                                             <td className="text-center">{index + 1}</td>
                                             <td className="text-center">
                                                 <img
-                                                    src={Image}
-                                                    alt="Store logo"
+                                                    src={`${ImageURL}${data.logo}`}
+                                                    alt=""
                                                     className="img-fluid"
                                                     width={50}
                                                 />

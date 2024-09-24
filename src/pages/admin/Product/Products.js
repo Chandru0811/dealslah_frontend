@@ -50,11 +50,11 @@ const Products = () => {
                         <div className="col p-2">
                             <div className="d-flex justify-content-between align-items-center">
                                 <h3 className="mb-0">Products</h3>
-                                <Link to="/products/add">
+                                {/* <Link to="/products/add">
                                     <button className="btn btn-sm btn-button shadow-none border-none py-3">
                                         <PiPlusSquareFill size={20} /> Add Product
                                     </button>
-                                </Link>
+                                </Link> */}
                             </div>
                         </div>
                     </div>
@@ -117,9 +117,9 @@ const Products = () => {
                                             <Link to={`/products/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>
                                             </Link>
-                                            <Link to={`/products/edit/${data.id}`}>
+                                            {/* <Link to={`/products/edit/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">Edit</button>
-                                            </Link>
+                                            </Link> */}
                                             <DeleteModel />
                                         </td>
                                     </tr>

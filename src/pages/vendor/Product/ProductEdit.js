@@ -181,7 +181,7 @@ function ProductAdd() {
   });
 
   useEffect(() => {
-    const getData = async () => {
+    const getData1 = async () => {
       try {
         const response = await api.get(`vendor/categorygroups`);
 
@@ -190,8 +190,18 @@ function ProductAdd() {
         toast.error("Error Fetching Data ", error);
       }
     };
+    getData1();
     getData();
   }, []);
+  const getData = async () => {
+    try {
+      const response = await api.get(`vendor/product/${id}`);
+
+      setAllCategorgroup(response.data.data);
+    } catch (error) {
+      toast.error("Error Fetching Data ", error);
+    }
+  };
 
   const fetchCategory = async (categoryId) => {
     try {

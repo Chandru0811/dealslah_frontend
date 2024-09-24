@@ -39,25 +39,6 @@ function CategoriesView() {
     }
   };
 
-  const handleDeActive = async () => {
-    setLoading(true);
-    // try {
-    //   const response = await api.delete(`admin/category/${id}/dispprove`);
-    //   if (response.status === 200) {
-    //     handleClose();
-    //     getData();
-    //     toast.success('Category deactivated successfully!');
-    //   } else {
-    //     toast.error('Failed to deactivate Category.');
-    //   }
-    // } catch (error) {
-    //   toast.error('An error occurred while deactivating the Category.');
-    //   console.error('Deactivation Error:', error);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
-
   const handleActivate = async () => {
     setLoading(true);
     try {
@@ -95,7 +76,7 @@ function CategoriesView() {
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus == 0 && (
+              {shopStatus === 0 && (
                 <button
                   type="button"
                   onClick={handleActivate}
@@ -109,15 +90,6 @@ function CategoriesView() {
                     ></span>
                   )}
                   Activate
-                </button>
-              )}
-
-              {shopStatus == 1 && (
-                <button
-                  onClick={handleOpenModal}
-                  className="btn btn-danger btn-sm me-2"
-                >
-                  Deactivate
                 </button>
               )}
             </div>
@@ -218,7 +190,7 @@ function CategoriesView() {
         </div>
       </div>
 
-      <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+      {/* <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Deactivate Shop</Modal.Title>
         </Modal.Header>
@@ -242,7 +214,7 @@ function CategoriesView() {
             Deactivate
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

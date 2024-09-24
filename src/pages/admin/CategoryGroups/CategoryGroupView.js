@@ -17,43 +17,6 @@ function CategoryGroupView() {
   const handleOpenModal = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
 
-  const handleDeActive = async () => {
-    setLoading(true);
-    // try {
-    //   const response = await api.post(`admin/dealCategory/${id}/deactivate`);
-    //   if (response.status === 200) {
-    //     handleClose();
-    //     getData();
-    //     toast.success('dealCategory deactivated successfully!');
-    //   } else {
-    //     toast.error('Failed to deactivate dealCategory.');
-    //   }
-    // } catch (error) {
-    //   toast.error('An error occurred while deactivating the dealCategory.');
-    //   console.error('Deactivation Error:', error);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
-
-  const handleActivate = async () => {
-    setLoading(true);
-    // try {
-    //   const response = await api.post(`admin/dealCategory/${id}/activate`);
-    //   if (response.status === 200) {
-    //     getData();
-    //     toast.success("dealCategory activated successfully!");
-    //   } else {
-    //     toast.error("Failed to activate dealCategory.");
-    //   }
-    // } catch (error) {
-    //   toast.error("An error occurred while activating the dealCategory.");
-    //   console.error("Activation Error:", error);
-    // } finally {
-    //   setLoading(false);
-    // }
-  };
-
 
   const getData = async () => {
     try {
@@ -83,7 +46,7 @@ function CategoryGroupView() {
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus == true ? (
+              {/* {shopStatus === false ? (
                 <button
                   type="button"
                   onClick={handleActivate}
@@ -106,7 +69,7 @@ function CategoryGroupView() {
                 >
                   Deactivate
                 </button>
-              ) : <></>}
+              ) : <></>} */}
             </div>
           </div>
         </div>
@@ -150,7 +113,7 @@ function CategoryGroupView() {
                 </div>
               </div>
             </div>
-            <div className="col-md-6 col-12">
+            {/* <div className="col-md-6 col-12">
               <div className="row mb-3">
                 <div className="col-6 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
@@ -158,10 +121,10 @@ function CategoryGroupView() {
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">:  {data.active == 0 ? 'Active' : data.active == 1 ? 'Inactive' : ''}</p>
+                  <p className="text-muted text-sm">:  {data.active === true ? 'Active' : 'Inactive'}</p>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="col-md-6 col-12">
               <div className="row mb-3">
                 <div className="col-6 d-flex justify-content-start align-items-center">
@@ -193,7 +156,7 @@ function CategoryGroupView() {
           </div>
         </div>
       </div>
-      <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+      {/* <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>Deactivate Shop</Modal.Title>
         </Modal.Header>
@@ -217,7 +180,7 @@ function CategoryGroupView() {
             Deactivate
           </button>
         </Modal.Footer>
-      </Modal>
+      </Modal> */}
     </div>
   );
 }

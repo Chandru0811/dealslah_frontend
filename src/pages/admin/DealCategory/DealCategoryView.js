@@ -10,55 +10,14 @@ function DealCategoryView() {
     const { id } = useParams();
     const [data, setData] = useState([]);
     const navigate = useNavigate();
-    const [shopStatus, setShopStatus] = useState("");
-    const [loading, setLoading] = useState(false);
+    // const [shopStatus, setShopStatus] = useState("");
+    // const [loading, setLoading] = useState(false);
 
-    const [showModal, setShowModal] = useState(false);
-    const handleOpenModal = () => setShowModal(true);
-    const handleClose = () => setShowModal(false);
+    // const [showModal, setShowModal] = useState(false);
+    // const handleOpenModal = () => setShowModal(true);
+    // const handleClose = () => setShowModal(false);
 
     console.log("first", data.icon)
-
-
-    const handleDeActive = async () => {
-        setLoading(true);
-        // try {
-        //     const response = await api.delete(`admin/dealCategory${id}/approve`);
-        //     if (response.status === 200) {
-        //         // handleClose();
-        //         getData();
-        //         toast.success('Deal deactivated successfully!');
-        //         navigate("/dealcategories");
-        //     } else {
-        //         toast.error('Failed to deactivate Deal.');
-        //     }
-        // } catch (error) {
-        //     toast.error('An error occurred while deactivating the Deal.');
-        //     console.error('Deactivation Error:', error);
-        // } finally {
-        //     setLoading(false);
-        // }
-    };
-
-    const handleActivate = async () => {
-        setLoading(true);
-        // try {
-        //     const response = await api.post(`admin/deal/${id}/approve`);
-        //     if (response.status === 200) {
-        //         getData();
-        //         setShopStatus(1);
-        //         toast.success("Deal activated successfully!");
-
-        //     } else {
-        //         toast.error("Failed to activate Deal.");
-        //     }
-        // } catch (error) {
-        //     toast.error("An error occurred while activating the Deal.");
-        //     console.error("Activation Error:", error);
-        // } finally {
-        //     setLoading(false);
-        // }
-    };
 
 
     const getData = async () => {
@@ -105,30 +64,6 @@ function DealCategoryView() {
                                                 Back
                                             </button>
                                         </Link>
-                                        {shopStatus == 0 ? (
-                                            <button
-                                                type="button"
-                                                onClick={handleActivate}
-                                                className="btn btn-success btn-sm me-2" disabled={loading}
-                                            >
-                                                {loading && (
-                                                    <span
-                                                        className="spinner-border spinner-border-sm me-2"
-                                                        aria-hidden="true"
-                                                    ></span>
-                                                )}
-                                                Activate
-                                            </button>
-                                        ) : null}
-
-                                        {shopStatus == 1 ? (
-                                            <button
-                                                onClick={handleOpenModal}
-                                                className="btn btn-danger btn-sm me-2"
-                                            >
-                                                Deactivate
-                                            </button>
-                                        ) : null}
 
                                     </div>
                                 </div>
@@ -166,7 +101,7 @@ function DealCategoryView() {
                                 </div>
                             </div>
 
-                            <div className="col-md-6 col-12">
+                            {/* <div className="col-md-6 col-12">
                                 <div className="row mb-3">
                                     <div className="col-6 d-flex justify-content-start align-items-center">
                                         <p className="text-sm">
@@ -177,7 +112,7 @@ function DealCategoryView() {
                                         <p className="text-muted text-sm">:  {data.active == 0 ? 'Active' : data.active == 1 ? 'Inactive' : ''}</p>
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="col-md-6 col-12">
                                 <div className="row mb-3">
                                     <div className="col-6 d-flex justify-content-start align-items-center">
@@ -210,7 +145,7 @@ function DealCategoryView() {
                     </div>
                 </div>
             </div>
-            <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+            {/* <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
                 <Modal.Header closeButton>
                     <Modal.Title>Deactivate Shop</Modal.Title>
                 </Modal.Header>
@@ -234,7 +169,7 @@ function DealCategoryView() {
                         Deactivate
                     </button>
                 </Modal.Footer>
-            </Modal>
+            </Modal> */}
         </section>
 
     );

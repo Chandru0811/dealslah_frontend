@@ -13,7 +13,7 @@ function DealCategoryEdit() {
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
         image: Yup.mixed().nullable().required("*Image is required"),
-        active: Yup.string().required("*Select an active status"),
+        // active: Yup.string().required("*Select an active status"),
     });
 
     const formik = useFormik({
@@ -21,7 +21,7 @@ function DealCategoryEdit() {
             name: "",
             image: null,
             slug: "",
-            active: "",
+            // active: "",
             description: "",
         },
         validationSchema: validationSchema,
@@ -33,7 +33,7 @@ function DealCategoryEdit() {
 
             formData.append("name", values.name);
             formData.append("image", values.image);
-            formData.append("active", values.active);
+            // formData.append("active", values.active);
             formData.append("description", values.description);
 
             try {
@@ -61,7 +61,7 @@ function DealCategoryEdit() {
                 formik.setValues({
                     name: response.data.data.name || "",
                     order: response.data.data.order || "",
-                    active: response.data.data.active || "",
+                    // active: response.data.data.active || "",
                     description: response.data.data.description || "",
                     image: null, // Image needs to be set via file input
                 });
@@ -115,7 +115,7 @@ function DealCategoryEdit() {
                                 )}
                             </div>
 
-                            <div className="col-md-6 col-12 mb-3">
+                            {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Active<span className="text-danger">*</span>
                                 </label>
@@ -130,7 +130,7 @@ function DealCategoryEdit() {
                                 {formik.touched.active && formik.errors.active && (
                                     <div className="invalid-feedback">{formik.errors.active}</div>
                                 )}
-                            </div>
+                            </div> */}
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">

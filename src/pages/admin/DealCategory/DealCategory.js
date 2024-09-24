@@ -87,7 +87,7 @@ function DealCategory() {
                                     <th scope="col">Name</th>
                                     <th scope="col">Slug</th>
                                     <th scope="col" className='text-start'>Description</th>
-                                    <th scope="col">Active</th>
+                                    {/* <th scope="col">Active</th> */}
                                     <th scope="col" className="text-center">
                                         ACTION
                                     </th>
@@ -106,7 +106,7 @@ function DealCategory() {
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.description}</td>
-                                        <td className="text-center">
+                                        {/* <td className="text-center">
                                             <div className="word-wrap">
                                                 {data.active == 1 ? (
                                                     <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
@@ -115,7 +115,7 @@ function DealCategory() {
                                                 )}
                                                 {data.active ? ' Active' : ' Inactive'}
                                             </div>
-                                        </td>
+                                        </td> */}
 
 
 

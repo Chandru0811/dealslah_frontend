@@ -50,7 +50,7 @@ function ProductsAdd() {
             file: null,
             description: "",
         },
-        validationSchema: validationSchema,
+        // validationSchema: validationSchema,
         onSubmit: (values) => {
             console.log("Form Data:", values);
         },
@@ -143,6 +143,23 @@ function ProductsAdd() {
                                 <div className="invalid-feedback">
                                     {formik.errors.category_id}
                                 </div>
+                            )}
+                        </div>
+                        <div className="col-md-6 col-12 mb-3">
+                            <label className="form-label">
+                                Image<span className="text-danger">*</span>
+                            </label>
+                            <input
+                                type="file"
+                                className={`form-control ${formik.touched.file && formik.errors.file ? "is-invalid" : ""
+                                    }`}
+                                onChange={(event) => {
+                                    formik.setFieldValue("file", event.target.files[0]);
+                                }}
+                                {...formik.getFieldProps("file")}
+                            />
+                            {formik.touched.file && formik.errors.file && (
+                                <div className="invalid-feedback">{formik.errors.file}</div>
                             )}
                         </div>
                         <div className="col-md-6 col-12 mb-3">
@@ -268,23 +285,7 @@ function ProductsAdd() {
                                     </div>
                                 )}
                         </div>
-                        <div className="col-md-6 col-12 mb-3">
-                            <label className="form-label">
-                                Image<span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="file"
-                                className={`form-control ${formik.touched.file && formik.errors.file ? "is-invalid" : ""
-                                    }`}
-                                onChange={(event) => {
-                                    formik.setFieldValue("file", event.target.files[0]);
-                                }}
-                                {...formik.getFieldProps("file")}
-                            />
-                            {formik.touched.file && formik.errors.file && (
-                                <div className="invalid-feedback">{formik.errors.file}</div>
-                            )}
-                        </div>
+                     
                         <div className="col-md-6 col-12 mb-3">
                             <label className="form-label">
                                 Stock<span className="text-danger">*</span>
