@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Button, Modal } from "react-bootstrap";
@@ -8,7 +8,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 
-function ProductEdit() {
+function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
@@ -16,9 +16,10 @@ function ProductEdit() {
   const [category, setCategory] = useState([]);
   const shop_id = sessionStorage.getItem("shop_id");
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    // shop_id: Yup.string().required("Shop Id is required"),
+    shop_id: Yup.string().required("Shop Id is required"),
     name: Yup.string().required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
     brand: Yup.string().required("Brand is required"),
@@ -72,7 +73,7 @@ function ProductEdit() {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       const formData = new FormData();
-      // formData.append("shop_id", values.shop_id);
+      formData.append("_method", "PUT");
       formData.append("shop_id", shop_id);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
@@ -93,7 +94,7 @@ function ProductEdit() {
 
       console.log("Form Data:", formData);
       try {
-        const response = await api.put(`vendor/product/${id}`, formData, {
+        const response = await api.post(`vendor/product/${id}`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -102,6 +103,7 @@ function ProductEdit() {
         if (response.status === 200) {
           toast.success(response.data.message);
           setShowModal(false);
+          navigate("/product");
         } else {
           toast.error(response.data.message);
         }
@@ -118,7 +120,7 @@ function ProductEdit() {
             });
           }
         } else {
-          console.error("API Error", error.message);
+          console.error("API Error", error);
           toast.error("An unexpected error occurred.");
         }
       } finally {
@@ -191,18 +193,6 @@ function ProductEdit() {
     getData();
   }, []);
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await api.get(`vendor/product/${id}`);
-        formik.setValues(response.data.data);
-      } catch (error) {
-        toast.error("Error Fetching Data ", error.message);
-      }
-    };
-    getData();
-  }, []);
-
   const fetchCategory = async (categoryId) => {
     try {
       const category = await api.get(
@@ -234,7 +224,7 @@ function ProductEdit() {
         <div className="card shadow border-0 mb-3">
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h1 className="h4 ls-tight">Add Products</h1>
+              <h1 className="h4 ls-tight">Edit Products</h1>
               <Link to="/product">
                 <button type="button" className="btn btn-light btn-sm">
                   <span>Back</span>
@@ -334,8 +324,8 @@ function ProductEdit() {
                 {...formik.getFieldProps("deal_type")}
               >
                 <option></option>
-                <option value="1">Product</option>
-                <option value="2">Service</option>
+                <option value="0">Product</option>
+                <option value="1">Service</option>
               </select>
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">
@@ -551,18 +541,14 @@ function ProductEdit() {
           </div>
         </div>
         <div className="hstack gap-2 justify-content-end p-2">
-          <button
-            type="submit"
-            className="btn btn-sm btn-button"
-            onClick={formik.handleSubmit}
-          >
+          <button type="submit" className="btn btn-sm btn-button">
             {loadIndicator && (
               <span
                 className="spinner-border spinner-border-sm me-2"
                 aria-hidden="true"
               ></span>
             )}
-            Submit
+            Update
           </button>
         </div>
       </form>
@@ -696,4 +682,4 @@ function ProductEdit() {
   );
 }
 
-export default ProductEdit;
+export default ProductAdd;
