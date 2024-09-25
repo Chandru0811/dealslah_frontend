@@ -85,7 +85,7 @@ function ProductsView() {
                                     <span>Back</span>
                                 </button>
                             </Link>
-                            {shopStatus == 0 ? (
+                            {shopStatus === "0" ? (
                                 <button
                                     type="button"
                                     onClick={handleActivate}
@@ -101,7 +101,7 @@ function ProductsView() {
                                 </button>
                             ) : <></>}
 
-                            {shopStatus == 1 ? (
+                            {shopStatus === "1" ? (
                                 <button
                                     onClick={handleOpenModal}
                                     className="btn btn-danger btn-sm me-2"
@@ -143,11 +143,19 @@ function ProductsView() {
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
-                                    <b>category</b>
+                                    <b>Category</b>
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: 2</p>
+                                <p className="text-muted text-sm">
+                                    :{" "}
+                                    {Array.isArray(datas) &&
+                                        datas.map((category) =>
+                                            parseInt(data.category_group_id) === category.id
+                                                ? category.name || "--"
+                                                : ""
+                                        )}
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -179,7 +187,7 @@ function ProductsView() {
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
-                                    <b>Orginal Price</b>
+                                    <b>Original Price</b>
                                 </p>
                             </div>
                             <div className="col-6">
@@ -207,7 +215,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: {data.discount_percentage}</p>
+                                <p className="text-muted text-sm">: {data.discount_percentage}%</p>
                             </div>
                         </div>
                     </div>
@@ -277,6 +285,70 @@ function ProductsView() {
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
                                     <b>Image</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: <img
+                                    src={`${ImageURL}${data.image_url}`}
+                                    alt="icon"
+                                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                /></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Image 1</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: <img
+                                    src={`${ImageURL}${data.image_url}`}
+                                    alt="icon"
+                                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                /></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Image 2</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: <img
+                                    src={`${ImageURL}${data.image_url}`}
+                                    alt="icon"
+                                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                /></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Image 3</b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm">: <img
+                                    src={`${ImageURL}${data.image_url}`}
+                                    alt="icon"
+                                    style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                /></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Image 4</b>
                                 </p>
                             </div>
                             <div className="col-6">

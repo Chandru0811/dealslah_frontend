@@ -134,6 +134,7 @@ function CategoryGroupAdd() {
                                 <input
                                     name="icon"
                                     type="file"
+                                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
                                     className={`form-control`}
                                     onChange={(event) => {
                                         const file = event.currentTarget.files[0];

@@ -198,29 +198,44 @@ function CategoriesEdits() {
                 )}
               </div> */}
               <div className="col-md-6 col-12 mb-3">
-                <label className="form-label">
+                <label className="form-label fw-bold">
                   Icon<span className="text-danger">*</span>
                 </label>
+
                 <input
                   type="file"
-                  name="icon"
-                  accept=".png"
+                  name="file"
+                  accept=".png,.jpeg,.jpg,.gif,.svg"
                   className="form-control"
                   onChange={(event) => {
-                    formik.setFieldValue("icon", event.target.files[0]);
+                    const file = event.target.files[0];
+                    formik.setFieldValue("icon", file);
                   }}
                   onBlur={formik.handleBlur}
                 />
                 {formik.touched.icon && formik.errors.icon && (
-                  <div className="invalid-feedback">{formik.errors.icon}</div>
+                  <div className="error text-danger">
+                    <small>{formik.errors.icon}</small>
+                  </div>
                 )}
-                {/* <div className="mb-3">
-                  <img
-                    src={`${ImageURL}${formik.values.icon}`}
-                    alt="Shop Logo"
-                    style={{ maxWidth: "100px", maxHeight: "100px" }}
-                  />
-                </div> */}
+
+                {formik.values.icon && (
+                  <div className="mb-3">
+                    {typeof formik.values.icon === "object" ? (
+                      <img
+                        src={URL.createObjectURL(formik.values.icon)}
+                        alt="icon"
+                        style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      />
+                    ) : (
+                      <img
+                        src={`${ImageURL}${formik.values.icon}`}
+                        alt="icon"
+                        style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
               <div className="col-md-12 col-12 mb-3">
                 <label className="form-label">

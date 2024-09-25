@@ -180,6 +180,7 @@ function CategoriesAdd() {
                 <input
                   name="icon"
                   type="file"
+                  accept=".png,.jpeg,.jpg,.gif,.svg"
                   className={`form-control`}
                   onChange={(event) => {
                     const file = event.currentTarget.files[0];

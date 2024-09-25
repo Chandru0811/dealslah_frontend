@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import ImageURL from "../../../config/ImageURL";
 
 function CategoryGroupEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
@@ -115,23 +116,44 @@ function CategoryGroupEdit() {
                                 )}
                             </div>
 
-
-
                             <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
+                                <label className="form-label fw-bold">
                                     Icon<span className="text-danger">*</span>
                                 </label>
+
                                 <input
-                                    name="icon"
                                     type="file"
+                                    name="file"
+                                    accept=".png,.jpeg,.jpg,.gif,.svg"
                                     className="form-control"
                                     onChange={(event) => {
-                                        const file = event.currentTarget.files[0];
-                                        setLogo(file); // Set the selected file to logo state
+                                        const file = event.target.files[0];
+                                        formik.setFieldValue("icon", file);
                                     }}
+                                    onBlur={formik.handleBlur}
                                 />
                                 {formik.touched.icon && formik.errors.icon && (
-                                    <div className="invalid-feedback">{formik.errors.icon}</div>
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.icon}</small>
+                                    </div>
+                                )}
+
+                                {formik.values.icon && (
+                                    <div className="mb-3">
+                                        {typeof formik.values.icon === "object" ? (
+                                            <img
+                                                src={URL.createObjectURL(formik.values.icon)}
+                                                alt="icon"
+                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={`${ImageURL}${formik.values.icon}`}
+                                                alt="icon"
+                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                            />
+                                        )}
+                                    </div>
                                 )}
                             </div>
 

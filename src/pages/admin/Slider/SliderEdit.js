@@ -4,6 +4,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
+import ImageURL from "../../../config/ImageURL";
 
 function SliderEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -79,25 +80,46 @@ function SliderEdit() {
         >
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
+              <label className="form-label fw-bold">
                 Image<span className="text-danger">*</span>
               </label>
+
               <input
                 type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                className={`form-control ${formik.touched.image && formik.errors.image
-                  ? "is-invalid"
-                  : ""
-                  }`}
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
                 onChange={(event) => {
-                  const file = event.currentTarget.files[0];
-                  formik.setFieldValue("image", file);
+                  const file = event.target.files[0];
+                  formik.setFieldValue("image_path", file);
                 }}
+                onBlur={formik.handleBlur}
               />
-              {formik.touched.image && formik.errors.image && (
-                <div className="invalid-feedback">{formik.errors.image}</div>
+              {formik.touched.image_path && formik.errors.image_path && (
+                <div className="error text-danger">
+                  <small>{formik.errors.image_path}</small>
+                </div>
+              )}
+
+              {formik.values.image_path && (
+                <div className="mb-3">
+                  {typeof formik.values.image_path === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_path)}
+                      alt="image_path"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_path}`}
+                      alt="image_path"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
               )}
             </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Order<span className="text-danger">*</span>
