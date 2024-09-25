@@ -7,9 +7,9 @@ import DeleteModel from "../../../components/admin/DeleteModel";
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 
-function CategoriesIndex() {
-  const [datas, setDatas] = useState([]);
-  const [loading, setLoading] = useState(false);
+const CategoriesIndex = () => {
+  const [datas, setDatas] = useState();
+  const [loading, setLoading] = useState(true);
   const tableRef = useRef(null);
 
   const initializeDataTable = () => {
@@ -48,21 +48,28 @@ function CategoriesIndex() {
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
+
       try {
-        // Initial data fetch with pagination
-        const response = await api.get('/admin/categories');
+        const response = await api.get("/admin/categories");
         setDatas(response.data.data);
+
+        // Initialize DataTable
+        if (tableRef.current) {
+          $(tableRef.current).DataTable();
+        }
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
       setLoading(false);
-      initializeDataTable(); // Initialize DataTable with fetched data
     };
 
     fetchData();
 
+    // Cleanup DataTable on component unmount
     return () => {
-      destroyDataTable(); // Cleanup DataTable on component unmount
+      if (tableRef.current) {
+        $(tableRef.current).DataTable().destroy();
+      }
     };
   }, []);
 
