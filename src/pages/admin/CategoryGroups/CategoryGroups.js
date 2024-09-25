@@ -6,7 +6,8 @@ import { Link } from "react-router-dom";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
-
+import ImageURL from '../../../config/ImageURL';
+import noImage from '../../../assets/noimage.png'
 function CategoryGroups() {
     const [datas, setDatas] = useState([]);
     const [loading, setLoading] = useState(false);
@@ -22,12 +23,12 @@ function CategoryGroups() {
     };
     useEffect(() => {
         if (!loading) {
-          initializeDataTable();
+            initializeDataTable();
         }
         return () => {
-          destroyDataTable();
+            destroyDataTable();
         };
-      }, [loading]);
+    }, [loading]);
 
     const destroyDataTable = () => {
         if ($.fn.DataTable.isDataTable(tableRef.current)) {
@@ -124,8 +125,14 @@ function CategoryGroups() {
                                 {datas?.map((data, index) => (
                                     <tr key={data.id}>
                                         <td className="text-start align-middle">{index + 1}</td>
-                                        <td
-                                            className="ms-2">{data.name}
+                                        <td className="text-start">
+                                            <img
+                                                src={data.icon !== null ? `${ImageURL}${data.icon}` : noImage}
+                                                alt=""
+                                                className="img-fluid w-25 me-3"
+                                                style={{ maxHeight: "70px", maxWidth: "70px" }}
+                                            />
+                                            {data.name}
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.order}</td>

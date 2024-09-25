@@ -9,12 +9,19 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
     .required("E-mail is required"),
-  mobile: Yup.string().required("Mobile is required"),
+    mobile: Yup.string()
+    .required("Mobile is required")
+    .min(8, "Minimum digits is 8")
+    .max(10, "Maximum digits is 10"),
+  
   external_url: Yup.string()
     .url("Invalid URL")
     .required("Website URL is required"),
 
-  shop_ratings: Yup.number().required("Shop Rating is required"),
+    shop_ratings: Yup.number()
+    .required("Shop Rating is required")
+    .max(5, "Shop Rating cannot be more than 5"),
+  
   shop_type: Yup.string().required("Shop Type is required"),
   description: Yup.string().required("Description is required"),
 });

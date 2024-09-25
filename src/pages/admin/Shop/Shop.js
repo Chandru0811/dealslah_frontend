@@ -7,6 +7,7 @@ import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
+import noImage from '../../../assets/noimage.png'
 
 const Shop = () => {
     const tableRef = useRef(null);
@@ -104,7 +105,7 @@ const Shop = () => {
                                             <td className="text-center">{index + 1}</td>
                                             <td className="text-center">
                                                 <img
-                                                    src={`${ImageURL}${data.logo}`}
+                                                    src={data.logo !== null ? `${ImageURL}${data.logo}` : noImage}
                                                     alt=""
                                                     className="img-fluid"
                                                     width={50}

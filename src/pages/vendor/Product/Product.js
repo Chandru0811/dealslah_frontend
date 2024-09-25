@@ -127,7 +127,7 @@ const Product = () => {
                 {data.map((data, index) => (
                   <tr key={index}>
                     <th scope="row">{index + 1}</th>
-                    <td className="text-center">
+                    <td className="text-start">
                       <img
                         src={`${ImageURL}${data.image_url}`}
                         alt="Logo"
