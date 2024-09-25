@@ -20,10 +20,17 @@ const Slider = () => {
       return; // DataTable already initialized
     }
     $(tableRef.current).DataTable({
-      responsive: true,
       columnDefs: [{ orderable: false, targets: -1 }],
     });
   };
+  useEffect(() => {
+    if (!loading) {
+      initializeDataTable();
+    }
+    return () => {
+      destroyDataTable();
+    };
+  }, [loading]);
 
   const destroyDataTable = () => {
     if ($.fn.DataTable.isDataTable(tableRef.current)) {
@@ -58,7 +65,7 @@ const Slider = () => {
     };
 
     fetchData();
-
+    refreshData();
     return () => {
       destroyDataTable(); // Cleanup DataTable on component unmount
     };
