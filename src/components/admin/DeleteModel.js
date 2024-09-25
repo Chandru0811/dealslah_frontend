@@ -64,8 +64,8 @@ function DeleteModel({ onSuccess, path, staffmsg, teachermsg }) {
 
   return (
     <>
-      <button className="btn btn-sm" onClick={handleShow}>
-        <FaTrash />
+      <button className="button-btn btn-sm" onClick={handleShow}>
+        Delete
       </button>
 
       <Modal show={show} onHide={handleClose}>

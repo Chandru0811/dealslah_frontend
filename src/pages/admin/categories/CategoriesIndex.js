@@ -17,13 +17,17 @@ const CategoriesIndex = () => {
       return; // DataTable already initialized
     }
     $(tableRef.current).DataTable({
-      responsive: true,
-      pageLength: 10, // Set to show 10 entries per page
       columnDefs: [{ orderable: false, targets: -1 }],
-      lengthChange: false, // Hide the page length change dropdown
-      destroy: true, // Ensure DataTable can be re-initialized correctly
     });
   };
+  useEffect(() => {
+    if (!loading) {
+      initializeDataTable();
+    }
+    return () => {
+      destroyDataTable();
+    };
+  }, [loading]);
 
   const destroyDataTable = () => {
     if ($.fn.DataTable.isDataTable(tableRef.current)) {
@@ -64,6 +68,8 @@ const CategoriesIndex = () => {
     };
 
     fetchData();
+    refreshData();
+    
 
     // Cleanup DataTable on component unmount
     return () => {
