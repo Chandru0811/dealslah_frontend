@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import DeleteModel from "../../../components/admin/DeleteModel";
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
+import ImageURL from "../../../config/ImageURL";
 
 const CategoriesIndex = () => {
   const [datas, setDatas] = useState();
@@ -143,8 +144,14 @@ const CategoriesIndex = () => {
                       {data.category_group_id}
                     </div>
                   </td> */}
-                    <td>
-                      <div className="word-wrap">{data.name}</div>
+                      <td className="text-start">
+                      <img
+                        src={`${ImageURL}${data.icon}`}
+                        alt="Logo"
+                        className="img-fluid w-25 me-3"
+                        style={{ maxHeight: "70px", maxWidth: "70px" }}
+                      />
+                      {data.name}
                     </td>
                     <td>
                       <div className="word-wrap">{data.slug}</div>

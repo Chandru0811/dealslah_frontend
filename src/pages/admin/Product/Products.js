@@ -7,6 +7,7 @@ import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
+import ImageURL from "../../../config/ImageURL";
 
 const Products = () => {
     const [datas, setDatas] = useState([]);
@@ -107,7 +108,15 @@ const Products = () => {
                                             width={50}
                                             className="img-fluid"></img>{data.name}
                                     </td> */}
-                                        <td className="align-middle">{data.name}</td>
+                                        <td className="text-start">
+                                            <img
+                                                src={`${ImageURL}${data.image_url}`}
+                                                alt="Logo"
+                                                className="img-fluid w-25 me-3"
+                                                style={{ maxHeight: "70px", maxWidth: "70px" }}
+                                            />
+                                            {data.name}
+                                        </td>
                                         <td className="align-middle text-start">{data.original_price}</td>
                                         <td className="align-middle text-start">{data.brand}</td>
 
