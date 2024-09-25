@@ -92,6 +92,7 @@ function ProductAdd() {
       formData.append("slug", finalSlug);
 
       console.log("Form Data:", formData);
+      setLoadIndicator(true);
       try {
         const response = await api.post(`vendor/product`, formData, {
           headers: {
