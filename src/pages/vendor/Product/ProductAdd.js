@@ -40,7 +40,10 @@ function ProductAdd() {
       .required("Stock is required")
       .min(0, "Stock cannot be negative"),
     sku: Yup.string().required("SKU is required"),
-    image: Yup.mixed().required("Image is required"),
+    image1: Yup.mixed().required("Image 1 is required"),
+    image2: Yup.mixed().required("Image 2 is required"),
+    image3: Yup.mixed().required("Image 3 is required"),
+    image4: Yup.mixed().required("Image 4 is required"),
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
@@ -66,7 +69,10 @@ function ProductAdd() {
       end_date: "",
       stock: "",
       sku: "",
-      image: null,
+      image1: null,
+      image2: null,
+      image3: null,
+      image4: null,
       description: "",
     },
     validationSchema: validationSchema,
@@ -85,7 +91,10 @@ function ProductAdd() {
       formData.append("end_date", values.end_date);
       formData.append("stock", values.stock);
       formData.append("sku", values.sku);
-      formData.append("image", values.image);
+      formData.append("image1", values.image1);
+      formData.append("image2", values.image2);
+      formData.append("image3", values.image3);
+      formData.append("image4", values.image4);
       formData.append("description", values.description);
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
@@ -363,23 +372,19 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Image<span className="text-danger">*</span>
+                SKU<span className="text-danger">*</span>
               </label>
               <input
-                type="file"
-                name="file"
-                accept=".png,.jpeg,.jpg,.gif,.svg"
-                className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image", file);
-                }}
-                onBlur={formik.handleBlur}
+                type="text"
+                className={`form-control ${formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
+                  }`}
+                {...formik.getFieldProps("sku")}
               />
-              {formik.touched.image && formik.errors.image && (
-                <div className="invalid-feedback">{formik.errors.image}</div>
+              {formik.touched.sku && formik.errors.sku && (
+                <div className="invalid-feedback">{formik.errors.sku}</div>
               )}
             </div>
+
 
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -494,16 +499,78 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                SKU<span className="text-danger">*</span>
+                Image 1<span className="text-danger">*</span>
               </label>
               <input
-                type="text"
-                className={`form-control ${formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
-                  }`}
-                {...formik.getFieldProps("sku")}
+                type="file"
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  formik.setFieldValue("image1", file);
+                }}
+                onBlur={formik.handleBlur}
               />
-              {formik.touched.sku && formik.errors.sku && (
-                <div className="invalid-feedback">{formik.errors.sku}</div>
+              {formik.touched.image1 && formik.errors.image1 && (
+                <div className="invalid-feedback">{formik.errors.image1}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Image 2<span className="text-danger">*</span>
+              </label>
+              <input
+                type="file"
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  formik.setFieldValue("image2", file);
+                }}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.image2 && formik.errors.image2 && (
+                <div className="invalid-feedback">{formik.errors.image2}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Image 3<span className="text-danger">*</span>
+              </label>
+              <input
+                type="file"
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  formik.setFieldValue("image3", file);
+                }}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.image3 && formik.errors.image3 && (
+                <div className="invalid-feedback">{formik.errors.image3}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Image 4<span className="text-danger">*</span>
+              </label>
+              <input
+                type="file"
+                name="file"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
+                onChange={(event) => {
+                  const file = event.target.files[0];
+                  formik.setFieldValue("image4", file);
+                }}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.image4 && formik.errors.image4 && (
+                <div className="invalid-feedback">{formik.errors.image4}</div>
               )}
             </div>
 
