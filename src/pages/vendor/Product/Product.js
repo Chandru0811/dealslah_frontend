@@ -172,7 +172,7 @@ const Product = () => {
                       </Link>
                       <DeleteModel
                         onSuccess={refreshData}
-                        path={`vendor/product/${data.id}`}
+                        path={`vendor/product/${data.id}/delete`}
                         style={{ display: "inline-block" }}
                       />
                     </td>
