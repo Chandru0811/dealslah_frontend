@@ -30,8 +30,8 @@ function ApprovePopup() {
         <Modal.Title>Approval Restricted</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        You cannot approve on the vendor page at the moment. Please wait or
-        refresh the page.
+        You cannot approve on the vendor page at this time. Please wait or try
+        refreshing the page.
       </Modal.Body>
     </Modal>
   );

@@ -64,7 +64,7 @@ const Product = () => {
         console.error('Error fetching data:', error);
       }
       setLoading(false);
-      initializeDataTable(); // Initialize DataTable with fetched data
+      initializeDataTable();
     };
 
     fetchData();
