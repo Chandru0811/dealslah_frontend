@@ -9,7 +9,6 @@ import ImageURL from "../../../config/ImageURL";
 function CategoryGroupEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const { id } = useParams();
-    const [logo, setLogo] = useState(null);
     const navigate = useNavigate();
 
     const validationSchema = Yup.object({
@@ -30,13 +29,13 @@ function CategoryGroupEdit() {
             description: "",
         },
         validationSchema: validationSchema,
-        onSubmit: async (values, { resetForm }) => {
+        onSubmit: async (values) => {
             const formData = new FormData();
             formData.append("_method", "PUT");
 
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", logo);
+            formData.append("icon", values.icon);
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
@@ -117,47 +116,6 @@ function CategoryGroupEdit() {
                             </div>
 
                             <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label fw-bold">
-                                    Icon<span className="text-danger">*</span>
-                                </label>
-
-                                <input
-                                    type="file"
-                                    name="file"
-                                    accept=".png,.jpeg,.jpg,.gif,.svg"
-                                    className="form-control"
-                                    onChange={(event) => {
-                                        const file = event.target.files[0];
-                                        formik.setFieldValue("icon", file);
-                                    }}
-                                    onBlur={formik.handleBlur}
-                                />
-                                {formik.touched.icon && formik.errors.icon && (
-                                    <div className="error text-danger">
-                                        <small>{formik.errors.icon}</small>
-                                    </div>
-                                )}
-
-                                {formik.values.icon && (
-                                    <div className="mb-3">
-                                        {typeof formik.values.icon === "object" ? (
-                                            <img
-                                                src={URL.createObjectURL(formik.values.icon)}
-                                                alt="icon"
-                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
-                                            />
-                                        ) : (
-                                            <img
-                                                src={`${ImageURL}${formik.values.icon}`}
-                                                alt="icon"
-                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
-                                            />
-                                        )}
-                                    </div>
-                                )}
-                            </div>
-
-                            <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Order<span className="text-danger">*</span>
                                 </label>
@@ -172,6 +130,61 @@ function CategoryGroupEdit() {
                                 </select>
                                 {formik.touched.order && formik.errors.order && (
                                     <div className="invalid-feedback">{formik.errors.order}</div>
+                                )}
+                            </div>
+
+                            <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label">
+                                    Icon<span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""}`}
+                                    {...formik.getFieldProps("icon")}
+                                />
+                                {formik.touched.icon && formik.errors.icon && (
+                                    <div className="invalid-feedback">{formik.errors.icon}</div>
+                                )}
+                            </div>
+
+                            <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label fw-bold">
+                                    Image<span className="text-danger">*</span>
+                                </label>
+
+                                <input
+                                    type="file"
+                                    name="image_path"
+                                    accept=".png,.jpeg,.jpg,.gif,.svg"
+                                    className="form-control"
+                                    onChange={(event) => {
+                                        const file = event.target.files[0];
+                                        formik.setFieldValue("image_path", file);
+                                    }}
+                                    onBlur={formik.handleBlur}
+                                />
+                                {formik.touched.image_path && formik.errors.image_path && (
+                                    <div className="error text-danger">
+                                        <small>{formik.errors.image_path}</small>
+                                    </div>
+                                )}
+
+                                {formik.values.image_path && (
+                                    <div className="mb-3">
+                                        {typeof formik.values.image_path === "object" ? (
+                                            <img
+                                                src={URL.createObjectURL(formik.values.image_path)}
+                                                alt="image"
+                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={`${ImageURL}${formik.values.image_path}`}
+                                                alt="image_path"
+                                                style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                            />
+                                        )}
+                                    </div>
                                 )}
                             </div>
 

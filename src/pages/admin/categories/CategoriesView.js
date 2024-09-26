@@ -39,6 +39,25 @@ function CategoriesView() {
     }
   };
 
+  // const handleDeActive = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await api.post(`admin`);
+  //     if (response.status === 200) {
+  //       handleClose();
+  //       getData();
+  //       toast.success('Shop deactivated successfully!');
+  //     } else {
+  //       toast.error('Failed to deactivate shop.');
+  //     }
+  //   } catch (error) {
+  //     toast.error('An error occurred while deactivating the shop.');
+  //     console.error('Deactivation Error:', error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const handleActivate = async () => {
     setLoading(true);
     try {
@@ -76,12 +95,11 @@ function CategoriesView() {
                   <span>Back</span>
                 </button>
               </Link>
-              {shopStatus === "0" && (
+              {shopStatus == 0 ? (
                 <button
                   type="button"
                   onClick={handleActivate}
-                  className="btn btn-success btn-sm me-2"
-                  disabled={loading}
+                  className="btn btn-success btn-sm me-2" disabled={loading}
                 >
                   {loading && (
                     <span
@@ -91,7 +109,16 @@ function CategoriesView() {
                   )}
                   Activate
                 </button>
-              )}
+              ) : <></>}
+
+              {/* {shopStatus == 1 ? (
+                <button
+                  onClick={handleOpenModal}
+                  className="btn btn-danger btn-sm me-2"
+                >
+                  Deactivate
+                </button>
+              ) : <></>} */}
             </div>
 
           </div>

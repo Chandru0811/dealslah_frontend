@@ -13,13 +13,13 @@ function SliderEdit() {
 
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    image: Yup.string().required("*Image is required"),
+    image_path: Yup.string().required("*Image is required"),
   });
 
   const formik = useFormik({
     initialValues: {
       order: "3",
-      image: null,
+      image_path: null,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -27,7 +27,7 @@ function SliderEdit() {
       const formData = new FormData();
       formData.append("_method", "PUT");
       formData.append("order", values.order);
-      formData.append("image", values.image);
+      formData.append("image_path", values.image_path);
 
       setLoadIndicator(true)
       try {
@@ -86,7 +86,7 @@ function SliderEdit() {
 
               <input
                 type="file"
-                name="file"
+                name="image_path"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
                 onChange={(event) => {

@@ -11,22 +11,18 @@ function CategoryGroupAdd() {
     const [logo, setLogo] = useState(null); // this is the file
     const navigate = useNavigate();
 
-    console.log("logo", logo);
-
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        // icon: Yup.mixed().required("*Icon is required"), // ensuring it's validated as a file
         order: Yup.string().required("*Select an order"),
-        // active: Yup.string().required("*Select an active"),
     });
 
     const formik = useFormik({
         initialValues: {
             name: "",
             slug: "",
-            icon: null,
+            icon: "",
+            image: null,
             order: "",
-            active: "",
             description: "",
         },
         validationSchema: validationSchema,
@@ -36,9 +32,9 @@ function CategoryGroupAdd() {
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", logo); // adding the logo file to FormData
+            formData.append("icon", values.icon); // adding the logo file to FormData
+            formData.append("image", logo); // adding the logo file to FormData
             formData.append("order", values.order);
-            formData.append("active", values.active);
             formData.append("description", values.description);
 
             setLoadIndicator(true);
@@ -129,24 +125,6 @@ function CategoryGroupAdd() {
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
-                                    Icon<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    name="icon"
-                                    type="file"
-                                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                                    className={`form-control`}
-                                    onChange={(event) => {
-                                        const file = event.currentTarget.files[0];
-                                        setLogo(file); // setting the selected file
-                                    }}
-                                />
-                                {formik.touched.icon && formik.errors.icon && (
-                                    <div className="invalid-feedback">{formik.errors.icon}</div>
-                                )}
-                            </div>
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
                                     Order<span className="text-danger">*</span>
                                 </label>
                                 <select
@@ -163,6 +141,41 @@ function CategoryGroupAdd() {
                                     <div className="invalid-feedback">{formik.errors.order}</div>
                                 )}
                             </div>
+
+
+                            <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label">
+                                    Icon<span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="text"
+                                    className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""}`}
+                                    {...formik.getFieldProps("icon")}
+                                />
+                                {formik.touched.icon && formik.errors.icon && (
+                                    <div className="invalid-feedback">{formik.errors.icon}</div>
+                                )}
+                            </div>
+
+                            <div className="col-md-6 col-12 mb-3">
+                                <label className="form-label">
+                                    Image<span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    name="image"
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                                    className={`form-control`}
+                                    onChange={(event) => {
+                                        const file = event.currentTarget.files[0];
+                                        setLogo(file);
+                                    }}
+                                />
+                                {formik.touched.image && formik.errors.image && (
+                                    <div className="invalid-feedback">{formik.errors.image}</div>
+                                )}
+                            </div>
+
                             {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Active<span className="text-danger">*</span>
