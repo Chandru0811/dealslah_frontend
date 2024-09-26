@@ -192,7 +192,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
                   justifyContent: "center",
                 }}
               >
-                Became a Vendor
+                Register as a Vendor
               </Button>
             </Link>
           </div>

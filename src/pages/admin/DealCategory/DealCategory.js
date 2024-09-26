@@ -130,7 +130,8 @@ function DealCategory() {
                                                 alt="icon"
 
                                                 width={50}
-                                                className="img-fluid"></img>{data.name}
+                                                className="img-fluid w-25 me-3"  style={{ maxHeight: "70px", maxWidth: "70px" }}>
+                                                    </img>{data.name}
                                         </td>
                                         <td className="align-middle">{data.slug}</td>
                                         <td className="align-middle text-start">{data.description}</td>

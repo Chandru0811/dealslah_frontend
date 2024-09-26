@@ -139,7 +139,7 @@ const Slider = () => {
                       ></img>
                     </td>
                     <td
-                      className="ms-2">{data.order}
+                      className="text-center ms-2">{data.order}
                     </td>
                     {/* <td className="align-middle">{data.slug}</td> */}
 

@@ -102,8 +102,8 @@ function SliderAdd() {
         const ctx = canvas.getContext('2d');
 
         // Set canvas size to 250x250 pixels
-        const targetWidth = 250;
-        const targetHeight = 250;
+        const targetWidth = 1750;
+        const targetHeight = 550;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -188,8 +188,8 @@ function SliderAdd() {
                     image={imageSrc}
                     crop={crop}
                     zoom={zoom}
-                    aspect={1}
-                    onCropChange={setCrop}
+                    aspect={1750 / 550}
+                                        onCropChange={setCrop}
                     onZoomChange={setZoom}
                     onCropComplete={onCropComplete}
                     cropShape="box"
