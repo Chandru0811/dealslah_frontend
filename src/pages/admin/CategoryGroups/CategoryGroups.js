@@ -113,7 +113,7 @@ function CategoryGroups() {
                                         S.NO
                                     </th>
                                     <th scope="col">Name</th>
-                                    <th scope="col">Slug</th>
+                                    {/* <th scope="col">Slug</th> */}
                                     <th scope="col" className='text-start'>Order</th>
                                     <th scope="col">Active</th>
                                     <th scope="col" className="text-center">
@@ -127,14 +127,14 @@ function CategoryGroups() {
                                         <td className="text-start align-middle">{index + 1}</td>
                                         <td className="text-start">
                                             <img
-                                                src={data.icon !== null ? `${ImageURL}${data.icon}` : noImage}
+                                                src={data.image_path !== null ? `${ImageURL}${data.image_path}` : noImage}
                                                 alt=""
                                                 className="img-fluid w-25 me-3"
                                                 style={{ maxHeight: "70px", maxWidth: "70px" }}
                                             />
                                             {data.name}
                                         </td>
-                                        <td className="align-middle">{data.slug}</td>
+                                        {/* <td className="align-middle">{data.slug}</td> */}
                                         <td className="align-middle text-start">{data.order}</td>
                                         <td className="align-middle">
                                             {data.active ? (

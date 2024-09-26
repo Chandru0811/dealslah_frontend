@@ -22,7 +22,7 @@ const validationSchema = Yup.object({
     .required("External URL is required!"),
   map_url: Yup.string()
     .url("Please enter a valid URL")
-    .required("External URL is required!"),
+    .required("Map URL is required!"),
 
   //   banner: Yup.mixed().required("Banner is required!"),
   description: Yup.string().required("Description is required!"),

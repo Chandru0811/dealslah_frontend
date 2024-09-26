@@ -224,6 +224,7 @@ function ProductAdd() {
   };
 
   const handleCategoryAdd = () => {
+    formik1.resetForm();
     setShowModal(true);
   };
 

@@ -7,6 +7,7 @@ import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
+import ImageURL from "../../../config/ImageURL";
 
 function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -65,7 +66,7 @@ function ProductAdd() {
       brand: "",
       original_price: "",
       discounted_price: "",
-      discounted_percentage: "",
+      discount_percentage: "",
       start_date: "",
       end_date: "",
       stock: "",
@@ -87,7 +88,7 @@ function ProductAdd() {
       formData.append("brand", values.brand);
       formData.append("original_price", values.original_price);
       formData.append("discounted_price", values.discounted_price);
-      formData.append("discount_percentage", values.discounted_percentage);
+      formData.append("discount_percentage", values.discount_percentage);
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
       formData.append("stock", values.stock);
@@ -207,7 +208,6 @@ function ProductAdd() {
     try {
       const response = await api.get(`vendor/product/${id}/get`);
       formik.setValues(response.data.data);
-      setAllCategorgroup(response.data.data);
     } catch (error) {
       toast.error("Error Fetching Data ", error);
     }
@@ -475,17 +475,17 @@ function ProductAdd() {
               </label>
               <input
                 type="number"
-                className={`form-control ${formik.touched.discounted_percentage &&
-                  formik.errors.discounted_percentage
+                className={`form-control ${formik.touched.discount_percentage &&
+                  formik.errors.discount_percentage
                   ? "is-invalid"
                   : ""
                   }`}
-                {...formik.getFieldProps("discounted_percentage")}
+                {...formik.getFieldProps("discount_percentage")}
               />
-              {formik.touched.discounted_percentage &&
-                formik.errors.discounted_percentage && (
+              {formik.touched.discount_percentage &&
+                formik.errors.discount_percentage && (
                   <div className="invalid-feedback">
-                    {formik.errors.discounted_percentage}
+                    {formik.errors.discount_percentage}
                   </div>
                 )}
             </div>
@@ -525,6 +525,23 @@ function ProductAdd() {
               {formik.touched.image1 && formik.errors.image1 && (
                 <div className="invalid-feedback">{formik.errors.image1}</div>
               )}
+               {formik.values.image_url1 && (
+                <div className="mb-3">
+                  {typeof formik.values.image_url1 === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_url1)}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_url1}`}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -543,6 +560,23 @@ function ProductAdd() {
               />
               {formik.touched.image2 && formik.errors.image2 && (
                 <div className="invalid-feedback">{formik.errors.image2}</div>
+              )}
+                 {formik.values.image_url2 && (
+                <div className="mb-3">
+                  {typeof formik.values.image_url2 === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_url2)}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_url2}`}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
@@ -563,6 +597,23 @@ function ProductAdd() {
               {formik.touched.image3 && formik.errors.image3 && (
                 <div className="invalid-feedback">{formik.errors.image3}</div>
               )}
+                 {formik.values.image_url3 && (
+                <div className="mb-3">
+                  {typeof formik.values.image_url3 === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_url3)}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_url3}`}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -582,8 +633,25 @@ function ProductAdd() {
               {formik.touched.image4 && formik.errors.image4 && (
                 <div className="invalid-feedback">{formik.errors.image4}</div>
               )}
+                 {formik.values.image_url4 && (
+                <div className="mb-3">
+                  {typeof formik.values.image_url4 === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_url4)}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_url4}`}
+                      alt=""
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
+              )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
+            <div className="col-12 mb-3">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
               </label>
@@ -644,11 +712,11 @@ function ProductAdd() {
                 >
                   <option></option>
                   {allCategorgroup &&
-                    allCategorgroup.map((categorygroup) => (
-                      <option key={categorygroup.id} value={categorygroup.id}>
-                        {categorygroup.name}
-                      </option>
-                    ))}
+                  allCategorgroup.map((categorygroup) => (
+                    <option key={categorygroup.id} value={categorygroup.id}>
+                      {categorygroup.name}
+                    </option>
+                  ))}
                 </select>
                 {formik1.touched.catagory_group_id &&
                   formik1.errors.catagory_group_id && (

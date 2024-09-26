@@ -70,8 +70,6 @@ const CategoriesIndex = () => {
 
     fetchData();
     refreshData();
-    
-
     // Cleanup DataTable on component unmount
     return () => {
       if (tableRef.current) {
@@ -127,7 +125,7 @@ const CategoriesIndex = () => {
                   </th>
                   {/* <th scope="col">Category Group Id</th> */}
                   <th scope="col">Name</th>
-                  <th scope="col">Slug</th>
+                  {/* <th scope="col">Slug</th> */}
                   <th scope="col">Description</th>
                   <th scope="col">Active</th>
                   <th scope="col" className="text-center">
@@ -144,7 +142,7 @@ const CategoriesIndex = () => {
                       {data.category_group_id}
                     </div>
                   </td> */}
-                      <td className="text-start">
+                    <td className="text-start">
                       <img
                         src={`${ImageURL}${data.icon}`}
                         alt="Logo"
@@ -153,21 +151,20 @@ const CategoriesIndex = () => {
                       />
                       {data.name}
                     </td>
-                    <td>
+                    {/* <td>
                       <div className="word-wrap">{data.slug}</div>
-                    </td>
+                    </td> */}
                     <td>
                       <div className="word-wrap">{data.description}</div>
                     </td>
                     <td className="align-middle">
-                      {data.active ? (
-                        <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
-                      ) : (
+                      {data.active === "0" ? (
                         <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                      ) : (
+                        <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
                       )}
-                      {data.active ? ' Active' : ' Inactive'}
+                      {data.active === "1" ? ' Active' : ' Inactive'}
                     </td>
-
 
                     <td className="text-center">
                       <div>

@@ -40,10 +40,7 @@ function CategoriesEdits() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
-
-      if (values.icon) {
-        formData.append("icon", values.icon);
-      }
+      formData.append("icon", values.icon);
 
       setLoadIndicator(true);
       try {
@@ -199,12 +196,12 @@ function CategoriesEdits() {
               </div> */}
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label fw-bold">
-                  Icon<span className="text-danger">*</span>
+                  Image<span className="text-danger">*</span>
                 </label>
 
                 <input
                   type="file"
-                  name="file"
+                  name="icon"
                   accept=".png,.jpeg,.jpg,.gif,.svg"
                   className="form-control"
                   onChange={(event) => {
