@@ -165,12 +165,12 @@ function ProductView() {
               </div>
             </div>
           </div>
-          <div className="col-md-6 col-12">
+          <div className="col-12">
             <div className="row mb-3">
-              <div className="col-6 d-flex justify-content-start align-items-center">
+              <div className="col-3 d-flex justify-content-start align-items-center">
                 <p className="text-sm"><b>Description</b></p>
               </div>
-              <div className="col-6">
+              <div className="col-9">
                 <p className="text-muted text-sm">: {data.description}</p>
               </div>
             </div>
@@ -178,12 +178,63 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Image</b></p>
+                <p className="text-sm"><b>image1</b></p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm"> :
                   <img
-                    src={`${ImageURL}${data.image_url}`} 
+                    src={`${ImageURL}${data.image_url1}`} 
+                    alt="product"
+                    className="img-fluid"
+                    width={150}
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm"><b>image2</b></p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm"> :
+                  <img
+                    src={`${ImageURL}${data.image_url2}`} 
+                    alt="product"
+                    className="img-fluid"
+                    width={150}
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm"><b>image3</b></p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm"> :
+                  <img
+                    src={`${ImageURL}${data.image_url3}`} 
+                    alt="product"
+                    className="img-fluid"
+                    width={150}
+                  />
+                </p>
+              </div>
+            </div>
+          </div>
+          <div className="col-md-6 col-12">
+            <div className="row mb-3">
+              <div className="col-6 d-flex justify-content-start align-items-center">
+                <p className="text-sm"><b>image4</b></p>
+              </div>
+              <div className="col-6">
+                <p className="text-muted text-sm"> :
+                  <img
+                    src={`${ImageURL}${data.image_url4}`} 
                     alt="product"
                     className="img-fluid"
                     width={150}

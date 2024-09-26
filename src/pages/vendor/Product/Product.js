@@ -129,10 +129,10 @@ const Product = () => {
                     <th scope="row">{index + 1}</th>
                     <td className="text-start">
                       <img
-                        src={`${ImageURL}${data.image_url}`}
+                        src={`${ImageURL}${data.image_url1}`}
                         alt="Logo"
                         className="img-fluid w-25 me-3"
-                        style={{ maxHeight: "70px", maxWidth: "70px" }}
+                        style={{ maxHeight: "50px", maxWidth: "50px" }}
                       />
                       {data.name}
                     </td>
