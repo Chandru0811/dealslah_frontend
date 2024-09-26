@@ -89,10 +89,11 @@ const Products = () => {
                                         S.NO
                                     </th>
                                     {/* <th className="text-center">Image</th> */}
-                                    <th className="text-center">Title</th>
-                                    <th className="text-center">Orginal Price</th>
-                                    <th className="text-center">Brand</th>
-                                    <th className="text-center">
+                                    <th className="text-start">Title</th>
+                                    <th className="text-start">Orginal Price</th>
+                                    <th className="text-start">Brand</th>
+                                    <th className="text-start">Active</th>
+                                    <th className="text-start">
                                         ACTION
                                     </th>
                                 </tr>
@@ -110,7 +111,7 @@ const Products = () => {
                                     </td> */}
                                         <td className="text-start">
                                             <img
-                                                src={`${ImageURL}${data.image_url}`}
+                                                src={`${ImageURL}${data.image_url1}`}
                                                 alt="Logo"
                                                 className="img-fluid w-25 me-3"
                                                 style={{ maxHeight: "70px", maxWidth: "70px" }}
@@ -119,9 +120,14 @@ const Products = () => {
                                         </td>
                                         <td className="align-middle text-start">{data.original_price}</td>
                                         <td className="align-middle text-start">{data.brand}</td>
-
-
-
+                                        <td className="align-middle">
+                                            {data.active === "0" ? (
+                                                <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                            ) : (
+                                                <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                            )}
+                                            {data.active === "1" ? ' Active' : ' Inactive'}
+                                        </td>
                                         <td className="align-middle text-center">
                                             <Link to={`/products/view/${data.id}`}>
                                                 <button className="button-btn btn-sm m-2">View</button>

@@ -101,14 +101,14 @@ function ProductsView() {
                                 </button>
                             ) : <></>}
 
-                            {shopStatus === "1" ? (
+                            {/* {shopStatus === "1" ? (
                                 <button
                                     onClick={handleOpenModal}
                                     className="btn btn-danger btn-sm me-2"
                                 >
                                     Deactivate
                                 </button>
-                            ) : <></>}
+                            ) : <></>} */}
                         </div>
                     </div>
                 </div>
@@ -267,9 +267,20 @@ function ProductsView() {
                             </div>
                         </div>
                     </div>
-
-                
                     <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                            <div className="col-6 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b></b>
+                                </p>
+                            </div>
+                            <div className="col-6">
+                                <p className="text-muted text-sm"></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
@@ -278,13 +289,13 @@ function ProductsView() {
                             </div>
                             <div className="col-6">
                                 <p className="text-muted text-sm">: <img
-                                    src={`${ImageURL}${data.image_url}`}
+                                    src={`${ImageURL}${data.image_url1}`}
                                     alt="icon"
                                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                                 /></p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                     <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
@@ -294,7 +305,7 @@ function ProductsView() {
                             </div>
                             <div className="col-6">
                                 <p className="text-muted text-sm">: <img
-                                    src={`${ImageURL}${data.image_url}`}
+                                    src={`${ImageURL}${data.image_url1}`}
                                     alt="icon"
                                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                                 /></p>
@@ -310,7 +321,7 @@ function ProductsView() {
                             </div>
                             <div className="col-6">
                                 <p className="text-muted text-sm">: <img
-                                    src={`${ImageURL}${data.image_url}`}
+                                    src={`${ImageURL}${data.image_url2}`}
                                     alt="icon"
                                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                                 /></p>
@@ -326,7 +337,7 @@ function ProductsView() {
                             </div>
                             <div className="col-6">
                                 <p className="text-muted text-sm">: <img
-                                    src={`${ImageURL}${data.image_url}`}
+                                    src={`${ImageURL}${data.image_url3}`}
                                     alt="icon"
                                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                                 /></p>
@@ -342,25 +353,26 @@ function ProductsView() {
                             </div>
                             <div className="col-6">
                                 <p className="text-muted text-sm">: <img
-                                    src={`${ImageURL}${data.image_url}`}
+                                    src={`${ImageURL}${data.image_url4}`}
                                     alt="icon"
                                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                                 /></p>
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6 col-12">
-    <div className="row mb-3">
-        <div className="col-6 d-flex justify-content-start align-items-center">
-            <p className="text-sm">
-                <b>Description</b>
-            </p>
-        </div>
-        <div className="col-6">
-            <p className="text-muted text-sm">: {data.description}</p>
-        </div>
-    </div>
-</div>
+
+                    <div className=" col-12">
+                        <div className="row mb-3">
+                            <div className="col-3 d-flex justify-content-start align-items-center">
+                                <p className="text-sm">
+                                    <b>Description</b>
+                                </p>
+                            </div>
+                            <div className="col-9">
+                                <p className="text-muted text-sm">: {data.description}</p>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
             </div>

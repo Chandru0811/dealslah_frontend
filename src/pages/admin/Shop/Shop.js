@@ -92,9 +92,10 @@ const Shop = () => {
                             <thead className="thead-light">
                                 <tr>
                                     <th scope="col" style={{ whiteSpace: "nowrap" }}>S.NO</th>
-                                    <th className="text-center">Logo</th>
-                                    <th className="text-center">Store Name</th>
-                                    <th className="text-center">Email</th>
+
+                                    <th className="text-start">Store Name</th>
+                                    <th className="text-start">Email</th>
+                                    <th className="text-start">Active</th>
                                     <th className="text-center">ACTION</th>
                                 </tr>
                             </thead>
@@ -103,16 +104,25 @@ const Shop = () => {
                                     datas.map((data, index) => (
                                         <tr key={data.id}> {/* Unique key prop */}
                                             <td className="text-center">{index + 1}</td>
-                                            <td className="text-center">
+                                            <td className="text-start">
                                                 <img
                                                     src={data.logo !== null ? `${ImageURL}${data.logo}` : noImage}
                                                     alt=""
                                                     className="img-fluid"
                                                     width={50}
                                                 />
+                                                {data.name}
                                             </td>
-                                            <td className="text-center">{data.name}</td>
-                                            <td className="text-center">{data.email}</td>
+                                            {/* <td className="text-center">{data.name}</td> */}
+                                            <td className="text-start">{data.email}</td>
+                                            <td className="align-middle">
+                                                {data.active === "0" ? (
+                                                    <span className="dot" style={{ backgroundColor: 'red', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                                ) : (
+                                                    <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
+                                                )}
+                                                {data.active === "1" ? ' Active' : ' Inactive'}
+                                            </td>
                                             <td className="text-center">
                                                 <div className="d-flex justify-content-center">
                                                     <Link to={`/shop/view/${data.id}`}>
