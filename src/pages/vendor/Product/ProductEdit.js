@@ -8,6 +8,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import ImageURL from "../../../config/ImageURL";
+import imageCompression from "browser-image-compression";
 
 function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -242,6 +243,64 @@ function ProductAdd() {
   const handleCategoryAdd = () => {
     setShowModal(true);
     formik1.resetForm();
+  };
+  const resizeImage = (file, width, height) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.src = event.target.result;
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+
+          // Set the canvas to the desired dimensions
+          canvas.width = width;
+          canvas.height = height;
+
+          // Draw the image to fit exactly in the 320x240px canvas
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              resolve(new File([blob], file.name, { type: file.type }));
+            },
+            file.type,
+            1
+          );
+        };
+      };
+      reader.onerror = (error) => reject(error);
+      reader.readAsDataURL(file);
+    });
+  };
+
+  // Function to handle image resizing and compression
+  const handleImageProcessing = async (file) => {
+    try {
+      // First resize the image to 320x240px
+      const resizedImage = await resizeImage(file, 320, 240);
+
+      // Then compress the resized image
+      const options = {
+        maxSizeMB: 1, // Set maximum size to 1MB
+        useWebWorker: true, // Use web worker for better performance
+      };
+      const compressedImage = await imageCompression(resizedImage, options);
+
+      return compressedImage;
+    } catch (error) {
+      console.error("Image processing error:", error);
+    }
+  };
+
+  // Use this function in Formik onChange to handle multiple images
+  const handleImageChange = async (event, setFieldValue, fieldName) => {
+    const file = event.target.files[0];
+    if (file) {
+      const processedImage = await handleImageProcessing(file);
+      setFieldValue(fieldName, processedImage);
+    }
   };
 
   return (
@@ -534,10 +593,13 @@ function ProductAdd() {
                 name="file"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image1", file);
-                }}
+                // onChange={(event) => {
+                //   const file = event.target.files[0];
+                //   formik.setFieldValue("image1", file);
+                // }}
+                onChange={(event) =>
+                  handleImageChange(event, formik.setFieldValue, "image1")
+                }
                 onBlur={formik.handleBlur}
               />
               {formik.touched.image1 && formik.errors.image1 && (
@@ -570,10 +632,13 @@ function ProductAdd() {
                 name="file"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image2", file);
-                }}
+                // onChange={(event) => {
+                //   const file = event.target.files[0];
+                //   formik.setFieldValue("image2", file);
+                // }}
+                onChange={(event) =>
+                  handleImageChange(event, formik.setFieldValue, "image2")
+                }
                 onBlur={formik.handleBlur}
               />
               {formik.touched.image2 && formik.errors.image2 && (
@@ -606,10 +671,13 @@ function ProductAdd() {
                 name="file"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image3", file);
-                }}
+                // onChange={(event) => {
+                //   const file = event.target.files[0];
+                //   formik.setFieldValue("image3", file);
+                // }}
+                onChange={(event) =>
+                  handleImageChange(event, formik.setFieldValue, "image3")
+                }
                 onBlur={formik.handleBlur}
               />
               {formik.touched.image3 && formik.errors.image3 && (
@@ -642,10 +710,13 @@ function ProductAdd() {
                 name="file"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image4", file);
-                }}
+                // onChange={(event) => {
+                //   const file = event.target.files[0];
+                //   formik.setFieldValue("image4", file);
+                // }}
+                onChange={(event) =>
+                  handleImageChange(event, formik.setFieldValue, "image4")
+                }
                 onBlur={formik.handleBlur}
               />
               {formik.touched.image4 && formik.errors.image4 && (

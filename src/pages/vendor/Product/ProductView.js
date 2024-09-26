@@ -186,7 +186,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url1}`} 
                     alt="product"
                     className="img-fluid"
-                    width={150}
+                    // width={150}
                   />
                 </p>
               </div>
@@ -203,7 +203,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url2}`} 
                     alt="product"
                     className="img-fluid"
-                    width={150}
+                    // width={150}
                   />
                 </p>
               </div>
@@ -220,7 +220,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url3}`} 
                     alt="product"
                     className="img-fluid"
-                    width={150}
+                    // width={150}
                   />
                 </p>
               </div>
@@ -237,7 +237,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url4}`} 
                     alt="product"
                     className="img-fluid"
-                    width={150}
+                    // width={150}
                   />
                 </p>
               </div>
