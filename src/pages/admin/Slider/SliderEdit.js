@@ -5,31 +5,38 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
+import Cropper from "react-easy-crop";
+import '../../../styles/admin.css';
 
 function SliderEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
-
+  const [imageSrc, setImageSrc] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
+  const [croppedImagePreview, setCroppedImagePreview] = useState(null); // Preview cropped image
+  
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    image: Yup.string().required("*Image is required"),
+    image_path: Yup.string().required("*Image is required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      order: "3",
-      image: null,
+      order: "",
+      image_path: null,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("Form Data:", values);
       const formData = new FormData();
       formData.append("_method", "PUT");
       formData.append("order", values.order);
-      formData.append("image", values.image);
+      formData.append("image_path", values.image_path);
 
-      setLoadIndicator(true)
+      setLoadIndicator(true);
       try {
         const response = await api.post(`admin/slider/update/${id}`, formData, {
           headers: {
@@ -43,7 +50,7 @@ function SliderEdit() {
       } catch (error) {
         toast.error(error.message);
       }
-      setLoadIndicator(false)
+      setLoadIndicator(false);
     },
   });
 
@@ -59,6 +66,93 @@ function SliderEdit() {
     getData();
   }, [id]);
 
+  const handleFileChange = (event) => {
+    const file = event.currentTarget.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const convertImageToBase64 = (url, callback) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      const reader = new FileReader();
+      reader.onloadend = function () {
+        callback(reader.result);
+      };
+      reader.readAsDataURL(xhr.response);
+    };
+    xhr.open('GET', url);
+    xhr.responseType = 'blob';
+    xhr.send();
+  };
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  // Helper function to get the cropped image
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to 250x250 pixels
+        const targetWidth = 1750;
+        const targetHeight = 550;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Scale the cropped image to fit into the 250x250 pixels canvas
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+
+        // Convert the canvas content to a Blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('Canvas is empty'));
+            return;
+          }
+          blob.name = 'croppedImage.jpeg';
+          resolve(blob);
+        }, 'image/jpeg');
+      };
+    });
+  };
+
+  const handleCropSave = async () => {
+    try {
+      const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+
+      // Convert the Blob to a File object
+      const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+
+      // Set the file in Formik
+      formik.setFieldValue("image_path", file);
+
+      // Close the cropper
+      setShowCropper(false);
+    } catch (error) {
+      console.error("Error cropping the image:", error);
+    }
+  };
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -74,25 +168,19 @@ function SliderEdit() {
             </div>
           </div>
         </div>
-        <div
-          className="container card shadow border-0"
-          style={{ minHeight: "60vh" }}
-        >
+        <div className="container card shadow border-0" style={{ minHeight: "60vh" }}>
           <div className="row mt-3">
-            <div className="col-md-6 col-12 mb-3">
+          <div className="col-md-6 col-12 mb-3">
               <label className="form-label fw-bold">
                 Image<span className="text-danger">*</span>
               </label>
 
               <input
                 type="file"
-                name="file"
+                name="image_path"
                 accept=".png,.jpeg,.jpg,.gif,.svg"
                 className="form-control"
-                onChange={(event) => {
-                  const file = event.target.files[0];
-                  formik.setFieldValue("image_path", file);
-                }}
+                onChange={handleFileChange}
                 onBlur={formik.handleBlur}
               />
               {formik.touched.image_path && formik.errors.image_path && (
@@ -118,7 +206,31 @@ function SliderEdit() {
                   )}
                 </div>
               )}
+
+              {showCropper && (
+                <div className="crop-container">
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1750 / 550}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={onCropComplete}
+                    cropShape="box"
+                    showGrid={false}
+                  />
+                </div>
+              )}
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleCropSave}
+              >
+                Save Cropped Image
+              </button>
             </div>
+
 
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -126,23 +238,15 @@ function SliderEdit() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${formik.touched.order && formik.errors.order
-                  ? "is-invalid"
-                  : ""
-                  }`}
+                className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
+                {Array.from({ length: 10 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
               </select>
               {formik.touched.order && formik.errors.order && (
                 <div className="invalid-feedback">{formik.errors.order}</div>
@@ -151,14 +255,8 @@ function SliderEdit() {
           </div>
         </div>
         <div className="hstack gap-2 justify-content-end p-2">
-          <button type="submit" className="btn btn-sm btn-button"
-            disabled={loadIndicator}>
-            {loadIndicator && (
-              <span
-                className="spinner-border spinner-border-sm me-2"
-                aria-hidden="true"
-              ></span>
-            )}
+          <button type="submit" className="btn btn-sm btn-button" disabled={loadIndicator}>
+            {loadIndicator && <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>}
             Update
           </button>
         </div>
