@@ -69,8 +69,8 @@ const CategoriesIndex = () => {
     };
 
     fetchData();
-    refreshData();
-    // Cleanup DataTable on component unmount
+  
+    
     return () => {
       if (tableRef.current) {
         $(tableRef.current).DataTable().destroy();

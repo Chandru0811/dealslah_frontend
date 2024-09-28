@@ -13,69 +13,76 @@ import Image from "../../../assets/tv.png";
 import ImageURL from '../../../config/ImageURL';
 
 function DealCategory() {
-    const [datas, setDatas] = useState([]);
-    const [loading, setLoading] = useState(false);
-    console.log("first", datas);
-    const tableRef = useRef(null);
-    const initializeDataTable = () => {
-        if ($.fn.DataTable.isDataTable(tableRef.current)) {
-            return; // DataTable already initialized
-        }
-        $(tableRef.current).DataTable({
-            columnDefs: [{ orderable: false, targets: -1 }],
-        });
+    const [datas, setDatas] = useState();
+  const [loading, setLoading] = useState(true);
+  const tableRef = useRef(null);
+
+  const initializeDataTable = () => {
+    if ($.fn.DataTable.isDataTable(tableRef.current)) {
+      return; // DataTable already initialized
+    }
+    $(tableRef.current).DataTable({
+      columnDefs: [{ orderable: false, targets: -1 }],
+    });
+  };
+  useEffect(() => {
+    if (!loading) {
+      initializeDataTable();
+    }
+    return () => {
+      destroyDataTable();
     };
-    useEffect(() => {
-        if (!loading) {
-          initializeDataTable();
-        }
-        return () => {
-          destroyDataTable();
-        };
-      }, [loading]);
+  }, [loading]);
 
-    const destroyDataTable = () => {
-        if ($.fn.DataTable.isDataTable(tableRef.current)) {
-            $(tableRef.current).DataTable().destroy();
+  const destroyDataTable = () => {
+    if ($.fn.DataTable.isDataTable(tableRef.current)) {
+      $(tableRef.current).DataTable().destroy();
+    }
+  };
+
+  const refreshData = async () => {
+    destroyDataTable(); // Clean up the old DataTable
+    setLoading(true);
+    try {
+      // Fetch paginated data; adjust URL parameters if server supports pagination
+      const response = await api.get('/admin/categories');
+      setDatas(response.data.data); // Update data state
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+    setLoading(false);
+    initializeDataTable(); // Reinitialize DataTable after data update
+  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+
+      try {
+        const response = await api.get("/admin/dealCategory");
+        setDatas(response.data.data);
+
+        // Initialize DataTable
+        if (tableRef.current) {
+          $(tableRef.current).DataTable();
         }
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+      setLoading(false);
     };
 
-    const refreshData = async () => {
-        destroyDataTable(); // Clean up the old DataTable
-        setLoading(true);
-        try {
-            // Fetch paginated data; adjust URL parameters if server supports pagination
-            const response = await api.get('/admin/dealCategory');
-            setDatas(response.data.data); // Update data state
-        } catch (error) {
-            console.error('Error refreshing data:', error);
-        }
-        setLoading(false);
-        initializeDataTable(); // Reinitialize DataTable after data update
+    fetchData();
+  
+    
+    return () => {
+      if (tableRef.current) {
+        $(tableRef.current).DataTable().destroy();
+      }
     };
+  }, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Initial data fetch with pagination
-                const response = await api.get('/admin/dealCategory');
-                setDatas(response.data.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            setLoading(false);
-            initializeDataTable(); // Initialize DataTable with fetched data
-        };
-
-        fetchData();
-        refreshData();
-
-        return () => {
-            destroyDataTable(); // Cleanup DataTable on component unmount
-        };
-    }, []);
-
+       
     return (
         <section className="px-4">
             <div className="card shadow border-0 mb-2 top-header p-2">

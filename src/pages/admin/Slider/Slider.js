@@ -21,14 +21,6 @@ const Slider = () => {
       columnDefs: [{ orderable: false, targets: -1 }],
     });
   };
-  useEffect(() => {
-    if (!loading) {
-      initializeDataTable();
-    }
-    return () => {
-      destroyDataTable();
-    };
-  }, [loading]);
 
   const destroyDataTable = () => {
     if ($.fn.DataTable.isDataTable(tableRef.current)) {
@@ -36,34 +28,22 @@ const Slider = () => {
     }
   };
 
-  const refreshData = async () => {
-    destroyDataTable(); // Clean up the old DataTable
+  const fetchData = async () => {
     setLoading(true);
     try {
       const response = await api.get('admin/sliders');
       setDatas(response.data.data); // Update data state
-      initializeDataTable(); // Reinitialize DataTable after data update
+      setLoading(false);
+      initializeDataTable(); // Initialize DataTable after data update
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error('Error fetching data:', error);
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get('admin/sliders');
-        setDatas(response.data.data);
-        initializeDataTable(); // Initialize DataTable with fetched data
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-      setLoading(false);
-    };
+    fetchData(); // Fetch data only once when the component mounts
 
-    fetchData();
-    refreshData();
     return () => {
       destroyDataTable(); // Cleanup DataTable on component unmount
     };
@@ -71,7 +51,7 @@ const Slider = () => {
 
   return (
     <section className="px-4">
-      <div className="card shadow border-0 mb-2 top-header" >
+      <div className="card shadow border-0 mb-2 top-header">
         <div className="container-fluid">
           <div className="row align-items-center">
             <div className="col p-2">
@@ -89,9 +69,7 @@ const Slider = () => {
           </div>
         </div>
       </div>
-      <div
-        className="container card shadow border-0" style={{ minHeight: "80vh" }}
-      >
+      <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
         {loading ? (
           <div className="loader-container">
             <div className="loader">
@@ -102,16 +80,10 @@ const Slider = () => {
           </div>
         ) : (
           <div className="table-responsive p-2">
-            <table
-              ref={tableRef}
-              className="display table nowrap"
-              style={{ width: "100%" }}
-            >
+            <table ref={tableRef} className="display table nowrap" style={{ width: "100%" }}>
               <thead className="thead-light">
                 <tr>
-                  <th scope="col" style={{ whiteSpace: "nowrap" }}>
-                    S.NO
-                  </th>
+                  <th scope="col" style={{ whiteSpace: "nowrap" }}>S.NO</th>
                   <th className="text-center">Image</th>
                   <th className="text-center">Order</th>
                   <th className="text-center">ACTION</th>
@@ -124,7 +96,7 @@ const Slider = () => {
                     <td className="text-center">
                       <img
                         src={`${ImageURL}${data.image_path}`}
-                        alt="Image"
+                        alt="image_path"
                         className="img-fluid"
                         width={50}
                       ></img>
@@ -139,7 +111,7 @@ const Slider = () => {
                           <button className="button-btn btn-sm m-2">Edit</button>
                         </Link>
                         <DeleteModel
-                          onSuccess={refreshData}
+                          onSuccess={fetchData} // Use fetchData to refresh after delete
                           path={`/admin/slider/delete/${data.id}`}
                           style={{ display: "inline-block" }}
                         />

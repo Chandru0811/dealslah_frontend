@@ -9,72 +9,77 @@ import api from "../../../config/URL";
 import ImageURL from '../../../config/ImageURL';
 import noImage from '../../../assets/noimage.png'
 function CategoryGroups() {
-    const [datas, setDatas] = useState([]);
-    const [loading, setLoading] = useState(false);
+    const [datas, setDatas] = useState();
+    const [loading, setLoading] = useState(true);
     const tableRef = useRef(null);
-
+  
     const initializeDataTable = () => {
-        if ($.fn.DataTable.isDataTable(tableRef.current)) {
-            return; // DataTable already initialized
-        }
-        $(tableRef.current).DataTable({
-            columnDefs: [{ orderable: false, targets: -1 }],
-        });
+      if ($.fn.DataTable.isDataTable(tableRef.current)) {
+        return; // DataTable already initialized
+      }
+      $(tableRef.current).DataTable({
+        columnDefs: [{ orderable: false, targets: -1 }],
+      });
     };
     useEffect(() => {
-        if (!loading) {
-            initializeDataTable();
-        }
-        return () => {
-            destroyDataTable();
-        };
+      if (!loading) {
+        initializeDataTable();
+      }
+      return () => {
+        destroyDataTable();
+      };
     }, [loading]);
-
+  
     const destroyDataTable = () => {
-        if ($.fn.DataTable.isDataTable(tableRef.current)) {
-            $(tableRef.current).DataTable().destroy();
-        }
+      if ($.fn.DataTable.isDataTable(tableRef.current)) {
+        $(tableRef.current).DataTable().destroy();
+      }
     };
-
+  
     const refreshData = async () => {
-        destroyDataTable(); // Clean up the old DataTable
+      destroyDataTable(); // Clean up the old DataTable
+      setLoading(true);
+      try {
+        // Fetch paginated data; adjust URL parameters if server supports pagination
+        const response = await api.get('/admin/categories');
+        setDatas(response.data.data); // Update data state
+      } catch (error) {
+        console.error('Error refreshing data:', error);
+      }
+      setLoading(false);
+      initializeDataTable(); // Reinitialize DataTable after data update
+    };
+  
+    useEffect(() => {
+      const fetchData = async () => {
         setLoading(true);
+  
         try {
-            // Fetch paginated data; adjust URL parameters if server supports pagination
-            const response = await api.get('/admin/categoryGroup', {
-                params: { page: 1, limit: 10 }, // Example of requesting 10 entries per page
-            });
-            setDatas(response.data.data); // Update data state
+          const response = await api.get("/admin/categoryGroup");
+          setDatas(response.data.data);
+  
+          // Initialize DataTable
+          if (tableRef.current) {
+            $(tableRef.current).DataTable();
+          }
         } catch (error) {
-            console.error('Error refreshing data:', error);
+          console.error("Error fetching data:", error);
         }
         setLoading(false);
-        initializeDataTable(); // Reinitialize DataTable after data update
-    };
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Initial data fetch with pagination
-                const response = await api.get('/admin/categoryGroup', {
-                    params: { page: 1, limit: 10 }, // Request the first 10 entries
-                });
-                setDatas(response.data.data);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-            setLoading(false);
-            initializeDataTable(); // Initialize DataTable with fetched data
-        };
-
-        fetchData();
-        refreshData();
-
-        return () => {
-            destroyDataTable(); // Cleanup DataTable on component unmount
-        };
+      };
+  
+      fetchData();
+    
+      
+      return () => {
+        if (tableRef.current) {
+          $(tableRef.current).DataTable().destroy();
+        }
+      };
     }, []);
+  
+
+  
 
     return (
         <section className="px-4">

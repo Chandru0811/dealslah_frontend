@@ -171,7 +171,7 @@ function DealCategoryAdd() {
               <div className="col">
                 <div className="d-flex align-items-center gap-4">
                   <h1 className="h4 ls-tight headingColor">
-                    Add Category Group
+                    Add Deal Category 
                   </h1>
                 </div>
               </div>
