@@ -7,7 +7,7 @@ import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
-import imageCompression from 'browser-image-compression';
+import Cropper from "react-easy-crop";
 
 function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -15,11 +15,21 @@ function ProductAdd() {
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
+  const [images, setImages] = useState([null, null, null, null]);
+  const [croppedAreas, setCroppedAreas] = useState([null, null, null, null]);
+  const [crops, setCrops] = useState([
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+    { x: 0, y: 0 },
+  ]);
+  const [zooms, setZooms] = useState([1, 1, 1, 1]);
+  const [showCropper, setShowCropper] = useState([false, false, false, false]);
   const id = sessionStorage.getItem("shop_id");
   const navigate = useNavigate();
 
   const validationSchema = Yup.object({
-    shop_id: Yup.string().required("Shop Id is required"),
+    shop_id: Yup.string().required("Caategory Group is required"),
     name: Yup.string().required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
     brand: Yup.string().required("Brand is required"),
@@ -242,61 +252,77 @@ function ProductAdd() {
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
 
-  const resizeImage = (file, width, height) => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        const img = new Image();
-        img.src = event.target.result;
-        img.onload = () => {
-          const canvas = document.createElement('canvas');
-          const ctx = canvas.getContext('2d');
-          
-          // Set the canvas to the desired dimensions
-          canvas.width = width;
-          canvas.height = height;
-  
-          // Draw the image to fit exactly in the 320x240px canvas
-          ctx.drawImage(img, 0, 0, width, height);
-  
-          canvas.toBlob((blob) => {
-            resolve(new File([blob], file.name, { type: file.type }));
-          }, file.type, 1);
-        };
-      };
-      reader.onerror = (error) => reject(error);
-      reader.readAsDataURL(file);
-    });
-  };
-  
-  // Function to handle image resizing and compression
-  const handleImageProcessing = async (file) => {
-    try {
-      // First resize the image to 320x240px
-      const resizedImage = await resizeImage(file, 320, 240);
-  
-      // Then compress the resized image
-      const options = {
-        maxSizeMB: 1, // Set maximum size to 1MB
-        useWebWorker: true, // Use web worker for better performance
-      };
-      const compressedImage = await imageCompression(resizedImage, options);
-  
-      return compressedImage;
-    } catch (error) {
-      console.error('Image processing error:', error);
-    }
-  };
-  
-  // Use this function in Formik onChange to handle multiple images
-  const handleImageChange = async (event, setFieldValue, fieldName) => {
+  const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     if (file) {
-      const processedImage = await handleImageProcessing(file);
-      setFieldValue(fieldName, processedImage);
+      const reader = new FileReader();
+      reader.onload = () => {
+        const newImages = [...images];
+        newImages[index] = reader.result;
+        setImages(newImages);
+
+        const newShowCropper = [...showCropper];
+        newShowCropper[index] = true;
+        setShowCropper(newShowCropper);
+      };
+      reader.readAsDataURL(file);
     }
   };
 
+  const onCropComplete = (index, croppedArea, croppedAreaPixels) => {
+    const newCroppedAreas = [...croppedAreas];
+    newCroppedAreas[index] = croppedAreaPixels;
+    setCroppedAreas(newCroppedAreas);
+  };
+
+  const handleCropSave = async (index) => {
+    const croppedImageBlob = await getCroppedImg(
+      images[index],
+      crops[index],
+      croppedAreas[index]
+    );
+    const file = new File([croppedImageBlob], `croppedImage${index + 1}.jpg`, {
+      type: "image/jpeg",
+    });
+    formik.setFieldValue(`image${index + 1}`, file);
+    const newShowCropper = [...showCropper];
+    newShowCropper[index] = false;
+    setShowCropper(newShowCropper);
+  };
+
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+        const targetWidth = 320;
+        const targetHeight = 240;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas is empty"));
+            return;
+          }
+          blob.name = "croppedImage.jpeg";
+          resolve(blob);
+        }, "image/jpeg");
+      };
+    });
+  };
 
   return (
     <section className="px-4">
@@ -558,7 +584,7 @@ function ProductAdd() {
                     : ""
                 }`}
                 {...formik.getFieldProps("discounted_price")}
-                value={formik.values.discounted_price} 
+                value={formik.values.discounted_price}
                 readOnly
               />
               {formik.touched.discounted_price &&
@@ -585,86 +611,59 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.stock}</div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Image 1<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                name="file"
-                accept=".png,.jpeg,.jpg,.gif,.svg"
-                className="form-control"
-                // onChange={(event) => {
-                //   const file = event.target.files[0];
-                //   formik.setFieldValue("image1", file);
-                // }}
-                onChange={(event) => handleImageChange(event, formik.setFieldValue, "image1")}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.image1 && formik.errors.image1 && (
-                <div className="invalid-feedback">{formik.errors.image1}</div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Image 2<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                name="file"
-                accept=".png,.jpeg,.jpg,.gif,.svg"
-                className="form-control"
-                // onChange={(event) => {
-                //   const file = event.target.files[0];
-                //   formik.setFieldValue("image2", file);
-                // }}
-                onChange={(event) => handleImageChange(event, formik.setFieldValue, "image2")}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.image2 && formik.errors.image2 && (
-                <div className="invalid-feedback">{formik.errors.image2}</div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Image 3<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                name="file"
-                accept=".png,.jpeg,.jpg,.gif,.svg"
-                className="form-control"
-                // onChange={(event) => {
-                //   const file = event.target.files[0];
-                //   formik.setFieldValue("image3", file);
-                // }}
-                onChange={(event) => handleImageChange(event, formik.setFieldValue, "image3")}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.image3 && formik.errors.image3 && (
-                <div className="invalid-feedback">{formik.errors.image3}</div>
-              )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Image 4<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                name="file"
-                accept=".png,.jpeg,.jpg,.gif,.svg"
-                className="form-control"
-                // onChange={(event) => {
-                //   const file = event.target.files[0];
-                //   formik.setFieldValue("image4", file);
-                // }}
-                onChange={(event) => handleImageChange(event, formik.setFieldValue, "image4")}
-                onBlur={formik.handleBlur}
-              />
-              {formik.touched.image4 && formik.errors.image4 && (
-                <div className="invalid-feedback">{formik.errors.image4}</div>
-              )}
-            </div>
+            {[1, 2, 3, 4].map((num, index) => (
+              <div key={num} className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Image {num}
+                  <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="file"
+                  accept=".png,.jpeg,.jpg,.gif,.svg"
+                  className="form-control"
+                  onChange={(e) => handleFileChange(index, e)}
+                  onBlur={formik.handleBlur}
+                />
+                {formik.touched[`image${num}`] &&
+                  formik.errors[`image${num}`] && (
+                    <div className="invalid-feedback">
+                      {formik.errors[`image${num}`]}
+                    </div>
+                  )}
+                {showCropper[index] && (
+                  <>
+                    <div className="crop-container">
+                      <Cropper
+                        image={images[index]}
+                        crop={crops[index]}
+                        zoom={zooms[index]}
+                        aspect={320 / 240}
+                        onCropChange={(crop) => {
+                          const newCrops = [...crops];
+                          newCrops[index] = crop;
+                          setCrops(newCrops);
+                        }}
+                        onZoomChange={(zoom) => {
+                          const newZooms = [...zooms];
+                          newZooms[index] = zoom;
+                          setZooms(newZooms);
+                        }}
+                        onCropComplete={(croppedArea, croppedAreaPixels) =>
+                          onCropComplete(index, croppedArea, croppedAreaPixels)
+                        }
+                      />
+                    </div>
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-3"
+                      onClick={() => handleCropSave(index)}
+                    >
+                      Save Cropped Image {num}
+                    </button>
+                  </>
+                )}
+              </div>
+            ))}
 
             <div className="col-12 mb-3">
               <label className="form-label">

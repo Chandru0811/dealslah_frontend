@@ -75,7 +75,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
           toast.error(response.data.message);
         }
       } catch (error) {
-        console.error("error login");
+        toast.error(error.message);
       } finally {
         setLoadIndicator(false);
       }

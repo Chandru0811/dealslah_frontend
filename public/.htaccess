@@ -1,4 +1,4 @@
-<IfModule mod_rewrite.c>
+<!-- <IfModule mod_rewrite.c>
 
   RewriteEngine On
   RewriteBase /
@@ -7,4 +7,19 @@
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule . /index.html [L]
 
+</IfModule> -->
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /auth/
+  
+  # Allow access to index.html directly
+  RewriteRule ^index\.html$ - [L]
+  
+  # Check if the file or directory exists
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  
+  # Redirect all other requests to index.html (React handles the routing)
+  RewriteRule . /dealslahVendor/index.html [L]
 </IfModule>
