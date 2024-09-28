@@ -10,6 +10,11 @@ function CategoryGroupAdd() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const [logo, setLogo] = useState(null); // this is the file
     const navigate = useNavigate();
+    const [imageSrc, setImageSrc] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [showCropper, setShowCropper] = useState(false);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
@@ -79,7 +84,79 @@ function CategoryGroupAdd() {
         const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
         formik.setFieldValue("slug", slug);
     }, [formik.values.name]);
-
+    const handleFileChange = async (event) => {
+        const file = event.currentTarget.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            setImageSrc(reader.result);
+            setShowCropper(true);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    
+      const onCropComplete = (croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+      };
+    
+      // Helper function to get the cropped image
+      const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = imageSrc;
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+    
+            // Set canvas size to 250x250 pixels
+            const targetWidth = 1750;
+            const targetHeight = 550;
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+    
+            // Scale the cropped image to fit into the 250x250 pixels canvas
+            ctx.drawImage(
+              image,
+              croppedAreaPixels.x,
+              croppedAreaPixels.y,
+              croppedAreaPixels.width,
+              croppedAreaPixels.height,
+              0,
+              0,
+              targetWidth,
+              targetHeight
+            );
+    
+            // Convert the canvas content to a Blob
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                reject(new Error('Canvas is empty'));
+                return;
+              }
+              blob.name = 'croppedImage.jpeg';
+              resolve(blob);
+            }, 'image/jpeg');
+          };
+        });
+      };
+    
+      const handleCropSave = async () => {
+        try {
+          const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+    
+          // Convert the Blob to a File object
+          const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+    
+          // Set the file in Formik
+          formik.setFieldValue("image", file);
+    
+          // Close the cropper
+          setShowCropper(false);
+        } catch (error) {
+          console.error("Error cropping the image:", error);
+        }
+      };
     return (
         <div className="container-fluid minHeight m-0">
             <form onSubmit={formik.handleSubmit}>
@@ -157,7 +234,7 @@ function CategoryGroupAdd() {
                                 )}
                             </div>
 
-                            <div className="col-md-6 col-12 mb-3">
+                            {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Image<span className="text-danger">*</span>
                                 </label>
@@ -174,7 +251,46 @@ function CategoryGroupAdd() {
                                 {formik.touched.image && formik.errors.image && (
                                     <div className="invalid-feedback">{formik.errors.image}</div>
                                 )}
-                            </div>
+                            </div> */}
+                            <div className="col-md-6 col-12 file-input">
+              <label className="form-label">
+                Image<span className="text-danger">*</span>
+              </label>
+              <input
+                type="file"
+                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""
+                  }`}
+                onChange={handleFileChange}
+              />
+              {formik.touched.image && formik.errors.image && (
+                <div className="invalid-feedback">{formik.errors.image}</div>
+              )}
+
+              {showCropper && (
+                <div className="crop-container">
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1750 / 550}
+                                        onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={onCropComplete}
+                    cropShape="box"
+                    showGrid={false}
+                  />
+
+                </div>
+              )}
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleCropSave}
+              >
+                Save Cropped Image
+              </button>
+            </div>
 
                             {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">

@@ -10,6 +10,12 @@ function CategoryGroupEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
+    const [imageSrc, setImageSrc] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [showCropper, setShowCropper] = useState(false);
+    const [croppedImagePreview, setCroppedImagePreview] = useState(null);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
@@ -23,7 +29,8 @@ function CategoryGroupEdit() {
         initialValues: {
             name: "",
             slug: "",
-            icon: null,
+            icon: "",
+            image: null,
             order: "",
             active: "",
             description: "",
@@ -36,6 +43,7 @@ function CategoryGroupEdit() {
             formData.append("name", values.name);
             formData.append("slug", values.slug);
             formData.append("icon", values.icon);
+            formData.append("image", values.image);
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
@@ -74,7 +82,93 @@ function CategoryGroupEdit() {
         const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
         formik.setFieldValue("slug", slug);
     }, [formik.values.name]);
-
+    const handleFileChange = (event) => {
+        const file = event.currentTarget.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            setImageSrc(reader.result);
+            setShowCropper(true);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    
+      const convertImageToBase64 = (url, callback) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+      };
+    
+      const onCropComplete = (croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+      };
+    
+      // Helper function to get the cropped image
+      const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = imageSrc;
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+    
+            // Set canvas size to 250x250 pixels
+            const targetWidth = 1750;
+            const targetHeight = 550;
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+    
+            // Scale the cropped image to fit into the 250x250 pixels canvas
+            ctx.drawImage(
+              image,
+              croppedAreaPixels.x,
+              croppedAreaPixels.y,
+              croppedAreaPixels.width,
+              croppedAreaPixels.height,
+              0,
+              0,
+              targetWidth,
+              targetHeight
+            );
+    
+            // Convert the canvas content to a Blob
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                reject(new Error('Canvas is empty'));
+                return;
+              }
+              blob.name = 'croppedImage.jpeg';
+              resolve(blob);
+            }, 'image/jpeg');
+          };
+        });
+      };
+    
+      const handleCropSave = async () => {
+        try {
+          const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+    
+          // Convert the Blob to a File object
+          const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+    
+          // Set the file in Formik
+          formik.setFieldValue("image", file);
+    
+          // Close the cropper
+          setShowCropper(false);
+        } catch (error) {
+          console.error("Error cropping the image:", error);
+        }
+      };
     return (
         <div className="container-fluid minHeight m-">
             <form onSubmit={formik.handleSubmit}>
@@ -154,33 +248,33 @@ function CategoryGroupEdit() {
 
                                 <input
                                     type="file"
-                                    name="image_path"
+                                    name="image"
                                     accept=".png,.jpeg,.jpg,.gif,.svg"
                                     className="form-control"
                                     onChange={(event) => {
                                         const file = event.target.files[0];
-                                        formik.setFieldValue("image_path", file);
+                                        formik.setFieldValue("image", file);
                                     }}
                                     onBlur={formik.handleBlur}
                                 />
-                                {formik.touched.image_path && formik.errors.image_path && (
+                                {formik.touched.image && formik.errors.image && (
                                     <div className="error text-danger">
-                                        <small>{formik.errors.image_path}</small>
+                                        <small>{formik.errors.image}</small>
                                     </div>
                                 )}
 
-                                {formik.values.image_path && (
+                                {formik.values.image && (
                                     <div className="mb-3">
-                                        {typeof formik.values.image_path === "object" ? (
+                                        {typeof formik.values.image === "object" ? (
                                             <img
-                                                src={URL.createObjectURL(formik.values.image_path)}
+                                                src={URL.createObjectURL(formik.values.image)}
                                                 alt="image"
                                                 style={{ maxWidth: "100px", maxHeight: "100px" }}
                                             />
                                         ) : (
                                             <img
-                                                src={`${ImageURL}${formik.values.image_path}`}
-                                                alt="image_path"
+                                                src={`${ImageURL}${formik.values.image}`}
+                                                alt="image"
                                                 style={{ maxWidth: "100px", maxHeight: "100px" }}
                                             />
                                         )}

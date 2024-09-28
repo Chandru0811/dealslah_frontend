@@ -338,3 +338,6 @@
   justify-content: flex-end;
   padding: 0.5rem 0;
 }
+.dt-length .dt-input{
+  margin: 0 10px 0 0;
+}

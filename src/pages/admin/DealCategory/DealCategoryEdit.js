@@ -11,17 +11,23 @@ function DealCategoryEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
     const { id } = useParams();
     const navigate = useNavigate();
+    const [imageSrc, setImageSrc] = useState(null);
+    const [crop, setCrop] = useState({ x: 0, y: 0 });
+    const [zoom, setZoom] = useState(1);
+    const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+    const [showCropper, setShowCropper] = useState(false);
+    const [croppedImagePreview, setCroppedImagePreview] = useState(null);
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
-        image: Yup.mixed().nullable().required("*Image is required"),
+        image_path: Yup.mixed().nullable().required("*Image is required"),
         // active: Yup.string().required("*Select an active status"),
     });
 
     const formik = useFormik({
         initialValues: {
             name: "",
-            image: null,
+            image_path: null,
             slug: "",
             // active: "",
             description: "",
@@ -34,7 +40,7 @@ function DealCategoryEdit() {
             formData.append("slug", values.slug);
 
             formData.append("name", values.name);
-            formData.append("image", values.image);
+            formData.append("image_path", values.image_path);
             // formData.append("active", values.active);
             formData.append("description", values.description);
 
@@ -65,7 +71,7 @@ function DealCategoryEdit() {
                     order: response.data.data.order || "",
                     // active: response.data.data.active || "",
                     description: response.data.data.description || "",
-                    image: null, // Image needs to be set via file input
+                    image_path: response.data.data.image_path,
                 });
             } catch (error) {
                 toast.error("Error Fetching Data", error.message);
@@ -77,6 +83,94 @@ function DealCategoryEdit() {
         const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
         formik.setFieldValue("slug", slug);
     }, [formik.values.name]);
+
+    const handleFileChange = (event) => {
+        const file = event.currentTarget.files[0];
+        if (file) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            setImageSrc(reader.result);
+            setShowCropper(true);
+          };
+          reader.readAsDataURL(file);
+        }
+      };
+    
+      const convertImageToBase64 = (url, callback) => {
+        const xhr = new XMLHttpRequest();
+        xhr.onload = function () {
+          const reader = new FileReader();
+          reader.onloadend = function () {
+            callback(reader.result);
+          };
+          reader.readAsDataURL(xhr.response);
+        };
+        xhr.open('GET', url);
+        xhr.responseType = 'blob';
+        xhr.send();
+      };
+    
+      const onCropComplete = (croppedArea, croppedAreaPixels) => {
+        setCroppedAreaPixels(croppedAreaPixels);
+      };
+    
+      // Helper function to get the cropped image
+      const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          image.src = imageSrc;
+          image.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+    
+            // Set canvas size to 250x250 pixels
+            const targetWidth = 1750;
+            const targetHeight = 550;
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+    
+            // Scale the cropped image to fit into the 250x250 pixels canvas
+            ctx.drawImage(
+              image,
+              croppedAreaPixels.x,
+              croppedAreaPixels.y,
+              croppedAreaPixels.width,
+              croppedAreaPixels.height,
+              0,
+              0,
+              targetWidth,
+              targetHeight
+            );
+    
+            // Convert the canvas content to a Blob
+            canvas.toBlob((blob) => {
+              if (!blob) {
+                reject(new Error('Canvas is empty'));
+                return;
+              }
+              blob.name = 'croppedImage.jpeg';
+              resolve(blob);
+            }, 'image/jpeg');
+          };
+        });
+      };
+    
+      const handleCropSave = async () => {
+        try {
+          const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+    
+          // Convert the Blob to a File object
+          const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+    
+          // Set the file in Formik
+          formik.setFieldValue("image_path", file);
+    
+          // Close the cropper
+          setShowCropper(false);
+        } catch (error) {
+          console.error("Error cropping the image:", error);
+        }
+      };
     return (
         <div className="container-fluid minHeight m-">
             <form onSubmit={formik.handleSubmit}>
@@ -134,42 +228,66 @@ function DealCategoryEdit() {
                                 )}
                             </div> */}
 
-                            <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Image<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="file"
-                                    name="image"
-                                    accept=".png, .jpg, .jpeg, .gif, .svg"
-                                    className={"form-control"}
-                                    onChange={(event) => {
-                                        const file = event.currentTarget.files[0];
-                                        formik.setFieldValue("image", file);
-                                    }}
-                                    onBlur={formik.handleBlur}
-                                />
-                                {formik.touched.image && formik.errors.image && (
-                                    <div className="invalid-feedback">{formik.errors.image}</div>
-                                )}
-                                {formik.values.image && (
-                  <div className="mb-3">
-                    {typeof formik.values.image === "object" ? (
-                      <img
-                        src={URL.createObjectURL(formik.values.image)}
-                        alt="image"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    ) : (
-                      <img
-                        src={`${ImageURL}${formik.values.image}`}
-                        alt="image"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    )}
-                  </div>
-                )}
-                            </div>
+<div className="col-md-6 col-12 mb-3">
+              <label className="form-label fw-bold">
+                Image<span className="text-danger">*</span>
+              </label>
+
+              <input
+                type="file"
+                name="image_path"
+                accept=".png,.jpeg,.jpg,.gif,.svg"
+                className="form-control"
+                onChange={handleFileChange}
+                onBlur={formik.handleBlur}
+              />
+              {formik.touched.image_path && formik.errors.image_path && (
+                <div className="error text-danger">
+                  <small>{formik.errors.image_path}</small>
+                </div>
+              )}
+
+              {formik.values.image_path && (
+                <div className="mb-3">
+                  {typeof formik.values.image_path === "object" ? (
+                    <img
+                      src={URL.createObjectURL(formik.values.image_path)}
+                      alt="image_path"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  ) : (
+                    <img
+                      src={`${ImageURL}${formik.values.image_path}`}
+                      alt="image_path"
+                      style={{ maxWidth: "100px", maxHeight: "100px" }}
+                    />
+                  )}
+                </div>
+              )}
+
+              {showCropper && (
+                <div className="crop-container">
+                  <Cropper
+                    image={imageSrc}
+                    crop={crop}
+                    zoom={zoom}
+                    aspect={1750 / 550}
+                    onCropChange={setCrop}
+                    onZoomChange={setZoom}
+                    onCropComplete={onCropComplete}
+                    cropShape="box"
+                    showGrid={false}
+                  />
+                </div>
+              )}
+              <button
+                type="button"
+                className="btn btn-primary mt-3"
+                onClick={handleCropSave}
+              >
+                Save Cropped Image
+              </button>
+            </div>
 
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">Description</label>
