@@ -66,7 +66,7 @@ function DeleteModel({ onSuccess, path, staffmsg, teachermsg }) {
 
   return (
     <>
-      <button className="button-btn btn-sm" onClick={handleShow}>
+      <button className="button-btn btn-sm m-2" onClick={handleShow}>
         Delete
       </button>
 

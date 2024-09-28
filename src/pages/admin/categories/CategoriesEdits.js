@@ -123,7 +123,6 @@ function CategoriesEdits() {
         </div>
         <div
           className="card shadow border-0 my-2"
-          style={{ minHeight: "80vh" }}
         >
           <div className="container mb-5">
             <div className="row py-4">
@@ -217,7 +216,7 @@ function CategoriesEdits() {
                 )}
 
                 {formik.values.icon && (
-                  <div className="mb-3">
+                  <div className="my-3">
                     {typeof formik.values.icon === "object" ? (
                       <img
                         src={URL.createObjectURL(formik.values.icon)}
@@ -234,7 +233,7 @@ function CategoriesEdits() {
                   </div>
                 )}
               </div>
-              <div className="col-md-12 col-12 mb-3">
+              <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Description<span className="text-danger">*</span>
                 </label>

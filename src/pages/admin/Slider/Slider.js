@@ -3,12 +3,10 @@ import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
-import Image from "../../../assets/tv.png";
 import DeleteModel from '../../../components/admin/DeleteModel';
 import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
-import toast from "react-hot-toast";
 
 const Slider = () => {
   const tableRef = useRef(null);
@@ -93,16 +91,13 @@ const Slider = () => {
       </div>
       <div
         className="container card shadow border-0" style={{ minHeight: "80vh" }}
-
       >
         {loading ? (
           <div className="loader-container">
-            <div class="loading">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32"></circle>
+              </svg>
             </div>
           </div>
         ) : (
@@ -118,17 +113,13 @@ const Slider = () => {
                     S.NO
                   </th>
                   <th className="text-center">Image</th>
-                  {/* <th className="text-center">Title</th> */}
                   <th className="text-center">Order</th>
-                  <th className="text-center">
-                    ACTION
-                  </th>
+                  <th className="text-center">ACTION</th>
                 </tr>
               </thead>
               <tbody>
                 {datas?.map((data, index) => (
                   <tr key={data.id}>
-
                     <td className="text-start align-middle">{index + 1}</td>
                     <td className="text-center">
                       <img
@@ -138,14 +129,7 @@ const Slider = () => {
                         width={50}
                       ></img>
                     </td>
-                    <td
-                      className="text-center ms-2">{data.order}
-                    </td>
-                    {/* <td className="align-middle">{data.slug}</td> */}
-
-
-
-
+                    <td className="text-center ms-2">{data.order}</td>
                     <td className="text-center">
                       <div className="d-flex justify-content-center">
                         <Link to={`/slider/view/${data.id}`}>
@@ -168,7 +152,6 @@ const Slider = () => {
           </div>
         )}
       </div>
-
     </section>
   );
 };

@@ -86,7 +86,7 @@ const CategoriesIndex = () => {
             <div className="col-12 p-2 d-flex justify-content-between align-items-center">
               <h3 class="mb-0">Categories</h3>
               <div class="container-fluid d-flex justify-content-end">
-                <Link to="/category/add">
+                <Link to="/categories/add">
                   <button
                     type="submit"
                     className="btn btn-sm btn-button shadow-none border-0 py-3"
@@ -168,12 +168,12 @@ const CategoriesIndex = () => {
 
                     <td className="text-center">
                       <div>
-                        <Link to={`/category/view/${data.id}`}>
+                        <Link to={`/categories/view/${data.id}`}>
                           <button className="button-btn btn-sm m-2">
                             View
                           </button>
                         </Link>
-                        <Link to={`/category/edit/${data.id}`}>
+                        <Link to={`/categories/edit/${data.id}`}>
                           <button className="button-btn btn-sm m-2">
                             Edit
                           </button>

@@ -131,19 +131,11 @@ function CategoriesView() {
               <div className="row mb-3">
                 <div className="col-6 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
-                    <b>Category Group Id</b>
+                    <b>Category Group Name</b>
                   </p>
                 </div>
                 <div className="col-6">
-                  <p className="text-muted text-sm">
-                    :{" "}
-                    {datas &&
-                      datas.map((category) =>
-                        parseInt(data.category_group_id) === category.id
-                          ? category.name || "--"
-                          : ""
-                      )}
-                  </p>
+                  <p className="text-muted text-sm">: {data.categoryGroupName}</p>
                 </div>
               </div>
             </div>

@@ -88,76 +88,76 @@ function CategoryGroupAdd() {
     const handleFileChange = async (event) => {
         const file = event.currentTarget.files[0];
         if (file) {
-          const reader = new FileReader();
-          reader.onload = () => {
-            setImageSrc(reader.result);
-            setShowCropper(true);
-          };
-          reader.readAsDataURL(file);
+            const reader = new FileReader();
+            reader.onload = () => {
+                setImageSrc(reader.result);
+                setShowCropper(true);
+            };
+            reader.readAsDataURL(file);
         }
-      };
-    
-      const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    };
+
+    const onCropComplete = (croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
-      };
-    
-      // Helper function to get the cropped image
-      const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+    };
+
+    // Helper function to get the cropped image
+    const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
         return new Promise((resolve, reject) => {
-          const image = new Image();
-          image.src = imageSrc;
-          image.onload = () => {
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-    
-            // Set canvas size to 250x250 pixels
-            const targetWidth = 1750;
-            const targetHeight = 550;
-            canvas.width = targetWidth;
-            canvas.height = targetHeight;
-    
-            // Scale the cropped image to fit into the 250x250 pixels canvas
-            ctx.drawImage(
-              image,
-              croppedAreaPixels.x,
-              croppedAreaPixels.y,
-              croppedAreaPixels.width,
-              croppedAreaPixels.height,
-              0,
-              0,
-              targetWidth,
-              targetHeight
-            );
-    
-            // Convert the canvas content to a Blob
-            canvas.toBlob((blob) => {
-              if (!blob) {
-                reject(new Error('Canvas is empty'));
-                return;
-              }
-              blob.name = 'croppedImage.jpeg';
-              resolve(blob);
-            }, 'image/jpeg');
-          };
+            const image = new Image();
+            image.src = imageSrc;
+            image.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Set canvas size to 250x250 pixels
+                const targetWidth = 1750;
+                const targetHeight = 550;
+                canvas.width = targetWidth;
+                canvas.height = targetHeight;
+
+                // Scale the cropped image to fit into the 250x250 pixels canvas
+                ctx.drawImage(
+                    image,
+                    croppedAreaPixels.x,
+                    croppedAreaPixels.y,
+                    croppedAreaPixels.width,
+                    croppedAreaPixels.height,
+                    0,
+                    0,
+                    targetWidth,
+                    targetHeight
+                );
+
+                // Convert the canvas content to a Blob
+                canvas.toBlob((blob) => {
+                    if (!blob) {
+                        reject(new Error('Canvas is empty'));
+                        return;
+                    }
+                    blob.name = 'croppedImage.jpeg';
+                    resolve(blob);
+                }, 'image/jpeg');
+            };
         });
-      };
-    
-      const handleCropSave = async () => {
+    };
+
+    const handleCropSave = async () => {
         try {
-          const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
-    
-          // Convert the Blob to a File object
-          const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
-    
-          // Set the file in Formik
-          formik.setFieldValue("image", file);
-    
-          // Close the cropper
-          setShowCropper(false);
+            const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+
+            // Convert the Blob to a File object
+            const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+
+            // Set the file in Formik
+            formik.setFieldValue("image", file);
+
+            // Close the cropper
+            setShowCropper(false);
         } catch (error) {
-          console.error("Error cropping the image:", error);
+            console.error("Error cropping the image:", error);
         }
-      };
+    };
     return (
         <div className="container-fluid minHeight m-0">
             <form onSubmit={formik.handleSubmit}>
@@ -211,16 +211,16 @@ function CategoryGroupAdd() {
                                     {...formik.getFieldProps("order")}
                                 >
                                     <option value="">Select an order</option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
+                                    {Array.from({ length: 15 }, (_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}
+                                        </option>
+                                    ))}
                                 </select>
                                 {formik.touched.order && formik.errors.order && (
                                     <div className="invalid-feedback">{formik.errors.order}</div>
                                 )}
                             </div>
-
-
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Icon<span className="text-danger">*</span>
@@ -254,44 +254,44 @@ function CategoryGroupAdd() {
                                 )}
                             </div> */}
                             <div className="col-md-6 col-12 file-input">
-              <label className="form-label">
-                Image<span className="text-danger">*</span>
-              </label>
-              <input
-                type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""
-                  }`}
-                onChange={handleFileChange}
-              />
-              {formik.touched.image && formik.errors.image && (
-                <div className="invalid-feedback">{formik.errors.image}</div>
-              )}
+                                <label className="form-label">
+                                    Image<span className="text-danger">*</span>
+                                </label>
+                                <input
+                                    type="file"
+                                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                                    className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""
+                                        }`}
+                                    onChange={handleFileChange}
+                                />
+                                {formik.touched.image && formik.errors.image && (
+                                    <div className="invalid-feedback">{formik.errors.image}</div>
+                                )}
 
-              {showCropper && (
-                <div className="crop-container">
-                  <Cropper
-                    image={imageSrc}
-                    crop={crop}
-                    zoom={zoom}
-                    aspect={1750 / 550}
-                                        onCropChange={setCrop}
-                    onZoomChange={setZoom}
-                    onCropComplete={onCropComplete}
-                    cropShape="box"
-                    showGrid={false}
-                  />
+                                {showCropper && (
+                                    <div className="crop-container">
+                                        <Cropper
+                                            image={imageSrc}
+                                            crop={crop}
+                                            zoom={zoom}
+                                            aspect={1750 / 550}
+                                            onCropChange={setCrop}
+                                            onZoomChange={setZoom}
+                                            onCropComplete={onCropComplete}
+                                            cropShape="box"
+                                            showGrid={false}
+                                        />
 
-                </div>
-              )}
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={handleCropSave}
-              >
-                Save Cropped Image
-              </button>
-            </div>
+                                    </div>
+                                )}
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mt-3"
+                                    onClick={handleCropSave}
+                                >
+                                    Save Cropped Image
+                                </button>
+                            </div>
 
                             {/* <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">

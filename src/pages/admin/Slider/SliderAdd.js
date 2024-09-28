@@ -210,15 +210,18 @@ function SliderAdd() {
               <label className="form-label">
                 Order<span className="text-danger">*</span>
               </label>
-              <input
-                type="text"
-                className={`form-control ${formik.touched.order && formik.errors.order ? "is-invalid" : ""
-                  }`}
-                id="order"
-                name="order"
-                onChange={formik.handleChange}
-                value={formik.values.order}
-              />
+              <select
+                aria-label="Default select example"
+                className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
+                {...formik.getFieldProps("order")}
+              >
+                <option value="">Select an order</option>
+                {Array.from({ length: 8 }, (_, i) => (
+                  <option key={i + 1} value={i + 1}>
+                    {i + 1}
+                  </option>
+                ))}
+              </select>
               {formik.touched.order && formik.errors.order && (
                 <div className="invalid-feedback">{formik.errors.order}</div>
               )}

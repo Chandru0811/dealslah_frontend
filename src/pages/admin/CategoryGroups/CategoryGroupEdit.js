@@ -30,7 +30,7 @@ function CategoryGroupEdit() {
             name: "",
             slug: "",
             icon: "",
-            image: null,
+            image_path: null,
             order: "",
             active: "",
             description: "",
@@ -43,7 +43,7 @@ function CategoryGroupEdit() {
             formData.append("name", values.name);
             formData.append("slug", values.slug);
             formData.append("icon", values.icon);
-            formData.append("image", values.image);
+            formData.append("image_path", values.image_path);
             formData.append("order", values.order);
             formData.append("active", values.active);
             formData.append("description", values.description);
@@ -217,10 +217,12 @@ function CategoryGroupEdit() {
                                     className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
                                     {...formik.getFieldProps("order")}
                                 >
-                                    <option value=""></option>
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
+                                    <option value="">Select an order</option>
+                                    {Array.from({ length: 15 }, (_, i) => (
+                                        <option key={i + 1} value={i + 1}>
+                                            {i + 1}
+                                        </option>
+                                    ))}
                                 </select>
                                 {formik.touched.order && formik.errors.order && (
                                     <div className="invalid-feedback">{formik.errors.order}</div>
@@ -242,38 +244,38 @@ function CategoryGroupEdit() {
                             </div>
 
                             <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label fw-bold">
+                                <label className="form-label">
                                     Image<span className="text-danger">*</span>
                                 </label>
 
                                 <input
                                     type="file"
-                                    name="image"
+                                    name="image_path"
                                     accept=".png,.jpeg,.jpg,.gif,.svg"
                                     className="form-control"
                                     onChange={(event) => {
                                         const file = event.target.files[0];
-                                        formik.setFieldValue("image", file);
+                                        formik.setFieldValue("image_path", file);
                                     }}
                                     onBlur={formik.handleBlur}
                                 />
-                                {formik.touched.image && formik.errors.image && (
+                                {formik.touched.image_path && formik.errors.image_path && (
                                     <div className="error text-danger">
-                                        <small>{formik.errors.image}</small>
+                                        <small>{formik.errors.image_path}</small>
                                     </div>
                                 )}
 
-                                {formik.values.image && (
-                                    <div className="mb-3">
-                                        {typeof formik.values.image === "object" ? (
+                                {formik.values.image_path && (
+                                    <div className="my-3">
+                                        {typeof formik.values.image_path === "object" ? (
                                             <img
-                                                src={URL.createObjectURL(formik.values.image)}
+                                                src={URL.createObjectURL(formik.values.image_path)}
                                                 alt="image"
                                                 style={{ maxWidth: "100px", maxHeight: "100px" }}
                                             />
                                         ) : (
                                             <img
-                                                src={`${ImageURL}${formik.values.image}`}
+                                                src={`${ImageURL}${formik.values.image_path}`}
                                                 alt="image"
                                                 style={{ maxWidth: "100px", maxHeight: "100px" }}
                                             />

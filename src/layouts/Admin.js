@@ -66,13 +66,13 @@ function Admin({ handleLogout }) {
 
                   {/* Categories */}
                   <Route path="/categories" element={<CategoriesIndex />} />
-                  <Route path="/category/add" element={<CategoriesAdd />} />
+                  <Route path="/categories/add" element={<CategoriesAdd />} />
                   <Route
-                    path="/category/view/:id"
+                    path="/categories/view/:id"
                     element={<CategoriesView />}
                   />
                   <Route
-                    path="/category/edit/:id"
+                    path="/categories/edit/:id"
                     element={<CategoriesEdits />}
                   />
 

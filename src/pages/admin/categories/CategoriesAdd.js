@@ -102,7 +102,6 @@ function CategoriesAdd() {
         </div>
         <div
           className="card shadow border-0 my-2"
-          style={{ minHeight: "80vh" }}
         >
           <div className="container mb-5">
             <div className="row py-4">
@@ -191,7 +190,7 @@ function CategoriesAdd() {
                   <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}
               </div>
-              <div className="col-md-12 col-12 mb-3">
+              <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Description<span className="text-danger">*</span>
                 </label>

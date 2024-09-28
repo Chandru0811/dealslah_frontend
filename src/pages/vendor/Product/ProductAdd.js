@@ -340,8 +340,7 @@ function ProductAdd() {
           </div>
         </div>
         <div
-          className="container card shadow border-0"
-          style={{ minHeight: "80vh" }}
+          className="container card shadow border-0 pb-5"
         >
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
@@ -665,12 +664,13 @@ function ProductAdd() {
               </div>
             ))}
 
-            <div className="col-12 mb-3">
+            <div className="col-12 mb-5">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
               </label>
               <textarea
                 type="text"
+                rows={5}
                 className={`form-control ${
                   formik.touched.description && formik.errors.description
                     ? "is-invalid"

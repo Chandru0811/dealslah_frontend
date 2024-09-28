@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Image from "../../../assets/tv.png";
 import Modal from 'react-bootstrap/Modal';
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
@@ -43,12 +42,12 @@ function ProductsView() {
             const response = await api.post(`admin/deal/${id}/approve`);
             if (response.status === 200) {
                 getData();
-                toast.success("dealCategory activated successfully!");
+                toast.success(response.data.message);
             } else {
-                toast.error("Failed to activate dealCategory.");
+                toast.error(response.data.message);
             }
         } catch (error) {
-            toast.error("An error occurred while activating the dealCategory.");
+            toast.error("An error occurred while activating the product.");
             console.error("Activation Error:", error);
         } finally {
             setLoading(false);
@@ -118,7 +117,7 @@ function ProductsView() {
                 style={{ minHeight: "80vh" }}
             >
                 <div className="row mt-5 p-3">
-                    <div className="col-md-6 col-12">
+                    {/* <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
@@ -137,7 +136,7 @@ function ProductsView() {
                                 </p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     <div className="col-md-6 col-12">
                         <div className="row mb-3">
@@ -147,15 +146,7 @@ function ProductsView() {
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">
-                                    :{" "}
-                                    {Array.isArray(datas) &&
-                                        datas.map((category) =>
-                                            parseInt(data.category_group_id) === category.id
-                                                ? category.name || "--"
-                                                : ""
-                                        )}
-                                </p>
+                                <p className="text-muted text-sm">: {data.categoryName}</p>
                             </div>
                         </div>
                     </div>
@@ -267,7 +258,7 @@ function ProductsView() {
                             </div>
                         </div>
                     </div>
-                    <div className="col-md-6 col-12">
+                    {/* <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
@@ -278,7 +269,7 @@ function ProductsView() {
                                 <p className="text-muted text-sm"></p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
 
                     {/* <div className="col-md-6 col-12">
                         <div className="row mb-3">
