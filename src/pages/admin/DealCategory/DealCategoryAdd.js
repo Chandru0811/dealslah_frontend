@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import { FiAlertTriangle } from "react-icons/fi";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
+import Cropper from "react-easy-crop";
 
 function DealCategoryAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);

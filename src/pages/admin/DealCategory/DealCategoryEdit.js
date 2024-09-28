@@ -6,6 +6,7 @@ import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
 
 import toast from "react-hot-toast";
+import Cropper from "react-easy-crop";
 
 function DealCategoryEdit() {
     const [loadIndicator, setLoadIndicator] = useState(false);
