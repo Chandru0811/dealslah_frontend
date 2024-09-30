@@ -8,7 +8,7 @@ import ImageURL from "../../../config/ImageURL";
 function ProductView() {
   const { id } = useParams();
   const [data, setData] = useState(null);
-  
+
   useEffect(() => {
     const getData = async () => {
       try {
@@ -24,7 +24,7 @@ function ProductView() {
 
   // Loading state while fetching data
   if (!data) {
-    return <div>Loading...</div>; // You might want to replace this with a spinner or skeleton loader
+    return <div>Loading...</div>;
   }
 
   return (
@@ -43,9 +43,12 @@ function ProductView() {
           </div>
         </div>
       </div>
-      <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
+      <div
+        className="container card shadow border-0"
+        style={{ minHeight: "80vh" }}
+      >
         <div className="row mt-5 p-3">
-          <div className="col-md-6 col-12">
+          {/* <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm"><b>Category Group</b></p>
@@ -54,11 +57,13 @@ function ProductView() {
                 <p className="text-muted text-sm">: {data.category_group}</p>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Category</b></p>
+                <p className="text-sm">
+                  <b>Category</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.category_id}</p>
@@ -68,7 +73,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Deal Type</b></p>
+                <p className="text-sm">
+                  <b>Deal Type</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.deal_type}</p>
@@ -78,7 +85,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Brand</b></p>
+                <p className="text-sm">
+                  <b>Brand</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.brand}</p>
@@ -88,7 +97,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Name</b></p>
+                <p className="text-sm">
+                  <b>Name</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.name}</p>
@@ -98,7 +109,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Original Price</b></p>
+                <p className="text-sm">
+                  <b>Original Price</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.original_price}</p>
@@ -108,7 +121,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Discounted Price</b></p>
+                <p className="text-sm">
+                  <b>Discounted Price</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.discounted_price}</p>
@@ -118,37 +133,51 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Discounted Percentage</b></p>
+                <p className="text-sm">
+                  <b>Discounted Percentage</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: {data.discount_percentage}</p>
+                <p className="text-muted text-sm">
+                  : {data.discount_percentage}
+                </p>
               </div>
             </div>
           </div>
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Start Date</b></p>
+                <p className="text-sm">
+                  <b>Start Date</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: {new Date(data.start_date).toLocaleDateString()}</p>
+                <p className="text-muted text-sm">
+                  : {new Date(data.start_date).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>End Date</b></p>
+                <p className="text-sm">
+                  <b>End Date</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: {new Date(data.end_date).toLocaleDateString()}</p>
+                <p className="text-muted text-sm">
+                  : {new Date(data.end_date).toLocaleDateString()}
+                </p>
               </div>
             </div>
           </div>
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Stock</b></p>
+                <p className="text-sm">
+                  <b>Stock</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.stock}</p>
@@ -158,7 +187,9 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>SKU</b></p>
+                <p className="text-sm">
+                  <b>SKU</b>
+                </p>
               </div>
               <div className="col-6">
                 <p className="text-muted text-sm">: {data.sku}</p>
@@ -168,7 +199,9 @@ function ProductView() {
           <div className="col-12">
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>Description</b></p>
+                <p className="text-sm">
+                  <b>Description</b>
+                </p>
               </div>
               <div className="col-9">
                 <p className="text-muted text-sm">: {data.description}</p>
@@ -178,12 +211,16 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>image1</b></p>
+                <p className="text-sm">
+                  <b>image1</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm"> :
+                <p className="text-muted text-sm">
+                  {" "}
+                  :
                   <img
-                    src={`${ImageURL}${data.image_url1}`} 
+                    src={`${ImageURL}${data.image_url1}`}
                     alt="product"
                     className="img-fluid"
                     // width={150}
@@ -195,12 +232,16 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>image2</b></p>
+                <p className="text-sm">
+                  <b>image2</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm"> :
+                <p className="text-muted text-sm">
+                  {" "}
+                  :
                   <img
-                    src={`${ImageURL}${data.image_url2}`} 
+                    src={`${ImageURL}${data.image_url2}`}
                     alt="product"
                     className="img-fluid"
                     // width={150}
@@ -212,12 +253,16 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>image3</b></p>
+                <p className="text-sm">
+                  <b>image3</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm"> :
+                <p className="text-muted text-sm">
+                  {" "}
+                  :
                   <img
-                    src={`${ImageURL}${data.image_url3}`} 
+                    src={`${ImageURL}${data.image_url3}`}
                     alt="product"
                     className="img-fluid"
                     // width={150}
@@ -229,12 +274,16 @@ function ProductView() {
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
-                <p className="text-sm"><b>image4</b></p>
+                <p className="text-sm">
+                  <b>image4</b>
+                </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm"> :
+                <p className="text-muted text-sm">
+                  {" "}
+                  :
                   <img
-                    src={`${ImageURL}${data.image_url4}`} 
+                    src={`${ImageURL}${data.image_url4}`}
                     alt="product"
                     className="img-fluid"
                     // width={150}
