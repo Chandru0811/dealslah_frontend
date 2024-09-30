@@ -18,7 +18,7 @@ function CategoriesEdits() {
     // active: Yup.string().required("*Select an Status"),
     description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
-    slug: Yup.string().required("*name Label is required"),
+    // slug: Yup.string().required("*name Label is required"),
     // icon: Yup.string().required("*Icon is required"),
   });
 
@@ -75,11 +75,9 @@ function CategoriesEdits() {
     };
 
     getData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      // setLoading(true);
       try {
         const response = await api.get("/admin/categoryGroup");
         setDatas(response.data.data);

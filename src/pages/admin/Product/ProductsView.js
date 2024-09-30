@@ -190,11 +190,11 @@ function ProductsView() {
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
-                                    <b>Discounted Price</b>
+                                    <b>Discounted Percentage</b>
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: {data.discounted_price}</p>
+                                <p className="text-muted text-sm">: {data.discount_percentage}%</p>
                             </div>
                         </div>
                     </div>
@@ -202,11 +202,11 @@ function ProductsView() {
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
                                 <p className="text-sm">
-                                    <b>Discounted Percentage</b>
+                                    <b>Discounted Price</b>
                                 </p>
                             </div>
                             <div className="col-6">
-                                <p className="text-muted text-sm">: {data.discount_percentage}%</p>
+                                <p className="text-muted text-sm">: {data.discounted_price}</p>
                             </div>
                         </div>
                     </div>

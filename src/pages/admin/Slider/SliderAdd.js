@@ -76,6 +76,12 @@ function SliderAdd() {
     },
   });
 
+  // Handle canceling the cropper
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageSrc(null);
+  };
+
   const handleFileChange = async (event) => {
     const file = event.currentTarget.files[0];
     if (file) {
@@ -189,7 +195,7 @@ function SliderAdd() {
                     crop={crop}
                     zoom={zoom}
                     aspect={1750 / 550}
-                                        onCropChange={setCrop}
+                    onCropChange={setCrop}
                     onZoomChange={setZoom}
                     onCropComplete={onCropComplete}
                     cropShape="box"
@@ -198,13 +204,25 @@ function SliderAdd() {
 
                 </div>
               )}
-              <button
-                type="button"
-                className="btn btn-primary mt-3"
-                onClick={handleCropSave}
-              >
-                Save Cropped Image
-              </button>
+              {showCropper && (
+                <div className="d-flex justify-content-start mt-3 gap-2">
+                  <button
+                    type="button"
+                    className="btn btn-primary mt-3"
+                    onClick={handleCropSave}
+                  >
+                    Save Cropped Image
+                  </button>
+
+                  <button
+                    type="button"
+                    className="btn btn-secondary mt-3"
+                    onClick={handleCropCancel}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              )}
             </div>
             <div className="col-md-6 col-12 file-input">
               <label className="form-label">

@@ -27,19 +27,19 @@ function Stores() {
       style={{ minHeight: "80vh" }}
     >
       <div className="row mt-5 p-3">
-        <div className="col-md-6 col-12">
+        <div className="col-md-7 col-12">
           <div className="row mb-3">
-            <div className="col-4 d-flex justify-content-start align-items-center">
+            <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
                 <b>Shop Name</b>
               </p>
             </div>
-            <div className="col-8">
+            <div className="col-9">
               <p className="text-muted text-sm">: {data?.name}</p>
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-5 col-12">
           <div className="row mb-3">
             <div className="col-4 d-flex justify-content-start align-items-center">
               <p className="text-sm">
@@ -51,19 +51,19 @@ function Stores() {
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-7 col-12">
           <div className="row mb-3">
-            <div className="col-4 d-flex justify-content-start align-items-center">
+            <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
                 <b>Shop Email</b>
               </p>
             </div>
-            <div className="col-8">
+            <div className="col-9">
               <p className="text-muted text-sm ">: {data?.email}</p>
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-5 col-12">
           <div className="row mb-3">
             <div className="col-4 d-flex justify-content-start align-items-center">
               <p className="text-sm">
@@ -75,19 +75,19 @@ function Stores() {
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-7 col-12">
           <div className="row mb-3">
-            <div className="col-4 d-flex justify-content-start align-items-center">
+            <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
                 <b>Shop Type</b>
               </p>
             </div>
-            <div className="col-8">
+            <div className="col-9">
               <p className="text-muted text-sm">: {data?.shop_type == 1 ? 'Product' : data?.shop_type == 2 ? 'Service' : ''}</p>
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-5 col-12">
           <div className="row mb-3">
             <div className="col-4 d-flex justify-content-start align-items-center">
               <p className="text-sm">
@@ -106,19 +106,19 @@ function Stores() {
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-7 col-12">
           <div className="row mb-3">
-            <div className="col-4 d-flex justify-content-start align-items-center">
+            <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
                 <b>Shop Description</b>
               </p>
             </div>
-            <div className="col-8">
+            <div className="col-9">
               <p className="text-muted text-sm">: {data?.description}</p>
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-5 col-12">
           <div className="row mb-3">
             <div className="col-4 d-flex justify-content-start align-items-center">
               <p className="text-sm">
@@ -130,14 +130,14 @@ function Stores() {
             </div>
           </div>
         </div>
-        <div className="col-md-6 col-12">
+        <div className="col-md-7 col-12">
           <div className="row mb-3">
-            <div className="col-4 d-flex justify-content-start align-items-center">
+            <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
                 <b>External URL</b>
               </p>
             </div>
-            <div className="col-8">
+            <div className="col-9">
               <p className="text-muted text-sm">: {data?.external_url}</p>
             </div>
           </div>

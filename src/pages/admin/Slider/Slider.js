@@ -15,7 +15,7 @@ const Slider = () => {
 
   const initializeDataTable = () => {
     if ($.fn.DataTable.isDataTable(tableRef.current)) {
-      return; // DataTable already initialized
+      return;
     }
     $(tableRef.current).DataTable({
       columnDefs: [{ orderable: false, targets: -1 }],
@@ -32,20 +32,33 @@ const Slider = () => {
     setLoading(true);
     try {
       const response = await api.get('admin/sliders');
-      setDatas(response.data.data); // Update data state
+      setDatas(response.data.data);
       setLoading(false);
-      initializeDataTable(); // Initialize DataTable after data update
+      initializeDataTable();
     } catch (error) {
       console.error('Error fetching data:', error);
       setLoading(false);
     }
   };
 
+  const refreshData = async () => {
+    destroyDataTable();
+    setLoading(true);
+    try {
+      const response = await api.get('/admin/sliders');
+      setDatas(response.data.data);
+    } catch (error) {
+      console.error('Error refreshing data:', error);
+    }
+    setLoading(false);
+    initializeDataTable();
+  };
+
   useEffect(() => {
-    fetchData(); // Fetch data only once when the component mounts
+    fetchData();
 
     return () => {
-      destroyDataTable(); // Cleanup DataTable on component unmount
+      destroyDataTable();
     };
   }, []);
 
@@ -111,7 +124,7 @@ const Slider = () => {
                           <button className="button-btn btn-sm m-2">Edit</button>
                         </Link>
                         <DeleteModel
-                          onSuccess={fetchData} // Use fetchData to refresh after delete
+                          onSuccess={refreshData}
                           path={`/admin/slider/delete/${data.id}`}
                           style={{ display: "inline-block" }}
                         />

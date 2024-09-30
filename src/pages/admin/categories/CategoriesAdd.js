@@ -150,28 +150,6 @@ function CategoriesAdd() {
                 )}
               </div>
 
-              {/* <div className="col-md-6 col-12 mb-3">
-                <label className="form-label">
-                  Active<span className="text-danger">*</span>
-                </label>
-                <select
-                  aria-label="Default select example"
-                  className={`form-select ${formik.touched.active && formik.errors.active
-                    ? "is-invalid"
-                    : ""
-                    }`}
-                  {...formik.getFieldProps("active")}
-                >
-                  <option>Select an option</option>
-                  <option value="0">Active</option>
-                  <option value="1">InActive</option>
-                </select>
-                {formik.touched.active && formik.errors.active && (
-                  <div className="invalid-feedback">
-                    {formik.errors.active}
-                  </div>
-                )}
-              </div> */}
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Icon<span className="text-danger">*</span>
@@ -179,7 +157,7 @@ function CategoriesAdd() {
                 <input
                   name="icon"
                   type="file"
-                  accept=".png,.jpeg,.jpg,.gif,.svg"
+                  accept=".png,.jpeg,.jpg,.gif,.svg,.webp"
                   className={`form-control`}
                   onChange={(event) => {
                     const file = event.currentTarget.files[0];
@@ -190,6 +168,7 @@ function CategoriesAdd() {
                   <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}
               </div>
+
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Description<span className="text-danger">*</span>

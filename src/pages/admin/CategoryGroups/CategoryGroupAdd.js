@@ -1,25 +1,74 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { FiAlertTriangle } from "react-icons/fi";
 import toast from "react-hot-toast";
-import api from "../../../config/URL";
 import Cropper from "react-easy-crop";
+import api from "../../../config/URL";
+import "../../../styles/admin.css"; // Ensure your styles handle the cropper
+
+// Helper function to create the cropped image
+const getCroppedImg = (imageSrc, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.src = imageSrc;
+        image.setAttribute("crossOrigin", "anonymous"); // To avoid CORS issues
+        image.onload = () => {
+            const canvas = document.createElement("canvas");
+            const ctx = canvas.getContext("2d");
+
+            const targetWidth = 500; // Adjust as needed
+            const targetHeight = 500; // Adjust as needed
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+
+            ctx.drawImage(
+                image,
+                croppedAreaPixels.x,
+                croppedAreaPixels.y,
+                croppedAreaPixels.width,
+                croppedAreaPixels.height,
+                0,
+                0,
+                targetWidth,
+                targetHeight
+            );
+
+            canvas.toBlob(
+                (blob) => {
+                    if (!blob) {
+                        reject(new Error("Canvas is empty"));
+                        return;
+                    }
+                    blob.name = "croppedImage.jpeg";
+                    resolve(blob);
+                },
+                "image/jpeg",
+                1
+            );
+        };
+        image.onerror = () => {
+            reject(new Error("Failed to load image"));
+        };
+    });
+};
 
 function CategoryGroupAdd() {
     const [loadIndicator, setLoadIndicator] = useState(false);
-    const [logo, setLogo] = useState(null); // this is the file
-    const navigate = useNavigate();
     const [imageSrc, setImageSrc] = useState(null);
     const [crop, setCrop] = useState({ x: 0, y: 0 });
     const [zoom, setZoom] = useState(1);
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
     const [showCropper, setShowCropper] = useState(false);
+    const [previewImage, setPreviewImage] = useState(null);
+    const navigate = useNavigate();
 
     const validationSchema = Yup.object({
         name: Yup.string().required("*Name is required"),
+        // icon: Yup.mixed().required("*Icon is required"),
         order: Yup.string().required("*Select an order"),
+        // active: Yup.string().required("*Select an active"),
     });
 
     const formik = useFormik({
@@ -38,8 +87,8 @@ function CategoryGroupAdd() {
             const formData = new FormData();
             formData.append("name", values.name);
             formData.append("slug", values.slug);
-            formData.append("icon", values.icon); // adding the logo file to FormData
-            formData.append("image", logo); // adding the logo file to FormData
+            formData.append("icon", values.icon);
+            formData.append("image", values.image);
             formData.append("order", values.order);
             formData.append("description", values.description);
 
@@ -48,7 +97,7 @@ function CategoryGroupAdd() {
             try {
                 const response = await api.post(`admin/categoryGroup`, formData, {
                     headers: {
-                        "Content-Type": "multipart/form-data", // make sure this is multipart/form-data
+                        "Content-Type": "multipart/form-data",
                     },
                 });
                 console.log("Response", response);
@@ -57,6 +106,7 @@ function CategoryGroupAdd() {
                     toast.success(response.data.message);
                     navigate("/categorygroup");
                     resetForm();
+                    setPreviewImage(null);
                 } else {
                     toast.error(response.data.message);
                 }
@@ -81,13 +131,31 @@ function CategoryGroupAdd() {
             }
         },
     });
+
     useEffect(() => {
-        const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+        const slug = formik.values.name
+            .toLowerCase()
+            .trim()
+            .replace(/\s+/g, "_")
+            .replace(/[^\w\-]+/g, "");
         formik.setFieldValue("slug", slug);
     }, [formik.values.name]);
-    const handleFileChange = async (event) => {
+
+    const handleFileChange = (event) => {
         const file = event.currentTarget.files[0];
         if (file) {
+            const validTypes = [
+                "image/png",
+                "image/jpeg",
+                "image/jpg",
+                "image/gif",
+                "image/svg+xml",
+                "image/webp",
+            ];
+            if (!validTypes.includes(file.type)) {
+                toast.error("Unsupported file type. Please select a valid image.");
+                return;
+            }
             const reader = new FileReader();
             reader.onload = () => {
                 setImageSrc(reader.result);
@@ -97,67 +165,47 @@ function CategoryGroupAdd() {
         }
     };
 
-    const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    const onCropCompleteHandler = useCallback((croppedArea, croppedAreaPixels) => {
         setCroppedAreaPixels(croppedAreaPixels);
-    };
-
-    // Helper function to get the cropped image
-    const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
-        return new Promise((resolve, reject) => {
-            const image = new Image();
-            image.src = imageSrc;
-            image.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-
-                // Set canvas size to 250x250 pixels
-                const targetWidth = 1750;
-                const targetHeight = 550;
-                canvas.width = targetWidth;
-                canvas.height = targetHeight;
-
-                // Scale the cropped image to fit into the 250x250 pixels canvas
-                ctx.drawImage(
-                    image,
-                    croppedAreaPixels.x,
-                    croppedAreaPixels.y,
-                    croppedAreaPixels.width,
-                    croppedAreaPixels.height,
-                    0,
-                    0,
-                    targetWidth,
-                    targetHeight
-                );
-
-                // Convert the canvas content to a Blob
-                canvas.toBlob((blob) => {
-                    if (!blob) {
-                        reject(new Error('Canvas is empty'));
-                        return;
-                    }
-                    blob.name = 'croppedImage.jpeg';
-                    resolve(blob);
-                }, 'image/jpeg');
-            };
-        });
-    };
+    }, []);
 
     const handleCropSave = async () => {
         try {
-            const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+            const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
 
-            // Convert the Blob to a File object
-            const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+            const file = new File([croppedImageBlob], "croppedImage.jpg", {
+                type: "image/jpeg",
+            });
 
-            // Set the file in Formik
             formik.setFieldValue("image", file);
 
-            // Close the cropper
+            const newPreviewURL = URL.createObjectURL(file);
+            setPreviewImage(newPreviewURL);
+
+            if (previewImage && previewImage.startsWith("blob:")) {
+                URL.revokeObjectURL(previewImage);
+            }
             setShowCropper(false);
+            setImageSrc(null);
         } catch (error) {
             console.error("Error cropping the image:", error);
+            toast.error("Failed to crop the image. Please try again.");
         }
     };
+
+    const handleCropCancel = () => {
+        setShowCropper(false);
+        setImageSrc(null);
+    };
+
+    useEffect(() => {
+        return () => {
+            if (previewImage && previewImage.startsWith("blob:")) {
+                URL.revokeObjectURL(previewImage);
+            }
+        };
+    }, [previewImage]);
+
     return (
         <div className="container-fluid minHeight m-0">
             <form onSubmit={formik.handleSubmit}>
@@ -181,6 +229,7 @@ function CategoryGroupAdd() {
                         </div>
                     </div>
                 </div>
+
                 <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
                     <div className="row mt-3 me-2">
                         <div className="col-12 text-end"></div>
@@ -193,7 +242,8 @@ function CategoryGroupAdd() {
                                 </label>
                                 <input
                                     type="text"
-                                    className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""}`}
+                                    className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""
+                                        }`}
                                     {...formik.getFieldProps("name")}
                                 />
                                 {formik.touched.name && formik.errors.name && (
@@ -207,7 +257,8 @@ function CategoryGroupAdd() {
                                 </label>
                                 <select
                                     aria-label="Default select example"
-                                    className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""}`}
+                                    className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""
+                                        }`}
                                     {...formik.getFieldProps("order")}
                                 >
                                     <option value="">Select an order</option>
@@ -221,13 +272,15 @@ function CategoryGroupAdd() {
                                     <div className="invalid-feedback">{formik.errors.order}</div>
                                 )}
                             </div>
+
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Icon<span className="text-danger">*</span>
                                 </label>
                                 <input
                                     type="text"
-                                    className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""}`}
+                                    className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""
+                                        }`}
                                     {...formik.getFieldProps("icon")}
                                 />
                                 {formik.touched.icon && formik.errors.icon && (
@@ -235,7 +288,7 @@ function CategoryGroupAdd() {
                                 )}
                             </div>
 
-                            {/* <div className="col-md-6 col-12 mb-3">
+                            <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">
                                     Image<span className="text-danger">*</span>
                                 </label>
@@ -243,33 +296,27 @@ function CategoryGroupAdd() {
                                     name="image"
                                     type="file"
                                     accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                                    className={`form-control`}
-                                    onChange={(event) => {
-                                        const file = event.currentTarget.files[0];
-                                        setLogo(file);
-                                    }}
-                                />
-                                {formik.touched.image && formik.errors.image && (
-                                    <div className="invalid-feedback">{formik.errors.image}</div>
-                                )}
-                            </div> */}
-                            <div className="col-md-6 col-12 file-input">
-                                <label className="form-label">
-                                    Image<span className="text-danger">*</span>
-                                </label>
-                                <input
-                                    type="file"
-                                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
                                     className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""
                                         }`}
                                     onChange={handleFileChange}
+                                    onBlur={formik.handleBlur}
                                 />
                                 {formik.touched.image && formik.errors.image && (
                                     <div className="invalid-feedback">{formik.errors.image}</div>
                                 )}
 
+                                {previewImage && (
+                                    <div className="my-3">
+                                        <img
+                                            src={previewImage}
+                                            alt="Selected"
+                                            style={{ maxWidth: "100px", maxHeight: "100px" }}
+                                        />
+                                    </div>
+                                )}
+
                                 {showCropper && (
-                                    <div className="crop-container">
+                                    <div className="position-relative" style={{ height: 400 }}>
                                         <Cropper
                                             image={imageSrc}
                                             crop={crop}
@@ -277,55 +324,59 @@ function CategoryGroupAdd() {
                                             aspect={1750 / 550}
                                             onCropChange={setCrop}
                                             onZoomChange={setZoom}
-                                            onCropComplete={onCropComplete}
+                                            onCropComplete={onCropCompleteHandler}
                                             cropShape="box"
                                             showGrid={false}
                                         />
-
                                     </div>
                                 )}
-                                <button
-                                    type="button"
-                                    className="btn btn-primary mt-3"
-                                    onClick={handleCropSave}
-                                >
-                                    Save Cropped Image
-                                </button>
+                                {showCropper && (
+                                    <div className="d-flex justify-content-start mt-3 gap-2">
+                                        <button
+                                            type="button"
+                                            className="btn btn-primary mt-3"
+                                            onClick={handleCropSave}
+                                        >
+                                            Save Cropped Image
+                                        </button>
+
+                                        <button
+                                            type="button"
+                                            className="btn btn-secondary mt-3"
+                                            onClick={handleCropCancel}
+                                        >
+                                            Cancel
+                                        </button>
+                                    </div>
+                                )}
                             </div>
 
-                            {/* <div className="col-md-6 col-12 mb-3">
-                                <label className="form-label">
-                                    Active<span className="text-danger">*</span>
-                                </label>
-                                <select
-                                    aria-label="Default select example"
-                                    className={`form-select ${formik.touched.active && formik.errors.active ? "is-invalid" : ""}`}
-                                    {...formik.getFieldProps("active")}
-                                >
-                                    <option value="">Select an active</option>
-                                    <option value="1">Active</option>
-                                    <option value="0">Inactive</option>
-                                </select>
-                                {formik.touched.active && formik.errors.active && (
-                                    <div className="invalid-feedback">{formik.errors.active}</div>
-                                )}
-                            </div> */}
+                            {/* Description Field */}
                             <div className="col-md-6 col-12 mb-3">
                                 <label className="form-label">Description</label>
                                 <textarea
                                     rows={4}
-                                    className={`form-control`}
+                                    className="form-control"
                                     {...formik.getFieldProps("description")}
                                 />
                             </div>
                         </div>
                     </div>
                 </div>
+
+                {/* Submit Button */}
                 <div className="col-auto">
                     <div className="hstack gap-2 justify-content-end">
-                        <button type="submit" className="btn btn-button btn-sm">
+                        <button
+                            type="submit"
+                            className="btn btn-button btn-sm"
+                            disabled={loadIndicator}
+                        >
                             {loadIndicator && (
-                                <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                                <span
+                                    className="spinner-border spinner-border-sm me-2"
+                                    aria-hidden="true"
+                                ></span>
                             )}
                             Submit
                         </button>
