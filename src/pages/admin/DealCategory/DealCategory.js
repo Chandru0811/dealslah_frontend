@@ -45,7 +45,7 @@ function DealCategory() {
     setLoading(true);
     try {
       // Fetch paginated data; adjust URL parameters if server supports pagination
-      const response = await api.get('/admin/categories');
+      const response = await api.get('/admin/dealCategory');
       setDatas(response.data.data); // Update data state
     } catch (error) {
       console.error('Error refreshing data:', error);

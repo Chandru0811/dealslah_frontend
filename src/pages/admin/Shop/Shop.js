@@ -3,8 +3,6 @@ import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
-import Image from "../../../assets/tv.png";
-import DeleteModel from '../../../components/admin/DeleteModel';
 import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
 import noImage from '../../../assets/noimage.png'

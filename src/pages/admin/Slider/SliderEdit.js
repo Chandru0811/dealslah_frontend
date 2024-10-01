@@ -57,31 +57,31 @@ function SliderEdit() {
       setLoadIndicator(false);
     },
   });
+  
+    useEffect(() => {
+      const getData = async () => {
+        try {
+          const response = await api.get(`admin/slider/${id}`);
+          const sliderData = response.data.data;
+          formik.setValues({
+            order: sliderData.order || "",
+            image: null,
+          });
+          setPreviewImage(`${ImageURL}${sliderData.image_path}`);
+        } catch (error) {
+          const errorMessage =
+            error.response?.data?.message || "Error Fetching Data";
+          toast.error(errorMessage);
+        }
+      };
+      getData();
+    }, [id]);
 
   // Handle canceling the cropper
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
   };
-
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        const response = await api.get(`admin/slider/${id}`);
-        const sliderData = response.data.data;
-        formik.setValues({
-          order: sliderData.order || "",
-          image: null,
-        });
-        setPreviewImage(`${ImageURL}${sliderData.image_path}`);
-      } catch (error) {
-        const errorMessage =
-          error.response?.data?.message || "Error Fetching Data";
-        toast.error(errorMessage);
-      }
-    };
-    getData();
-  }, [id]);
 
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];

@@ -42,7 +42,7 @@ function ProductsView() {
             const response = await api.post(`admin/deal/${id}/approve`);
             if (response.status === 200) {
                 getData();
-                toast.success(response.data.message);
+                toast.success("Product Activated Successfully!");
             } else {
                 toast.error(response.data.message);
             }

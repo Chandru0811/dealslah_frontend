@@ -171,7 +171,7 @@ function DealCategoryAdd() {
               <div className="col">
                 <div className="d-flex align-items-center gap-4">
                   <h1 className="h4 ls-tight headingColor">
-                    Add Deal Category 
+                    Add Deal Category
                   </h1>
                 </div>
               </div>
@@ -202,11 +202,10 @@ function DealCategoryAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.name && formik.errors.name
+                  className={`form-control ${formik.touched.name && formik.errors.name
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -239,11 +238,10 @@ function DealCategoryAdd() {
                 <input
                   type="file"
                   accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                  className={`form-control ${
-                    formik.touched.image && formik.errors.image
+                  className={`form-control ${formik.touched.image && formik.errors.image
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                   onChange={handleFileChange}
                 />
                 {formik.touched.image && formik.errors.image && (
@@ -256,7 +254,7 @@ function DealCategoryAdd() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={1750 / 550}
+                      aspect={400 / 266}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}

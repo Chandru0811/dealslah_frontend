@@ -4,12 +4,18 @@ import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
+import Cropper from "react-easy-crop";
 
 function CategoriesAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
-  const navigate = useNavigate();
+  const [imageSrc, setImageSrc] = useState(null);
   const [datas, setDatas] = useState([]);
-  const [logo, setLogo] = useState(null);
+  const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
+  const [showCropper, setShowCropper] = useState(false);
+
+  const navigate = useNavigate();
 
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
@@ -37,7 +43,7 @@ function CategoriesAdd() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
-      formData.append("icon", logo);
+      formData.append("icon", values.icon);
 
       setLoadIndicator(true);
       try {
@@ -78,6 +84,86 @@ function CategoriesAdd() {
     const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
     formik.setFieldValue("slug", slug);
   }, [formik.values.name]);
+
+  // Handle canceling the cropper
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageSrc(null);
+  };
+
+  const handleFileChange = async (event) => {
+    const file = event.currentTarget.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        setImageSrc(reader.result);
+        setShowCropper(true);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
+    setCroppedAreaPixels(croppedAreaPixels);
+  };
+
+  // Helper function to get the cropped image
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+
+        // Set canvas size to 250x250 pixels
+        const targetWidth = 1750;
+        const targetHeight = 550;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        // Scale the cropped image to fit into the 250x250 pixels canvas
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+
+        // Convert the canvas content to a Blob
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error('Canvas is empty'));
+            return;
+          }
+          blob.name = 'croppedImage.jpeg';
+          resolve(blob);
+        }, 'image/jpeg');
+      };
+    });
+  };
+
+  const handleCropSave = async () => {
+    try {
+      const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+
+      // Convert the Blob to a File object
+      const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+
+      // Set the file in Formik
+      formik.setFieldValue("icon", file);
+
+      // Close the cropper
+      setShowCropper(false);
+    } catch (error) {
+      console.error("Error cropping the image:", error);
+    }
+  };
 
   return (
     <section className="px-4">
@@ -150,22 +236,55 @@ function CategoriesAdd() {
                 )}
               </div>
 
-              <div className="col-md-6 col-12 mb-3">
+              <div className="col-md-6 col-12 file-input">
                 <label className="form-label">
-                  Icon<span className="text-danger">*</span>
+                  Icon
                 </label>
                 <input
-                  name="icon"
                   type="file"
-                  accept=".png,.jpeg,.jpg,.gif,.svg,.webp"
-                  className={`form-control`}
-                  onChange={(event) => {
-                    const file = event.currentTarget.files[0];
-                    setLogo(file);
-                  }}
+                  accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                  className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""
+                    }`}
+                  onChange={handleFileChange}
                 />
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>
+                )}
+
+                {showCropper && (
+                  <div className="crop-container">
+                    <Cropper
+                      image={imageSrc}
+                      crop={crop}
+                      zoom={zoom}
+                      aspect={400 / 266}
+                      onCropChange={setCrop}
+                      onZoomChange={setZoom}
+                      onCropComplete={onCropComplete}
+                      cropShape="box"
+                      showGrid={false}
+                    />
+
+                  </div>
+                )}
+                {showCropper && (
+                  <div className="d-flex justify-content-start mt-3 gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-3"
+                      onClick={handleCropSave}
+                    >
+                      Save Cropped Image
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-secondary mt-3"
+                      onClick={handleCropCancel}
+                    >
+                      Cancel
+                    </button>
+                  </div>
                 )}
               </div>
 

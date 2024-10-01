@@ -337,7 +337,7 @@ function CategoryGroupEdit() {
                                             image={imageSrc}
                                             crop={crop}
                                             zoom={zoom}
-                                            aspect={1750 / 550}
+                                            aspect={1280 / 1259}
                                             onCropChange={setCrop}
                                             onZoomChange={setZoom}
                                             onCropComplete={onCropComplete}

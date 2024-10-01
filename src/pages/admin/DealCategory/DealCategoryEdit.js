@@ -21,27 +21,27 @@ function DealCategoryEdit() {
 
   const validationSchema = Yup.object({
     name: Yup.string().required("*Name is required"),
-    image_path: Yup.mixed().nullable().required("*Image is required"),
+    image: Yup.mixed().nullable().required("*Image is required"),
     // active: Yup.string().required("*Select an active status"),
   });
 
   const formik = useFormik({
     initialValues: {
       name: "",
-      image_path: null,
+      image: null,
       slug: "",
       // active: "",
       description: "",
     },
     validationSchema: validationSchema,
-    onSubmit: async (values, { resetForm }) => {
+    onSubmit: async (values) => {
       setLoadIndicator(true);
       const formData = new FormData();
       formData.append("_method", "PUT");
       formData.append("slug", values.slug);
 
       formData.append("name", values.name);
-      formData.append("image_path", values.image_path);
+      formData.append("image", values.image);
       // formData.append("active", values.active);
       formData.append("description", values.description);
 
@@ -69,7 +69,6 @@ function DealCategoryEdit() {
         const response = await api.get(`admin/dealCategory/${id}`);
         formik.setValues({
           name: response.data.data.name || "",
-          order: response.data.data.order || "",
           // active: response.data.data.active || "",
           description: response.data.data.description || "",
         });
@@ -264,7 +263,7 @@ function DealCategoryEdit() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={1750 / 550}
+                      aspect={400 / 266}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}
