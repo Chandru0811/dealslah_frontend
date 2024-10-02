@@ -8,6 +8,7 @@ import { IoMdArrowBack } from "react-icons/io";
 import toast from "react-hot-toast";
 import axios from "axios";
 import ApprovePopup from "./ApprovePopup";
+import api from "../../config/URL";
 
 function VendorLogin({ handleVendorLogin, handleLogin }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,8 +31,8 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
     onSubmit: async (values) => {
       try {
         setLoadIndicator(true);
-        const response = await axios.post(
-          `https://sgitjobs.com/dealslah/public/api/login`,
+        const response = await api.post(
+          `login`,
           values
         );
         if (response.status === 200) {
