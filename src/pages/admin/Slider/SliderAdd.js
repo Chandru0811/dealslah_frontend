@@ -15,6 +15,7 @@ function SliderAdd() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
+  const [originalFileName, setOriginalFileName] = useState('');
 
   const navigate = useNavigate();
 
@@ -80,6 +81,8 @@ function SliderAdd() {
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
+    formik.setFieldValue("image", ""); // Reset Formik field value for 'image'
+    document.querySelector("input[type='file']").value = ""; // Reset the file input field
   };
 
   const handleFileChange = async (event) => {
@@ -89,6 +92,7 @@ function SliderAdd() {
       reader.onload = () => {
         setImageSrc(reader.result);
         setShowCropper(true);
+        setOriginalFileName(file.name); // Save the original file name
       };
       reader.readAsDataURL(file);
     }
@@ -142,9 +146,8 @@ function SliderAdd() {
   const handleCropSave = async () => {
     try {
       const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
-
-      // Convert the Blob to a File object
-      const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+      const fileName = originalFileName || "croppedImage.jpg";
+      const file = new File([croppedImageBlob], fileName, { type: "image/jpeg" });
 
       // Set the file in Formik
       formik.setFieldValue("image", file);
@@ -224,6 +227,7 @@ function SliderAdd() {
                 </div>
               )}
             </div>
+
             <div className="col-md-6 col-12 file-input">
               <label className="form-label">
                 Order<span className="text-danger">*</span>

@@ -20,15 +20,18 @@ function SliderEdit() {
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
 
+  // Validation schema: make image optional when editing
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    image: Yup.mixed().required("*Image is required"),
+    // Image is not required for existing sliders
+    image: Yup.mixed().nullable(),
   });
 
+  // Initialize Formik
   const formik = useFormik({
     initialValues: {
       order: "",
-      image: null,
+      image: null, // Set the initial image to null
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -36,7 +39,11 @@ function SliderEdit() {
       const formData = new FormData();
       formData.append("_method", "PUT");
       formData.append("order", values.order);
-      formData.append("image", values.image);
+
+      // Only append the image if it's updated
+      if (values.image) {
+        formData.append("image", values.image);
+      }
 
       setLoadIndicator(true);
       try {
@@ -57,25 +64,28 @@ function SliderEdit() {
       setLoadIndicator(false);
     },
   });
-  
-    useEffect(() => {
-      const getData = async () => {
-        try {
-          const response = await api.get(`admin/slider/${id}`);
-          const sliderData = response.data.data;
-          formik.setValues({
-            order: sliderData.order || "",
-            image: null,
-          });
-          setPreviewImage(`${ImageURL}${sliderData.image_path}`);
-        } catch (error) {
-          const errorMessage =
-            error.response?.data?.message || "Error Fetching Data";
-          toast.error(errorMessage);
-        }
-      };
-      getData();
-    }, [id]);
+
+  // Fetch the slider data for editing
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const response = await api.get(`admin/slider/${id}`);
+        const sliderData = response.data.data;
+
+        // Set initial form values with existing slider data
+        formik.setValues({
+          order: sliderData.order || "",
+          image: null, // Set image to null for now
+        });
+        setPreviewImage(`${ImageURL}${sliderData.image_path}`);
+      } catch (error) {
+        const errorMessage =
+          error.response?.data?.message || "Error Fetching Data";
+        toast.error(errorMessage);
+      }
+    };
+    getData();
+  }, [id]);
 
   // Handle canceling the cropper
   const handleCropCancel = () => {
@@ -162,6 +172,7 @@ function SliderEdit() {
         type: "image/jpeg",
       });
 
+      // Set the cropped image in Formik
       formik.setFieldValue("image", file);
 
       const newPreviewURL = URL.createObjectURL(file);
@@ -209,7 +220,7 @@ function SliderEdit() {
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Image<span className="text-danger">*</span>
+                Image <span className="text-danger">*</span>
               </label>
               <input
                 type="file"
@@ -248,7 +259,7 @@ function SliderEdit() {
                 </div>
               )}
 
-              {previewImage && showCropper && (
+              {showCropper && (
                 <div className="d-flex justify-content-start mt-3 gap-2">
                   <button
                     type="button"
