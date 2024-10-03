@@ -20,7 +20,14 @@ function Register() {
     email: Yup.string()
       .email("Invalid email address")
       .required("Email is required"),
-    password: Yup.string().required("Password is required"),
+
+    password: Yup.string()
+      .matches(
+        /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
+        "Must Contain 8 Characters, One Uppercase, One Lowercase, One Number and one Special Case Character"
+      )
+      .required("*Please Enter your password"),
+
     cpassword: Yup.string()
       .required("Confirm Password is required")
       .oneOf([Yup.ref("password"), null], "Passwords must match"),
@@ -37,12 +44,12 @@ function Register() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-        const payload = {
-          name: values.name,
-          email: values.email,
-          password: values.password,
-          password_confirmation: values.cpassword,
-        };
+      const payload = {
+        name: values.name,
+        email: values.email,
+        password: values.password,
+        password_confirmation: values.cpassword,
+      };
       try {
         setLoadIndicator(true);
         const response = await api.post(`register`, payload);
@@ -74,8 +81,8 @@ function Register() {
           console.error("API Error", error);
           toast.error("An unexpected error occurred.");
         }
-      }finally{
-        setLoadIndicator(false)
+      } finally {
+        setLoadIndicator(false);
       }
     },
   });
@@ -161,8 +168,8 @@ function Register() {
                   onClick={togglePasswordVisibility}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "50%",
+                    right: "40px",
+                    top: "22%",
                     transform: "translateY(-50%)",
                     cursor: "pointer",
                   }}

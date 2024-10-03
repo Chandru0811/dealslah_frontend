@@ -160,6 +160,12 @@ function DealCategoryAdd() {
       console.error("Error cropping the image:", error);
     }
   };
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageSrc(null);
+    formik.setFieldValue("image", ""); // Reset Formik field value for 'image'
+    document.querySelector("input[type='file']").value = ""; // Reset the file input field
+  };
 
   return (
     <div className="container-fluid minHeight m-0">
@@ -201,10 +207,11 @@ function DealCategoryAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.name && formik.errors.name
+                  className={`form-control ${
+                    formik.touched.name && formik.errors.name
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -237,10 +244,11 @@ function DealCategoryAdd() {
                 <input
                   type="file"
                   accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                  className={`form-control ${formik.touched.image && formik.errors.image
+                  className={`form-control ${
+                    formik.touched.image && formik.errors.image
                       ? "is-invalid"
                       : ""
-                    }`}
+                  }`}
                   onChange={handleFileChange}
                 />
                 {formik.touched.image && formik.errors.image && (
@@ -262,13 +270,25 @@ function DealCategoryAdd() {
                     />
                   </div>
                 )}
-                <button
-                  type="button"
-                  className="btn btn-primary mt-3"
-                  onClick={handleCropSave}
-                >
-                  Save Cropped Image
-                </button>
+                {showCropper && (
+                  <div className="d-flex justify-content-start mt-3 gap-2">
+                    <button
+                      type="button"
+                      className="btn btn-primary mt-3"
+                      onClick={handleCropSave}
+                    >
+                      Save Cropped Image
+                    </button>
+
+                    <button
+                      type="button"
+                      className="btn btn-secondary mt-3"
+                      onClick={handleCropCancel}
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                )}
               </div>
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">Description</label>

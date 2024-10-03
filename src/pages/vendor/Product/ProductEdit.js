@@ -8,6 +8,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
+import ImageURL from "../../../config/ImageURL";
 
 function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -52,10 +53,10 @@ function ProductAdd() {
       .required("Stock is required")
       .min(0, "Stock cannot be negative"),
     sku: Yup.string().required("SKU is required"),
-    image1: Yup.mixed().required("Image is required"),
-    image2: Yup.mixed().required("Image is required"),
-    image3: Yup.mixed().required("Image is required"),
-    image4: Yup.mixed().required("Image is required"),
+    image_url1: Yup.mixed().required("Image is required"),
+    image_url2: Yup.mixed().required("Image is required"),
+    image_url3: Yup.mixed().required("Image is required"),
+    image_url4: Yup.mixed().required("Image is required"),
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
@@ -66,6 +67,7 @@ function ProductAdd() {
     icon: Yup.string().required("Imagei s required"),
     description: Yup.string().required("Description is required"),
   });
+
 
   const formik = useFormik({
     initialValues: {
@@ -81,10 +83,10 @@ function ProductAdd() {
       end_date: "",
       stock: "",
       sku: "",
-      image1: null,
-      image2: null,
-      image3: null,
-      image4: null,
+      image_url1: null,
+      image_url2: null,
+      image_url3: null,
+      image_url4: null,
       description: "",
     },
     validationSchema: validationSchema,
@@ -103,11 +105,12 @@ function ProductAdd() {
       formData.append("end_date", values.end_date);
       formData.append("stock", values.stock);
       formData.append("sku", values.sku);
-      formData.append("image1", values.image1);
-      formData.append("image2", values.image2);
-      formData.append("image3", values.image3);
-      formData.append("image4", values.image4);
+      formData.append("image_url1", values.image_url1);
+      formData.append("image_url2", values.image_url2);
+      formData.append("image_url3", values.image_url3);
+      formData.append("image_url4", values.image_url4);
       formData.append("description", values.description);
+
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${shop_id}`;
       formData.append("slug", finalSlug);
@@ -153,6 +156,7 @@ function ProductAdd() {
       }
     },
   });
+
   const formik1 = useFormik({
     initialValues: {
       catagory_group_id: "",
@@ -167,8 +171,10 @@ function ProductAdd() {
       formData.append("name", values.name);
       formData.append("icon", values.icon);
       formData.append("description", values.description);
+
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       formData.append("slug", slug);
+
       console.log("Form Data:", values);
       try {
         const response = await api.post(`vendor/categories/create`, formData, {
@@ -210,7 +216,6 @@ function ProductAdd() {
     const getData1 = async () => {
       try {
         const response = await api.get(`vendor/categorygroups`);
-
         setAllCategorgroup(response.data.data);
       } catch (error) {
         toast.error("Error Fetching Data ", error);
@@ -219,10 +224,17 @@ function ProductAdd() {
     getData1();
     getData();
   }, []);
+
   const getData = async () => {
     try {
       const response = await api.get(`vendor/product/${id}/get`);
-      formik.setValues(response.data.data);
+      const { data: productData } = response.data; // Destructure the data
+      formik.setValues({
+        ...formik.values,
+        ...productData,
+        start_date: new Date(productData.start_date).toISOString().split('T')[0],
+        end_date: new Date(productData.end_date).toISOString().split('T')[0],
+      });
     } catch (error) {
       toast.error("Error Fetching Data ", error);
     }
@@ -238,13 +250,12 @@ function ProductAdd() {
       toast.error(error);
     }
   };
+
   const handleCategorygroupChange = (event) => {
     const categoryGroup = event.target.value;
     setCategory([]);
-
     formik.setFieldValue("shop_id", categoryGroup);
     formik1.setFieldValue("catagory_group_id", categoryGroup);
-
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
   };
@@ -347,11 +358,10 @@ function ProductAdd() {
                 Category Group<span className="text-danger">*</span>
               </label>
               <select
-                className={`form-select ${
-                  formik.touched.shop_id && formik.errors.shop_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.shop_id && formik.errors.shop_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("shop_id")}
                 onChange={handleCategorygroupChange}
                 value={formik.values.shop_id} // Ensure value is set from Formik state
@@ -375,11 +385,10 @@ function ProductAdd() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.category_id && formik.errors.category_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("category_id")}
                 onChange={(event) => {
                   const selectedValue = event.target.value;
@@ -420,11 +429,10 @@ function ProductAdd() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.deal_type && formik.errors.deal_type
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("deal_type")}
               >
                 <option></option>
@@ -444,11 +452,10 @@ function ProductAdd() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.brand && formik.errors.brand
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.brand && formik.errors.brand
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("brand")}
               />
               {formik.touched.brand && formik.errors.brand && (
@@ -461,9 +468,8 @@ function ProductAdd() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.name && formik.errors.name ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("name")}
               />
               {formik.touched.name && formik.errors.name && (
@@ -476,9 +482,8 @@ function ProductAdd() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("sku")}
               />
               {formik.touched.sku && formik.errors.sku && (
@@ -491,11 +496,10 @@ function ProductAdd() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.original_price && formik.errors.original_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.original_price && formik.errors.original_price
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("original_price")}
               />
               {formik.touched.original_price &&
@@ -511,12 +515,11 @@ function ProductAdd() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.discounted_price &&
+                className={`form-control ${formik.touched.discounted_price &&
                   formik.errors.discounted_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("discounted_price")}
               />
               {formik.touched.discounted_price &&
@@ -533,11 +536,10 @@ function ProductAdd() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.start_date && formik.errors.start_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("start_date")}
               />
               {formik.touched.start_date && formik.errors.start_date && (
@@ -552,11 +554,10 @@ function ProductAdd() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.end_date && formik.errors.end_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("end_date")}
               />
               {formik.touched.end_date && formik.errors.end_date && (
@@ -569,12 +570,11 @@ function ProductAdd() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.discount_percentage &&
+                className={`form-control ${formik.touched.discount_percentage &&
                   formik.errors.discount_percentage
-                    ? "is-invalid"
-                    : ""
-                }`}
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("discount_percentage")}
               />
               {formik.touched.discount_percentage &&
@@ -591,11 +591,10 @@ function ProductAdd() {
               </label>
               <input
                 type="number"
-                className={`form-control ${
-                  formik.touched.stock && formik.errors.stock
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.stock && formik.errors.stock
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("stock")}
               />
               {formik.touched.stock && formik.errors.stock && (
@@ -622,7 +621,16 @@ function ProductAdd() {
                       {formik.errors[`image${num}`]}
                     </div>
                   )}
-                {showCropper[index] && (
+
+                {formik.values[`image_url${num}`] && (
+                  <img
+                    src={`${ImageURL}${formik.values[`image_url${num}`]}`}
+                    alt={`Uploaded Image ${num}`}
+                    className="img-fluid"
+                    width={150}
+
+                  />
+                )}                {showCropper[index] && (
                   <>
                     <div className="crop-container">
                       <Cropper
@@ -663,11 +671,10 @@ function ProductAdd() {
               <textarea
                 type="text"
                 rows={5}
-                className={`form-control ${
-                  formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.description && formik.errors.description
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("description")}
               />
               {formik.touched.description && formik.errors.description && (
@@ -709,12 +716,11 @@ function ProductAdd() {
                 </label>
                 <select
                   type="text"
-                  className={`form-control ${
-                    formik1.touched.catagory_group_id &&
+                  className={`form-control ${formik1.touched.catagory_group_id &&
                     formik1.errors.catagory_group_id
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik1.getFieldProps("catagory_group_id")}
                   disabled
                 >
@@ -740,11 +746,10 @@ function ProductAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik1.touched.name && formik1.errors.name
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik1.touched.name && formik1.errors.name
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik1.getFieldProps("name")}
                 />
                 {formik1.touched.name && formik1.errors.name && (
@@ -757,11 +762,10 @@ function ProductAdd() {
                 </label>
                 <input
                   type="file"
-                  className={`form-control ${
-                    formik1.touched.icon && formik1.errors.icon
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik1.touched.icon && formik1.errors.icon
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   onChange={(event) => {
                     const file = event.target.files[0];
                     formik1.setFieldValue("icon", file);
@@ -780,11 +784,10 @@ function ProductAdd() {
                 </label>
                 <textarea
                   rows={5}
-                  className={`form-control ${
-                    formik1.touched.description && formik1.errors.description
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control ${formik1.touched.description && formik1.errors.description
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   {...formik1.getFieldProps("description")}
                 />
                 {formik1.touched.description && formik1.errors.description && (
