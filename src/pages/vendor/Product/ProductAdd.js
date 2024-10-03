@@ -32,7 +32,7 @@ function ProductAdd() {
     shop_id: Yup.string().required("Caategory Group is required"),
     name: Yup.string().required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
-    brand: Yup.string().required("Brand is required"),
+    // brand: Yup.string().required("Brand is required"),
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
@@ -45,15 +45,15 @@ function ProductAdd() {
         Yup.ref("original_price"),
         "Discounted Price must be less than Original Price"
       ),
-    start_date: Yup.date().required("Start Date is required").nullable(),
-    end_date: Yup.date()
-      .required("End Date is required")
-      .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
-      .nullable(),
-    stock: Yup.number()
-      .required("Stock is required")
-      .min(0, "Stock cannot be negative"),
-    sku: Yup.string().required("SKU is required"),
+    // start_date: Yup.date().required("Start Date is required").nullable(),
+    // end_date: Yup.date()
+    //   .required("End Date is required")
+    //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
+    //   .nullable(),
+    // stock: Yup.number()
+    //   .required("Stock is required")
+    //   .min(0, "Stock cannot be negative"),
+    // sku: Yup.string().required("SKU is required"),
     image1: Yup.mixed().required("Image 1 is required"),
     image2: Yup.mixed().required("Image 2 is required"),
     image3: Yup.mixed().required("Image 3 is required"),
@@ -248,9 +248,18 @@ function ProductAdd() {
     if (original_price && discounted_percentage) {
       const discountedPrice =
         original_price - (original_price * discounted_percentage) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice.toFixed(2));
+      formik.setFieldValue("discounted_price", discountedPrice);
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
+
+  useEffect(() => {
+    const { original_price, discounted_price } = formik.values;
+    if (original_price && discounted_price) {
+      const discountedPercentage =
+        ((original_price - discounted_price) / original_price) * 100;
+      formik.setFieldValue("discounted_percentage", discountedPercentage);
+    }
+  }, [formik.values.original_price, formik.values.discounted_price]);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -400,7 +409,7 @@ function ProductAdd() {
                       {cat.name}
                     </option>
                   ))}
-                {selectedCategoryGroup && (
+                {/* {selectedCategoryGroup && (
                   <option
                     value="add_new"
                     style={{ background: "#1c2b36", color: "#fff" }}
@@ -409,7 +418,7 @@ function ProductAdd() {
                     <PiPlusSquareFill size={20} color="#fff" />
                     Add New Category
                   </option>
-                )}
+                )} */}
               </select>
               {formik.touched.category_id && formik.errors.category_id && (
                 <div className="invalid-feedback">
@@ -433,6 +442,7 @@ function ProductAdd() {
                 <option></option>
                 <option value="0">Product</option>
                 <option value="1">Service</option>
+                <option value="2">Product and Service</option>
               </select>
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">
@@ -443,7 +453,7 @@ function ProductAdd() {
 
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Brand<span className="text-danger">*</span>
+                Brand
               </label>
               <input
                 type="text"
@@ -475,7 +485,7 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                SKU<span className="text-danger">*</span>
+                SKU
               </label>
               <input
                 type="text"
@@ -511,6 +521,28 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
+                Discounted Price<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.discounted_price &&
+                  formik.errors.discounted_price
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("discounted_price")}
+                value={formik.values.discounted_price}
+              />
+              {formik.touched.discounted_price &&
+                formik.errors.discounted_price && (
+                  <div className="invalid-feedback">
+                    {formik.errors.discounted_price}
+                  </div>
+                )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
                 Discounted Percentage<span className="text-danger">*</span>
               </label>
               <input
@@ -533,7 +565,25 @@ function ProductAdd() {
 
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Start Date<span className="text-danger">*</span>
+                Stock<span className="text-danger">*</span>
+              </label>
+              <input
+                type="number"
+                className={`form-control ${
+                  formik.touched.stock && formik.errors.stock
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("stock")}
+              />
+              {formik.touched.stock && formik.errors.stock && (
+                <div className="invalid-feedback">{formik.errors.stock}</div>
+              )}
+            </div>
+
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Start Date
               </label>
               <input
                 type="date"
@@ -552,7 +602,7 @@ function ProductAdd() {
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                End Date<span className="text-danger">*</span>
+                End Date
               </label>
               <input
                 type="date"
@@ -568,46 +618,8 @@ function ProductAdd() {
               )}
             </div>
 
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Discounted Price<span className="text-danger">*</span>
-              </label>
-              <input
-                type="number"
-                className={`form-control ${
-                  formik.touched.discounted_price &&
-                  formik.errors.discounted_price
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("discounted_price")}
-                value={formik.values.discounted_price}
-                readOnly
-              />
-              {formik.touched.discounted_price &&
-                formik.errors.discounted_price && (
-                  <div className="invalid-feedback">
-                    {formik.errors.discounted_price}
-                  </div>
-                )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Stock<span className="text-danger">*</span>
-              </label>
-              <input
-                type="number"
-                className={`form-control ${
-                  formik.touched.stock && formik.errors.stock
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("stock")}
-              />
-              {formik.touched.stock && formik.errors.stock && (
-                <div className="invalid-feedback">{formik.errors.stock}</div>
-              )}
-            </div>
+          
+            
             {[1, 2, 3, 4].map((num, index) => (
               <div key={num} className="col-md-6 col-12 mb-3">
                 <label className="form-label">
@@ -634,7 +646,7 @@ function ProductAdd() {
                         image={images[index]}
                         crop={crops[index]}
                         zoom={zooms[index]}
-                        aspect={320 / 240}
+                        aspect={400 / 266}
                         onCropChange={(crop) => {
                           const newCrops = [...crops];
                           newCrops[index] = crop;
