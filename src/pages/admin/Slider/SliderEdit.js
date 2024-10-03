@@ -204,51 +204,40 @@ function SliderEdit() {
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
-        <div>
-          {loading ? (
-            <div className="loader-container">
-              <div className="loader">
-                <svg viewBox="0 0 80 80">
-                  <circle cx="40" cy="40" r="32"></circle>
-                </svg>
-              </div>
+        <div className="card shadow border-0 mb-3">
+          <div className="row p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <h1 className="h4 ls-tight">Edit Slider</h1>
+              <Link to="/slider">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
+                </button>
+              </Link>
             </div>
-          ) : (
-            <>
-              <div className="card shadow border-0 mb-3">
-                <div className="row p-3">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <h1 className="h4 ls-tight">Edit Slider</h1>
-                    <Link to="/slider">
-                      <button type="button" className="btn btn-light btn-sm">
-                        <span>Back</span>
-                      </button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                className="container card shadow border-0"
-                style={{ minHeight: "60vh" }}>
-                <div className="row mt-3">
-                  <div className="col-md-6 col-12 mb-3">
-                    <label className="form-label">
-                      Image <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                      className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
-                      onChange={handleFileChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
-                    </p>
-                    {formik.touched.image && formik.errors.image && (
-                      <div className="invalid-feedback">{formik.errors.image}</div>
-                    )}
+          </div>
+        </div>
+        <div
+          className="container card shadow border-0"
+          style={{ minHeight: "60vh" }}
+        >
+          <div className="row mt-3">
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Image
+              </label>
+              <input
+                type="file"
+                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
+                onChange={handleFileChange}
+                onBlur={formik.handleBlur}
+              />
+              <p style={{ fontSize: "13px" }}>
+                Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+              </p>
+              {formik.touched.image && formik.errors.image && (
+                <div className="invalid-feedback">{formik.errors.image}</div>
+              )}
 
                     {previewImage && (
                       <div className="my-3">
