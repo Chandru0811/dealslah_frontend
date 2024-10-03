@@ -66,8 +66,7 @@ const Store = () => {
       formdata.append("external_url", data.external_url);
       formdata.append("description", data.description);
       formdata.append("shop_ratings", data.shop_ratings);
-      // const slug = convertToSlug(data.legal_name);
-      // formdata.append("slug", slug);
+
       if (data.logo) {
         formdata.append("logo", data.logo);
       }
@@ -152,7 +151,7 @@ const Store = () => {
             <div className="row">
               <div className="col-md-4 col-12 mb-5 ">
                 <label className="form-label fw-bold">
-                  Shop Name<span className="text-danger">*</span>
+                Company Name<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -176,7 +175,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Legal Name<span className="text-danger">*</span>
+                Company Legal Name<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -200,7 +199,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Email<span className="text-danger">*</span>
+                Company Email<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -224,7 +223,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop mobile<span className="text-danger">*</span>
+                Company mobile<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -247,10 +246,10 @@ const Store = () => {
                 )}
               </div>
 
-              <h3 className="text-primary py-3">Shop Brand Setup</h3>
+              <h3 className="text-primary py-3">Company Brand Setup</h3>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Type<span className="text-danger">*</span>
+                Company Type<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -278,7 +277,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Logo<span className="text-danger">*</span>
+                Company Logo<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -344,7 +343,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Map Url<span className="text-danger">*</span>
+                Company Map Url<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -368,7 +367,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                  Shop Rating<span className="text-danger">*</span>
+                Company Rating<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -391,7 +390,7 @@ const Store = () => {
                 )}
               </div>
               <div className="col-md-4 col-12 mb-5">
-                <label className="form-label fw-bold">Shop Banner</label>
+                <label className="form-label fw-bold">Company Banner</label>
               </div>
               <div className="col-md-8 col-12 mb-5">
                 <input
@@ -421,7 +420,7 @@ const Store = () => {
                   </div>
                 )}
               <div className="mb-3">
-                <h5 className="mb-4 fw-bold">Shop Description</h5>
+                <h5 className="mb-4 fw-bold">Company Description</h5>
               </div>
 
               <div className="row align-items-center">

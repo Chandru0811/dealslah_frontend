@@ -82,7 +82,7 @@ function Locations() {
                 </div>
               </div>
             </div>
-            <div className="col-12">
+            {/* <div className="col-12">
               <div className="row mb-3">
                 <div className="col-3 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
@@ -93,7 +93,7 @@ function Locations() {
                   <p className="text-muted text-sm">: {data.state}</p>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="col-12">
               <div className="row mb-3">
                 <div className="col-3 d-flex justify-content-start align-items-center">

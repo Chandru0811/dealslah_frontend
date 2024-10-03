@@ -1,14 +1,17 @@
 import React, { forwardRef, useImperativeHandle } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import toast from "react-hot-toast";
+import api from "../../../../config/URL";
+import { FiAlertTriangle } from "react-icons/fi";
 
 const validationSchema = Yup.object().shape({
   street: Yup.string().required("Street 1 is required"),
-  street2: Yup.string().required("Street 2 is required"),
-  city: Yup.string().required("City is required"),
+  // street2: Yup.string().required("Street 2 is required"),
+  // city: Yup.string().required("City is required"),
   zip_code: Yup.string().required("Zip Code is required"),
   country: Yup.string().required("Country is required"),
-  state: Yup.string().required("State is required"),
+  // state: Yup.string().required("State is required"),
 });
 
 const Form4 = forwardRef(
@@ -20,16 +23,48 @@ const Form4 = forwardRef(
         city: formData.city,
         zip_code: formData.zip_code,
         country: formData.country,
-        state: formData.state,
+        state: "Singapore",
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
-        console.log("Form Data", data);
-        setFormData((prev) => ({
-          ...prev,
-          ...data,
-        }));
-        handleNext();
+        setLoadIndicators(true);
+        // console.log("Form Data", data);
+        const completeFormData = { ...formData, ...data };
+        try {
+          const response = await api.post(
+            `vendor/shopregistration`,
+            completeFormData
+          );
+          console.log("Response", response);
+          if (response.status === 200) {
+            toast.success(response.data.message);
+            sessionStorage.setItem("shop_id", response.data.data.id);
+          } else {
+            toast.error(response.data.message);
+          }
+          handleNext();
+        } catch (error) {
+          if (error.response.status === 422) {
+            console.log("Full error response:", error.response);
+
+            const errors = error.response.data.error;
+
+            if (errors) {
+              Object.keys(errors).map((key) => {
+                errors[key].map((errorMsg) => {
+                  toast(errorMsg, {
+                    icon: <FiAlertTriangle className="text-warning" />,
+                  });
+                });
+              });
+            }
+          } else {
+            console.error("API Error", error);
+            toast.error("An unexpected error occurred.");
+          }
+        } finally {
+          setLoadIndicators(false);
+        }
       },
     });
 
@@ -78,9 +113,7 @@ const Form4 = forwardRef(
                 {/* Street 2 */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
-                    <label className="col-md-4 form-label">
-                      Street 2<span className="text-danger">*</span>
-                    </label>
+                    <label className="col-md-4 form-label">Street 2</label>
                     <div className="col-md-8">
                       <input
                         type="text"
@@ -106,9 +139,7 @@ const Form4 = forwardRef(
                 {/* City */}
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
-                    <label className="col-md-4 form-label">
-                      City<span className="text-danger">*</span>
-                    </label>
+                    <label className="col-md-4 form-label">City</label>
                     <div className="col-md-8">
                       <input
                         type="text"
@@ -132,7 +163,7 @@ const Form4 = forwardRef(
                 </div>
 
                 {/* State */}
-                <div className="col-12">
+                {/* <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
                       State<span className="text-danger">*</span>
@@ -157,7 +188,7 @@ const Form4 = forwardRef(
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Zip Code */}
                 <div className="col-12">

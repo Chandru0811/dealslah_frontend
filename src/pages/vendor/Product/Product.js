@@ -83,10 +83,10 @@ const Product = () => {
           <div className="row align-items-center">
             <div className="col p-2">
               <div className="d-flex justify-content-between align-items-center">
-                <h3 className="mb-0">Products</h3>
+                <h3 className="mb-0">Deals</h3>
                 <Link to="/product/add">
                   <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                    <PiIntersectSquareFill size={20} /> Add Product
+                    <PiIntersectSquareFill size={20} /> Add Deal
                   </button>
                 </Link>
               </div>

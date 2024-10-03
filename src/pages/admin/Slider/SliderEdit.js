@@ -19,6 +19,7 @@ function SliderEdit() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Validation schema: make image optional when editing
   const validationSchema = Yup.object({
@@ -67,6 +68,7 @@ function SliderEdit() {
   // Fetch the slider data for editing
   useEffect(() => {
     const getData = async () => {
+      setLoading(true);
       try {
         const response = await api.get(`admin/slider/${id}`);
         const sliderData = response.data.data;
@@ -82,6 +84,8 @@ function SliderEdit() {
           error.response?.data?.message || "Error Fetching Data";
         toast.error(errorMessage);
       }
+
+      setLoading(false);
     };
     getData();
   }, [id]);
@@ -235,90 +239,93 @@ function SliderEdit() {
                 <div className="invalid-feedback">{formik.errors.image}</div>
               )}
 
-              {previewImage && (
-                <div className="my-3">
-                  <img
-                    src={previewImage}
-                    alt="Selected"
-                    style={{ maxWidth: "100px", maxHeight: "100px" }}
-                  />
+                    {previewImage && (
+                      <div className="my-3">
+                        <img
+                          src={previewImage}
+                          alt="Selected"
+                          style={{ maxWidth: "100px", maxHeight: "100px" }}
+                        />
+                      </div>
+                    )}
+
+                    {showCropper && (
+                      <div className="position-relative" style={{ height: 400 }}>
+                        <Cropper
+                          image={imageSrc}
+                          crop={crop}
+                          zoom={zoom}
+                          aspect={1750 / 550}
+                          onCropChange={setCrop}
+                          onZoomChange={setZoom}
+                          onCropComplete={onCropComplete}
+                          cropShape="box"
+                          showGrid={false}
+                        />
+                      </div>
+                    )}
+
+                    {showCropper && (
+                      <div className="d-flex justify-content-start mt-3 gap-2">
+                        <button
+                          type="button"
+                          className="btn btn-primary mt-3"
+                          onClick={handleCropSave}
+                        >
+                          Save Cropped Image
+                        </button>
+
+                        <button
+                          type="button"
+                          className="btn btn-secondary mt-3"
+                          onClick={handleCropCancel}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="col-md-6 col-12 mb-3">
+                    <label className="form-label">
+                      Order<span className="text-danger">*</span>
+                    </label>
+                    <select
+                      aria-label="Default select example"
+                      className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""
+                        }`}
+                      {...formik.getFieldProps("order")}
+                    >
+                      <option value="">Select an order</option>
+                      {[...Array(10)].map((_, index) => (
+                        <option key={index + 1} value={index + 1}>
+                          {index + 1}
+                        </option>
+                      ))}
+                    </select>
+                    {formik.touched.order && formik.errors.order && (
+                      <div className="invalid-feedback">{formik.errors.order}</div>
+                    )}
+                  </div>
                 </div>
-              )}
-
-              {showCropper && (
-                <div className="position-relative" style={{ height: 400 }}>
-                  <Cropper
-                    image={imageSrc}
-                    crop={crop}
-                    zoom={zoom}
-                    aspect={1750 / 550}
-                    onCropChange={setCrop}
-                    onZoomChange={setZoom}
-                    onCropComplete={onCropComplete}
-                    cropShape="box"
-                    showGrid={false}
-                  />
-                </div>
-              )}
-
-              {showCropper && (
-                <div className="d-flex justify-content-start mt-3 gap-2">
-                  <button
-                    type="button"
-                    className="btn btn-primary mt-3"
-                    onClick={handleCropSave}
-                  >
-                    Save Cropped Image
-                  </button>
-
-                  <button
-                    type="button"
-                    className="btn btn-secondary mt-3"
-                    onClick={handleCropCancel}
-                  >
-                    Cancel
-                  </button>
-                </div>
-              )}
-            </div>
-
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Order<span className="text-danger">*</span>
-              </label>
-              <select
-                aria-label="Default select example"
-                className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""
-                  }`}
-                {...formik.getFieldProps("order")}
-              >
-                <option value="">Select an order</option>
-                {[...Array(10)].map((_, index) => (
-                  <option key={index + 1} value={index + 1}>
-                    {index + 1}
-                  </option>
-                ))}
-              </select>
-              {formik.touched.order && formik.errors.order && (
-                <div className="invalid-feedback">{formik.errors.order}</div>
-              )}
-            </div>
-          </div>
-        </div>
-        <div className="hstack gap-2 justify-content-end p-2">
-          <button
-            type="submit"
-            className="btn btn-sm btn-button"
-            disabled={loadIndicator}
-          >
-            {loadIndicator && (
-              <span
-                className="spinner-border spinner-border-sm me-2"
-                aria-hidden="true"
-              ></span>
-            )}
-            Update
-          </button>
+              </div>
+              <div className="hstack gap-2 justify-content-end p-2">
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-button"
+                  disabled={loadIndicator}
+                >
+                  {loadIndicator && (
+                    <span
+                      className="spinner-border spinner-border-sm me-2"
+                      aria-hidden="true"
+                    ></span>
+                  )}
+                  Update
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </form>
     </section>
