@@ -219,7 +219,7 @@ function SliderEdit() {
           <div className="row mt-3">
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Image <span className="text-danger">*</span>
+                Image
               </label>
               <input
                 type="file"
