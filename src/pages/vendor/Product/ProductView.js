@@ -66,7 +66,7 @@ function ProductView() {
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: {data.category_id}</p>
+                <p className="text-muted text-sm">: {data.categoryName}</p>
               </div>
             </div>
           </div>
@@ -78,10 +78,17 @@ function ProductView() {
                 </p>
               </div>
               <div className="col-6">
-                <p className="text-muted text-sm">: {data.deal_type}</p>
+                {console.log("Deal Type Value:", data.deal_type)} {/* Debugging */}
+                <p className="text-muted text-sm">
+                  : {data.deal_type === 0 || data.deal_type === "0" ? 'Product' :
+                    data.deal_type === 1 || data.deal_type === "1" ? 'Service' :
+                      data.deal_type === 2 || data.deal_type === "2" ? 'Product and Service' :
+                        'Unknown'}
+                </p>
               </div>
             </div>
           </div>
+
           <div className="col-md-6 col-12">
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
@@ -223,7 +230,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url1}`}
                     alt="product"
                     className="img-fluid"
-                    // width={150}
+                  // width={150}
                   />
                 </p>
               </div>
@@ -244,7 +251,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url2}`}
                     alt="product"
                     className="img-fluid"
-                    // width={150}
+                  // width={150}
                   />
                 </p>
               </div>
@@ -265,7 +272,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url3}`}
                     alt="product"
                     className="img-fluid"
-                    // width={150}
+                  // width={150}
                   />
                 </p>
               </div>
@@ -286,7 +293,7 @@ function ProductView() {
                     src={`${ImageURL}${data.image_url4}`}
                     alt="product"
                     className="img-fluid"
-                    // width={150}
+                  // width={150}
                   />
                 </p>
               </div>
