@@ -23,8 +23,7 @@ function SliderEdit() {
   // Validation schema: make image optional when editing
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    // Image is not required for existing sliders
-    image: Yup.mixed().nullable(),
+    // image: Yup.mixed().nullable(),
   });
 
   // Initialize Formik
@@ -229,6 +228,9 @@ function SliderEdit() {
                 onChange={handleFileChange}
                 onBlur={formik.handleBlur}
               />
+              <p style={{ fontSize: "13px" }}>
+                Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+              </p>
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
               )}

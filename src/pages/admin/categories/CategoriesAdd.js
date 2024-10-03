@@ -14,15 +14,21 @@ function CategoriesAdd() {
   const [zoom, setZoom] = useState(1);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
-
   const navigate = useNavigate();
+  const [originalFileName, setOriginalFileName] = useState('');
 
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
     // active: Yup.string().required("*Select an Status"),
-    description: Yup.string().required("*Description is required"),
+    // description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
-    // icon: Yup.string().required("*Icon is required"),
+    icon: Yup.mixed()
+      .required("*Icon is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
   });
 
   const formik = useFormik({
@@ -89,6 +95,8 @@ function CategoriesAdd() {
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
+    formik.setFieldValue("icon", ""); // Reset Formik field value for 'image'
+    document.querySelector("input[type='file']").value = ""; // Reset the file input field
   };
 
   const handleFileChange = async (event) => {
@@ -98,6 +106,7 @@ function CategoriesAdd() {
       reader.onload = () => {
         setImageSrc(reader.result);
         setShowCropper(true);
+        setOriginalFileName(file.name); // Save the original file name
       };
       reader.readAsDataURL(file);
     }
@@ -151,9 +160,8 @@ function CategoriesAdd() {
   const handleCropSave = async () => {
     try {
       const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
-
-      // Convert the Blob to a File object
-      const file = new File([croppedImageBlob], "croppedImage.jpg", { type: "image/jpeg" });
+      const fileName = originalFileName || "croppedImage.jpg";
+      const file = new File([croppedImageBlob], fileName, { type: "image/jpeg" });
 
       // Set the file in Formik
       formik.setFieldValue("icon", file);
@@ -238,7 +246,7 @@ function CategoriesAdd() {
 
               <div className="col-md-6 col-12 file-input">
                 <label className="form-label">
-                  Icon
+                  Icon<span className="text-danger">*</span>
                 </label>
                 <input
                   type="file"
@@ -247,6 +255,9 @@ function CategoriesAdd() {
                     }`}
                   onChange={handleFileChange}
                 />
+                <p style={{ fontSize: "13px" }}>
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                </p>
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}

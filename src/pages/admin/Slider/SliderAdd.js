@@ -21,7 +21,13 @@ function SliderAdd() {
 
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    image: Yup.mixed().required("*Image is required"),
+    image: Yup.mixed()
+      .required("*Image is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
   });
 
   const formik = useFormik({
@@ -187,6 +193,9 @@ function SliderAdd() {
                   }`}
                 onChange={handleFileChange}
               />
+              <p style={{ fontSize: "13px" }}>
+                Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+              </p>
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
               )}
