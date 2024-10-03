@@ -69,8 +69,8 @@ const CategoriesIndex = () => {
     };
 
     fetchData();
-  
-    
+
+
     return () => {
       if (tableRef.current) {
         $(tableRef.current).DataTable().destroy();
@@ -103,12 +103,10 @@ const CategoriesIndex = () => {
       <div className="container card shadow border-0" style={{ minHeight: "80vh" }}>
         {loading ? (
           <div className="loader-container">
-            <div class="loading">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32"></circle>
+              </svg>
             </div>
           </div>
         ) : (

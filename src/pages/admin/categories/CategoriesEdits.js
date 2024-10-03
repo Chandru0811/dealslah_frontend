@@ -24,7 +24,7 @@ function CategoriesEdits() {
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
     // active: Yup.string().required("*Select an Status"),
-    description: Yup.string().required("*Description is required"),
+    // description: Yup.string().required("*Description is required"),
     name: Yup.string().required("*name is required"),
     // slug: Yup.string().required("*name Label is required"),
     // icon: Yup.string().required("*Icon is required"),
@@ -48,7 +48,9 @@ function CategoriesEdits() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
-      formData.append("icon", values.icon);
+      if (values.icon) {
+        formData.append("icon", values.icon);
+      }
 
       setLoadIndicator(true);
       try {
@@ -106,6 +108,7 @@ function CategoriesEdits() {
     const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
     formik.setFieldValue("slug", slug);
   }, [formik.values.name]);
+
 
   // Handle canceling the cropper
   const handleCropCancel = () => {
@@ -192,6 +195,7 @@ function CategoriesEdits() {
         type: "image/jpeg",
       });
 
+      // Set the cropped image in Formik
       formik.setFieldValue("icon", file);
 
       const newPreviewURL = URL.createObjectURL(file);
@@ -289,7 +293,7 @@ function CategoriesEdits() {
               </div>
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
-                  Icon
+                  Icon <span className="text-danger">*</span>
                 </label>
                 <input
                   type="file"
@@ -298,6 +302,9 @@ function CategoriesEdits() {
                   onChange={handleFileChange}
                   onBlur={formik.handleBlur}
                 />
+                <p style={{ fontSize: "13px" }}>
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                </p>
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>
                 )}
@@ -328,7 +335,7 @@ function CategoriesEdits() {
                   </div>
                 )}
 
-                {previewImage && showCropper && (
+                {showCropper && (
                   <div className="d-flex justify-content-start mt-3 gap-2">
                     <button
                       type="button"
