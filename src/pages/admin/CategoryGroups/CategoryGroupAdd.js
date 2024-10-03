@@ -321,7 +321,7 @@ function CategoryGroupAdd() {
                                             image={imageSrc}
                                             crop={crop}
                                             zoom={zoom}
-                                            aspect={1280 / 1259}
+                                            aspect={50 / 50}
                                             onCropChange={setCrop}
                                             onZoomChange={setZoom}
                                             onCropComplete={onCropCompleteHandler}

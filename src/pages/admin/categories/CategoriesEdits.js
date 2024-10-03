@@ -148,8 +148,8 @@ function CategoriesEdits() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 1750;
-        const targetHeight = 550;
+        const targetWidth = 300;
+        const targetHeight = 200;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -318,7 +318,7 @@ function CategoriesEdits() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={400 / 266}
+                      aspect={300 / 200}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}

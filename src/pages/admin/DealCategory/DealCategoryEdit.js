@@ -124,8 +124,8 @@ function DealCategoryEdit() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 1750;
-        const targetHeight = 550;
+        const targetWidth = 300;
+        const targetHeight = 200;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -200,7 +200,9 @@ function DealCategoryEdit() {
             <div className="row align-items-center">
               <div className="col">
                 <div className="d-flex align-items-center gap-4">
-                  <h1 className="h4 ls-tight headingColor">Edit Deal Category</h1>
+                  <h1 className="h4 ls-tight headingColor">
+                    Edit Deal Category
+                  </h1>
                 </div>
               </div>
               <div className="col-auto">
@@ -215,7 +217,10 @@ function DealCategoryEdit() {
             </div>
           </div>
         </div>
-        <div className="card shadow border-0 my-2" style={{ minHeight: "80vh" }}>
+        <div
+          className="card shadow border-0 my-2"
+          style={{ minHeight: "80vh" }}
+        >
           <div className="container mb-5">
             <div className="row py-4">
               <div className="col-md-6 col-12 mb-3">
@@ -224,7 +229,11 @@ function DealCategoryEdit() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""}`}
+                  className={`form-control ${
+                    formik.touched.name && formik.errors.name
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -239,7 +248,11 @@ function DealCategoryEdit() {
                 <input
                   type="file"
                   accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                  className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
+                  className={`form-control ${
+                    formik.touched.image && formik.errors.image
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   onChange={handleFileChange}
                   onBlur={formik.handleBlur}
                 />
@@ -263,7 +276,7 @@ function DealCategoryEdit() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={400 / 266}
+                      aspect={300 / 200}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}
@@ -302,7 +315,9 @@ function DealCategoryEdit() {
                   {...formik.getFieldProps("description")}
                 />
                 {formik.touched.description && formik.errors.description && (
-                  <div className="invalid-feedback">{formik.errors.description}</div>
+                  <div className="invalid-feedback">
+                    {formik.errors.description}
+                  </div>
                 )}
               </div>
             </div>
@@ -312,7 +327,10 @@ function DealCategoryEdit() {
           <div className="hstack gap-2 justify-content-end">
             <button type="submit" className="btn btn-button btn-sm">
               {loadIndicator && (
-                <span className="spinner-border spinner-border-sm me-2" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                ></span>
               )}
               Update
             </button>

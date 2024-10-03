@@ -117,8 +117,8 @@ function CategoriesAdd() {
         const ctx = canvas.getContext('2d');
 
         // Set canvas size to 250x250 pixels
-        const targetWidth = 1750;
-        const targetHeight = 550;
+        const targetWidth = 300;
+        const targetHeight = 200;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -257,7 +257,7 @@ function CategoriesAdd() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={400 / 266}
+                      aspect={300 / 200}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}
