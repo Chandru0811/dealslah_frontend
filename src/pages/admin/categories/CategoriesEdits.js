@@ -6,10 +6,10 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import ImageURL from "../../../config/ImageURL";
 import Cropper from "react-easy-crop";
+import { FiAlertTriangle } from "react-icons/fi";
 
 function CategoriesEdits() {
   const [loadIndicator, setLoadIndicator] = useState(false);
-  const [loading, setLoading] = useState(false);
   // const id = sessionStorage.getItem("id");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,18 +49,21 @@ function CategoriesEdits() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
-
       if (values.icon) {
         formData.append("icon", values.icon);
       }
+
       setLoadIndicator(true);
       try {
         const response = await api.post(
-          `/admin/categories/update/${id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+          `/admin/categories/update/${id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
 
         if (response.status === 200) {
           toast.success(response.data.message);
@@ -69,7 +72,22 @@ function CategoriesEdits() {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error.message || "An error occurred");
+        if (error.response.status === 422) {
+          const errors = error.response.data.errors;
+          if (errors) {
+            Object.keys(errors).forEach((key) => {
+              errors[key].forEach((errorMsg) => {
+                toast(errorMsg, {
+                  icon: <FiAlertTriangle className="text-warning" />,
+                });
+              });
+            });
+          }
+        } else {
+          toast.error(
+            error.response.data.message || "An unexpected error occurred."
+          );
+        }
       } finally {
         setLoadIndicator(false);
       }
@@ -77,40 +95,28 @@ function CategoriesEdits() {
   });
   useEffect(() => {
     const getData = async () => {
-      setLoading(true);
       try {
         const response = await api.get(`/admin/categories/${id}`);
-        const categoryData = response.data.data;
-
-        // Set formik values without setting 'icon' to existing URL
-        formik.setValues({
-          category_group_id: categoryData.category_group_id || "",
-          active: categoryData.active || "",
-          description: categoryData.description || "",
-          name: categoryData.name || "",
-          slug: categoryData.slug || "",
-          icon: null, // Do not set icon to existing image path
-        });
-
-        setPreviewImage(`${ImageURL}${categoryData.icon}`);
+        const { icon, ...rest } = response.data.data;
+        formik.setValues(rest);
+        setPreviewImage(`${ImageURL}${response.data.data.icon}`);
       } catch (error) {
-        const errorMessage = error.response?.data?.message || "Error fetching category data.";
-        toast.error(errorMessage);
+        console.error("Error fetching data ", error);
       }
-      setLoading(false);
     };
 
     getData();
-  }, [id]);
-
+  }, []);
   useEffect(() => {
     const fetchData = async () => {
+      setLoadIndicator(true);
       try {
         const response = await api.get("/admin/categoryGroup");
         setDatas(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
+      setLoadIndicator(false);
     };
 
     fetchData();
@@ -125,7 +131,6 @@ function CategoriesEdits() {
     formik.setFieldValue("slug", slug);
   }, [formik.values.name]);
 
-
   // Handle canceling the cropper
   const handleCropCancel = () => {
     setShowCropper(false);
@@ -135,7 +140,14 @@ function CategoriesEdits() {
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];
     if (file) {
-      const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/svg+xml", "image/webp"];
+      const validTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/gif",
+        "image/svg+xml",
+        "image/webp",
+      ];
       if (!validTypes.includes(file.type)) {
         toast.error("Unsupported file type. Please select a valid image.");
         return;
@@ -240,7 +252,7 @@ function CategoriesEdits() {
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
-        {loading ? (
+        {loadIndicator ? (
           <div className="loader-container">
             <div className="loader">
               <svg viewBox="0 0 80 80">
@@ -322,12 +334,14 @@ function CategoriesEdits() {
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                      className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""}`}
-                      onChange={handleFileChange}
-                      onBlur={formik.handleBlur}
+                      onChange={(event) => {
+                        const file = event.currentTarget.files[0];
+                        formik.setFieldValue("icon", file); // Update Formik state with selected file
+                      }}
                     />
                     <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                      Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
+                      .gif, .svg, .webp.
                     </p>
                     {formik.touched.icon && formik.errors.icon && (
                       <div className="invalid-feedback">{formik.errors.icon}</div>
