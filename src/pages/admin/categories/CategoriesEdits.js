@@ -48,10 +48,10 @@ function CategoriesEdits() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
+
       if (values.icon) {
         formData.append("icon", values.icon);
       }
-
       setLoadIndicator(true);
       try {
         const response = await api.post(
@@ -78,15 +78,28 @@ function CategoriesEdits() {
     const getData = async () => {
       try {
         const response = await api.get(`/admin/categories/${id}`);
-        formik.setValues(response.data.data);
-        setPreviewImage(`${ImageURL}${response.data.data.icon}`);
+        const categoryData = response.data.data;
+
+        // Set formik values without setting 'icon' to existing URL
+        formik.setValues({
+          category_group_id: categoryData.category_group_id || "",
+          active: categoryData.active || "",
+          description: categoryData.description || "",
+          name: categoryData.name || "",
+          slug: categoryData.slug || "",
+          icon: null, // Do not set icon to existing image path
+        });
+
+        setPreviewImage(`${ImageURL}${categoryData.icon}`);
       } catch (error) {
-        console.error("Error fetching data ", error);
+        const errorMessage = error.response?.data?.message || "Error fetching category data.";
+        toast.error(errorMessage);
       }
     };
 
     getData();
-  }, []);
+  }, [id]);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
