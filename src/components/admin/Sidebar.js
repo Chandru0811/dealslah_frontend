@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
-import Logo from "../../assets/CRMLogo.png";
+import deals from "../../assets/deals.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
@@ -40,7 +40,7 @@ function Sidebar({ handleLogout }) {
             }`}
           to="/"
         >
-          <img src={Logo} alt="Logo" className="img-fluid sidebar-logo rounded-circle"
+          <img src={deals} alt="deals" className="img-fluid sidebar-logo rounded-circle"
             style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
           <p className="text-white">Dealslash</p>
         </NavLink>

@@ -84,7 +84,7 @@ function ShopView() {
             <div>
               {selectedItem === "Shop" && <h3>General Settings</h3>}
               {selectedItem === "Location" && <h3>Shop Address</h3>}
-              {selectedItem === "Payment" && <h3>Payment Settings</h3>}
+              {/* {selectedItem === "Payment" && <h3>Payment Settings</h3>} */}
               {selectedItem === "Shop Policies" && <h3>Policies Settings</h3>}
               {selectedItem === "Shop Hours" && <h3>Hours Settings</h3>}
             </div>
@@ -135,24 +135,22 @@ function ShopView() {
           <div className="col-md-3 col-12">
             <div className="dropdown-menu p-3" style={{ zIndex: "1" }}>
               <div
-                className={`dropdown-item ${
-                  selectedItem === "Shop" ? "active" : ""
-                }`}
+                className={`dropdown-item ${selectedItem === "Shop" ? "active" : ""
+                  }`}
                 onClick={() => handleItemClick("Shop")}
               >
                 <BsHandbag /> Shop
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${
-                  selectedItem === "Location" ? "active" : ""
-                }`}
+                className={`dropdown-item ${selectedItem === "Location" ? "active" : ""
+                  }`}
                 onClick={() => handleItemClick("Location")}
               >
                 <CiGlobe /> Location
               </div>
               <div className="dropdown-divider"></div>
-              <div
+              {/* <div
                 className={`dropdown-item ${
                   selectedItem === "Payment" ? "active" : ""
                 }`}
@@ -160,20 +158,18 @@ function ShopView() {
               >
                 <GrCurrency /> Payment
               </div>
-              <div className="dropdown-divider"></div>
+              <div className="dropdown-divider"></div> */}
               <div
-                className={`dropdown-item ${
-                  selectedItem === "Shop Policies" ? "active" : ""
-                }`}
+                className={`dropdown-item ${selectedItem === "Shop Policies" ? "active" : ""
+                  }`}
                 onClick={() => handleItemClick("Shop Policies")}
               >
                 <PiVanFill /> Shop Policies
               </div>
               <div className="dropdown-divider"></div>
               <div
-                className={`dropdown-item ${
-                  selectedItem === "Shop Hours" ? "active" : ""
-                }`}
+                className={`dropdown-item ${selectedItem === "Shop Hours" ? "active" : ""
+                  }`}
                 onClick={() => handleItemClick("Shop Hours")}
               >
                 <MdAccessTime /> Shop Hours
