@@ -253,22 +253,32 @@ function ProductAdd() {
   }, []);
 
   useEffect(() => {
-    const { original_price, discount_percentage } = formik.values;
-    if (original_price && discount_percentage) {
-      const discountedPrice =
-        original_price - (original_price * discount_percentage) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
+    const { original_price, discounted_percentage } = formik.values;
+
+    if (original_price) {
+      if (discounted_percentage === "" || discounted_percentage === null) {
+        formik.setFieldValue("discounted_price", original_price);
+      } else {
+        const discountedPrice =
+          original_price - (original_price * discounted_percentage) / 100;
+        formik.setFieldValue("discounted_price", discountedPrice);
+      }
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
 
   useEffect(() => {
-    const { original_price, discount_percentage } = formik.values;
-    if (original_price && discount_percentage) {
-      const discountedPercentage =
-        ((original_price - discount_percentage) / original_price) * 100;
-      formik.setFieldValue("discounted_percentage", discountedPercentage);
+    const { original_price, discounted_price } = formik.values;
+    if (original_price) {
+      let discountedPercentage = 0;
+      if (!discounted_price || discounted_price === "0") {
+        formik.setFieldValue("discounted_percentage", 100);
+      } else {
+        discountedPercentage =
+          ((original_price - discounted_price) / original_price) * 100;
+        formik.setFieldValue("discounted_percentage", discountedPercentage);
+      }
     }
-  }, [formik.values.discount_percentage]);
+  }, [formik.values.discounted_price]);
 
   const getData = async () => {
     try {
