@@ -386,7 +386,7 @@ function ProductAdd() {
         <div className="card shadow border-0 mb-3">
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h1 className="h4 ls-tight">Edit Products</h1>
+              <h1 className="h4 ls-tight">Edit Deals</h1>
               <Link to="/product">
                 <button type="button" className="btn btn-light btn-sm">
                   <span>Back</span>
@@ -487,8 +487,9 @@ function ProductAdd() {
                 {...formik.getFieldProps("deal_type")}
               >
                 <option></option>
-                <option value="0">Product</option>
-                <option value="1">Service</option>
+                <option value="1">Product</option>
+                <option value="2">Service</option>
+                <option value="3">Product & Service</option>
               </select>
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">
@@ -674,6 +675,10 @@ function ProductAdd() {
                   onChange={(e) => handleFileChange(index, e)}
                   onBlur={formik.handleBlur}
                 />
+                <p style={{ fontSize: "13px" }}>
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
+                  .gif, .svg, .webp.
+                </p>
                 {formik.touched[`image_url${num}`] &&
                   formik.errors[`image_url${num}`] && (
                     <div className="invalid-feedback">

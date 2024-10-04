@@ -114,14 +114,16 @@ function ProductsView() {
                     <></>
                   )}
 
-                  {shopStatus === "1" ? (
+                  {/* {shopStatus === "1" ? (
                     <button
                       onClick={handleOpenModal}
                       className="btn btn-danger btn-sm me-2"
                     >
                       Deactivate
                     </button>
-                  ) : <></>}
+                  ) : (
+                    <></>
+                  )} */}
                 </div>
               </div>
             </div>
@@ -160,7 +162,9 @@ function ProductsView() {
                     </p>
                   </div>
                   <div className="col-6">
-                    <p className="text-muted text-sm">: {data.categoryGroupName}</p>
+                    <p className="text-muted text-sm">
+                      : {data.categoryGroupName}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -173,6 +177,29 @@ function ProductsView() {
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data.categoryName}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">
+                      <b>Deal Type</b>
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    {console.log("Deal Type Value:", data.deal_type)}{" "}
+                    {/* Debugging */}
+                    <p className="text-muted text-sm">
+                      :{" "}
+                      {data.deal_type === 1 || data.deal_type === "0"
+                        ? "Product"
+                        : data.deal_type === 2 || data.deal_type === "1"
+                        ? "Service"
+                        : data.deal_type === 3 || data.deal_type === "2"
+                        ? "Product and Service"
+                        : "Unknown"}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -251,7 +278,7 @@ function ProductsView() {
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
-                      :  {new Date(data.start_date).toLocaleDateString()}
+                      : {new Date(data.start_date).toLocaleDateString()}
                     </p>
                   </div>
                 </div>
@@ -264,7 +291,9 @@ function ProductsView() {
                     </p>
                   </div>
                   <div className="col-6">
-                    <p className="text-muted text-sm">:  {new Date(data.end_date).toLocaleDateString()}</p>
+                    <p className="text-muted text-sm">
+                      : {new Date(data.end_date).toLocaleDateString()}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -294,11 +323,8 @@ function ProductsView() {
               </div>
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-
-                  </div>
-                  <div className="col-6">
-                  </div>
+                  <div className="col-6 d-flex justify-content-start align-items-center"></div>
+                  <div className="col-6"></div>
                 </div>
               </div>
               {/* <div className="col-md-6 col-12">
@@ -424,19 +450,24 @@ function ProductsView() {
         </div>
       )}
 
-      <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+      <Modal
+        show={showModal}
+        backdrop="static"
+        keyboard={false}
+        onHide={handleClose}
+      >
         <Modal.Header closeButton>
           <Modal.Title>Deactivate Shop</Modal.Title>
         </Modal.Header>
-        <Modal.Body>
-          Are you sure you want to deactivate this shop?
-        </Modal.Body>
+        <Modal.Body>Are you sure you want to deactivate this shop?</Modal.Body>
         <Modal.Footer>
-          <button className='btn btn-sm btn-button' onClick={handleClose}>
+          <button className="btn btn-sm btn-button" onClick={handleClose}>
             Close
           </button>
-          <button className='btn-sm btn-danger'
-            type="submit" onClick={handleDeActive}
+          <button
+            className="btn-sm btn-danger"
+            type="submit"
+            onClick={handleDeActive}
             disabled={loading}
           >
             {loading && (

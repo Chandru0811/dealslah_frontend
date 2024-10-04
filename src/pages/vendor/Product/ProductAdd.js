@@ -54,11 +54,35 @@ function ProductAdd() {
     stock: Yup.number()
       .required("Stock is required")
       .min(0, "Stock cannot be negative"),
-    sku: Yup.string().required("SKU is required"),
-    image1: Yup.mixed().required("Image 1 is required"),
-    image2: Yup.mixed().required("Image 2 is required"),
-    image3: Yup.mixed().required("Image 3 is required"),
-    image4: Yup.mixed().required("Image 4 is required"),
+    // sku: Yup.string().required("SKU is required"),
+    image1: Yup.mixed()
+      .required("*Image is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
+    image2: Yup.mixed()
+      .required("*Image is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
+    image3: Yup.mixed()
+      .required("*Image is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
+    image4: Yup.mixed()
+      .required("*Image is required")
+      .test(
+        "fileSize",
+        "File size should be less than 2MB",
+        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
+      ),
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
@@ -340,7 +364,7 @@ function ProductAdd() {
         <div className="card shadow border-0 mb-3">
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h1 className="h4 ls-tight">Add Products</h1>
+              <h1 className="h4 ls-tight">Add Deals</h1>
               <Link to="/product">
                 <button type="button" className="btn btn-light btn-sm">
                   <span>Back</span>
@@ -441,9 +465,9 @@ function ProductAdd() {
                 {...formik.getFieldProps("deal_type")}
               >
                 <option></option>
-                <option value="0">Product</option>
-                <option value="1">Service</option>
-                <option value="2">Product and Service</option>
+                <option value="1">Product</option>
+                <option value="2">Service</option>
+                <option value="3">Product and Service</option>
               </select>
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">
@@ -630,6 +654,10 @@ function ProductAdd() {
                   onChange={(e) => handleFileChange(index, e)}
                   onBlur={formik.handleBlur}
                 />
+                <p style={{ fontSize: "13px" }}>
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
+                  .gif, .svg, .webp.
+                </p>
                 {/* Show error message for each image */}
                 {formik.touched[`image${num}`] &&
                   formik.errors[`image${num}`] && (
