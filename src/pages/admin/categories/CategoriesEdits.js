@@ -95,6 +95,7 @@ function CategoriesEdits() {
   });
   useEffect(() => {
     const getData = async () => {
+      setLoadIndicator(true);
       try {
         const response = await api.get(`/admin/categories/${id}`);
         const { icon, ...rest } = response.data.data;
@@ -103,13 +104,13 @@ function CategoriesEdits() {
       } catch (error) {
         console.error("Error fetching data ", error);
       }
+      setLoadIndicator(false);
     };
 
     getData();
   }, []);
   useEffect(() => {
     const fetchData = async () => {
-      setLoadIndicator(true);
       try {
         const response = await api.get("/admin/categoryGroup");
         setDatas(response.data.data);
@@ -123,7 +124,6 @@ function CategoriesEdits() {
   }, []);
   useEffect(() => {
     // formik.setValues(datas);
-    setLoadIndicator(false);
   }, []);
 
   useEffect(() => {
