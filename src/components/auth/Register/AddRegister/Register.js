@@ -206,7 +206,7 @@ function Register() {
                     cursor: "pointer",
                   }}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showcPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               )}
               {formik.touched.cpassword && formik.errors.cpassword ? (
