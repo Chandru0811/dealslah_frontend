@@ -27,7 +27,23 @@ function ProductAdd() {
   const [showCropper, setShowCropper] = useState([false, false, false, false]);
   const id = sessionStorage.getItem("shop_id");
   const navigate = useNavigate();
-
+  const SUPPORTED_FORMATS = [
+    "image/jpg",
+    "image/jpeg",
+    "image/png",
+    "image/gif",
+    "image/svg+xml",
+    "image/webp",
+  ];
+  const FILE_SIZE = 2 * 1024 * 1024;
+  const imageValidation = Yup.mixed()
+    .required("Image field is required")
+    .test("fileSize", "File size is too large. Max 2MB", (value) => {
+      return !value || (value && value.size <= FILE_SIZE);
+    })
+    .test("fileFormat", "Unsupported format", (value) => {
+      return !value || (value && SUPPORTED_FORMATS.includes(value.type));
+    });
   const validationSchema = Yup.object({
     shop_id: Yup.string().required("Caategory Group is required"),
     name: Yup.string().required("Name is required"),
@@ -55,34 +71,10 @@ function ProductAdd() {
       .required("Stock is required")
       .min(0, "Stock cannot be negative"),
     // sku: Yup.string().required("SKU is required"),
-    image1: Yup.mixed()
-      .required("*Image is required")
-      .test(
-        "fileSize",
-        "File size should be less than 2MB",
-        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
-      ),
-    image2: Yup.mixed()
-      .required("*Image is required")
-      .test(
-        "fileSize",
-        "File size should be less than 2MB",
-        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
-      ),
-    image3: Yup.mixed()
-      .required("*Image is required")
-      .test(
-        "fileSize",
-        "File size should be less than 2MB",
-        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
-      ),
-    image4: Yup.mixed()
-      .required("*Image is required")
-      .test(
-        "fileSize",
-        "File size should be less than 2MB",
-        (value) => !value || (value && value.size <= 2 * 1024 * 1024)
-      ),
+    image1: imageValidation,
+    image2: imageValidation,
+    image3: imageValidation,
+    image4: imageValidation,
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
@@ -545,7 +537,13 @@ function ProductAdd() {
                 Discounted Price<span className="text-danger">*</span>
               </label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value.replace(
+                    /[^0-9]/g,
+                    ""
+                  );
+                }}
                 className={`form-control ${
                   formik.touched.discounted_price &&
                   formik.errors.discounted_price
@@ -567,7 +565,12 @@ function ProductAdd() {
                 Discounted Percentage<span className="text-danger">*</span>
               </label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 2);
+                }}
                 className={`form-control ${
                   formik.touched.discounted_percentage &&
                   formik.errors.discounted_percentage
