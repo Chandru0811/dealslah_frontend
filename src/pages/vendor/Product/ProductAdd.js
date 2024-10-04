@@ -249,7 +249,7 @@ function ProductAdd() {
     if (original_price && discounted_percentage) {
       const discountedPrice =
         original_price - (original_price * discounted_percentage) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice.toFixed(2));
+      formik.setFieldValue("discounted_price", discountedPrice);
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
 
@@ -258,7 +258,7 @@ function ProductAdd() {
     if (original_price && discounted_price) {
       const discountedPercentage =
         ((original_price - discounted_price) / original_price) * 100;
-      formik.setFieldValue("discounted_percentage", discountedPercentage.toFixed(2));
+      formik.setFieldValue("discounted_percentage", discountedPercentage);
     }
   }, [formik.values.discounted_price]);
 
