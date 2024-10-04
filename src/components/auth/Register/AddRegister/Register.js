@@ -169,7 +169,7 @@ function Register() {
                   style={{
                     position: "absolute",
                     right: "40px",
-                    top: "22%",
+                    top: "30%",
                     transform: "translateY(-50%)",
                     cursor: "pointer",
                   }}
