@@ -32,6 +32,7 @@ function ProductAdd() {
     shop_id: Yup.string().required("Caategory Group is required"),
     name: Yup.string().required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
+    deal_type: Yup.string().required("Deal Type is required"),
     // brand: Yup.string().required("Brand is required"),
     original_price: Yup.number()
       .required("Original Price is required")
@@ -50,10 +51,10 @@ function ProductAdd() {
     //   .required("End Date is required")
     //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
     //   .nullable(),
-    // stock: Yup.number()
-    //   .required("Stock is required")
-    //   .min(0, "Stock cannot be negative"),
-    // sku: Yup.string().required("SKU is required"),
+    stock: Yup.number()
+      .required("Stock is required")
+      .min(0, "Stock cannot be negative"),
+    sku: Yup.string().required("SKU is required"),
     image1: Yup.mixed().required("Image 1 is required"),
     image2: Yup.mixed().required("Image 2 is required"),
     image3: Yup.mixed().required("Image 3 is required"),
@@ -62,12 +63,12 @@ function ProductAdd() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
   });
-  const validationSchema1 = Yup.object({
-    catagory_group_id: Yup.string().required("Category Group is required"),
-    name: Yup.string().required("Name is required"),
-    icon: Yup.string().required("Imagei s required"),
-    description: Yup.string().required("Description is required"),
-  });
+  // const validationSchema1 = Yup.object({
+  //   catagory_group_id: Yup.string().required("Category Group is required"),
+  //   name: Yup.string().required("Name is required"),
+  //   icon: Yup.string().required("Imagei s required"),
+  //   description: Yup.string().required("Description is required"),
+  // });
 
   const formik = useFormik({
     initialValues: {
@@ -151,57 +152,57 @@ function ProductAdd() {
       }
     },
   });
-  const formik1 = useFormik({
-    initialValues: {
-      catagory_group_id: "",
-      name: "",
-      icon: "",
-      description: "",
-    },
-    validationSchema: validationSchema1,
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("category_group_id", values.catagory_group_id);
-      formData.append("name", values.name);
-      formData.append("icon", values.icon);
-      formData.append("description", values.description);
-      const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-      formData.append("slug", slug);
-      console.log("Form Data:", values);
-      try {
-        const response = await api.post(`vendor/categories/create`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log("Response", response);
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          setShowModal(false);
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 422) {
-          const errors = error.response.data.errors;
-          if (errors) {
-            Object.keys(errors).forEach((key) => {
-              errors[key].forEach((errorMsg) => {
-                toast(errorMsg, {
-                  icon: <FiAlertTriangle className="text-warning" />,
-                });
-              });
-            });
-          }
-        } else {
-          console.error("API Error", error);
-          toast.error("An unexpected error occurred.");
-        }
-      } finally {
-        setLoadIndicator(false);
-      }
-    },
-  });
+  // const formik1 = useFormik({
+  //   initialValues: {
+  //     catagory_group_id: "",
+  //     name: "",
+  //     icon: "",
+  //     description: "",
+  //   },
+  //   validationSchema: validationSchema1,
+  //   onSubmit: async (values) => {
+  //     const formData = new FormData();
+  //     formData.append("category_group_id", values.catagory_group_id);
+  //     formData.append("name", values.name);
+  //     formData.append("icon", values.icon);
+  //     formData.append("description", values.description);
+  //     const slug = values.name.toLowerCase().replace(/\s+/g, "_");
+  //     formData.append("slug", slug);
+  //     console.log("Form Data:", values);
+  //     try {
+  //       const response = await api.post(`vendor/categories/create`, formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+  //       console.log("Response", response);
+  //       if (response.status === 200) {
+  //         toast.success(response.data.message);
+  //         setShowModal(false);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     } catch (error) {
+  //       if (error.response && error.response.status === 422) {
+  //         const errors = error.response.data.errors;
+  //         if (errors) {
+  //           Object.keys(errors).forEach((key) => {
+  //             errors[key].forEach((errorMsg) => {
+  //               toast(errorMsg, {
+  //                 icon: <FiAlertTriangle className="text-warning" />,
+  //               });
+  //             });
+  //           });
+  //         }
+  //       } else {
+  //         console.error("API Error", error);
+  //         toast.error("An unexpected error occurred.");
+  //       }
+  //     } finally {
+  //       setLoadIndicator(false);
+  //     }
+  //   },
+  // });
 
   useEffect(() => {
     const getData = async () => {
@@ -231,18 +232,18 @@ function ProductAdd() {
     setCategory([]);
 
     formik.setFieldValue("shop_id", categoryGroup);
-    formik1.setFieldValue("catagory_group_id", categoryGroup);
+    // formik1.setFieldValue("catagory_group_id", categoryGroup);
 
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
   };
 
-  const handleCategoryAdd = () => {
-    formik1.setFieldValue("name", "");
-    formik1.setFieldValue("icon", "");
-    formik1.setFieldValue("description", "");
-    setShowModal(true);
-  };
+  // const handleCategoryAdd = () => {
+  //   formik1.setFieldValue("name", "");
+  //   formik1.setFieldValue("icon", "");
+  //   formik1.setFieldValue("description", "");
+  //   setShowModal(true);
+  // };
   useEffect(() => {
     const { original_price, discounted_percentage } = formik.values;
     if (original_price && discounted_percentage) {
@@ -252,14 +253,14 @@ function ProductAdd() {
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
 
-  useEffect(() => {
-    const { original_price, discounted_price } = formik.values;
-    if (original_price && discounted_price) {
-      const discountedPercentage =
-        ((original_price - discounted_price) / original_price) * 100;
-      formik.setFieldValue("discounted_percentage", discountedPercentage);
-    }
-  }, [formik.values.original_price, formik.values.discounted_price]);
+  // useEffect(() => {
+  //   const { original_price, discounted_price } = formik.values;
+  //   if (original_price && discounted_price) {
+  //     const discountedPercentage =
+  //       ((original_price - discounted_price) / original_price) * 100;
+  //     formik.setFieldValue("discounted_percentage", discountedPercentage);
+  //   }
+  // }, [formik.values.original_price, formik.values.discounted_price]);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -389,18 +390,18 @@ function ProductAdd() {
                     : ""
                 }`}
                 {...formik.getFieldProps("category_id")}
-                onChange={(event) => {
-                  const selectedValue = event.target.value;
-                  if (selectedValue === "add_new") {
-                    // formik1.resetForm();
-                    formik1.setFieldValue("name", "");
-                    formik1.setFieldValue("icon", "");
-                    formik1.setFieldValue("description", "");
-                    setShowModal(true);
-                  } else {
-                    formik.setFieldValue("category_id", selectedValue);
-                  }
-                }}
+                // onChange={(event) => {
+                //   const selectedValue = event.target.value;
+                //   if (selectedValue === "add_new") {
+                //     // formik1.resetForm();
+                //     formik1.setFieldValue("name", "");
+                //     formik1.setFieldValue("icon", "");
+                //     formik1.setFieldValue("description", "");
+                //     setShowModal(true);
+                //   } else {
+                //     formik.setFieldValue("category_id", selectedValue);
+                //   }
+                // }}
               >
                 <option></option>
                 {category &&
@@ -452,9 +453,7 @@ function ProductAdd() {
             </div>
 
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Brand
-              </label>
+              <label className="form-label">Brand</label>
               <input
                 type="text"
                 className={`form-control ${
@@ -484,9 +483,7 @@ function ProductAdd() {
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                SKU
-              </label>
+              <label className="form-label">SKU</label>
               <input
                 type="text"
                 className={`form-control ${
@@ -582,9 +579,7 @@ function ProductAdd() {
             </div>
 
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Start Date
-              </label>
+              <label className="form-label">Start Date</label>
               <input
                 type="date"
                 className={`form-control ${
@@ -601,9 +596,7 @@ function ProductAdd() {
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                End Date
-              </label>
+              <label className="form-label">End Date</label>
               <input
                 type="date"
                 className={`form-control ${
@@ -618,8 +611,6 @@ function ProductAdd() {
               )}
             </div>
 
-          
-            
             {[1, 2, 3, 4].map((num, index) => (
               <div key={num} className="col-md-6 col-12 mb-3">
                 <label className="form-label">
@@ -629,16 +620,24 @@ function ProductAdd() {
                 <input
                   type="file"
                   accept=".png,.jpeg,.jpg,.gif,.svg,.webp"
-                  className="form-control"
+                  className={`form-control ${
+                    formik.touched[`image${num}`] &&
+                    formik.errors[`image${num}`]
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  name={`image${num}`} // Ensure name attribute matches validation schema
                   onChange={(e) => handleFileChange(index, e)}
                   onBlur={formik.handleBlur}
                 />
+                {/* Show error message for each image */}
                 {formik.touched[`image${num}`] &&
                   formik.errors[`image${num}`] && (
                     <div className="invalid-feedback">
                       {formik.errors[`image${num}`]}
                     </div>
                   )}
+
                 {showCropper[index] && (
                   <>
                     <div className="crop-container">
@@ -708,7 +707,7 @@ function ProductAdd() {
           </button>
         </div>
       </form>
-      <Modal
+      {/* <Modal
         show={showModal}
         onHide={() => setShowModal(false)}
         size="md"
@@ -718,7 +717,6 @@ function ProductAdd() {
           <Modal.Title>Add Category</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          {/* Form inside the modal */}
           <form onSubmit={formik1.handleSubmit}>
             <div className="row py-4">
               <div className="col-12 mb-3">
@@ -834,7 +832,7 @@ function ProductAdd() {
             </div>
           </form>
         </Modal.Body>
-      </Modal>
+      </Modal> */}
     </section>
   );
 }
