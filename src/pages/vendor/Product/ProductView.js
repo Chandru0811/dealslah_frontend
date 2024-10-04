@@ -219,7 +219,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>image1</b>
+                  <b>Image1</b>
                 </p>
               </div>
               <div className="col-6">
@@ -240,7 +240,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>image2</b>
+                  <b>Image2</b>
                 </p>
               </div>
               <div className="col-6">
@@ -261,7 +261,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>image3</b>
+                  <b>Image3</b>
                 </p>
               </div>
               <div className="col-6">
@@ -282,7 +282,7 @@ function ProductView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>image4</b>
+                  <b>Image4</b>
                 </p>
               </div>
               <div className="col-6">
