@@ -83,6 +83,7 @@ function DealCategoryEdit() {
         formik.setValues({
           name: response.data.data.name || "",
           // active: response.data.data.active || "",
+          slug: response.data.data.slug || "",
           description: response.data.data.description || "",
         });
         setPreviewImage(`${ImageURL}${response.data.data.image_path}`);
@@ -93,10 +94,16 @@ function DealCategoryEdit() {
     };
     getData();
   }, [id]);
+
   useEffect(() => {
-    const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+    const slug = formik.values.name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^\w\-]+/g, "");
     formik.setFieldValue("slug", slug);
   }, [formik.values.name]);
+
 
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];
@@ -263,8 +270,8 @@ function DealCategoryEdit() {
                     <input
                       type="text"
                       className={`form-control ${formik.touched.name && formik.errors.name
-                          ? "is-invalid"
-                          : ""
+                        ? "is-invalid"
+                        : ""
                         }`}
                       {...formik.getFieldProps("name")}
                     />
@@ -283,8 +290,8 @@ function DealCategoryEdit() {
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
                       className={`form-control ${formik.touched.image_path && formik.errors.image_path
-                          ? "is-invalid"
-                          : ""
+                        ? "is-invalid"
+                        : ""
                         }`}
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
