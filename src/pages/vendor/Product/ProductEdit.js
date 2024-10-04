@@ -55,6 +55,9 @@ function ProductAdd() {
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
+    discount_percentage: Yup.number()
+      .required("Discount is required")
+      .max(100, "Discount must be less than 100"),
     discounted_price: Yup.number()
       .required("Discounted Price is required")
       .lessThan(
@@ -256,7 +259,16 @@ function ProductAdd() {
         original_price - (original_price * discount_percentage) / 100;
       formik.setFieldValue("discounted_price", discountedPrice);
     }
-  }, [formik.values.original_price, formik.values.discount_percentage]);
+  }, [formik.values.original_price, formik.values.discounted_percentage]);
+
+  useEffect(() => {
+    const { original_price, discount_percentage } = formik.values;
+    if (original_price && discount_percentage) {
+      const discountedPercentage =
+        ((original_price - discount_percentage) / original_price) * 100;
+      formik.setFieldValue("discounted_percentage", discountedPercentage);
+    }
+  }, [formik.values.discount_percentage]);
 
   const getData = async () => {
     try {

@@ -169,7 +169,7 @@ function Register() {
                   style={{
                     position: "absolute",
                     right: "40px",
-                    top: "22%",
+                    top: "30%",
                     transform: "translateY(-50%)",
                     cursor: "pointer",
                   }}
@@ -200,13 +200,13 @@ function Register() {
                   onClick={toggleconfirmPasswordVisibility}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "50%",
+                    right: "40px",
+                    top: "22%",
                     transform: "translateY(-50%)",
                     cursor: "pointer",
                   }}
                 >
-                  {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  {showcPassword ? <FaEyeSlash /> : <FaEye />}
                 </span>
               )}
               {formik.touched.cpassword && formik.errors.cpassword ? (
