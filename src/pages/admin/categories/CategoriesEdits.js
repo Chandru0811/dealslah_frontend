@@ -289,11 +289,12 @@ function CategoriesEdits() {
                     </label>
                     <select
                       aria-label="Default select example"
-                      className={`form-select ${formik.touched.category_group_id &&
+                      className={`form-select ${
+                        formik.touched.category_group_id &&
                         formik.errors.category_group_id
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("category_group_id")}
                     >
                       <option value=""></option>
@@ -317,34 +318,43 @@ function CategoriesEdits() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.name && formik.errors.name
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
-                      <div className="invalid-feedback">{formik.errors.name}</div>
+                      <div className="invalid-feedback">
+                        {formik.errors.name}
+                      </div>
                     )}
                   </div>
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
-                      Icon <span className="text-danger">*</span>
+                      Icon<span className="text-danger">*</span>
                     </label>
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                      onChange={(event) => {
-                        const file = event.currentTarget.files[0];
-                        formik.setFieldValue("icon", file); // Update Formik state with selected file
-                      }}
+                      className={`form-control ${
+                        formik.touched.image && formik.errors.image
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      onChange={handleFileChange}
+                      onBlur={formik.handleBlur}
                     />
                     <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
-                      .gif, .svg, .webp.
+                      Note: Maximum file size is 2MB. Allowed: .png, .jpg,
+                      .jpeg, .gif, .svg, .webp.
                     </p>
-                    {formik.touched.icon && formik.errors.icon && (
-                      <div className="invalid-feedback">{formik.errors.icon}</div>
+
+                    {formik.touched.image && formik.errors.image && (
+                      <div className="invalid-feedback">
+                        {formik.errors.image}
+                      </div>
                     )}
 
                     {previewImage && (
@@ -358,7 +368,10 @@ function CategoriesEdits() {
                     )}
 
                     {showCropper && (
-                      <div className="position-relative" style={{ height: 400 }}>
+                      <div
+                        className="position-relative"
+                        style={{ height: 400 }}
+                      >
                         <Cropper
                           image={imageSrc}
                           crop={crop}
@@ -373,7 +386,7 @@ function CategoriesEdits() {
                       </div>
                     )}
 
-                    {showCropper && (
+                    {previewImage && showCropper && (
                       <div className="d-flex justify-content-start mt-3 gap-2">
                         <button
                           type="button"
@@ -400,17 +413,19 @@ function CategoriesEdits() {
                     </label>
                     <textarea
                       rows={5}
-                      className={`form-control ${formik.touched.description && formik.errors.description
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.description && formik.errors.description
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("description")}
                     />
-                    {formik.touched.description && formik.errors.description && (
-                      <div className="invalid-feedback">
-                        {formik.errors.description}
-                      </div>
-                    )}
+                    {formik.touched.description &&
+                      formik.errors.description && (
+                        <div className="invalid-feedback">
+                          {formik.errors.description}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>
