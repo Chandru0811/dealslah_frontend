@@ -10,6 +10,7 @@ import { FiAlertTriangle } from "react-icons/fi";
 
 function CategoriesEdits() {
   const [loadIndicator, setLoadIndicator] = useState(false);
+  const [loading, setLoading] = useState(false);
   // const id = sessionStorage.getItem("id");
   const { id } = useParams();
   const navigate = useNavigate();
@@ -95,7 +96,7 @@ function CategoriesEdits() {
   });
   useEffect(() => {
     const getData = async () => {
-      setLoadIndicator(true);
+      setLoading(true);
       try {
         const response = await api.get(`/admin/categories/${id}`);
         const { icon, ...rest } = response.data.data;
@@ -104,7 +105,7 @@ function CategoriesEdits() {
       } catch (error) {
         console.error("Error fetching data ", error);
       }
-      setLoadIndicator(false);
+      setLoading(false);
     };
 
     getData();
@@ -252,7 +253,7 @@ function CategoriesEdits() {
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
-        {loadIndicator ? (
+        {loading ? (
           <div className="loader-container">
             <div className="loader">
               <svg viewBox="0 0 80 80">
@@ -289,12 +290,11 @@ function CategoriesEdits() {
                     </label>
                     <select
                       aria-label="Default select example"
-                      className={`form-select ${
-                        formik.touched.category_group_id &&
+                      className={`form-select ${formik.touched.category_group_id &&
                         formik.errors.category_group_id
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       {...formik.getFieldProps("category_group_id")}
                     >
                       <option value=""></option>
@@ -318,11 +318,10 @@ function CategoriesEdits() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${
-                        formik.touched.name && formik.errors.name
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={`form-control ${formik.touched.name && formik.errors.name
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
@@ -338,11 +337,10 @@ function CategoriesEdits() {
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                      className={`form-control ${
-                        formik.touched.image && formik.errors.image
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={`form-control ${formik.touched.image && formik.errors.image
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
                     />
@@ -413,11 +411,10 @@ function CategoriesEdits() {
                     </label>
                     <textarea
                       rows={5}
-                      className={`form-control ${
-                        formik.touched.description && formik.errors.description
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={`form-control ${formik.touched.description && formik.errors.description
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       {...formik.getFieldProps("description")}
                     />
                     {formik.touched.description &&

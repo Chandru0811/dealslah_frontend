@@ -22,13 +22,13 @@ function DealCategoryEdit() {
 
   const validationSchema = Yup.object({
     name: Yup.string().required("*Name is required"),
-    image: Yup.mixed()
-      .required("*Image is required")
-      .test(
-        "fileSize",
-        "File size should be less than 2MB",
-        (value) => !value || (value && value.size <= 2 * 1024 * 1024) // 2MB in bytes
-      ),
+    // image: Yup.mixed()
+    //   .required("*Image is required")
+    //   .test(
+    //     "fileSize",
+    //     "File size should be less than 2MB",
+    //     (value) => !value || (value && value.size <= 2 * 1024 * 1024) // 2MB in bytes
+    //   ),
 
     // active: Yup.string().required("*Select an active status"),
   });
@@ -36,7 +36,7 @@ function DealCategoryEdit() {
   const formik = useFormik({
     initialValues: {
       name: "",
-      image: null,
+      image_path: null,
       slug: "",
       // active: "",
       description: "",
@@ -49,7 +49,7 @@ function DealCategoryEdit() {
       formData.append("slug", values.slug);
 
       formData.append("name", values.name);
-      formData.append("image", values.image);
+      formData.append("image_path", values.image_path);
       // formData.append("active", values.active);
       formData.append("description", values.description);
 
@@ -83,6 +83,7 @@ function DealCategoryEdit() {
         formik.setValues({
           name: response.data.data.name || "",
           // active: response.data.data.active || "",
+          slug: response.data.data.slug || "",
           description: response.data.data.description || "",
         });
         setPreviewImage(`${ImageURL}${response.data.data.image_path}`);
@@ -93,10 +94,16 @@ function DealCategoryEdit() {
     };
     getData();
   }, [id]);
+
   useEffect(() => {
-    const slug = formik.values.name.toLowerCase().replace(/\s+/g, "_");
+    const slug = formik.values.name
+      .toLowerCase()
+      .trim()
+      .replace(/\s+/g, "_")
+      .replace(/[^\w\-]+/g, "");
     formik.setFieldValue("slug", slug);
   }, [formik.values.name]);
+
 
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];
@@ -130,7 +137,7 @@ function DealCategoryEdit() {
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
-    formik.setFieldValue("image", ""); // Reset Formik field value for 'image'
+    formik.setFieldValue("image_path", ""); // Reset Formik field value for 'image'
     document.querySelector("input[type='file']").value = ""; // Reset the file input field
   };
 
@@ -191,7 +198,7 @@ function DealCategoryEdit() {
         type: "image/jpeg",
       });
 
-      formik.setFieldValue("image", file);
+      formik.setFieldValue("image_path", file);
 
       const newPreviewURL = URL.createObjectURL(file);
       setPreviewImage(newPreviewURL);
@@ -262,11 +269,10 @@ function DealCategoryEdit() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${
-                        formik.touched.name && formik.errors.name
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={`form-control ${formik.touched.name && formik.errors.name
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
@@ -283,11 +289,10 @@ function DealCategoryEdit() {
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
-                      className={`form-control ${
-                        formik.touched.image && formik.errors.image
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                      className={`form-control ${formik.touched.image_path && formik.errors.image_path
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
                     />
@@ -296,9 +301,9 @@ function DealCategoryEdit() {
                       .jpeg, .gif, .svg, .webp.
                     </p>
 
-                    {formik.touched.image && formik.errors.image && (
+                    {formik.touched.image_path && formik.errors.image_path && (
                       <div className="invalid-feedback">
-                        {formik.errors.image}
+                        {formik.errors.image_path}
                       </div>
                     )}
 

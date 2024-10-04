@@ -2,13 +2,10 @@
   RewriteEngine On
   RewriteBase /dealslahVendor/
   
-  # Allow access to index.html directly
   RewriteRule ^index\.html$ - [L]
   
-  # Check if the file or directory exists
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   
-  # Redirect all other requests to index.html (React handles the routing)
   RewriteRule . /dealslahVendor/index.html [L]
 </IfModule>

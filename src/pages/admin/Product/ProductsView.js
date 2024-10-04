@@ -135,6 +135,18 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
+                      <b>Category Group</b>
+                    </p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">: {data.categoryGroupName}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">
                       <b>Category</b>
                     </p>
                   </div>
