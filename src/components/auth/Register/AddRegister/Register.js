@@ -200,8 +200,8 @@ function Register() {
                   onClick={toggleconfirmPasswordVisibility}
                   style={{
                     position: "absolute",
-                    right: "10px",
-                    top: "50%",
+                    right: "40px",
+                    top: "22%",
                     transform: "translateY(-50%)",
                     cursor: "pointer",
                   }}

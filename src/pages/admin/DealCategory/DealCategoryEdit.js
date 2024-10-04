@@ -49,7 +49,7 @@ function DealCategoryEdit() {
       formData.append("slug", values.slug);
 
       formData.append("name", values.name);
-      formData.append("image_path", values.image_path);
+      formData.append("image", values.image_path);
       // formData.append("active", values.active);
       formData.append("description", values.description);
 
