@@ -97,7 +97,7 @@ function StorePolicy() {
               {/* <h3 className="text-primary mb-4">Policies Setting</h3> */}
               <div className="mb-5">
                 <label className="form-label">
-                  <h5 className="fw-bold">Shipping Policy</h5>
+                  <h5 className="fw-bold">Shipping Policy<span className="text-danger">*</span></h5>
                 </label>
                 <ReactQuill
                   ref={editor}
@@ -117,7 +117,7 @@ function StorePolicy() {
               </div>
               <div className="mb-5">
                 <label className="form-label">
-                  <h5 className="fw-bold">Refund Policy</h5>
+                  <h5 className="fw-bold">Refund Policy<span className="text-danger">*</span></h5>
                 </label>
                 <ReactQuill
                   ref={editor}
@@ -138,7 +138,7 @@ function StorePolicy() {
               <div className="mb-5">
                 <label className="form-label">
                   <h5 className="fw-bold">
-                    Cancellation/Return/Exchange Policy
+                    Cancellation/Return/Exchange Policy<span className="text-danger">*</span>
                   </h5>
                 </label>
                 <ReactQuill

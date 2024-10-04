@@ -16,7 +16,7 @@ const validationSchema = Yup.object({
     .matches(/^[0-9]+$/, "mobile number must be numeric")
     .required("mobile number is required!"),
   shopType: Yup.string().required("Shop Type is required!"),
-  //   logo: Yup.mixed().required("Logo is required"),
+  logo: Yup.mixed().required("Logo is required"),
   external_url: Yup.string()
     .url("Please enter a valid URL")
     .required("External URL is required!"),
@@ -24,7 +24,7 @@ const validationSchema = Yup.object({
     .url("Please enter a valid URL")
     .required("Map URL is required!"),
 
-  //   banner: Yup.mixed().required("Banner is required!"),
+  banner: Yup.mixed().required("Banner is required!"),
   description: Yup.string().required("Description is required!"),
 });
 
@@ -67,12 +67,14 @@ const Store = () => {
       formdata.append("description", data.description);
       formdata.append("shop_ratings", data.shop_ratings);
 
-      if (data.logo) {
+      if (data.logo instanceof File || data.logo instanceof Blob) {
         formdata.append("logo", data.logo);
       }
-      if (data.banner) {
+
+      if (data.banner instanceof File || data.banner instanceof Blob) {
         formdata.append("banner", data.banner);
       }
+      
       try {
         const response = await api.post(
           `vendor/shop/${id}/update/details`,
@@ -151,7 +153,7 @@ const Store = () => {
             <div className="row">
               <div className="col-md-4 col-12 mb-5 ">
                 <label className="form-label fw-bold">
-                Company Name<span className="text-danger">*</span>
+                  Company Name<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -175,7 +177,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company Legal Name<span className="text-danger">*</span>
+                  Company Legal Name<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -199,7 +201,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company Email<span className="text-danger">*</span>
+                  Company Email<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -223,7 +225,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company mobile<span className="text-danger">*</span>
+                  Company mobile<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -249,7 +251,7 @@ const Store = () => {
               <h3 className="text-primary py-3">Company Brand Setup</h3>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company Type<span className="text-danger">*</span>
+                  Company Type<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -277,7 +279,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company Logo<span className="text-danger">*</span>
+                  Company Logo<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -343,7 +345,7 @@ const Store = () => {
               </div>
               <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
-                Company Map Url<span className="text-danger">*</span>
+                  Company Map Url<span className="text-danger">*</span>
                 </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -365,7 +367,7 @@ const Store = () => {
                   </div>
                 )}
               </div>
-              <div className="col-md-4 col-12 mb-5">
+              {/* <div className="col-md-4 col-12 mb-5">
                 <label className="form-label fw-bold">
                 Company Rating<span className="text-danger">*</span>
                 </label>
@@ -388,9 +390,11 @@ const Store = () => {
                     <small>{formik.errors.shop_ratings}</small>
                   </div>
                 )}
-              </div>
+              </div> */}
               <div className="col-md-4 col-12 mb-5">
-                <label className="form-label fw-bold">Company Banner</label>
+                <label className="form-label fw-bold">
+                  Company Banner<span className="text-danger">*</span>
+                </label>
               </div>
               <div className="col-md-8 col-12 mb-5">
                 <input
@@ -409,8 +413,26 @@ const Store = () => {
                     <small>{formik.errors.banner}</small>
                   </div>
                 )}
+
+                {formik.values.banner && (
+                  <div className="mb-3">
+                    {typeof formik.values.banner === "object" ? (
+                      <img
+                        src={URL.createObjectURL(formik.values.banner)}
+                        alt="Shop logo"
+                        style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      />
+                    ) : (
+                      <img
+                        src={`${ImageURL}${formik.values.banner}`}
+                        alt="Shop logo"
+                        style={{ maxWidth: "100px", maxHeight: "100px" }}
+                      />
+                    )}
+                  </div>
+                )}
               </div>
-              {formik.values.banner &&
+              {/* {formik.values.banner &&
                 typeof formik.values.banner === "string" && (
                   <div className="col-12 mb-3">
                     <img
@@ -418,9 +440,12 @@ const Store = () => {
                       alt="Shop Banner"
                     />
                   </div>
-                )}
+                )} */}
+
               <div className="mb-3">
-                <h5 className="mb-4 fw-bold">Company Description</h5>
+                <h5 className="mb-4 fw-bold">
+                  Company Description<span className="text-danger">*</span>
+                </h5>
               </div>
 
               <div className="row align-items-center">

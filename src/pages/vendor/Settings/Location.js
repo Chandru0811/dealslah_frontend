@@ -11,7 +11,7 @@ function Location() {
   const validationSchema = Yup.object({
     street: Yup.string().required("Street 1 is required"),
     // street2: Yup.string().required("Street 2 is required"),
-    city: Yup.string().required("City is required"),
+    // city: Yup.string().required("City is required"),
     zip_code: Yup.string().required("Zip Code is required"),
     country: Yup.string().required("Country is required"),
     // state: Yup.string().required("State is required"),
@@ -127,7 +127,7 @@ function Location() {
                 )}
               </div>
               <div className="col-md-4 col-12 mb-5">
-                <label className="form-label fw-bold">City<span className="text-danger">*</span></label>
+                <label className="form-label fw-bold">City</label>
               </div>
               <div className="col-md-8 col-12 mb-5">
                 <input
