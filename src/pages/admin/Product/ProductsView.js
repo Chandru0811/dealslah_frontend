@@ -12,8 +12,10 @@ function ProductsView() {
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [datas, setDatas] = useState([]);
-
   const [shopStatus, setShopStatus] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const handleOpenModal = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
 
   const handleActivate = async () => {
     setLoadIndicator(true);
@@ -30,6 +32,25 @@ function ProductsView() {
       console.error("Activation Error:", error);
     } finally {
       setLoadIndicator(false);
+    }
+  };
+
+  const handleDeActive = async () => {
+    setLoading(true);
+    try {
+      const response = await api.post(`admin/deal/${id}/disapprove`);
+      if (response.status === 200) {
+        getData();
+        toast.success("Product DeActivated Successfully!");
+        handleClose();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while activating the product.");
+      console.error("DeActivation Error:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,14 +114,14 @@ function ProductsView() {
                     <></>
                   )}
 
-                  {/* {shopStatus === "1" ? (
-                                <button
-                                    onClick={handleOpenModal}
-                                    className="btn btn-danger btn-sm me-2"
-                                >
-                                    Deactivate
-                                </button>
-                            ) : <></>} */}
+                  {shopStatus === "1" ? (
+                    <button
+                      onClick={handleOpenModal}
+                      className="btn btn-danger btn-sm me-2"
+                    >
+                      Deactivate
+                    </button>
+                  ) : <></>}
                 </div>
               </div>
             </div>
@@ -271,6 +292,15 @@ function ProductsView() {
                   </div>
                 </div>
               </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+
+                  </div>
+                  <div className="col-6">
+                  </div>
+                </div>
+              </div>
               {/* <div className="col-md-6 col-12">
                         <div className="row mb-3">
                             <div className="col-6 d-flex justify-content-start align-items-center">
@@ -377,7 +407,7 @@ function ProductsView() {
                 </div>
               </div>
 
-              <div className=" col-12">
+              <div className="col-12">
                 <div className="row mb-3">
                   <div className="col-3 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
@@ -393,6 +423,32 @@ function ProductsView() {
           </div>
         </div>
       )}
+
+      <Modal show={showModal} backdrop="static" keyboard={false} onHide={handleClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Deactivate Shop</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Are you sure you want to deactivate this shop?
+        </Modal.Body>
+        <Modal.Footer>
+          <button className='btn btn-sm btn-button' onClick={handleClose}>
+            Close
+          </button>
+          <button className='btn-sm btn-danger'
+            type="submit" onClick={handleDeActive}
+            disabled={loading}
+          >
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Deactivate
+          </button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 }
