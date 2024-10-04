@@ -249,18 +249,18 @@ function ProductAdd() {
     if (original_price && discounted_percentage) {
       const discountedPrice =
         original_price - (original_price * discounted_percentage) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
+      formik.setFieldValue("discounted_price", discountedPrice.toFixed(2));
     }
   }, [formik.values.original_price, formik.values.discounted_percentage]);
 
-  // useEffect(() => {
-  //   const { original_price, discounted_price } = formik.values;
-  //   if (original_price && discounted_price) {
-  //     const discountedPercentage =
-  //       ((original_price - discounted_price) / original_price) * 100;
-  //     formik.setFieldValue("discounted_percentage", discountedPercentage);
-  //   }
-  // }, [formik.values.original_price, formik.values.discounted_price]);
+  useEffect(() => {
+    const { original_price, discounted_price } = formik.values;
+    if (original_price && discounted_price) {
+      const discountedPercentage =
+        ((original_price - discounted_price) / original_price) * 100;
+      formik.setFieldValue("discounted_percentage", discountedPercentage.toFixed(2));
+    }
+  }, [formik.values.discounted_price]);
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
