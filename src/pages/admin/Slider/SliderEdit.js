@@ -68,7 +68,7 @@ function SliderEdit() {
   // Fetch the slider data for editing
   useEffect(() => {
     const getData = async () => {
-      setLoadIndicator(true);
+      setLoading(true);
       try {
         const response = await api.get(`admin/slider/${id}`);
         const sliderData = response.data.data;
@@ -84,8 +84,7 @@ function SliderEdit() {
           error.response?.data?.message || "Error Fetching Data";
         toast.error(errorMessage);
       }
-
-      setLoadIndicator(false);
+      setLoading(false);
     };
     getData();
   }, [id]);
@@ -204,7 +203,7 @@ function SliderEdit() {
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
-        {loadIndicator ? (
+        {loading ? (
           <div className="loader-container">
             <div className="loader">
               <svg viewBox="0 0 80 80">
