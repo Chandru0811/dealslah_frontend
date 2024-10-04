@@ -93,12 +93,7 @@ function Stores() {
               </div>
               <div className="col-9">
                 <p className="text-muted text-sm">
-                  :{" "}
-                  {data?.shop_type == 1
-                    ? "Product"
-                    : data?.shop_type == 2
-                    ? "Service"
-                    : ""}
+                  : {data?.shop_type}
                 </p>
               </div>
             </div>
@@ -114,7 +109,7 @@ function Stores() {
                 <p>
                   :{" "}
                   <img
-                    src={`${ImageURL}${data?.icon}`}
+                    src={`${ImageURL}${data?.banner}`}
                     alt=""
                     style={{ maxWidth: "100px", maxHeight: "100px" }}
                   />
@@ -134,7 +129,7 @@ function Stores() {
               </div>
             </div>
           </div>
-          <div className="col-md-5 col-12">
+          {/* <div className="col-md-5 col-12">
             <div className="row mb-3">
               <div className="col-4 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
@@ -145,7 +140,7 @@ function Stores() {
                 <p className="text-muted text-sm">: {data?.shop_ratings}</p>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="col-md-7 col-12">
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
