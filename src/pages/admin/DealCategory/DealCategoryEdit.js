@@ -112,7 +112,6 @@ function DealCategoryEdit() {
         "image/png",
         "image/jpeg",
         "image/jpg",
-        "image/gif",
         "image/svg+xml",
         "image/webp",
       ];
@@ -288,7 +287,7 @@ function DealCategoryEdit() {
                     </label>
                     <input
                       type="file"
-                      accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                      accept=".png, .jpg, .jpeg, .svg, .webp"
                       className={`form-control ${formik.touched.image_path && formik.errors.image_path
                         ? "is-invalid"
                         : ""
@@ -298,7 +297,7 @@ function DealCategoryEdit() {
                     />
                     <p style={{ fontSize: "13px" }}>
                       Note: Maximum file size is 2MB. Allowed: .png, .jpg,
-                      .jpeg, .gif, .svg, .webp.
+                      .jpeg, .svg, .webp.
                     </p>
 
                     {formik.touched.image_path && formik.errors.image_path && (

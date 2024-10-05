@@ -656,7 +656,7 @@ function ProductAdd() {
                 </label>
                 <input
                   type="file"
-                  accept=".png,.jpeg,.jpg,.gif,.svg,.webp"
+                  accept=".png,.jpeg,.jpg,.svg,.webp"
                   className={`form-control ${
                     formik.touched[`image${num}`] &&
                     formik.errors[`image${num}`]
@@ -669,7 +669,7 @@ function ProductAdd() {
                 />
                 <p style={{ fontSize: "13px" }}>
                   Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
-                  .gif, .svg, .webp.
+                  .svg, .webp.
                 </p>
                 {/* Show error message for each image */}
                 {formik.touched[`image${num}`] &&
