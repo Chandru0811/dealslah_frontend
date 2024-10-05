@@ -272,21 +272,24 @@ function ProductAdd() {
         formik.setFieldValue("discounted_price", discountedPrice);
       }
     }
-  }, [formik.values.original_price, formik.values.discounted_percentage]);
+  }, [formik.values.discounted_percentage]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
     if (original_price) {
-      let discountedPercentage = 0;
       if (!discounted_price || discounted_price === "0") {
         formik.setFieldValue("discounted_percentage", 100);
       } else {
-        discountedPercentage =
+        const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
-        formik.setFieldValue("discounted_percentage", discountedPercentage);
+  
+        // Example: Format manually to 1 decimal place if you want
+        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; // For one decimal
+        formik.setFieldValue("discounted_percentage", formattedPercentage);
       }
     }
-  }, [formik.values.discounted_price]);
+  }, [formik.values.discounted_price, formik.values.original_price]);
+  
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -527,7 +530,13 @@ function ProductAdd() {
                 Original Price<span className="text-danger">*</span>
               </label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value.replace(
+                    /[^0-9]/g,
+                    ""
+                  );
+                }}
                 className={`form-control ${
                   formik.touched.original_price && formik.errors.original_price
                     ? "is-invalid"
@@ -549,10 +558,9 @@ function ProductAdd() {
               <input
                 type="text"
                 onInput={(event) => {
-                  event.target.value = event.target.value.replace(
-                    /[^0-9]/g,
-                    ""
-                  );
+                  event.target.value = event.target.value
+                    .replace(/[^0-9.]/g, "") // Allow digits and decimal point
+                    .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
                 }}
                 className={`form-control ${
                   formik.touched.discounted_price &&
@@ -578,8 +586,9 @@ function ProductAdd() {
                 type="text"
                 onInput={(event) => {
                   event.target.value = event.target.value
-                    .replace(/[^0-9]/g, "")
-                    .slice(0, 2);
+                    .replace(/[^0-9.]/g, "") // Allow digits and decimal point
+                    .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
+                    .slice(0, 5); // Limit the length if needed (5 characters for example)
                 }}
                 className={`form-control ${
                   formik.touched.discounted_percentage &&
