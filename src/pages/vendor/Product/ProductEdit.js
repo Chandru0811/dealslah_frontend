@@ -277,8 +277,8 @@ function ProductAdd() {
       } else {
         const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
-  
-        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; 
+
+        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10;
         formik.setFieldValue("discounted_percentage", formattedPercentage);
       }
     }
@@ -343,6 +343,9 @@ function ProductAdd() {
         newImages[index] = reader.result;
         setImages(newImages);
 
+        // Set the image URL in Formik for preview
+        formik.setFieldValue(`image${index + 1}`, reader.result);
+
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
@@ -363,10 +366,13 @@ function ProductAdd() {
       crops[index],
       croppedAreas[index]
     );
-    const file = new File([croppedImageBlob], `croppedImage${index + 1}.jpg`, {
-      type: "image/jpeg",
-    });
-    formik.setFieldValue(`image_url${index + 1}`, file);
+
+    const croppedImageURL = URL.createObjectURL(croppedImageBlob);
+
+    // Set the cropped image in Formik for preview and form submission
+    formik.setFieldValue(`image${index + 1}`, croppedImageURL);
+    formik.setFieldValue(`image_url${index + 1}`, croppedImageBlob);
+
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
@@ -588,7 +594,12 @@ function ProductAdd() {
                     Original Price<span className="text-danger">*</span>
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    onInput={(event) => {
+                      event.target.value = event.target.value
+                        .replace(/[^0-9.]/g, "")
+                        .replace(/(\..*?)\..*/g, "$1");
+                    }}
                     className={`form-control ${
                       formik.touched.original_price &&
                       formik.errors.original_price
@@ -613,7 +624,7 @@ function ProductAdd() {
                     onInput={(event) => {
                       event.target.value = event.target.value
                         .replace(/[^0-9.]/g, "")
-                        .replace(/(\..*?)\..*/g, '$1') 
+                        .replace(/(\..*?)\..*/g, "$1");
                     }}
                     className={`form-control ${
                       formik.touched.discounted_price &&
@@ -640,7 +651,7 @@ function ProductAdd() {
                     onInput={(event) => {
                       event.target.value = event.target.value
                         .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                        .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
+                        .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
                         .slice(0, 5); // Limit the length if needed (5 characters for example)
                     }}
                     className={`form-control ${
@@ -661,10 +672,15 @@ function ProductAdd() {
 
                 <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">
-                    Stock<span className="text-danger">*</span>
+                    stock
                   </label>
                   <input
-                    type="number"
+                    type="text"
+                    onInput={(event) => {
+                      event.target.value = event.target.value
+                        .replace(/[^0-9.]/g, "")
+                        .replace(/(\..*?)\..*/g, "$1");
+                    }}
                     className={`form-control ${
                       formik.touched.stock && formik.errors.stock
                         ? "is-invalid"
@@ -749,12 +765,12 @@ function ProductAdd() {
                       <div className="image-preview mt-2">
                         <img
                           src={formik.values[`image${num}`]}
-                          alt={``}
+                          alt={`Image ${num} Preview`}
                           style={{
                             width: "100px",
                             height: "100px",
                             borderRadius: "8px",
-                          }} // Optional styling for the image
+                          }} 
                         />
                       </div>
                     )}
