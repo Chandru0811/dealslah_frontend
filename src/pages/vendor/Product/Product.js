@@ -47,7 +47,7 @@ const Product = () => {
       const response = await api.get(`vendor/product/${id}`);
       setData(response.data.data); // Update data state
     } catch (error) {
-      console.error('Error refreshing data:', error);
+      console.error("Error refreshing data:", error);
     }
     setLoading(false);
     initializeDataTable(); // Reinitialize DataTable after data update
@@ -61,7 +61,7 @@ const Product = () => {
         const response = await api.get(`vendor/product/${id}`);
         setData(response.data.data);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
       }
       setLoading(false);
       initializeDataTable();
@@ -101,12 +101,10 @@ const Product = () => {
       >
         {loading ? (
           <div className="loader-container">
-            <div class="loading">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32"></circle>
+              </svg>
             </div>
           </div>
         ) : (
