@@ -250,13 +250,13 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="file"
-                  accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                  accept=".png, .jpg, .jpeg, .svg, .webp"
                   className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""
                     }`}
                   onChange={handleFileChange}
                 />
                 <p style={{ fontSize: "13px" }}>
-                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
                 </p>
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>

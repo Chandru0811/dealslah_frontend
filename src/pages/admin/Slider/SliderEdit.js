@@ -98,7 +98,7 @@ function SliderEdit() {
   const handleFileChange = (event) => {
     const file = event.currentTarget.files[0];
     if (file) {
-      const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/gif", "image/svg+xml", "image/webp"];
+      const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml", "image/webp"];
       if (!validTypes.includes(file.type)) {
         toast.error("Unsupported file type. Please select a valid image.");
         return;
@@ -232,17 +232,17 @@ function SliderEdit() {
               <div className="row mt-3">
                 <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">
-                    Image
+                    Image<span className="text-danger">*</span>
                   </label>
                   <input
                     type="file"
-                    accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                    accept=".png, .jpg, .jpeg, .svg, .webp"
                     className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
                     onChange={handleFileChange}
                     onBlur={formik.handleBlur}
                   />
                   <p style={{ fontSize: "13px" }}>
-                    Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                    Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
                   </p>
                   {formik.touched.image && formik.errors.image && (
                     <div className="invalid-feedback">{formik.errors.image}</div>

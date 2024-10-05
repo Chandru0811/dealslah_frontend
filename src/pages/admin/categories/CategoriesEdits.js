@@ -145,7 +145,6 @@ function CategoriesEdits() {
         "image/png",
         "image/jpeg",
         "image/jpg",
-        "image/gif",
         "image/svg+xml",
         "image/webp",
       ];
@@ -336,7 +335,7 @@ function CategoriesEdits() {
                     </label>
                     <input
                       type="file"
-                      accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                      accept=".png, .jpg, .jpeg, .svg, .webp"
                       className={`form-control ${formik.touched.image && formik.errors.image
                         ? "is-invalid"
                         : ""
@@ -346,7 +345,7 @@ function CategoriesEdits() {
                     />
                     <p style={{ fontSize: "13px" }}>
                       Note: Maximum file size is 2MB. Allowed: .png, .jpg,
-                      .jpeg, .gif, .svg, .webp.
+                      .jpeg, .svg, .webp.
                     </p>
 
                     {formik.touched.image && formik.errors.image && (

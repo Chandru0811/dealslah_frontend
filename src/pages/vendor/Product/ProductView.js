@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import Image from "../../../assets/tv.png"; // Ensure you have a fallback if the image is not available
+// import Image from "../../../assets/tv.png"; // Ensure you have a fallback if the image is not available
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";

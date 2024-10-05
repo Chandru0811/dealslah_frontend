@@ -188,13 +188,13 @@ function SliderAdd() {
               </label>
               <input
                 type="file"
-                accept=".png, .jpg, .jpeg, .gif, .svg, .webp"
+                accept=".png, .jpg, .jpeg, .svg, .webp"
                 className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""
                   }`}
                 onChange={handleFileChange}
               />
               <p style={{ fontSize: "13px" }}>
-                Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .gif, .svg, .webp.
+                Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
               </p>
               {formik.touched.image && formik.errors.image && (
                 <div className="invalid-feedback">{formik.errors.image}</div>
