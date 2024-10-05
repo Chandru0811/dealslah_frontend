@@ -39,12 +39,9 @@ function ProductAdd() {
     "image/svg+xml",
     "image/webp",
   ];
-  const FILE_SIZE = 2 * 1024 * 1024;
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const imageValidation = Yup.mixed()
     .nullable()
-    .test("fileSize", "File size is too large. Max 2MB", (value) => {
-      return !value || (value && value.size <= FILE_SIZE);
-    })
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     });
@@ -337,6 +334,13 @@ function ProductAdd() {
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(
+          `image${index + 1}`,
+          "File size is too large. Max 2MB."
+        );
+        return;
+      }
       const reader = new FileReader();
       reader.onload = () => {
         const newImages = [...images];
@@ -671,9 +675,7 @@ function ProductAdd() {
                 </div>
 
                 <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    stock
-                  </label>
+                  <label className="form-label">stock</label>
                   <input
                     type="text"
                     onInput={(event) => {
@@ -770,7 +772,7 @@ function ProductAdd() {
                             width: "100px",
                             height: "100px",
                             borderRadius: "8px",
-                          }} 
+                          }}
                         />
                       </div>
                     )}

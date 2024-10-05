@@ -35,12 +35,9 @@ function ProductAdd() {
     "image/svg+xml",
     "image/webp",
   ];
-  const FILE_SIZE = 2 * 1024 * 1024;
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const imageValidation = Yup.mixed()
-    .required("Image field is required")
-    .test("fileSize", "File size is too large. Max 2MB", (value) => {
-      return !value || (value && value.size <= FILE_SIZE);
-    })
+  .required("*Image is required")
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     });
@@ -295,13 +292,19 @@ useEffect(() => {
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
+    
     if (file) {
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(`image${index + 1}`, "File size is too large. Max 2MB.");
+        return; 
+      }
+  
       const reader = new FileReader();
       reader.onload = () => {
         const newImages = [...images];
         newImages[index] = reader.result;
         setImages(newImages);
-
+  
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
