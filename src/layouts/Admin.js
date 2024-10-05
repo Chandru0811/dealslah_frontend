@@ -34,7 +34,7 @@ import DealCategory from "../pages/admin/DealCategory/DealCategory";
 import DealCategoryAdd from "../pages/admin/DealCategory/DealCategoryAdd";
 import DealCategoryEdit from "../pages/admin/DealCategory/DealCategoryEdit";
 import DealCategoryView from "../pages/admin/DealCategory/DealCategoryView";
-import ScrollToTop from "../pages/ScroolToTop";
+import ScrollToTop from "../pages/ScrollToTop";
 
 function Admin({ handleLogout }) {
   return (

@@ -42,7 +42,7 @@ function Sidebar({ handleLogout }) {
         >
           <img src={deals} alt="deals" className="img-fluid sidebar-logo rounded-circle"
             style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
-          <p className="text-white">Dealslash</p>
+          <p className="text-white">Dealslah</p>
         </NavLink>
         <div className="collapse navbar-collapse" id="sidebarCollapse">
           <ul className="navbar-nav">

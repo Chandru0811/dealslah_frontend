@@ -18,11 +18,13 @@ import Category from "../pages/vendor/Category/Category";
 import CategoryAdd from "../pages/vendor/Category/CategoryAdd";
 import CategoryEdit from "../pages/vendor/Category/CategoryEdit";
 import CategoryView from "../pages/vendor/Category/CategoryView";
+import ScrollToTop from "../pages/ScrollToTop";
 
 function Vendor({ handleLogout }) {
   return (
     <div>
       <BrowserRouter basename="/dealslahVendor">
+      <ScrollToTop />
         <ApprovePopup />
         <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
           <VendorSidebar handleLogout={handleLogout} />

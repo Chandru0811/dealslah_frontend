@@ -461,6 +461,7 @@ const Store = () => {
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                     value={formik.values.description}
+                    // style={{ cursor: "none"}}
                   />
                   {formik.touched.description && formik.errors.description && (
                     <div className="error text-danger">

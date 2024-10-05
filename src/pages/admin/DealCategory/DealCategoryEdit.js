@@ -49,9 +49,11 @@ function DealCategoryEdit() {
       formData.append("slug", values.slug);
 
       formData.append("name", values.name);
-      formData.append("image", values.image_path);
       // formData.append("active", values.active);
       formData.append("description", values.description);
+      if (values.image) {
+        formData.append("image", values.image_path);
+      }
 
       try {
         const response = await api.post(
