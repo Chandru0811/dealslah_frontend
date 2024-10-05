@@ -123,8 +123,12 @@ const Store = () => {
         formik.setValues(shopData);
         formik.setFieldValue(
           "shopType",
-          shopData.shop_type === "1" ? "product" : "service"
+          shopData.shop_type === "product" ? "product" :
+          shopData.shop_type === "service" ? "service" :
+          shopData.shop_type === "product&service" ? "product&service" :
+          "" 
         );
+        
       } catch (error) {
         toast.error("Error Fetching Data ", error);
       }
@@ -270,6 +274,7 @@ const Store = () => {
                   <option></option>
                   <option value="product">Product</option>
                   <option value="service">Service</option>
+                  <option value="product&service">Product and Service</option>
                 </select>
                 {formik.touched.shopType && formik.errors.shopType && (
                   <div className="error text-danger">

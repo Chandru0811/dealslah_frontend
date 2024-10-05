@@ -67,9 +67,9 @@ function ProductAdd() {
     //   .required("End Date is required")
     //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
     //   .nullable(),
-    stock: Yup.number()
-      .required("Stock is required")
-      .min(0, "Stock cannot be negative"),
+    // stock: Yup.number()
+    //   .required("Stock is required")
+    //   .min(0, "Stock cannot be negative"),
     // sku: Yup.string().required("SKU is required"),
     image1: imageValidation,
     image2: imageValidation,
@@ -260,19 +260,22 @@ function ProductAdd() {
   //   formik1.setFieldValue("description", "");
   //   setShowModal(true);
   // };
-  useEffect(() => {
-    const { original_price, discounted_percentage } = formik.values;
+useEffect(() => {
+  const { original_price, discounted_percentage } = formik.values;
 
-    if (original_price) {
-      if (discounted_percentage === "" || discounted_percentage === null) {
-        formik.setFieldValue("discounted_price", original_price);
-      } else {
-        const discountedPrice =
-          original_price - (original_price * discounted_percentage) / 100;
-        formik.setFieldValue("discounted_price", discountedPrice);
-      }
+  if (original_price) {
+    if (discounted_percentage === "" || discounted_percentage === null) {
+      formik.setFieldValue("discounted_price", original_price);
+    } else {
+      const parsedDiscountedPercentage = parseFloat(discounted_percentage);
+      const discountedPrice = (
+        original_price - (original_price * parsedDiscountedPercentage) / 100
+      )
+
+      formik.setFieldValue("discounted_price", discountedPrice);
     }
-  }, [formik.values.discounted_percentage]);
+  }
+}, [formik.values.discounted_percentage]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
@@ -282,14 +285,13 @@ function ProductAdd() {
       } else {
         const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
-  
+
         // Example: Format manually to 1 decimal place if you want
         const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; // For one decimal
         formik.setFieldValue("discounted_percentage", formattedPercentage);
       }
     }
   }, [formik.values.discounted_price, formik.values.original_price]);
-  
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -560,7 +562,8 @@ function ProductAdd() {
                 onInput={(event) => {
                   event.target.value = event.target.value
                     .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                    .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
+                    .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control ${
                   formik.touched.discounted_price &&
@@ -585,10 +588,12 @@ function ProductAdd() {
               <input
                 type="text"
                 onInput={(event) => {
-                  event.target.value = event.target.value
-                    .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                    .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
-                    .slice(0, 5); // Limit the length if needed (5 characters for example)
+                  const value = event.target.value
+                    .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
+                    .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
+                    .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
+                  
+                  formik.setFieldValue("discounted_percentage", value);
                 }}
                 className={`form-control ${
                   formik.touched.discounted_percentage &&
@@ -607,11 +612,14 @@ function ProductAdd() {
             </div>
 
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Stock<span className="text-danger">*</span>
-              </label>
+              <label className="form-label">Stock</label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*?)\..*/g, "$1");
+                }}
                 className={`form-control ${
                   formik.touched.stock && formik.errors.stock
                     ? "is-invalid"

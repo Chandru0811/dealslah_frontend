@@ -104,11 +104,11 @@ function ProductView() {
                     {/* Debugging */}
                     <p className="text-muted text-sm">
                       :{" "}
-                      {data?.deal_type === 1 || data?.deal_type === "0"
+                      {data?.deal_type === 1 || data?.deal_type === "1"
                         ? "Product"
-                        : data?.deal_type === 2 || data?.deal_type === "1"
+                        : data?.deal_type === 2 || data?.deal_type === "2"
                         ? "Service"
-                        : data?.deal_type === 3 || data?.deal_type === "2"
+                        : data?.deal_type === 3 || data?.deal_type === "3"
                         ? "Product and Service"
                         : "Unknown"}
                     </p>
