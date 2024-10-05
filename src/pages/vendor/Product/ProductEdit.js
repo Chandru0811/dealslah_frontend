@@ -271,17 +271,18 @@ function ProductAdd() {
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
-
     if (original_price) {
       if (!discounted_price || discounted_price === "0") {
-        formik.setFieldValue("discount_percentage", 100);
+        formik.setFieldValue("discounted_percentage", 100);
       } else {
-        const discountPercentage =
+        const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
-        formik.setFieldValue("discount_percentage", discountPercentage);
+  
+        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; 
+        formik.setFieldValue("discounted_percentage", formattedPercentage);
       }
     }
-  }, [formik.values.original_price, formik.values.discounted_price]);
+  }, [formik.values.discounted_price, formik.values.original_price]);
 
   const getData = async () => {
     try {
@@ -610,10 +611,9 @@ function ProductAdd() {
                   <input
                     type="text"
                     onInput={(event) => {
-                      event.target.value = event.target.value.replace(
-                        /[^0-9]/g,
-                        ""
-                      );
+                      event.target.value = event.target.value
+                        .replace(/[^0-9.]/g, "")
+                        .replace(/(\..*?)\..*/g, '$1') 
                     }}
                     className={`form-control ${
                       formik.touched.discounted_price &&
@@ -639,8 +639,9 @@ function ProductAdd() {
                     type="text"
                     onInput={(event) => {
                       event.target.value = event.target.value
-                        .replace(/[^0-9]/g, "")
-                        .slice(0, 2);
+                        .replace(/[^0-9.]/g, "") // Allow digits and decimal point
+                        .replace(/(\..*?)\..*/g, '$1') // Ensure only one decimal point
+                        .slice(0, 5); // Limit the length if needed (5 characters for example)
                     }}
                     className={`form-control ${
                       formik.touched.discount_percentage &&
