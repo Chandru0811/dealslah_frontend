@@ -30,6 +30,8 @@ function CategoryGroupAdd() {
       ),
     order: Yup.string().required("*Select an order"),
     // active: Yup.string().required("*Select an active"),
+    description: Yup.string().required("*Describtion is required"),
+    icon: Yup.string().required("*Icon is required"),
   });
 
   const formik = useFormik({
@@ -345,12 +347,21 @@ function CategoryGroupAdd() {
               </div>
 
               <div className="col-md-6 col-12 mb-3">
-                <label className="form-label">Description</label>
+                <label className="form-label">
+                  Description<span className="text-danger">*</span>
+                </label>
                 <textarea
                   rows={4}
-                  className="form-control"
+                  className={`form-control ${
+                    formik.touched.description && formik.errors.description
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("description")}
                 />
+                {formik.touched.description && formik.errors.description && (
+                  <div className="invalid-feedback">{formik.errors.description}</div>
+                )}
               </div>
             </div>
           </div>
