@@ -34,7 +34,6 @@ function ProductAdd() {
     "image/jpg",
     "image/jpeg",
     "image/png",
-    "image/gif",
     "image/svg+xml",
     "image/webp",
   ];
@@ -253,32 +252,32 @@ function ProductAdd() {
   }, []);
 
   useEffect(() => {
-    const { original_price, discounted_percentage } = formik.values;
+    const { original_price, discount_percentage } = formik.values;
 
     if (original_price) {
-      if (discounted_percentage === "" || discounted_percentage === null) {
+      if (discount_percentage === "" || discount_percentage === null) {
         formik.setFieldValue("discounted_price", original_price);
       } else {
         const discountedPrice =
-          original_price - (original_price * discounted_percentage) / 100;
+          original_price - (original_price * discount_percentage) / 100;
         formik.setFieldValue("discounted_price", discountedPrice);
       }
     }
-  }, [formik.values.original_price, formik.values.discounted_percentage]);
+  }, [formik.values.discount_percentage]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
+
     if (original_price) {
-      let discountedPercentage = 0;
       if (!discounted_price || discounted_price === "0") {
-        formik.setFieldValue("discounted_percentage", 100);
+        formik.setFieldValue("discount_percentage", 100);
       } else {
-        discountedPercentage =
+        const discountPercentage =
           ((original_price - discounted_price) / original_price) * 100;
-        formik.setFieldValue("discounted_percentage", discountedPercentage);
+        formik.setFieldValue("discount_percentage", discountPercentage);
       }
     }
-  }, [formik.values.discounted_price]);
+  }, [formik.values.original_price, formik.values.discounted_price]);
 
   const getData = async () => {
     try {
@@ -588,7 +587,13 @@ function ProductAdd() {
                 Discounted Price<span className="text-danger">*</span>
               </label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value.replace(
+                    /[^0-9]/g,
+                    ""
+                  );
+                }}
                 className={`form-control ${
                   formik.touched.discounted_price &&
                   formik.errors.discounted_price
@@ -610,7 +615,12 @@ function ProductAdd() {
                 Discounted Percentage<span className="text-danger">*</span>
               </label>
               <input
-                type="number"
+                type="text"
+                onInput={(event) => {
+                  event.target.value = event.target.value
+                    .replace(/[^0-9]/g, "")
+                    .slice(0, 2);
+                }}
                 className={`form-control ${
                   formik.touched.discount_percentage &&
                   formik.errors.discount_percentage
@@ -686,7 +696,7 @@ function ProductAdd() {
                 </label>
                 <input
                   type="file"
-                  accept=".png,.jpeg,.jpg,.gif,.svg,.webp"
+                  accept=".png,.jpeg,.jpg,.svg,.webp"
                   className={`form-control ${
                     formik.touched[`image_url${num}`] &&
                     formik.errors[`image_url${num}`]
@@ -699,7 +709,7 @@ function ProductAdd() {
                 />
                 <p style={{ fontSize: "13px" }}>
                   Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
-                  .gif, .svg, .webp.
+                  .svg, .webp.
                 </p>
                 {formik.touched[`image_url${num}`] &&
                   formik.errors[`image_url${num}`] && (
