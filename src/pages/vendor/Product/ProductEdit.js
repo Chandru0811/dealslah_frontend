@@ -47,7 +47,9 @@ function ProductAdd() {
     });
   const validationSchema = Yup.object({
     categoryGroupId: Yup.string().required("Shop Id is required"),
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
     // brand: Yup.string().required("Brand is required"),
     original_price: Yup.number()
@@ -364,6 +366,25 @@ function ProductAdd() {
     setCroppedAreas(newCroppedAreas);
   };
 
+  const handleCropCancel = (index) => {
+    const newShowCropper = [...showCropper];
+    newShowCropper[index] = false; // Hide cropper for the specific index
+    setShowCropper(newShowCropper);
+
+    const newImages = [...images];
+    newImages[index] = null; // Clear the image for this specific index
+    setImages(newImages);
+
+    // Reset the Formik field value for this specific image field
+    formik.setFieldValue(`image${index + 1}`, "");
+
+    // Reset the specific file input by targeting it using its index
+    const fileInput = document.querySelectorAll("input[type='file']")[index];
+    if (fileInput) {
+      fileInput.value = ""; // Clear the file input value
+    }
+  };
+
   const handleCropSave = async (index) => {
     const croppedImageBlob = await getCroppedImg(
       images[index],
@@ -448,12 +469,11 @@ function ProductAdd() {
                     Category Group<span className="text-danger">*</span>
                   </label>
                   <select
-                    className={`form-select ${
-                      formik.touched.categoryGroupId &&
+                    className={`form-select ${formik.touched.categoryGroupId &&
                       formik.errors.categoryGroupId
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("categoryGroupId")}
                     onChange={handleCategorygroupChange}
                     value={formik.values.categoryGroupId} // Ensure value is set from Formik state
@@ -480,11 +500,10 @@ function ProductAdd() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${
-                      formik.touched.category_id && formik.errors.category_id
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("category_id")}
                     onChange={(event) => {
                       const selectedValue = event.target.value;
@@ -525,11 +544,10 @@ function ProductAdd() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${
-                      formik.touched.deal_type && formik.errors.deal_type
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("deal_type")}
                   >
                     <option></option>
@@ -548,11 +566,10 @@ function ProductAdd() {
                   <label className="form-label">Brand</label>
                   <input
                     type="text"
-                    className={`form-control ${
-                      formik.touched.brand && formik.errors.brand
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.brand && formik.errors.brand
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("brand")}
                   />
                   {formik.touched.brand && formik.errors.brand && (
@@ -567,12 +584,12 @@ function ProductAdd() {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${
-                      formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.name && formik.errors.name
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("name")}
+                    maxLength={825}
                   />
                   {formik.touched.name && formik.errors.name && (
                     <div className="invalid-feedback">{formik.errors.name}</div>
@@ -582,11 +599,10 @@ function ProductAdd() {
                   <label className="form-label">SKU</label>
                   <input
                     type="text"
-                    className={`form-control ${
-                      formik.touched.sku && formik.errors.sku
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.sku && formik.errors.sku
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("sku")}
                   />
                   {formik.touched.sku && formik.errors.sku && (
@@ -604,12 +620,11 @@ function ProductAdd() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${
-                      formik.touched.original_price &&
+                    className={`form-control ${formik.touched.original_price &&
                       formik.errors.original_price
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("original_price")}
                   />
                   {formik.touched.original_price &&
@@ -630,12 +645,11 @@ function ProductAdd() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${
-                      formik.touched.discounted_price &&
+                    className={`form-control ${formik.touched.discounted_price &&
                       formik.errors.discounted_price
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("discounted_price")}
                   />
                   {formik.touched.discounted_price &&
@@ -658,12 +672,11 @@ function ProductAdd() {
                         .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
                         .slice(0, 5); // Limit the length if needed (5 characters for example)
                     }}
-                    className={`form-control ${
-                      formik.touched.discount_percentage &&
+                    className={`form-control ${formik.touched.discount_percentage &&
                       formik.errors.discount_percentage
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("discount_percentage")}
                   />
                   {formik.touched.discount_percentage &&
@@ -683,11 +696,10 @@ function ProductAdd() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${
-                      formik.touched.stock && formik.errors.stock
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.stock && formik.errors.stock
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("stock")}
                   />
                   {formik.touched.stock && formik.errors.stock && (
@@ -701,11 +713,10 @@ function ProductAdd() {
                   <label className="form-label">Start Date</label>
                   <input
                     type="date"
-                    className={`form-control ${
-                      formik.touched.start_date && formik.errors.start_date
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("start_date")}
                   />
                   {formik.touched.start_date && formik.errors.start_date && (
@@ -718,11 +729,10 @@ function ProductAdd() {
                   <label className="form-label">End Date</label>
                   <input
                     type="date"
-                    className={`form-control ${
-                      formik.touched.end_date && formik.errors.end_date
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("end_date")}
                   />
                   {formik.touched.end_date && formik.errors.end_date && (
@@ -741,12 +751,11 @@ function ProductAdd() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${
-                        formik.touched[`image_url${num}`] &&
+                      className={`form-control ${formik.touched[`image_url${num}`] &&
                         formik.errors[`image_url${num}`]
-                          ? "is-invalid"
-                          : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                        }`}
                       name={`image_url${num}`}
                       onChange={(e) => handleFileChange(index, e)}
                       onBlur={formik.handleBlur}
@@ -804,13 +813,22 @@ function ProductAdd() {
                             }
                           />
                         </div>
-                        <button
-                          type="button"
-                          className="btn btn-primary mt-3"
-                          onClick={() => handleCropSave(index)}
-                        >
-                          Save Cropped Image {num}
-                        </button>
+                        <div className="d-flex justify-content-start mt-3 gap-2">
+                          <button
+                            type="button"
+                            className="btn btn-primary mt-3"
+                            onClick={() => handleCropSave(index)}
+                          >
+                            Save Cropped Image {num}
+                          </button>
+                          <button
+                            type="button"
+                            className="btn btn-secondary mt-3"
+                            onClick={() => handleCropCancel(index)}
+                          >
+                            Cancel
+                          </button>
+                        </div>
                       </>
                     )}
                   </div>
@@ -822,11 +840,10 @@ function ProductAdd() {
                   <textarea
                     type="text"
                     rows={5}
-                    className={`form-control ${
-                      formik.touched.description && formik.errors.description
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.description && formik.errors.description
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("description")}
                   />
                   {formik.touched.description && formik.errors.description && (

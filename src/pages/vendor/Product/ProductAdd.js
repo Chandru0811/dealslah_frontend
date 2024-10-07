@@ -37,13 +37,15 @@ function ProductAdd() {
   ];
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const imageValidation = Yup.mixed()
-  .required("*Image is required")
+    .required("*Image is required")
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     });
   const validationSchema = Yup.object({
     shop_id: Yup.string().required("Caategory Group is required"),
-    name: Yup.string().required("Name is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
     category_id: Yup.string().required("Category Id is required"),
     deal_type: Yup.string().required("Deal Type is required"),
     // brand: Yup.string().required("Brand is required"),
@@ -57,7 +59,7 @@ function ProductAdd() {
       .required("Discounted Price is required")
       .lessThan(
         Yup.ref("original_price"),
-        "Discounted Price must be less than Original Price"
+        "The Discounted Price must be below the Original Price."
       ),
     // start_date: Yup.date().required("Start Date is required").nullable(),
     // end_date: Yup.date()
@@ -257,22 +259,24 @@ function ProductAdd() {
   //   formik1.setFieldValue("description", "");
   //   setShowModal(true);
   // };
-useEffect(() => {
-  const { original_price, discounted_percentage } = formik.values;
+  useEffect(() => {
+    const { original_price, discounted_percentage } = formik.values;
 
-  if (original_price) {
-    if (discounted_percentage === "" || discounted_percentage === null) {
-      formik.setFieldValue("discounted_price", original_price);
-    } else {
-      const parsedDiscountedPercentage = parseFloat(discounted_percentage);
-      const discountedPrice = (
-        original_price - (original_price * parsedDiscountedPercentage) / 100
-      )
-
-      formik.setFieldValue("discounted_price", discountedPrice);
+    if (original_price) {
+      if (discounted_percentage === "" || discounted_percentage === null) {
+        formik.setFieldValue("discounted_price", original_price);
+      } else {
+        // Calculate Discounted Price based on the Discounted Percentage
+        const parsedDiscountedPercentage = parseFloat(discounted_percentage);
+        if (parsedDiscountedPercentage >= 0 && parsedDiscountedPercentage <= 100) {
+          const discountedPrice = (
+            original_price - (original_price * parsedDiscountedPercentage) / 100
+          ).toFixed(0); // Keep two decimal points for Discounted Price
+          formik.setFieldValue("discounted_price", discountedPrice);
+        }
+      }
     }
-  }
-}, [formik.values.discounted_percentage]);
+  }, [formik.values.discounted_percentage]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
@@ -280,8 +284,9 @@ useEffect(() => {
       if (!discounted_price || discounted_price === "0") {
         formik.setFieldValue("discounted_percentage", 100);
       } else {
-        const discountedPercentage =
-          ((original_price - discounted_price) / original_price) * 100;
+        const discountedPercentage = (
+          ((original_price - discounted_price) / original_price) * 100
+        ).toFixed(0);
 
         // Example: Format manually to 1 decimal place if you want
         const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; // For one decimal
@@ -292,19 +297,19 @@ useEffect(() => {
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
-    
+
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
         formik.setFieldError(`image${index + 1}`, "File size is too large. Max 2MB.");
-        return; 
+        return;
       }
-  
+
       const reader = new FileReader();
       reader.onload = () => {
         const newImages = [...images];
         newImages[index] = reader.result;
         setImages(newImages);
-  
+
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
@@ -317,6 +322,25 @@ useEffect(() => {
     const newCroppedAreas = [...croppedAreas];
     newCroppedAreas[index] = croppedAreaPixels;
     setCroppedAreas(newCroppedAreas);
+  };
+
+  const handleCropCancel = (index) => {
+    const newShowCropper = [...showCropper];
+    newShowCropper[index] = false; // Hide cropper for the specific index
+    setShowCropper(newShowCropper);
+
+    const newImages = [...images];
+    newImages[index] = null; // Clear the image for this specific index
+    setImages(newImages);
+
+    // Reset the Formik field value for this specific image field
+    formik.setFieldValue(`image${index + 1}`, "");
+
+    // Reset the specific file input by targeting it using its index
+    const fileInput = document.querySelectorAll("input[type='file']")[index];
+    if (fileInput) {
+      fileInput.value = ""; // Clear the file input value
+    }
   };
 
   const handleCropSave = async (index) => {
@@ -390,11 +414,10 @@ useEffect(() => {
                 Category Group<span className="text-danger">*</span>
               </label>
               <select
-                className={`form-select ${
-                  formik.touched.shop_id && formik.errors.shop_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.shop_id && formik.errors.shop_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("shop_id")}
                 onChange={handleCategorygroupChange}
                 value={formik.values.shop_id} // Ensure value is set from Formik state
@@ -418,24 +441,23 @@ useEffect(() => {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.category_id && formik.errors.category_id
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("category_id")}
-                // onChange={(event) => {
-                //   const selectedValue = event.target.value;
-                //   if (selectedValue === "add_new") {
-                //     // formik1.resetForm();
-                //     formik1.setFieldValue("name", "");
-                //     formik1.setFieldValue("icon", "");
-                //     formik1.setFieldValue("description", "");
-                //     setShowModal(true);
-                //   } else {
-                //     formik.setFieldValue("category_id", selectedValue);
-                //   }
-                // }}
+              // onChange={(event) => {
+              //   const selectedValue = event.target.value;
+              //   if (selectedValue === "add_new") {
+              //     // formik1.resetForm();
+              //     formik1.setFieldValue("name", "");
+              //     formik1.setFieldValue("icon", "");
+              //     formik1.setFieldValue("description", "");
+              //     setShowModal(true);
+              //   } else {
+              //     formik.setFieldValue("category_id", selectedValue);
+              //   }
+              // }}
               >
                 <option></option>
                 {category &&
@@ -467,11 +489,10 @@ useEffect(() => {
               </label>
               <select
                 type="text"
-                className={`form-select ${
-                  formik.touched.deal_type && formik.errors.deal_type
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("deal_type")}
               >
                 <option></option>
@@ -490,11 +511,10 @@ useEffect(() => {
               <label className="form-label">Brand</label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.brand && formik.errors.brand
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.brand && formik.errors.brand
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("brand")}
               />
               {formik.touched.brand && formik.errors.brand && (
@@ -507,10 +527,10 @@ useEffect(() => {
               </label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.name && formik.errors.name ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.name && formik.errors.name ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("name")}
+                maxLength={825}
               />
               {formik.touched.name && formik.errors.name && (
                 <div className="invalid-feedback">{formik.errors.name}</div>
@@ -520,9 +540,8 @@ useEffect(() => {
               <label className="form-label">SKU</label>
               <input
                 type="text"
-                className={`form-control ${
-                  formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
-                }`}
+                className={`form-control ${formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
+                  }`}
                 {...formik.getFieldProps("sku")}
               />
               {formik.touched.sku && formik.errors.sku && (
@@ -542,11 +561,10 @@ useEffect(() => {
                     ""
                   );
                 }}
-                className={`form-control ${
-                  formik.touched.original_price && formik.errors.original_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.original_price && formik.errors.original_price
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("original_price")}
               />
               {formik.touched.original_price &&
@@ -556,6 +574,7 @@ useEffect(() => {
                   </div>
                 )}
             </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Discounted Price<span className="text-danger">*</span>
@@ -568,12 +587,11 @@ useEffect(() => {
                     .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
                     .replace(/(\.\d{2})./g, "$1");
                 }}
-                className={`form-control ${
-                  formik.touched.discounted_price &&
+                className={`form-control ${formik.touched.discounted_price &&
                   formik.errors.discounted_price
-                    ? "is-invalid"
-                    : ""
-                }`}
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("discounted_price")}
                 value={formik.values.discounted_price}
               />
@@ -584,9 +602,10 @@ useEffect(() => {
                   </div>
                 )}
             </div>
+
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
-                Discounted Percentage<span className="text-danger">*</span>
+                Discounted Percentage (%)<span className="text-danger">*</span>
               </label>
               <input
                 type="text"
@@ -595,15 +614,14 @@ useEffect(() => {
                     .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
                     .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
                     .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
-                  
+
                   formik.setFieldValue("discounted_percentage", value);
                 }}
-                className={`form-control ${
-                  formik.touched.discounted_percentage &&
+                className={`form-control ${formik.touched.discounted_percentage &&
                   formik.errors.discounted_percentage
-                    ? "is-invalid"
-                    : ""
-                }`}
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("discounted_percentage")}
               />
               {formik.touched.discounted_percentage &&
@@ -623,11 +641,10 @@ useEffect(() => {
                     .replace(/[^0-9.]/g, "")
                     .replace(/(\..*?)\..*/g, "$1");
                 }}
-                className={`form-control ${
-                  formik.touched.stock && formik.errors.stock
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.stock && formik.errors.stock
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("stock")}
               />
               {formik.touched.stock && formik.errors.stock && (
@@ -639,11 +656,10 @@ useEffect(() => {
               <label className="form-label">Start Date</label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.start_date && formik.errors.start_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("start_date")}
               />
               {formik.touched.start_date && formik.errors.start_date && (
@@ -656,11 +672,10 @@ useEffect(() => {
               <label className="form-label">End Date</label>
               <input
                 type="date"
-                className={`form-control ${
-                  formik.touched.end_date && formik.errors.end_date
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("end_date")}
               />
               {formik.touched.end_date && formik.errors.end_date && (
@@ -677,12 +692,11 @@ useEffect(() => {
                 <input
                   type="file"
                   accept=".png,.jpeg,.jpg,.svg,.webp"
-                  className={`form-control ${
-                    formik.touched[`image${num}`] &&
+                  className={`form-control ${formik.touched[`image${num}`] &&
                     formik.errors[`image${num}`]
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                    ? "is-invalid"
+                    : ""
+                    }`}
                   name={`image${num}`} // Ensure name attribute matches validation schema
                   onChange={(e) => handleFileChange(index, e)}
                   onBlur={formik.handleBlur}
@@ -722,13 +736,22 @@ useEffect(() => {
                         }
                       />
                     </div>
-                    <button
-                      type="button"
-                      className="btn btn-primary mt-3"
-                      onClick={() => handleCropSave(index)}
-                    >
-                      Save Cropped Image {num}
-                    </button>
+                    <div className="d-flex justify-content-start mt-3 gap-2">
+                      <button
+                        type="button"
+                        className="btn btn-primary mt-3"
+                        onClick={() => handleCropSave(index)}
+                      >
+                        Save Cropped Image {num}
+                      </button>
+                      <button
+                        type="button"
+                        className="btn btn-secondary mt-3"
+                        onClick={() => handleCropCancel(index)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </>
                 )}
               </div>
@@ -741,11 +764,10 @@ useEffect(() => {
               <textarea
                 type="text"
                 rows={5}
-                className={`form-control ${
-                  formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.description && formik.errors.description
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("description")}
               />
               {formik.touched.description && formik.errors.description && (
