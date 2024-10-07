@@ -68,10 +68,13 @@ function CategoryGroupEdit() {
   const [previewImage, setPreviewImage] = useState(null);
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("*Name is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
     // icon: Yup.mixed().required("*Icon is required"),
     order: Yup.string().required("*Select an order"),
     // active: Yup.string().required("*Select an active"),
+    description: Yup.string().max(825, "Maximum 825 characters allowed"),
   });
 
   const formik = useFormik({
@@ -101,11 +104,15 @@ function CategoryGroupEdit() {
 
       setLoadIndicator(true);
       try {
-        const response = await api.post(`admin/categoryGroup/update/${id}`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await api.post(
+          `admin/categoryGroup/update/${id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         if (response.status === 200) {
           toast.success(response.data.message);
           navigate("/categorygroup");
@@ -282,14 +289,17 @@ function CategoryGroupEdit() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.name && formik.errors.name
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
-                      <div className="invalid-feedback">{formik.errors.name}</div>
+                      <div className="invalid-feedback">
+                        {formik.errors.name}
+                      </div>
                     )}
                   </div>
 
@@ -298,10 +308,11 @@ function CategoryGroupEdit() {
                       Order<span className="text-danger">*</span>
                     </label>
                     <select
-                      className={`form-select ${formik.touched.order && formik.errors.order
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-select ${
+                        formik.touched.order && formik.errors.order
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("order")}
                     >
                       <option value="">Select an order</option>
@@ -324,14 +335,17 @@ function CategoryGroupEdit() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${formik.touched.icon && formik.errors.icon
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.icon && formik.errors.icon
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("icon")}
                     />
                     {formik.touched.icon && formik.errors.icon && (
-                      <div className="invalid-feedback">{formik.errors.icon}</div>
+                      <div className="invalid-feedback">
+                        {formik.errors.icon}
+                      </div>
                     )}
                   </div>
 
@@ -342,15 +356,17 @@ function CategoryGroupEdit() {
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .svg, .webp"
-                      className={`form-control ${formik.touched.image && formik.errors.image
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.image && formik.errors.image
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
                     />
                     <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
+                      Note: Maximum file size is 2MB. Allowed: .png, .jpg,
+                      .jpeg, .svg, .webp.
                     </p>
                     {formik.touched.image && formik.errors.image && (
                       <div className="invalid-feedback">
@@ -369,7 +385,10 @@ function CategoryGroupEdit() {
                     )}
 
                     {showCropper && (
-                      <div className="position-relative" style={{ height: 400 }}>
+                      <div
+                        className="position-relative"
+                        style={{ height: 400 }}
+                      >
                         <Cropper
                           image={imageSrc}
                           crop={crop}
@@ -411,12 +430,14 @@ function CategoryGroupEdit() {
                       rows={5}
                       className="form-control"
                       {...formik.getFieldProps("description")}
+                      maxLength={825}
                     />
-                    {formik.touched.description && formik.errors.description && (
-                      <div className="invalid-feedback">
-                        {formik.errors.description}
-                      </div>
-                    )}
+                    {formik.touched.description &&
+                      formik.errors.description && (
+                        <div className="invalid-feedback">
+                          {formik.errors.description}
+                        </div>
+                      )}
                   </div>
                 </div>
               </div>

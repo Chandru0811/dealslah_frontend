@@ -20,7 +20,9 @@ function CategoryGroupAdd() {
   const [originalFileName, setOriginalFileName] = useState("");
 
   const validationSchema = Yup.object({
-    name: Yup.string().required("*Name is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
     image: Yup.mixed()
       .required("*Image is required")
       .test(
@@ -30,7 +32,7 @@ function CategoryGroupAdd() {
       ),
     order: Yup.string().required("*Select an order"),
     // active: Yup.string().required("*Select an active"),
-    description: Yup.string().required("*Describtion is required"),
+    description: Yup.string().max(825, "Maximum 825 characters allowed"),
     icon: Yup.string().required("*Icon is required"),
   });
 
@@ -358,9 +360,12 @@ function CategoryGroupAdd() {
                       : ""
                   }`}
                   {...formik.getFieldProps("description")}
+                  maxLength={825}
                 />
                 {formik.touched.description && formik.errors.description && (
-                  <div className="invalid-feedback">{formik.errors.description}</div>
+                  <div className="invalid-feedback">
+                    {formik.errors.description}
+                  </div>
                 )}
               </div>
             </div>

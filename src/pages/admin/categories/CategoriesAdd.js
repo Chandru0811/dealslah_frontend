@@ -15,13 +15,15 @@ function CategoriesAdd() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const navigate = useNavigate();
-  const [originalFileName, setOriginalFileName] = useState('');
+  const [originalFileName, setOriginalFileName] = useState("");
 
   const validationSchema = Yup.object({
     category_group_id: Yup.string().required("*Select an groupId"),
     // active: Yup.string().required("*Select an Status"),
     // description: Yup.string().required("*Description is required"),
-    name: Yup.string().required("*name is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
     icon: Yup.mixed()
       .required("*Icon is required")
       .test(
@@ -29,6 +31,7 @@ function CategoriesAdd() {
         "File size should be less than 2MB",
         (value) => !value || (value && value.size <= 2 * 1024 * 1024)
       ),
+    description: Yup.string().max(825, "Maximum 825 characters allowed"),
   });
 
   const formik = useFormik({
@@ -66,7 +69,9 @@ function CategoriesAdd() {
           toast.error(response.data.message);
         }
       } catch (error) {
-        toast.error(error.response?.data?.message || error.message || "An error occurred");
+        toast.error(
+          error.response?.data?.message || error.message || "An error occurred"
+        );
       } finally {
         setLoadIndicator(false);
       }
@@ -122,8 +127,8 @@ function CategoriesAdd() {
       const image = new Image();
       image.src = imageSrc;
       image.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
         // Set canvas size to 250x250 pixels
         const targetWidth = 300;
@@ -147,21 +152,27 @@ function CategoriesAdd() {
         // Convert the canvas content to a Blob
         canvas.toBlob((blob) => {
           if (!blob) {
-            reject(new Error('Canvas is empty'));
+            reject(new Error("Canvas is empty"));
             return;
           }
-          blob.name = 'croppedImage.jpeg';
+          blob.name = "croppedImage.jpeg";
           resolve(blob);
-        }, 'image/jpeg');
+        }, "image/jpeg");
       };
     });
   };
 
   const handleCropSave = async () => {
     try {
-      const croppedImageBlob = await getCroppedImg(imageSrc, crop, croppedAreaPixels);
+      const croppedImageBlob = await getCroppedImg(
+        imageSrc,
+        crop,
+        croppedAreaPixels
+      );
       const fileName = originalFileName || "croppedImage.jpg";
-      const file = new File([croppedImageBlob], fileName, { type: "image/jpeg" });
+      const file = new File([croppedImageBlob], fileName, {
+        type: "image/jpeg",
+      });
 
       // Set the file in Formik
       formik.setFieldValue("icon", file);
@@ -194,9 +205,7 @@ function CategoriesAdd() {
             </div>
           </div>
         </div>
-        <div
-          className="card shadow border-0 my-2"
-        >
+        <div className="card shadow border-0 my-2">
           <div className="container mb-5">
             <div className="row py-4">
               <div className="col-md-6 col-12 mb-3">
@@ -205,11 +214,12 @@ function CategoriesAdd() {
                 </label>
                 <select
                   aria-label="Default select example"
-                  className={`form-select ${formik.touched.category_group_id &&
+                  className={`form-select ${
+                    formik.touched.category_group_id &&
                     formik.errors.category_group_id
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("category_group_id")}
                 >
                   <option value=""></option>
@@ -233,10 +243,11 @@ function CategoriesAdd() {
                 </label>
                 <input
                   type="text"
-                  className={`form-control ${formik.touched.name && formik.errors.name
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.name && formik.errors.name
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("name")}
                 />
                 {formik.touched.name && formik.errors.name && (
@@ -251,12 +262,16 @@ function CategoriesAdd() {
                 <input
                   type="file"
                   accept=".png, .jpg, .jpeg, .svg, .webp"
-                  className={`form-control ${formik.touched.icon && formik.errors.icon ? "is-invalid" : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.icon && formik.errors.icon
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   onChange={handleFileChange}
                 />
                 <p style={{ fontSize: "13px" }}>
-                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
+                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
+                  .svg, .webp.
                 </p>
                 {formik.touched.icon && formik.errors.icon && (
                   <div className="invalid-feedback">{formik.errors.icon}</div>
@@ -275,7 +290,6 @@ function CategoriesAdd() {
                       cropShape="box"
                       showGrid={false}
                     />
-
                   </div>
                 )}
                 {showCropper && (
@@ -305,11 +319,13 @@ function CategoriesAdd() {
                 </label>
                 <textarea
                   rows={5}
-                  className={`form-control ${formik.touched.description && formik.errors.description
-                    ? "is-invalid"
-                    : ""
-                    }`}
+                  className={`form-control ${
+                    formik.touched.description && formik.errors.description
+                      ? "is-invalid"
+                      : ""
+                  }`}
                   {...formik.getFieldProps("description")}
+                  maxLength={825}
                 />
                 {formik.touched.description && formik.errors.description && (
                   <div className="invalid-feedback">

@@ -20,11 +20,30 @@ function SliderEdit() {
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [originalFileName, setOriginalFileName] = useState("");
+
+  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+  const SUPPORTED_FORMATS = [
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/svg+xml",
+    "image/webp",
+  ];
+
+  const imageValidation = Yup.mixed()
+    .required("*Image is required")
+    .test("fileFormat", "Unsupported format", (value) => {
+      return !value || (value && SUPPORTED_FORMATS.includes(value.type));
+    })
+    .test("fileSize", "File size is too large. Max 2MB.", (value) => {
+      return !value || (value && value.size <= MAX_FILE_SIZE);
+    });
 
   // Validation schema: make image optional when editing
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
-    // image: Yup.mixed().nullable(),
+    image: imageValidation,
   });
 
   // Initialize Formik
@@ -90,42 +109,38 @@ function SliderEdit() {
   }, [id]);
 
   // Handle canceling the cropper
-  const handleCropCancel = () => {
-    setShowCropper(false);
-    setImageSrc(null);
-  };
-
   const handleFileChange = (event) => {
-    const file = event.currentTarget.files[0];
+    const file = event?.target?.files[0];
     if (file) {
-      const validTypes = ["image/png", "image/jpeg", "image/jpg", "image/svg+xml", "image/webp"];
-      if (!validTypes.includes(file.type)) {
-        toast.error("Unsupported file type. Please select a valid image.");
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
         return;
       }
-      if (file.size > 5 * 1024 * 1024) {
-        toast.error("File size exceeds 5MB. Please select a smaller image.");
-        return;
-      }
+      formik.setFieldError(`image`, "");
 
+      // Read file as data URL for cropping
       const reader = new FileReader();
       reader.onload = () => {
-        setImageSrc(reader.result);
-        setShowCropper(true);
+        setImageSrc(reader.result); // Set imageSrc for the cropper
+        setOriginalFileName(file.name);
+        setShowCropper(true); // Show cropper when image is loaded
       };
       reader.readAsDataURL(file);
+
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
+      }
     }
   };
 
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  };
 
-  const getCroppedImg = (imageSrc, croppedAreaPixels) => {
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.src = imageSrc;
-      image.setAttribute("crossOrigin", "anonymous");
       image.onload = () => {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
@@ -147,49 +162,42 @@ function SliderEdit() {
           targetHeight
         );
 
-        canvas.toBlob(
-          (blob) => {
-            if (!blob) {
-              reject(new Error("Canvas is empty"));
-              return;
-            }
-            blob.name = "croppedImage.jpeg";
-            resolve(blob);
-          },
-          "image/jpeg",
-          1
-        );
-      };
-      image.onerror = () => {
-        reject(new Error("Failed to load image"));
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas is empty"));
+            return;
+          }
+          blob.name = "croppedImage.jpeg";
+          resolve(blob);
+        }, "image/jpeg");
       };
     });
   };
 
   const handleCropSave = async () => {
     try {
-      const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-
-      const file = new File([croppedImageBlob], "croppedImage.jpg", {
+      const croppedImageBlob = await getCroppedImg(
+        imageSrc,
+        crop,
+        croppedAreaPixels
+      );
+      const fileName = originalFileName || "croppedImage.jpg";
+      const file = new File([croppedImageBlob], fileName, {
         type: "image/jpeg",
       });
 
-      // Set the cropped image in Formik
       formik.setFieldValue("image", file);
-
-      const newPreviewURL = URL.createObjectURL(file);
-      setPreviewImage(newPreviewURL);
-
-      if (previewImage && previewImage.startsWith("blob:")) {
-        URL.revokeObjectURL(previewImage);
-      }
-
       setShowCropper(false);
-      setImageSrc(null);
     } catch (error) {
       console.error("Error cropping the image:", error);
-      toast.error("Failed to crop the image. Please try again.");
     }
+  };
+
+  const handleCropCancel = () => {
+    setShowCropper(false);
+    setImageSrc(null);
+    formik.setFieldValue("image", "");
+    document.querySelector("input[type='file']").value = "";
   };
 
   useEffect(() => {
@@ -232,20 +240,29 @@ function SliderEdit() {
               <div className="row mt-3">
                 <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">
-                    Image<span className="text-danger">*</span>
+                    Image
+                    <span className="text-danger">*</span>
                   </label>
                   <input
                     type="file"
-                    accept=".png, .jpg, .jpeg, .svg, .webp"
-                    className={`form-control ${formik.touched.image && formik.errors.image ? "is-invalid" : ""}`}
+                    accept=".png,.jpeg,.jpg,.svg,.webp"
+                    className={`form-control ${
+                      formik.touched.image && formik.errors.image
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                    name="image"
                     onChange={handleFileChange}
                     onBlur={formik.handleBlur}
                   />
                   <p style={{ fontSize: "13px" }}>
-                    Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg, .svg, .webp.
+                    Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
+                    .svg, .webp.
                   </p>
                   {formik.touched.image && formik.errors.image && (
-                    <div className="invalid-feedback">{formik.errors.image}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.image}
+                    </div>
                   )}
 
                   {previewImage && (
@@ -257,9 +274,8 @@ function SliderEdit() {
                       />
                     </div>
                   )}
-
-                  {showCropper && (
-                    <div className="position-relative" style={{ height: 400 }}>
+                  {showCropper && imageSrc && (
+                    <div className="crop-container">
                       <Cropper
                         image={imageSrc}
                         crop={crop}
@@ -268,7 +284,7 @@ function SliderEdit() {
                         onCropChange={setCrop}
                         onZoomChange={setZoom}
                         onCropComplete={onCropComplete}
-                        cropShape="box"
+                        cropShape="rect"
                         showGrid={false}
                       />
                     </div>
@@ -283,7 +299,6 @@ function SliderEdit() {
                       >
                         Save Cropped Image
                       </button>
-
                       <button
                         type="button"
                         className="btn btn-secondary mt-3"
@@ -301,8 +316,11 @@ function SliderEdit() {
                   </label>
                   <select
                     aria-label="Default select example"
-                    className={`form-select ${formik.touched.order && formik.errors.order ? "is-invalid" : ""
-                      }`}
+                    className={`form-select ${
+                      formik.touched.order && formik.errors.order
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("order")}
                   >
                     <option value="">Select an order</option>
@@ -313,7 +331,9 @@ function SliderEdit() {
                     ))}
                   </select>
                   {formik.touched.order && formik.errors.order && (
-                    <div className="invalid-feedback">{formik.errors.order}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.order}
+                    </div>
                   )}
                 </div>
               </div>

@@ -27,9 +27,11 @@ function CategoriesEdits() {
     category_group_id: Yup.string().required("*Select an groupId"),
     // active: Yup.string().required("*Select an Status"),
     // description: Yup.string().required("*Description is required"),
-    name: Yup.string().required("*name is required"),
-    // slug: Yup.string().required("*name Label is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"), // slug: Yup.string().required("*name Label is required"),
     // icon: Yup.string().required("*Icon is required"),
+    description: Yup.string().max(825, "Maximum 825 characters allowed"),
   });
 
   const formik = useFormik({
@@ -289,11 +291,12 @@ function CategoriesEdits() {
                     </label>
                     <select
                       aria-label="Default select example"
-                      className={`form-select ${formik.touched.category_group_id &&
+                      className={`form-select ${
+                        formik.touched.category_group_id &&
                         formik.errors.category_group_id
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("category_group_id")}
                     >
                       <option value=""></option>
@@ -317,10 +320,11 @@ function CategoriesEdits() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.name && formik.errors.name
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
@@ -336,10 +340,11 @@ function CategoriesEdits() {
                     <input
                       type="file"
                       accept=".png, .jpg, .jpeg, .svg, .webp"
-                      className={`form-control ${formik.touched.image && formik.errors.image
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.image && formik.errors.image
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
                     />
@@ -410,11 +415,13 @@ function CategoriesEdits() {
                     </label>
                     <textarea
                       rows={5}
-                      className={`form-control ${formik.touched.description && formik.errors.description
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.description && formik.errors.description
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("description")}
+                      maxLength={825}
                     />
                     {formik.touched.description &&
                       formik.errors.description && (
