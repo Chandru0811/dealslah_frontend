@@ -41,10 +41,10 @@ function Admin({ handleLogout }) {
     <div>
       <BrowserRouter basename="/dealslahVendor">
         <ScrollToTop />
-        <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+        <div className="d-flex flex-column flex-lg-row bg-surface-secondary">
           <Sidebar handleLogout={handleLogout} />
 
-          <div className="h-screen flex-grow-1 overflow-y-lg-auto">
+          <div className="flex-grow-1">
             <AdminHeader />
             <main className="pt-2" style={{ backgroundColor: "#f2f2f2" }}>
               <div style={{ minHeight: "90vh" }}>

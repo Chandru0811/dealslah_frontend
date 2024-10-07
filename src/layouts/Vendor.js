@@ -24,13 +24,13 @@ function Vendor({ handleLogout }) {
   return (
     <div>
       <BrowserRouter basename="/dealslahVendor">
-      <ScrollToTop />
         <ApprovePopup />
-        <div className="d-flex flex-column flex-lg-row h-lg-full bg-surface-secondary">
+        <div className="d-flex flex-column flex-lg-row bg-surface-secondary">
           <VendorSidebar handleLogout={handleLogout} />
-          <div className="h-screen flex-grow-1 overflow-y-lg-auto">
+          <div className="flex-grow-1">
             <VendorHeader />
             <main className="pt-3 bg-surface-secondary">
+              <ScrollToTop />
               <div style={{ minHeight: "90vh" }}>
                 <Routes>
                   <Route path="/" element={<DashboardV />} />

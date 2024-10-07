@@ -6,7 +6,6 @@ import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { TbShoppingCartFilled } from "react-icons/tb";
 
-
 function Sidebar({ handleLogout }) {
   const navigate = useNavigate();
   const handelLogOutClick = () => {
@@ -20,7 +19,7 @@ function Sidebar({ handleLogout }) {
 
   return (
     <nav
-      className="navbar show navbar-vertical h-lg-screen navbar-expand-lg p-0 navbar-light border-bottom border-bottom-lg-0 border-end-lg"
+      className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom border-bottom-lg-0 border-end-lg"
       id="navbarVertical"
     >
       <div className="container-fluid">
@@ -36,24 +35,37 @@ function Sidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${leadMenuOpen || activeSubmenu ? "active" : ""
-            }`}
+          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${
+            leadMenuOpen || activeSubmenu ? "active" : ""
+          }`}
           to="/"
+          // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
         >
-          <img src={deals} alt="deals" className="img-fluid sidebar-logo rounded-circle"
-            style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
+          <img
+            src={deals}
+            alt="deals"
+            className="img-fluid sidebar-logo rounded-circle"
+            style={{
+              background: "#fff",
+              borderRadius: "5px",
+              width: "50px",
+              height: "50px",
+            }}
+          />
           <p className="text-white">Dealslah</p>
         </NavLink>
-        <div className="collapse navbar-collapse" id="sidebarCollapse">
+        <div className="collapse navbar-collapse" id="sidebarCollapse" style={{marginTop:"5rem"}}>
           <ul className="navbar-nav">
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
-                <BsBarChartFill />Dashboard
+                <BsBarChartFill />
+                Dashboard
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/slider">
-                <BiSolidCategory />Slider
+                <BiSolidCategory />
+                Slider
               </NavLink>
             </li>
             {/* <li className="nav-item">
@@ -64,22 +76,26 @@ function Sidebar({ handleLogout }) {
             </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/categorygroup">
-                <MdCategory />Category Groups
+                <MdCategory />
+                Category Groups
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/categories">
-                <BiSolidCategory />Categories
+                <BiSolidCategory />
+                Categories
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/dealcategories">
-                <BiSolidCategory />Deal Categories
+                <BiSolidCategory />
+                Deal Categories
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/products">
-                <TbShoppingCartFilled />Product
+                <TbShoppingCartFilled />
+                Product
               </NavLink>
             </li>
             <li className="nav-item">
@@ -89,7 +105,7 @@ function Sidebar({ handleLogout }) {
               </NavLink>
             </li>
           </ul>
-          <div className="mt-auto logutBtn">
+          <div className="ps-4 mt-auto w-100 mb-4">
             <div className="navbar-nav">
               <div className="nav-item">
                 <button
@@ -98,7 +114,8 @@ function Sidebar({ handleLogout }) {
                   className="nav-link ps-6"
                   onClick={handelLogOutClick}
                 >
-                  <BiLogOut />&nbsp;&nbsp; Logout
+                  <BiLogOut />
+                  &nbsp;&nbsp; Logout
                 </button>
               </div>
             </div>
