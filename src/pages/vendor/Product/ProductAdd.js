@@ -271,7 +271,7 @@ function ProductAdd() {
         if (parsedDiscountedPercentage >= 0 && parsedDiscountedPercentage <= 100) {
           const discountedPrice = (
             original_price - (original_price * parsedDiscountedPercentage) / 100
-          ).toFixed(0); // Keep two decimal points for Discounted Price
+          ).toFixed(2); // Keep two decimal points for Discounted Price
           formik.setFieldValue("discounted_price", discountedPrice);
         }
       }
@@ -286,14 +286,14 @@ function ProductAdd() {
       } else {
         const discountedPercentage = (
           ((original_price - discounted_price) / original_price) * 100
-        ).toFixed(0);
+        ).toFixed(2); // Now it handles up to 2 decimal places
 
         // Example: Format manually to 1 decimal place if you want
-        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10; // For one decimal
-        formik.setFieldValue("discounted_percentage", formattedPercentage);
+        formik.setFieldValue("discounted_percentage", parseFloat(discountedPercentage));
       }
     }
   }, [formik.values.discounted_price, formik.values.original_price]);
+
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -556,10 +556,10 @@ function ProductAdd() {
               <input
                 type="text"
                 onInput={(event) => {
-                  event.target.value = event.target.value.replace(
-                    /[^0-9]/g,
-                    ""
-                  );
+                  event.target.value = event.target.value
+                    .replace(/[^0-9.]/g, "") // Allow digits and decimal point
+                    .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control ${formik.touched.original_price && formik.errors.original_price
                   ? "is-invalid"
@@ -581,26 +581,22 @@ function ProductAdd() {
               </label>
               <input
                 type="text"
-                onInput={(event) => {
-                  event.target.value = event.target.value
-                    .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                    .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
-                    .replace(/(\.\d{2})./g, "$1");
+                onChange={(event) => {
+                  const value = event.target.value;
+                  const formattedValue = value
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*?)\..*/g, "$1")
+                    .replace(/(\.\d{2})\d+/g, "$1");
+                  formik.setFieldValue("discounted_price", formattedValue);
                 }}
-                className={`form-control ${formik.touched.discounted_price &&
-                  formik.errors.discounted_price
-                  ? "is-invalid"
-                  : ""
-                  }`}
-                {...formik.getFieldProps("discounted_price")}
+                className={`form-control ${formik.touched.discounted_price && formik.errors.discounted_price ? "is-invalid" : ""}`}
                 value={formik.values.discounted_price}
               />
-              {formik.touched.discounted_price &&
-                formik.errors.discounted_price && (
-                  <div className="invalid-feedback">
-                    {formik.errors.discounted_price}
-                  </div>
-                )}
+              {formik.touched.discounted_price && formik.errors.discounted_price && (
+                <div className="invalid-feedback">
+                  {formik.errors.discounted_price}
+                </div>
+              )}
             </div>
 
             <div className="col-md-6 col-12 mb-3">
@@ -611,9 +607,9 @@ function ProductAdd() {
                 type="text"
                 onInput={(event) => {
                   const value = event.target.value
-                    .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
-                    .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
-                    .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*)\./g, "$1")
+                    .replace(/(\.\d{1})./g, "$1");
 
                   formik.setFieldValue("discounted_percentage", value);
                 }}
