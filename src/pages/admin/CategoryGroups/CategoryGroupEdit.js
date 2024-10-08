@@ -59,6 +59,7 @@ function CategoryGroupEdit() {
   const [loading, setLoading] = useState(false);
   const { id } = useParams();
   const navigate = useNavigate();
+  const [originalFileName, setOriginalFileName] = useState("");
 
   const [imageSrc, setImageSrc] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -66,11 +67,29 @@ function CategoryGroupEdit() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
+  const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+  const SUPPORTED_FORMATS = [
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/svg+xml",
+    "image/webp",
+  ];
+
+  const imageValidation = Yup.mixed()
+    .required("*Image is required")
+    .test("fileFormat", "Unsupported format", (value) => {
+      return !value || (value && SUPPORTED_FORMATS.includes(value.type));
+    })
+    .test("fileSize", "File size is too large. Max 2MB.", (value) => {
+      return !value || (value && value.size <= MAX_FILE_SIZE);
+    });
 
   const validationSchema = Yup.object({
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
       .required("Name is required"),
+    image: imageValidation,
     // icon: Yup.mixed().required("*Icon is required"),
     order: Yup.string().required("*Select an order"),
     // active: Yup.string().required("*Select an active"),
@@ -177,60 +196,94 @@ function CategoryGroupEdit() {
   }, [id]);
 
   const handleFileChange = (event) => {
-    const file = event.currentTarget.files[0];
+    const file = event?.target?.files[0];
     if (file) {
-      const validTypes = [
-        "image/png",
-        "image/jpeg",
-        "image/jpg",
-        "image/gif",
-        "image/svg+xml",
-        "image/webp",
-      ];
-      if (!validTypes.includes(file.type)) {
-        toast.error("Unsupported file type. Please select a valid image.");
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
         return;
       }
+      formik.setFieldError(`image`, "");
+
+      // Read file as data URL for cropping
       const reader = new FileReader();
       reader.onload = () => {
-        setImageSrc(reader.result);
-        setShowCropper(true);
+        setImageSrc(reader.result); // Set imageSrc for the cropper
+        setOriginalFileName(file.name);
+        setShowCropper(true); // Show cropper when image is loaded
       };
       reader.readAsDataURL(file);
+
+      if (file.size > MAX_FILE_SIZE) {
+        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
+      }
     }
   };
 
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+  const onCropComplete = (croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
-  }, []);
+  };
+
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+    return new Promise((resolve, reject) => {
+      const image = new Image();
+      image.src = imageSrc;
+      image.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
+
+        const targetWidth = 1750;
+        const targetHeight = 550;
+        canvas.width = targetWidth;
+        canvas.height = targetHeight;
+
+        ctx.drawImage(
+          image,
+          croppedAreaPixels.x,
+          croppedAreaPixels.y,
+          croppedAreaPixels.width,
+          croppedAreaPixels.height,
+          0,
+          0,
+          targetWidth,
+          targetHeight
+        );
+
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            reject(new Error("Canvas is empty"));
+            return;
+          }
+          blob.name = "croppedImage.jpeg";
+          resolve(blob);
+        }, "image/jpeg");
+      };
+    });
+  };
 
   const handleCropSave = async () => {
     try {
-      const croppedImageBlob = await getCroppedImg(imageSrc, croppedAreaPixels);
-
-      const file = new File([croppedImageBlob], "croppedImage.jpg", {
+      const croppedImageBlob = await getCroppedImg(
+        imageSrc,
+        crop,
+        croppedAreaPixels
+      );
+      const fileName = originalFileName || "croppedImage.jpg";
+      const file = new File([croppedImageBlob], fileName, {
         type: "image/jpeg",
       });
 
       formik.setFieldValue("image", file);
-
-      const newPreviewURL = URL.createObjectURL(file);
-      setPreviewImage(newPreviewURL);
-
-      if (previewImage && previewImage.startsWith("blob:")) {
-        URL.revokeObjectURL(previewImage);
-      }
       setShowCropper(false);
-      setImageSrc(null);
     } catch (error) {
       console.error("Error cropping the image:", error);
-      toast.error("Failed to crop the image. Please try again.");
     }
   };
 
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
+    formik.setFieldValue("image", "");
+    document.querySelector("input[type='file']").value = "";
   };
 
   useEffect(() => {
@@ -240,7 +293,6 @@ function CategoryGroupEdit() {
       }
     };
   }, [previewImage]);
-
   return (
     <div className="container-fluid minHeight m-0">
       <form onSubmit={formik.handleSubmit}>
@@ -349,7 +401,7 @@ function CategoryGroupEdit() {
                     )}
                   </div>
 
-                  <div className="col-md-6 col-12 mb-3">
+                  {/* <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
                       Image<span className="text-danger">*</span>
                     </label>
@@ -422,8 +474,78 @@ function CategoryGroupEdit() {
                         </button>
                       </div>
                     )}
-                  </div>
+                  </div> */}
+                  <div className="col-md-6 col-12 mb-3">
+                    <label className="form-label">
+                      Image
+                      <span className="text-danger">*</span>
+                    </label>
+                    <input
+                      type="file"
+                      accept=".png,.jpeg,.jpg,.svg,.webp"
+                      className={`form-control ${
+                        formik.touched.image && formik.errors.image
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      name="image"
+                      onChange={handleFileChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    <p style={{ fontSize: "13px" }}>
+                      Note: Maximum file size is 2MB. Allowed: .png, .jpg,
+                      .jpeg, .svg, .webp.
+                    </p>
+                    {formik.touched.image && formik.errors.image && (
+                      <div className="invalid-feedback">
+                        {formik.errors.image}
+                      </div>
+                    )}
 
+                    {previewImage && (
+                      <div className="my-3">
+                        <img
+                          src={previewImage}
+                          alt="Selected"
+                          style={{ maxWidth: "100px", maxHeight: "100px" }}
+                        />
+                      </div>
+                    )}
+                    {showCropper && imageSrc && (
+                      <div className="crop-container">
+                        <Cropper
+                          image={imageSrc}
+                          crop={crop}
+                          zoom={zoom}
+                          aspect={1750 / 550}
+                          onCropChange={setCrop}
+                          onZoomChange={setZoom}
+                          onCropComplete={onCropComplete}
+                          cropShape="rect"
+                          showGrid={false}
+                        />
+                      </div>
+                    )}
+
+                    {showCropper && (
+                      <div className="d-flex justify-content-start mt-3 gap-2">
+                        <button
+                          type="button"
+                          className="btn btn-primary mt-3"
+                          onClick={handleCropSave}
+                        >
+                          Save Cropped Image
+                        </button>
+                        <button
+                          type="button"
+                          className="btn btn-secondary mt-3"
+                          onClick={handleCropCancel}
+                        >
+                          Cancel
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">Description</label>
                     <textarea
