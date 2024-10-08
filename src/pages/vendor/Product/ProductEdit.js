@@ -258,30 +258,33 @@ function ProductAdd() {
     const { original_price, discount_percentage } = formik.values;
 
     if (original_price) {
+      let discountedPrice;
       if (discount_percentage === "" || discount_percentage === null) {
-        formik.setFieldValue("discounted_price", original_price);
+        discountedPrice = original_price;
       } else {
-        const discountedPrice =
+        discountedPrice =
           original_price - (original_price * discount_percentage) / 100;
-        formik.setFieldValue("discounted_price", discountedPrice);
       }
+      // Round to two decimal places
+      discountedPrice = Math.round(discountedPrice * 100) / 100;
+      formik.setFieldValue("discounted_price", discountedPrice);
     }
-  }, [formik.values.discount_percentage]);
+  }, [formik.values.discount_percentage, formik.values.original_price]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
     if (original_price) {
-      if (!discounted_price || discounted_price === "0") {
+      if (discounted_price === null || discounted_price === "0") {
         formik.setFieldValue("discounted_percentage", 100);
       } else {
         const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
 
         const formattedPercentage = Math.floor(discountedPercentage * 10) / 10;
-        formik.setFieldValue("discounted_percentage", formattedPercentage);
+        formik.setFieldValue("discount_percentage", formattedPercentage);
       }
     }
-  }, [formik.values.discounted_price, formik.values.original_price]);
+  }, [formik.values.discounted_price]);
 
   const getData = async () => {
     try {
@@ -642,8 +645,9 @@ function ProductAdd() {
                     type="text"
                     onInput={(event) => {
                       event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "")
-                        .replace(/(\..*?)\..*/g, "$1");
+                        .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
+                        .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
+                        .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
                     }}
                     className={`form-control ${formik.touched.discounted_price &&
                       formik.errors.discounted_price

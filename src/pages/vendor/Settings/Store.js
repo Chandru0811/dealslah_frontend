@@ -16,6 +16,7 @@ const validationSchema = Yup.object({
     .matches(/^[0-9]+$/, "mobile number must be numeric")
     .required("mobile number is required!"),
   shopType: Yup.string().required("Shop Type is required!"),
+  company_registeration_no: Yup.string().required("Company Registration is required!"),
   logo: Yup.mixed().required("Logo is required"),
   external_url: Yup.string()
     .url("Please enter a valid URL")
@@ -43,6 +44,7 @@ const Store = () => {
       legal_name: "",
       email: "",
       mobile: "",
+      company_registeration_no:"",
       shopType: "",
       logo: null,
       external_url: "",
@@ -61,6 +63,7 @@ const Store = () => {
       formdata.append("legal_name", data.legal_name);
       formdata.append("email", data.email);
       formdata.append("mobile", data.mobile);
+      formdata.append("company_registeration_no", data.company_registeration_no);
       formdata.append("shop_type", data.shopType);
       formdata.append("map_url", data.map_url);
       formdata.append("external_url", data.external_url);
@@ -140,14 +143,12 @@ const Store = () => {
   return (
     <section>
       <form onSubmit={formik.handleSubmit} className="w-100">
-        {loading ? (
+      {loading ? (
           <div className="loader-container">
-            <div class="loading">
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
-              <span></span>
+            <div className="loader">
+              <svg viewBox="0 0 80 80">
+                <circle cx="40" cy="40" r="32"></circle>
+              </svg>
             </div>
           </div>
         ) : (
@@ -248,6 +249,30 @@ const Store = () => {
                 {formik.touched.mobile && formik.errors.mobile && (
                   <div className="error text-danger">
                     <small>{formik.errors.mobile}</small>
+                  </div>
+                )}
+              </div>
+              <div className="col-md-4 col-12 mb-5">
+                <label className="form-label fw-bold">
+                Company Registeration No<span className="text-danger">*</span>
+                </label>
+              </div>
+              <div className="col-md-8 col-12 mb-5">
+                <input
+                  type="text"
+                  className={`form-control ${
+                    formik.touched.company_registeration_no && formik.errors.company_registeration_no
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  name="company_registeration_no"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.company_registeration_no}
+                />
+                {formik.touched.company_registeration_no && formik.errors.company_registeration_no && (
+                  <div className="error text-danger">
+                    <small>{formik.errors.company_registeration_no}</small>
                   </div>
                 )}
               </div>
