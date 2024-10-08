@@ -27,7 +27,7 @@ function Vendor({ handleLogout }) {
         <ApprovePopup />
         <div className="d-flex flex-column flex-lg-row bg-surface-secondary">
           <VendorSidebar handleLogout={handleLogout} />
-          <div className="flex-grow-1">
+          <div className="flex-grow-1 h-screen overflow-y-auto">
             <VendorHeader />
             <main className="pt-3 bg-surface-secondary">
               <ScrollToTop />

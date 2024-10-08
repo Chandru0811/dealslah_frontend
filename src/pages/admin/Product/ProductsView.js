@@ -111,19 +111,13 @@ function ProductsView() {
                       Activate
                     </button>
                   ) : (
-                    <></>
-                  )}
-
-                  {/* {shopStatus === "1" ? (
                     <button
                       onClick={handleOpenModal}
                       className="btn btn-danger btn-sm me-2"
                     >
                       Deactivate
                     </button>
-                  ) : (
-                    <></>
-                  )} */}
+                  )}
                 </div>
               </div>
             </div>

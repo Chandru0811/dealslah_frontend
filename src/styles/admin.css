@@ -356,7 +356,7 @@
 
 .logo_ats{
   position: fixed !important;
-  min-width: 18.1%;
+  /* min-width: 18.1%; */
   top: 0;
 }
 
