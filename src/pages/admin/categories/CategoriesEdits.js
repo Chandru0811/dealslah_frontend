@@ -179,8 +179,8 @@ function CategoriesEdits() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 1750;
-        const targetHeight = 550;
+        const targetWidth = 300;
+        const targetHeight = 300;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
