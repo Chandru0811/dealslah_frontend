@@ -264,20 +264,19 @@ function ProductAdd() {
     const { original_price, discounted_percentage } = formik.values;
 
     if (original_price) {
+      let discountedPrice;
       if (discounted_percentage === "" || discounted_percentage === null) {
-        formik.setFieldValue("discounted_price", original_price);
+        discountedPrice = original_price;
       } else {
-        // Calculate Discounted Price based on the Discounted Percentage
-        const parsedDiscountedPercentage = parseFloat(discounted_percentage);
-        if (parsedDiscountedPercentage >= 0 && parsedDiscountedPercentage <= 100) {
-          const discountedPrice = (
-            original_price - (original_price * parsedDiscountedPercentage) / 100
-          ).toFixed(2); // Keep two decimal points for Discounted Price
-          formik.setFieldValue("discounted_price", discountedPrice);
-        }
+        discountedPrice =
+          original_price - (original_price * discounted_percentage) / 100;
       }
+      // Round to two decimal places
+      discountedPrice = Math.round(discountedPrice * 100) / 100;
+      formik.setFieldValue("discounted_price", discountedPrice);
     }
-  }, [formik.values.discounted_percentage]);
+  }, [formik.values.discounted_percentage, formik.values.original_price]);
+
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
