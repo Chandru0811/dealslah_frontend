@@ -15,7 +15,7 @@ function ProductView() {
       setLoading(true);
       try {
         const response = await api.get(`vendor/product/${id}/get`);
-        setData(response.data.data); // Ensure the response structure matches
+        setData(response.data.data); 
       } catch (error) {
         toast.error("Error Fetching Data");
       }
@@ -191,7 +191,7 @@ function ProductView() {
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
-                      : {new Date(data?.start_date).toLocaleDateString()}
+                      : {data?.start_date ?new Date(data?.start_date).toLocaleDateString():""}
                     </p>
                   </div>
                 </div>
@@ -205,7 +205,7 @@ function ProductView() {
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
-                      : {new Date(data?.end_date).toLocaleDateString()}
+                      : {data?.end_date? new Date(data?.end_date).toLocaleDateString():""}
                     </p>
                   </div>
                 </div>
