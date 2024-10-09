@@ -341,7 +341,7 @@ function ProductAdd() {
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
         formik.setFieldError(
-          `image${index + 1}`,
+          `image_url${index + 1}`,
           "File size is too large. Max 2MB."
         );
         return;
