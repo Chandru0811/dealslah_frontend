@@ -152,8 +152,8 @@ function CategoryGroupAdd() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 1750;
-        const targetHeight = 550;
+        const targetWidth = 50;
+        const targetHeight = 50;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
