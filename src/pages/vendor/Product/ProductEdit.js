@@ -60,9 +60,9 @@ function ProductAdd() {
       .max(100, "Discount must be less than 100"),
     discounted_price: Yup.number()
       .required("Discounted Price is required")
-      .lessThan(
+      .max(
         Yup.ref("original_price"),
-        "Discounted Price must be less than Original Price"
+        "The Discounted Price must be same or below the Original Price."
       ),
     // start_date: Yup.date().required("Start Date is required").nullable(),
     // end_date: Yup.date()

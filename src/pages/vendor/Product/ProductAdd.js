@@ -57,9 +57,9 @@ function ProductAdd() {
       .max(100, "Discount must be less than 100"),
     discounted_price: Yup.number()
       .required("Discounted Price is required")
-      .lessThan(
+      .max(
         Yup.ref("original_price"),
-        "The Discounted Price must be below the Original Price."
+        "The Discounted Price must be same or below the Original Price."
       ),
     // start_date: Yup.date().required("Start Date is required").nullable(),
     // end_date: Yup.date()
@@ -264,18 +264,20 @@ function ProductAdd() {
     const { original_price, discounted_percentage } = formik.values;
 
     if (original_price) {
-      let discountedPrice;
       if (discounted_percentage === "" || discounted_percentage === null) {
-        discountedPrice = original_price;
+        formik.setFieldValue("discounted_price", original_price);
       } else {
-        discountedPrice =
-          original_price - (original_price * discounted_percentage) / 100;
+        // Calculate Discounted Price based on the Discounted Percentage
+        const parsedDiscountedPercentage = parseFloat(discounted_percentage);
+        if (parsedDiscountedPercentage >= 0 && parsedDiscountedPercentage <= 100) {
+          const discountedPrice = (
+            original_price - (original_price * parsedDiscountedPercentage) / 100
+          ).toFixed(2); // Keep two decimal points for Discounted Price
+          formik.setFieldValue("discounted_price", discountedPrice);
+        }
       }
-      // Round to two decimal places
-      discountedPrice = Math.round(discountedPrice * 100) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
     }
-  }, [formik.values.discounted_percentage, formik.values.original_price]);
+  }, [formik.values.discounted_percentage]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
