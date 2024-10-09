@@ -31,7 +31,7 @@ function DealCategoryEdit() {
   ];
 
   const imageValidation = Yup.mixed()
-    .notRequired()
+    .nullable()
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     })

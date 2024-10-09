@@ -442,7 +442,7 @@ function CategoriesAdd() {
                       image={imageSrc}
                       crop={crop}
                       zoom={zoom}
-                      aspect={1750 / 550}
+                      aspect={300 / 200}
                       onCropChange={setCrop}
                       onZoomChange={setZoom}
                       onCropComplete={onCropComplete}

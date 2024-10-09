@@ -77,7 +77,7 @@ function CategoryGroupEdit() {
   ];
 
   const imageValidation = Yup.mixed()
-    .required("*Image is required")
+    .nullable()
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     })
@@ -517,7 +517,7 @@ function CategoryGroupEdit() {
                           image={imageSrc}
                           crop={crop}
                           zoom={zoom}
-                          aspect={1750 / 550}
+                          aspect={50 / 50}
                           onCropChange={setCrop}
                           onZoomChange={setZoom}
                           onCropComplete={onCropComplete}

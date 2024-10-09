@@ -32,7 +32,7 @@ function SliderEdit() {
   ];
 
   const imageValidation = Yup.mixed()
-    .required("*Image is required")
+    .nullable()
     .test("fileFormat", "Unsupported format", (value) => {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     })
