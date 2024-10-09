@@ -441,7 +441,7 @@ function CategoriesEdits() {
                           image={imageSrc}
                           crop={crop}
                           zoom={zoom}
-                          aspect={300 / 200}
+                          aspect={300 / 300}
                           onCropChange={setCrop}
                           onZoomChange={setZoom}
                           onCropComplete={onCropComplete}
