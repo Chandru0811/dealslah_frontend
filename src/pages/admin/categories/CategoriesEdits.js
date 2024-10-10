@@ -21,6 +21,7 @@ function CategoriesEdits() {
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const [originalFileName, setOriginalFileName] = useState("");
+  const [originalFileType, setOriginalFileType] = useState("");
 
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
   const SUPPORTED_FORMATS = [
@@ -161,6 +162,7 @@ function CategoriesEdits() {
       reader.onload = () => {
         setImageSrc(reader.result);
         setOriginalFileName(file.name);
+        setOriginalFileType(file.type);
         setShowCropper(true);
       };
       reader.readAsDataURL(file);
@@ -215,9 +217,8 @@ function CategoriesEdits() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
-      const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+      const file = new File([croppedImageBlob], originalFileName, {
+        type: originalFileType,
       });
 
       formik.setFieldValue("icon", file);

@@ -16,6 +16,7 @@ function DealCategoryAdd() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [originalFileName, setOriginalFileName] = useState("");
+  const [originalFileType, setOriginalFileType] = useState("");
 
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
   const SUPPORTED_FORMATS = [
@@ -116,6 +117,7 @@ function DealCategoryAdd() {
       reader.onload = () => {
         setImageSrc(reader.result); // Set imageSrc for the cropper
         setOriginalFileName(file.name);
+        setOriginalFileType(file.type);
         setShowCropper(true); // Show cropper when image is loaded
       };
       reader.readAsDataURL(file);
@@ -174,9 +176,8 @@ function DealCategoryAdd() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
-      const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+      const file = new File([croppedImageBlob], originalFileName, {
+        type: originalFileType,
       });
 
       formik.setFieldValue("image", file);
