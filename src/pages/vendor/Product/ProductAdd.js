@@ -262,36 +262,46 @@ function ProductAdd() {
 
   useEffect(() => {
     const { original_price, discounted_percentage } = formik.values;
-
-    if (original_price) {
-      let discountedPrice;
-      if (discounted_percentage === "" || discounted_percentage === null) {
-        discountedPrice = original_price;
-      } else {
-        discountedPrice =
-          original_price - (original_price * discounted_percentage) / 100;
+  
+    const timeoutId = setTimeout(() => {
+      if (original_price) {
+        let discountedPrice;
+        if (discounted_percentage === "" || discounted_percentage === null) {
+          discountedPrice = original_price;
+        } else {
+          discountedPrice =
+            original_price - (original_price * discounted_percentage) / 100;
+        }
+        discountedPrice = Math.round(discountedPrice * 100) / 100;
+        formik.setFieldValue("discounted_price", discountedPrice);
       }
-      // Round to two decimal places
-      discountedPrice = Math.round(discountedPrice * 100) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
-    }
+    }, 1000); 
+  
+    return () => clearTimeout(timeoutId);
   }, [formik.values.discounted_percentage, formik.values.original_price]);
-
-
+  
+  
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
-    if (original_price) {
-      if (discounted_price === null || discounted_price === "0") {
-        formik.setFieldValue("discounted_percentage", 100);
-      } else {
-        const discountedPercentage =
-          ((original_price - discounted_price) / original_price) * 100;
-
-        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10;
-        formik.setFieldValue("discounted_percentage", formattedPercentage);
+  
+    const timeoutId = setTimeout(() => {
+      if (original_price) {
+        if (discounted_price === null || discounted_price === "0") {
+          formik.setFieldValue("discounted_percentage", 100);
+        } else {
+          const discountedPercentage =
+            ((original_price - discounted_price) / original_price) * 100;
+  
+          const formattedPercentage = Math.round(discountedPercentage * 10) / 10;
+          formik.setFieldValue("discounted_percentage", formattedPercentage);
+        }
       }
-    }
+    }, 1000);
+  
+    return () => clearTimeout(timeoutId); 
   }, [formik.values.discounted_price]);
+  
+  
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -314,6 +324,9 @@ function ProductAdd() {
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
+        
+        formik.setFieldValue(`image${index + 1}_originalFileName`, file.name);
+        formik.setFieldValue(`image${index + 1}_originalFileFormat`, file.type);
       };
       reader.readAsDataURL(file);
     }
@@ -350,10 +363,16 @@ function ProductAdd() {
       crops[index],
       croppedAreas[index]
     );
-    const file = new File([croppedImageBlob], `croppedImage${index + 1}.jpg`, {
-      type: "image/jpeg",
+  
+    const originalFileName = formik.values[`image${index + 1}_originalFileName`];
+    const originalFileFormat = formik.values[`image${index + 1}_originalFileFormat`];
+  
+    const file = new File([croppedImageBlob], originalFileName, {
+      type: originalFileFormat, 
     });
+  
     formik.setFieldValue(`image${index + 1}`, file);
+  
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
@@ -626,13 +645,13 @@ function ProductAdd() {
 
                   formik.setFieldValue("discounted_percentage", value);
                 }}
+                {...formik.getFieldProps("discounted_percentage")}
                 className={`form-control ${
                   formik.touched.discounted_percentage &&
                   formik.errors.discounted_percentage
                     ? "is-invalid"
                     : ""
                 }`}
-                value={formik.values.discounted_percentage || ""}
               />
               {formik.touched.discounted_percentage &&
                 formik.errors.discounted_percentage && (

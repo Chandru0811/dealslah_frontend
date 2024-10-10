@@ -352,12 +352,11 @@ function ProductAdd() {
         newImages[index] = reader.result;
         setImages(newImages);
 
-        // Set the image URL in Formik for preview
-        formik.setFieldValue(`image${index + 1}`, reader.result);
-
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
+        formik.setFieldValue(`image_url${index + 1}_originalFileName`, file.name);
+        formik.setFieldValue(`image_url${index + 1}_originalFileFormat`, file.type);
       };
       reader.readAsDataURL(file);
     }
@@ -394,13 +393,17 @@ function ProductAdd() {
       crops[index],
       croppedAreas[index]
     );
-
-    const croppedImageURL = URL.createObjectURL(croppedImageBlob);
-
-    // Set the cropped image in Formik for preview and form submission
-    formik.setFieldValue(`image${index + 1}`, croppedImageURL);
-    formik.setFieldValue(`image_url${index + 1}`, croppedImageBlob);
-
+  
+    const originalFileName = formik.values[`image_url${index + 1}_originalFileName`];
+    const originalFileFormat = formik.values[`image_url${index + 1}_originalFileFormat`];
+  
+    const file = new File([croppedImageBlob], originalFileName, {
+      type: originalFileFormat, 
+    });
+  
+    formik.setFieldValue(`image_url${index + 1}`, file);
+    console.log("file",file)
+  
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
