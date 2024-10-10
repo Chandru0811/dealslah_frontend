@@ -16,6 +16,7 @@ function SliderAdd() {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [originalFileName, setOriginalFileName] = useState("");
+  const [originalFileType, setOriginalFileType] = useState("");
   const navigate = useNavigate();
 
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
@@ -98,16 +99,18 @@ function SliderAdd() {
     const file = event?.target?.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
+        toast.error("File size is too large. Max 2MB.");
+        event.target.value = null;
+        formik.setFieldValue("image", null);
         return;
       }
 
-      // Read file as data URL for cropping
       const reader = new FileReader();
       reader.onload = () => {
-        setImageSrc(reader.result); // Set imageSrc for the cropper
+        setImageSrc(reader.result);
         setOriginalFileName(file.name);
-        setShowCropper(true); // Show cropper when image is loaded
+        setOriginalFileType(file.type);
+        setShowCropper(true);
       };
       reader.readAsDataURL(file);
 
@@ -165,12 +168,14 @@ function SliderAdd() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
+      const fileName = originalFileName;
+
       const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+        type: originalFileType,
       });
 
       formik.setFieldValue("image", file);
+      setOriginalFileType(file.type);
       setShowCropper(false);
     } catch (error) {
       console.error("Error cropping the image:", error);
@@ -208,11 +213,10 @@ function SliderAdd() {
               <input
                 type="file"
                 accept=".png,.jpeg,.jpg,.svg,.webp"
-                className={`form-control ${
-                  formik.touched.image && formik.errors.image
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-control ${formik.touched.image && formik.errors.image
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 name="image"
                 onChange={handleFileChange}
                 onBlur={formik.handleBlur}
@@ -266,11 +270,10 @@ function SliderAdd() {
               </label>
               <select
                 aria-label="Default select example"
-                className={`form-select ${
-                  formik.touched.order && formik.errors.order
-                    ? "is-invalid"
-                    : ""
-                }`}
+                className={`form-select ${formik.touched.order && formik.errors.order
+                  ? "is-invalid"
+                  : ""
+                  }`}
                 {...formik.getFieldProps("order")}
               >
                 <option value="">Select an order</option>
@@ -287,7 +290,8 @@ function SliderAdd() {
           </div>
         </div>
         <div className="hstack gap-2 justify-content-end p-2">
-          <button type="submit" className="btn btn-sm btn-button">
+          <button type="submit" className="btn btn-sm btn-button"
+            disabled={loadIndicator}>
             {loadIndicator && (
               <span
                 className="spinner-border spinner-border-sm me-2"

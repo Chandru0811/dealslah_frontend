@@ -21,6 +21,7 @@ function SliderEdit() {
   const [previewImage, setPreviewImage] = useState(null);
   const [loading, setLoading] = useState(false);
   const [originalFileName, setOriginalFileName] = useState("");
+  const [originalFileType, setOriginalFileType] = useState("");
 
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
   const SUPPORTED_FORMATS = [
@@ -40,17 +41,15 @@ function SliderEdit() {
       return !value || (value && value.size <= MAX_FILE_SIZE);
     });
 
-  // Validation schema: make image optional when editing
   const validationSchema = Yup.object({
     order: Yup.string().required("*Select an Order"),
     image: imageValidation,
   });
 
-  // Initialize Formik
   const formik = useFormik({
     initialValues: {
       order: "",
-      image: null, // Set the initial image to null
+      image: null,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -59,7 +58,6 @@ function SliderEdit() {
       formData.append("_method", "PUT");
       formData.append("order", values.order);
 
-      // Only append the image if it's updated
       if (values.image) {
         formData.append("image", values.image);
       }
@@ -84,7 +82,6 @@ function SliderEdit() {
     },
   });
 
-  // Fetch the slider data for editing
   useEffect(() => {
     const getData = async () => {
       setLoading(true);
@@ -92,10 +89,9 @@ function SliderEdit() {
         const response = await api.get(`admin/slider/${id}`);
         const sliderData = response.data.data;
 
-        // Set initial form values with existing slider data
         formik.setValues({
           order: sliderData.order || "",
-          image: null, // Set image to null for now
+          image: null,
         });
         setPreviewImage(`${ImageURL}${sliderData.image_path}`);
       } catch (error) {
@@ -108,22 +104,23 @@ function SliderEdit() {
     getData();
   }, [id]);
 
-  // Handle canceling the cropper
   const handleFileChange = (event) => {
     const file = event?.target?.files[0];
     if (file) {
+
       if (file.size > MAX_FILE_SIZE) {
-        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
+        toast.error("File size is too large. Max 2MB.");
+        event.target.value = null;
+        formik.setFieldValue("image", null);
         return;
       }
-      formik.setFieldError(`image`, "");
 
-      // Read file as data URL for cropping
       const reader = new FileReader();
       reader.onload = () => {
-        setImageSrc(reader.result); // Set imageSrc for the cropper
+        setImageSrc(reader.result);
         setOriginalFileName(file.name);
-        setShowCropper(true); // Show cropper when image is loaded
+        setOriginalFileType(file.type);
+        setShowCropper(true);
       };
       reader.readAsDataURL(file);
 
@@ -181,12 +178,14 @@ function SliderEdit() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
+      const fileName = originalFileName;
+
       const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+        type: originalFileType,
       });
 
       formik.setFieldValue("image", file);
+      setOriginalFileType(file.type);
       setShowCropper(false);
     } catch (error) {
       console.error("Error cropping the image:", error);
@@ -246,11 +245,10 @@ function SliderEdit() {
                   <input
                     type="file"
                     accept=".png,.jpeg,.jpg,.svg,.webp"
-                    className={`form-control ${
-                      formik.touched.image && formik.errors.image
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-control ${formik.touched.image && formik.errors.image
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     name="image"
                     onChange={handleFileChange}
                     onBlur={formik.handleBlur}
@@ -316,11 +314,10 @@ function SliderEdit() {
                   </label>
                   <select
                     aria-label="Default select example"
-                    className={`form-select ${
-                      formik.touched.order && formik.errors.order
-                        ? "is-invalid"
-                        : ""
-                    }`}
+                    className={`form-select ${formik.touched.order && formik.errors.order
+                      ? "is-invalid"
+                      : ""
+                      }`}
                     {...formik.getFieldProps("order")}
                   >
                     <option value="">Select an order</option>
@@ -342,8 +339,7 @@ function SliderEdit() {
               <button
                 type="submit"
                 className="btn btn-sm btn-button"
-                disabled={loadIndicator}
-              >
+                disabled={loadIndicator}>
                 {loadIndicator && (
                   <span
                     className="spinner-border spinner-border-sm me-2"

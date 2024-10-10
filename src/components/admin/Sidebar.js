@@ -35,11 +35,10 @@ function Sidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${
-            leadMenuOpen || activeSubmenu ? "active" : ""
-          }`}
+          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${leadMenuOpen || activeSubmenu ? "active" : ""
+            }`}
           to="/"
-          // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
+        // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
         >
           <img
             src={deals}
@@ -54,7 +53,7 @@ function Sidebar({ handleLogout }) {
           />
           <p className="text-white">Dealslah</p>
         </NavLink>
-        <div className="collapse navbar-collapse" id="sidebarCollapse" style={{marginTop:"5rem"}}>
+        <div className="collapse navbar-collapse" id="sidebarCollapse" style={{ marginTop: "5rem" }}>
           <ul className="navbar-nav">
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
@@ -95,13 +94,13 @@ function Sidebar({ handleLogout }) {
             <li className="nav-item">
               <NavLink className="nav-link" to="/products">
                 <TbShoppingCartFilled />
-                Product
+                Deals
               </NavLink>
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/shop">
                 <TbShoppingCartFilled />
-                Shop
+                Company
               </NavLink>
             </li>
           </ul>
