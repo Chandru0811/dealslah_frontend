@@ -136,7 +136,7 @@ const Product = () => {
                     </td>
                     <td className="text-center">{data.brand}</td>
                     <td className="align-middle">
-                      {data.active === "1" ? (
+                      {data.active === 1 ? (
                         <span
                           className="dot"
                           style={{
@@ -159,7 +159,7 @@ const Product = () => {
                           }}
                         ></span>
                       )}
-                      {data.active === "0" ? " Inactive" : "Active "}
+                      {data.active === 0 ? " Inactive" : "Active "}
                     </td>
                     <td className="d-flex justify-content-center">
                       <Link to={`/product/view/${data.id}`}>

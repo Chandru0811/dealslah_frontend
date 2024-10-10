@@ -60,7 +60,7 @@ function CategoryGroupEdit() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [originalFileName, setOriginalFileName] = useState("");
-
+  const [originalFileType, setOriginalFileType] = useState("");
   const [imageSrc, setImageSrc] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
   const [zoom, setZoom] = useState(1);
@@ -209,6 +209,7 @@ function CategoryGroupEdit() {
       reader.onload = () => {
         setImageSrc(reader.result); // Set imageSrc for the cropper
         setOriginalFileName(file.name);
+        setOriginalFileType(file.type);
         setShowCropper(true); // Show cropper when image is loaded
       };
       reader.readAsDataURL(file);
@@ -267,9 +268,8 @@ function CategoryGroupEdit() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
-      const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+      const file = new File([croppedImageBlob], originalFileName, {
+        type:originalFileType,
       });
 
       formik.setFieldValue("image", file);

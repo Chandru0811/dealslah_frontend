@@ -262,7 +262,7 @@ function ProductAdd() {
 
   useEffect(() => {
     const { original_price, discounted_percentage } = formik.values;
-  
+
     const timeoutId = setTimeout(() => {
       if (original_price) {
         let discountedPrice;
@@ -275,15 +275,14 @@ function ProductAdd() {
         discountedPrice = Math.round(discountedPrice * 100) / 100;
         formik.setFieldValue("discounted_price", discountedPrice);
       }
-    }, 1000); 
-  
+    }, 1000);
+
     return () => clearTimeout(timeoutId);
   }, [formik.values.discounted_percentage, formik.values.original_price]);
-  
-  
+
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
-  
+
     const timeoutId = setTimeout(() => {
       if (original_price) {
         if (discounted_price === null || discounted_price === "0") {
@@ -291,17 +290,16 @@ function ProductAdd() {
         } else {
           const discountedPercentage =
             ((original_price - discounted_price) / original_price) * 100;
-  
-          const formattedPercentage = Math.round(discountedPercentage * 10) / 10;
+
+          const formattedPercentage =
+            Math.round(discountedPercentage * 10) / 10;
           formik.setFieldValue("discounted_percentage", formattedPercentage);
         }
       }
     }, 1000);
-  
-    return () => clearTimeout(timeoutId); 
+
+    return () => clearTimeout(timeoutId);
   }, [formik.values.discounted_price]);
-  
-  
 
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
@@ -324,7 +322,7 @@ function ProductAdd() {
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
-        
+
         formik.setFieldValue(`image${index + 1}_originalFileName`, file.name);
         formik.setFieldValue(`image${index + 1}_originalFileFormat`, file.type);
       };
@@ -363,16 +361,18 @@ function ProductAdd() {
       crops[index],
       croppedAreas[index]
     );
-  
-    const originalFileName = formik.values[`image${index + 1}_originalFileName`];
-    const originalFileFormat = formik.values[`image${index + 1}_originalFileFormat`];
-  
+
+    const originalFileName =
+      formik.values[`image${index + 1}_originalFileName`];
+    const originalFileFormat =
+      formik.values[`image${index + 1}_originalFileFormat`];
+
     const file = new File([croppedImageBlob], originalFileName, {
-      type: originalFileFormat, 
+      type: originalFileFormat,
     });
-  
+
     formik.setFieldValue(`image${index + 1}`, file);
-  
+
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
@@ -666,9 +666,10 @@ function ProductAdd() {
               <input
                 type="text"
                 onInput={(event) => {
-                  event.target.value = event.target.value
-                    .replace(/[^0-9.]/g, "")
-                    .replace(/(\..*?)\..*/g, "$1");
+                  event.target.value = event.target.value.replace(
+                    /[^0-9]/g,
+                    ""
+                  );
                 }}
                 className={`form-control ${
                   formik.touched.stock && formik.errors.stock

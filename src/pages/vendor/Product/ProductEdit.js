@@ -699,9 +699,10 @@ function ProductAdd() {
                   <input
                     type="text"
                     onInput={(event) => {
-                      event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "")
-                        .replace(/(\..*?)\..*/g, "$1");
+                      event.target.value = event.target.value.replace(
+                        /[^0-9]/g,
+                        ""
+                      );
                     }}
                     className={`form-control ${formik.touched.stock && formik.errors.stock
                       ? "is-invalid"

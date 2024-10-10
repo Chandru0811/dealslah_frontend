@@ -12,12 +12,14 @@ function CategoryGroupAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [imageSrc, setImageSrc] = useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
-  const [zoom, setZoom] = useState(1);
+  const [zoom, setZoom] = useState(1);  
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [showCropper, setShowCropper] = useState(false);
   const [previewImage, setPreviewImage] = useState(null);
   const navigate = useNavigate();
   const [originalFileName, setOriginalFileName] = useState("");
+  const [originalFileType, setOriginalFileType] = useState("");
+
   const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
   const SUPPORTED_FORMATS = [
     "image/png",
@@ -130,6 +132,7 @@ function CategoryGroupAdd() {
       reader.onload = () => {
         setImageSrc(reader.result); // Set imageSrc for the cropper
         setOriginalFileName(file.name);
+        setOriginalFileType(file.type);
         setShowCropper(true); // Show cropper when image is loaded
       };
       reader.readAsDataURL(file);
@@ -188,9 +191,8 @@ function CategoryGroupAdd() {
         crop,
         croppedAreaPixels
       );
-      const fileName = originalFileName || "croppedImage.jpg";
-      const file = new File([croppedImageBlob], fileName, {
-        type: "image/jpeg",
+      const file = new File([croppedImageBlob], originalFileName, {
+        type: originalFileType,
       });
 
       formik.setFieldValue("image", file);
