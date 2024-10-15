@@ -95,3 +95,6 @@
   filter: blur(10px);
   box-shadow: none;
 }
+.vendor_dashcard {
+  border-radius: 8px;
+}
