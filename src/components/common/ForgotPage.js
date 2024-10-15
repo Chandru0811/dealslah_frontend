@@ -1,7 +1,7 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const validationSchema = Yup.object({
   email: Yup.string()
@@ -10,6 +10,8 @@ const validationSchema = Yup.object({
 });
 
 const ForgotPage = () => {
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       email: "",
@@ -17,6 +19,7 @@ const ForgotPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log("values", values);
+      navigate("/reset");
     },
   });
 
@@ -76,7 +79,7 @@ const ForgotPage = () => {
                 ) : null}
               </div>
 
-              <Link to="/">
+              {/* <Link to="/"> */}
               <button
                 type="submit"
                 className="btn btn-primary btn-block mt-3 rounded-0 w-100"
@@ -84,18 +87,18 @@ const ForgotPage = () => {
               >
                 RESET PASSWORD
               </button>
-              </Link>
+              {/* </Link> */}
             </form>
 
             <div className="text-center mt-3 mb-4">
-              <Link to="/">
+              {/* <Link to="/"> */}
                 <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                   Go Back to &nbsp;
                   <span style={{ color: "#ef4444" }}>
                    Login In
                   </span>
                 </p>
-              </Link>
+              {/* </Link> */}
             </div>
           </div>
         </div>

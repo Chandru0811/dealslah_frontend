@@ -93,10 +93,10 @@ function Register() {
   return (
     <div
       className="container-fluid d-flex justify-content-center align-items-center"
-      style={{ backgroundColor: "#f2f2f2" }}
+      style={{ backgroundColor: "#f2f2f2", minHeight: "100vh" }}
     >
       <div
-        className="card shadow-lg p-3 mb-5 rounded"
+        className="card shadow-lg p-3 my-5 rounded"
         style={{ width: "100%", maxWidth: "400px" }}
       >
         <Link to="/">
