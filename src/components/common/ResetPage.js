@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
+// Updated validation schema
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("*Invalid email address")
     .required("*Email is required"),
   password: Yup.string().required("*Password is required"),
-  Cpassword: Yup.string().required("*Confirm Password is required"),
+  cpassword: Yup.string()
+    .oneOf([Yup.ref("password"), null], "*Passwords must match")
+    .required("*Confirm Password is required"),
 });
 
 const ResetPage = () => {
@@ -19,16 +22,22 @@ const ResetPage = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: "",
+      email: "suriya@gmail.com",
       password: "",
-      Cpassword: "",
+      cpassword: "",
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("values", values);
-      navigate("/reset");
+      console.log("Password:", values.password);
+      console.log("Confirm Password:", values.cpassword);
+      // navigate("/reset");
     },
   });
+
+  // UseEffect to set the email field as touched
+  useEffect(() => {
+    formik.setFieldTouched("email", true, false); // Set email field as touched
+  }, []);
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!passwordVisible);
@@ -39,14 +48,14 @@ const ResetPage = () => {
   };
 
   return (
-    <section>
+    <section style={{}}>
       <div
-        className="container-fluid d-flex justify-content-center align-items-center vh-100"
-        style={{ backgroundColor: "rgb(242, 242, 242)" }}
+        className="container-fluid d-flex justify-content-center align-items-center"
+        style={{ backgroundColor: "rgb(242, 242, 242)", minHeight: "100vh" }}
       >
         <div className="row">
           <div
-            className="card shadow-lg p-3 mb-5 rounded"
+            className="card shadow-lg p-3 my-5 rounded"
             style={{ width: "100%", maxWidth: "400px" }}
           >
             <h3
@@ -80,15 +89,13 @@ const ResetPage = () => {
                   className={`form-control rounded-0 ${
                     formik.touched.email && formik.errors.email
                       ? "is-invalid"
-                      : formik.touched.email && !formik.errors.email
-                      ? "is-valid"
                       : ""
                   }`}
                   placeholder="Email Address"
                   value={formik.values.email}
                   onChange={formik.handleChange}
                   onBlur={formik.handleBlur}
-                  disabled // Keep email disabled
+                  readOnly
                 />
                 {formik.touched.email && formik.errors.email ? (
                   <div className="invalid-feedback mt-0">
@@ -96,7 +103,6 @@ const ResetPage = () => {
                   </div>
                 ) : null}
               </div>
-
               <div className="form-group mb-4 mt-2">
                 <label className="form-label" htmlFor="password">
                   Password
@@ -109,14 +115,12 @@ const ResetPage = () => {
                     className={`form-control ${
                       formik.touched.password && formik.errors.password
                         ? "is-invalid"
-                        : formik.touched.password && !formik.errors.password
-                        ? "is-valid"
                         : ""
                     }`}
                     placeholder="Password"
                     value={formik.values.password}
                     onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
+                    // onBlur={formik.handleBlur}
                   />
                   <span
                     className="input-group-text"
@@ -126,14 +130,13 @@ const ResetPage = () => {
                   >
                     {passwordVisible ? <FaEyeSlash /> : <FaEye />}
                   </span>
+                  {formik.touched.password && formik.errors.password && (
+                    <div className="invalid-feedback mt-0">
+                      {formik.errors.password}
+                    </div>
+                  )}
                 </div>
-                {formik.touched.password && formik.errors.password ? (
-                  <div className="invalid-feedback mt-0">
-                    {formik.errors.password}
-                  </div>
-                ) : null}
               </div>
-
               <div className="form-group mb-4 mt-2">
                 <label className="form-label" htmlFor="Cpassword">
                   Confirm Password
@@ -141,17 +144,15 @@ const ResetPage = () => {
                 <div className="input-group mb-3">
                   <input
                     type={confirmPasswordVisible ? "text" : "password"}
-                    id="Cpassword"
-                    name="Cpassword"
+                    id="cpassword"
+                    name="cpassword"
                     className={`form-control rounded-0 ${
-                      formik.touched.Cpassword && formik.errors.Cpassword
+                      formik.touched.cpassword && formik.errors.cpassword
                         ? "is-invalid"
-                        : formik.touched.Cpassword && !formik.errors.Cpassword
-                        ? "is-valid"
                         : ""
                     }`}
                     placeholder="Confirm Password"
-                    value={formik.values.Cpassword}
+                    value={formik.values.cpassword}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -163,12 +164,12 @@ const ResetPage = () => {
                   >
                     {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                   </span>
+                  {formik.touched.cpassword && formik.errors.cpassword && (
+                    <div className="invalid-feedback mt-0">
+                      {formik.errors.cpassword}
+                    </div>
+                  )}
                 </div>
-                {formik.touched.Cpassword && formik.errors.Cpassword ? (
-                  <div className="invalid-feedback mt-0">
-                    {formik.errors.Cpassword}
-                  </div>
-                ) : null}
               </div>
 
               <button
@@ -181,10 +182,12 @@ const ResetPage = () => {
             </form>
 
             <div className="text-center mt-3 mb-4">
-              <p className="text-muted" style={{ fontSize: "0.9rem" }}>
-                Go Back to &nbsp;
-                <span style={{ color: "#ef4444" }}>Login In</span>
-              </p>
+              <Link to="/">
+                <p className="text-muted" style={{ fontSize: "0.9rem" }}>
+                  Go Back to &nbsp;
+                  <span style={{ color: "#ef4444" }}>Login In</span>
+                </p>
+              </Link>
             </div>
           </div>
         </div>

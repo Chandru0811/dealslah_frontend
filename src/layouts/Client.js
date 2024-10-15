@@ -13,6 +13,7 @@ import AdminLogin from "../components/auth/AdminLogin";
 import Wellcomepage from "../components/auth/Register/AddRegister/Wellcomepage";
 import Register from "../components/auth/Register/AddRegister/Register";
 import ScrollToTop from "../pages/ScrollToTop";
+import ResetPage from "../components/common/ResetPage";
 // import NotFound from "../components/common/NotFound";
 
 function Client({
@@ -60,6 +61,7 @@ function Client({
               }
             />
             <Route path="/forgot" element={<ForgotPage />} />
+            <Route path="/reset" element={<ResetPage />} />
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>
