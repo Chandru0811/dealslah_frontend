@@ -2,24 +2,41 @@ import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { Link, useNavigate } from "react-router-dom";
-
-const validationSchema = Yup.object({
-  email: Yup.string()
-    .email("*Invalid email address")
-    .required("*Email is required"),
-});
+import toast from "react-hot-toast";
+import api from "../../config/URL";
 
 const ForgotPage = () => {
   const navigate = useNavigate();
+
+  const validationSchema = Yup.object({
+    email: Yup.string()
+      .email("*Invalid email address")
+      .required("*Email is required"),
+  });
 
   const formik = useFormik({
     initialValues: {
       email: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log("values", values);
-      navigate("/reset");
+    onSubmit: async (values) => {
+      // console.log("values", values);
+      try {
+        const response = await api.post("forgot-password", values);
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          navigate("/forgotsuccess");
+        } else {
+          toast.error(response.data.message);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          const errors = error.response.data.error;
+          toast.error(errors.email);
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      }
     },
   });
 
@@ -35,14 +52,17 @@ const ForgotPage = () => {
             style={{ width: "100%", maxWidth: "400px" }}
           >
             <h3
-             className="cursor-pointer py-2 mb-3"
-             style={{
-               borderBottom: "2px solid #ef4444",
-               paddingBottom: "5px",
-               width: "100%",
-               textAlign: "center",
-               color: "#ef4444",
-             }}>Forgot Password</h3>
+              className="cursor-pointer py-2 mb-3"
+              style={{
+                borderBottom: "2px solid #ef4444",
+                paddingBottom: "5px",
+                width: "100%",
+                textAlign: "center",
+                color: "#ef4444",
+              }}
+            >
+              Forgot Password
+            </h3>
             <p
               className="text-center text-muted mb-4"
               style={{ fontSize: "0.9rem" }}
@@ -92,12 +112,10 @@ const ForgotPage = () => {
 
             <div className="text-center mt-3 mb-4">
               {/* <Link to="/"> */}
-                <p className="text-muted" style={{ fontSize: "0.9rem" }}>
-                  Go Back to &nbsp;
-                  <span style={{ color: "#ef4444" }}>
-                   Login In
-                  </span>
-                </p>
+              <p className="text-muted" style={{ fontSize: "0.9rem" }}>
+                Go Back to &nbsp;
+                <span style={{ color: "#ef4444" }}>Login In</span>
+              </p>
               {/* </Link> */}
             </div>
           </div>
