@@ -26,7 +26,7 @@ const ResetPage = () => {
     validationSchema: validationSchema,
     onSubmit: (values) => {
       console.log("values", values);
-      navigate("/reset");
+      navigate("/resetpassword");
     },
   });
 

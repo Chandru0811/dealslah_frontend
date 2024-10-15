@@ -14,6 +14,7 @@ import Wellcomepage from "../components/auth/Register/AddRegister/Wellcomepage";
 import Register from "../components/auth/Register/AddRegister/Register";
 import ScrollToTop from "../pages/ScrollToTop";
 import ResetPage from "../components/common/ResetPage";
+import ForgotSuccess from "../components/common/ForgotSuccess";
 // import NotFound from "../components/common/NotFound";
 
 function Client({
@@ -53,6 +54,7 @@ function Client({
               }
             />
             <Route path="/wellcomepage/:id" element={<Wellcomepage />} />
+            <Route path="/forgotsuccess" element={<ForgotSuccess />} />
             <Route path="/register" element={<Register />} />
             <Route
               path="/vendorregistration/:id"
@@ -61,7 +63,7 @@ function Client({
               }
             />
             <Route path="/forgot" element={<ForgotPage />} />
-            <Route path="/reset" element={<ResetPage />} />
+            <Route path="/resetpassword" element={<ResetPage />} />
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>

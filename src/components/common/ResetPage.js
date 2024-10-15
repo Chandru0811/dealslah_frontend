@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import api from "../../config/URL";
+import toast from "react-hot-toast";
 
 // Updated validation schema
 const validationSchema = Yup.object({
@@ -10,7 +12,7 @@ const validationSchema = Yup.object({
     .email("*Invalid email address")
     .required("*Email is required"),
   password: Yup.string().required("*Password is required"),
-  cpassword: Yup.string()
+  password_confirmation: Yup.string()
     .oneOf([Yup.ref("password"), null], "*Passwords must match")
     .required("*Confirm Password is required"),
 });
@@ -18,25 +20,50 @@ const validationSchema = Yup.object({
 const ResetPage = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
   const [confirmPasswordVisible, setConfirmPasswordVisible] = useState(false);
+
+  const [searchParams] = useSearchParams();
+
+  // Extract token and email from the URL
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
+
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      email: "suriya@gmail.com",
+      email: "",
       password: "",
-      cpassword: "",
+      password_confirmation: "",
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      console.log("Password:", values.password);
-      console.log("Confirm Password:", values.cpassword);
-      // navigate("/reset");
+    onSubmit: async (values) => {
+      values.token = token;
+
+      try {
+        const response = await api.post(`reset-password`, values);
+
+        if (response.status === 200) {
+          toast.success(response.data.message);
+          navigate("/");
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 422) {
+          const errors = error.response.data.errors;
+          for (const key in errors) {
+            if (errors[key]) {
+              errors[key].forEach((message) => toast.error(message));
+            }
+          }
+        } else {
+          toast.error("An error occurred. Please try again.");
+        }
+      }
     },
   });
 
-  // UseEffect to set the email field as touched
   useEffect(() => {
-    formik.setFieldTouched("email", true, false); // Set email field as touched
+    formik.setFieldTouched("email", true, false);
+    formik.setFieldValue("email", email);
   }, []);
 
   const togglePasswordVisibility = () => {
@@ -144,15 +171,16 @@ const ResetPage = () => {
                 <div className="input-group mb-3">
                   <input
                     type={confirmPasswordVisible ? "text" : "password"}
-                    id="cpassword"
-                    name="cpassword"
+                    id="password_confirmation"
+                    name="password_confirmation"
                     className={`form-control rounded-0 ${
-                      formik.touched.cpassword && formik.errors.cpassword
+                      formik.touched.password_confirmation &&
+                      formik.errors.password_confirmation
                         ? "is-invalid"
                         : ""
                     }`}
                     placeholder="Confirm Password"
-                    value={formik.values.cpassword}
+                    value={formik.values.password_confirmation}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
@@ -164,11 +192,12 @@ const ResetPage = () => {
                   >
                     {confirmPasswordVisible ? <FaEyeSlash /> : <FaEye />}
                   </span>
-                  {formik.touched.cpassword && formik.errors.cpassword && (
-                    <div className="invalid-feedback mt-0">
-                      {formik.errors.cpassword}
-                    </div>
-                  )}
+                  {formik.touched.password_confirmation &&
+                    formik.errors.password_confirmation && (
+                      <div className="invalid-feedback mt-0">
+                        {formik.errors.password_confirmation}
+                      </div>
+                    )}
                 </div>
               </div>
 
