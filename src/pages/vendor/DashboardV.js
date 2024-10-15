@@ -120,7 +120,7 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div>
               </div>
-              <p className="text-white mt-2">Members online</p>
+              <p className="text-white mt-4">Members online</p>
               <img src={graph5} alt="" className="img-fluid" />
             </div>
           </Card>
@@ -136,7 +136,7 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div>
               </div>
-              <p className="text-white mt-2">Members online</p>
+              <p className="text-white mt-4">Members online</p>
               <img src={graph4} alt="" className="img-fluid" />
             </div>
           </Card>
