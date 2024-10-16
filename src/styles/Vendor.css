@@ -98,3 +98,18 @@
 .vendor_dashcard {
   border-radius: 8px;
 }
+
+.setting-heading{
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.navbar-vertical.navbar-light .navbar-nav .nav-link:hover::after {
+  content: '\25C0';
+  font-size: 0.8rem;
+  color: var(--sidber-menu-color) !important;
+  position: absolute;
+  right: 0px;
+  top: 50%;
+  transform: translateY(-50%);
+}
