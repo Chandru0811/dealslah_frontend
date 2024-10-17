@@ -66,7 +66,7 @@ function Products() {
                       <img
                         src={
                           data.image_url1 !== null
-                            ? `${ImageURL}${data.logo}`
+                            ? `${ImageURL}${data.image_url1}`
                             : noImage
                         }
                         alt={data.name}

@@ -95,7 +95,7 @@ const Products = () => {
                     <td className="align-middle text-start">
                       {data.original_price}
                     </td>
-                    <td className="align-middle text-start">{data.shopName}</td>
+                    <td className="align-middle text-start">{data.shop.legal_name}</td>
                     <td className="align-middle text-start">
                       {data.active === 1 ? (
                         <>

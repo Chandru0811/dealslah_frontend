@@ -12,7 +12,7 @@ function LoginDetails() {
     const getData = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`admin/shop/${id}/location`);
+        const response = await api.get(`admin/shop/${id}/logindetails`);
         setData(response.data.data);
       } catch (error) {
         toast.error("Error Fetching Data ", error);
@@ -34,26 +34,26 @@ function LoginDetails() {
       ) : (
         <div className="container">
           <div className="row mt-5 p-3">
-            <div className="col-md-6 col-12">
+            <div className="col-12">
               <div className="row mb-3">
-                <div className="col-6 d-flex justify-content-start align-items-center">
+                <div className="col-3 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
                     <b>Name</b>
                   </p>
                 </div>
-                <div className="col-6">
+                <div className="col-9">
                   <p className="text-muted text-sm">: {data.name}</p>
                 </div>
               </div>
             </div>
-            <div className="col-md-6 col-12">
+            <div className="col-12">
               <div className="row mb-3">
-                <div className="col-6 d-flex justify-content-start align-items-center">
+                <div className="col-3 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
                     <b>Email</b>
                   </p>
                 </div>
-                <div className="col-6">
+                <div className="col-9">
                   <p className="text-muted text-sm">: {data.email}</p>
                 </div>
               </div>
