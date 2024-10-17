@@ -77,9 +77,7 @@ function CategoryGroups() {
         $(tableRef.current).DataTable().destroy();
       }
     };
-  }, []);
-
-
+  }, [])
 
 
   return (
@@ -90,7 +88,7 @@ function CategoryGroups() {
             <div className="col-12 p-2 d-flex justify-content-between align-items-center">
               <h3 className="mb-0">Category Groups</h3>
               <Link to="/categorygroup/add">
-                <button className="btn btn-sm btn-button shadow-none border-0">
+                <button className="btn btn-sm btn-button shadow-none border-0" disabled>
                   <PiPlusSquareFill size={20} /> Add Category Group
                 </button>
               </Link>
@@ -152,15 +150,16 @@ function CategoryGroups() {
 
                     <td className="align-middle text-center">
                       <Link to={`/categorygroup/view/${data.id}`}>
-                        <button className="button-btn btn-sm m-2">View</button>
+                        <button className="button-btn btn-sm m-2" disabled>View</button>
                       </Link>
                       <Link to={`/categorygroup/edit/${data.id}`}>
-                        <button className="button-btn btn-sm m-2">Edit</button>
+                        <button className="button-btn btn-sm m-2" disabled>Edit</button>
                       </Link>
                       <DeleteModel
                         onSuccess={refreshData}
                         path={`admin/categoryGroup/${data.id}`}
-                        style={{ display: "inline-block" }}
+                        style={{ display: "inline-block" }} 
+                        
                       />
                     </td>
                   </tr>

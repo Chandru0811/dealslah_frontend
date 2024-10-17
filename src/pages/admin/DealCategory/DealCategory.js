@@ -90,7 +90,7 @@ function DealCategory() {
               <h3 className="mb-0">Deal Category</h3>
               <Link to="/dealcategories/add">
                 <button className="btn btn-sm btn-button shadow-none border-0">
-                  <PiPlusSquareFill size={20} /> Add Deal Category
+                  <PiPlusSquareFill size={20}  disabled/> Add Deal Category
                 </button>
               </Link>
             </div>
@@ -164,15 +164,16 @@ function DealCategory() {
 
                     <td className="align-middle text-center">
                       <Link to={`/dealcategories/view/${data.id}`}>
-                        <button className="button-btn btn-sm m-2">View</button>
+                        <button className="button-btn btn-sm m-2" disabled>View</button>
                       </Link>
                       <Link to={`/dealcategories/edit/${data.id}`}>
-                        <button className="button-btn btn-sm m-2">Edit</button>
+                        <button className="button-btn btn-sm m-2" disabled>Edit</button>
                       </Link>
                       <DeleteModel
                         onSuccess={refreshData}
                         path={`admin/dealCategory/remove/${data.id}`}
                         style={{ display: "inline-block" }}
+                       
                       />
                     </td>
                   </tr>
