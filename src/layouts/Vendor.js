@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "../styles/adminCDN.css";
 import "../styles/admin.css";
@@ -19,14 +19,41 @@ import CategoryAdd from "../pages/vendor/Category/CategoryAdd";
 import CategoryEdit from "../pages/vendor/Category/CategoryEdit";
 import CategoryView from "../pages/vendor/Category/CategoryView";
 import ScrollToTop from "../pages/ScrollToTop";
+import api from "../config/URL";
+import toast from "react-hot-toast";
 
 function Vendor({ handleLogout }) {
+const [shows, setShows] = useState(true);
+const [logo, setLogo] = useState(null);
+
+  console.log(logo);
+const id = sessionStorage.getItem("shop_id");
+
+useEffect(() => {
+  const getData = async () => {
+    try {
+      const response = await api.get(`vendor/shop/status/${id}`);
+      const active = response.data.data.active; 
+
+      if (active === 1 && response.data.data.logo) {
+        setShows(false);
+        setLogo(response.data.data.logo); 
+      } else {
+        setShows(true);
+      }
+    } catch (error) {
+      toast.error("Error Fetching Data: " + error.message);
+    }
+  };
+  getData();
+}, [id]);
+
   return (
     <div>
       <BrowserRouter basename="/dealslahVendor">
-        <ApprovePopup />
+        <ApprovePopup shows={shows} />
         <div className="d-flex flex-column flex-lg-row bg-surface-secondary">
-          <VendorSidebar handleLogout={handleLogout} />
+          <VendorSidebar handleLogout={handleLogout} logo={logo} />
           <div className="flex-grow-1 h-screen overflow-y-auto">
             <VendorHeader />
             <main className="pt-3 bg-surface-secondary">

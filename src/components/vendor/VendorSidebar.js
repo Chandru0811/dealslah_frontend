@@ -5,8 +5,9 @@ import { BsBarChartFill, BsHouseDoorFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut, BiCart } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { IoSettings } from "react-icons/io5";
+import ImageURL from "../../config/ImageURL";
 
-function VendorSidebar({ handleLogout }) {
+function VendorSidebar({ handleLogout, logo }) {
   const navigate = useNavigate();
   const handelLogOutClick = () => {
     handleLogout();
@@ -19,9 +20,9 @@ function VendorSidebar({ handleLogout }) {
 
   return (
     <nav
-    className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom h-screen border-bottom-lg-0 border-end-lg overflow-y-auto"
-    id="navbarVertical"
-  >
+      className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom h-screen border-bottom-lg-0 border-end-lg overflow-y-auto"
+      id="navbarVertical"
+    >
       <div className="container-fluid">
         <button
           className="navbar-toggler mx-2 p-1"
@@ -35,15 +36,41 @@ function VendorSidebar({ handleLogout }) {
           <span className="navbar-toggler-icon"></span>
         </button>
         <NavLink
-          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${leadMenuOpen || activeSubmenu ? "active" : ""
-            }`}
+          className={`navbar-brand nav-logo logo_ats py-lg-2 px-lg-6 m-0 d-flex align-items-center justify-content-center gap-3 ${
+            leadMenuOpen || activeSubmenu ? "active" : ""
+          }`}
           to="/"
         >
-          <img src={deals} alt="deals" className="img-fluid sidebar-logo rounded-circle"
-            style={{ background: "#fff", borderRadius: "5px", width: "50px", height: "50px" }} />
-          <p className="text-white">Dealslah</p>
+          {logo !== null ? (
+            <img
+              src={`${ImageURL}${logo}`}
+              alt="shop logo"
+              className="img-fluid p-1"
+              style={{
+                background: "#fff",
+                borderRadius: "5px",
+              }}
+            />
+          ) : (
+            <img
+              src={deals}
+              alt="deals"
+              className="img-fluid sidebar-logo rounded-circle"
+              style={{
+                background: "#fff",
+                borderRadius: "5px",
+                width: "50px",
+                height: "50px",
+              }}
+            />
+          )}
+          {logo === null && <p className="text-white">Dealslah</p>}
         </NavLink>
-        <div className="collapse navbar-collapse" id="sidebarCollapse" style={{marginTop:"5rem"}}>
+        <div
+          className="collapse navbar-collapse"
+          id="sidebarCollapse"
+          style={{ marginTop: "5rem" }}
+        >
           <ul className="navbar-nav">
             {/* Dashboard */}
             <li className="nav-item">
@@ -77,7 +104,6 @@ function VendorSidebar({ handleLogout }) {
                 <BiCart /> Orders
               </NavLink>
             </li> */}
-
 
             {/* <li className="nav-item">
               <NavLink className="nav-link" to="/dealcategory">
