@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { Button, Modal } from "react-bootstrap";
-import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import ImageURL from "../../../config/ImageURL";
 
-function ProductAdd() {
+function ProductEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -64,15 +62,6 @@ function ProductAdd() {
         Yup.ref("original_price"),
         "The Discounted Price must be same or below the Original Price."
       ),
-    // start_date: Yup.date().required("Start Date is required").nullable(),
-    // end_date: Yup.date()
-    //   .required("End Date is required")
-    //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
-    //   .nullable(),
-    // stock: Yup.number()
-    //   .required("Stock is required")
-    //   .min(0, "Stock cannot be negative"),
-    // sku: Yup.string().required("SKU is required"),
     image_url1: imageValidation,
     image_url2: imageValidation,
     image_url3: imageValidation,
@@ -81,12 +70,6 @@ function ProductAdd() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
   });
-  // const validationSchema1 = Yup.object({
-  //   catagory_group_id: Yup.string().required("Category Group is required"),
-  //   name: Yup.string().required("Name is required"),
-  //   icon: Yup.string().required("Imagei s required"),
-  //   description: Yup.string().required("Description is required"),
-  // });
 
   const formik = useFormik({
     initialValues: {
@@ -183,61 +166,6 @@ function ProductAdd() {
       }
     },
   });
-
-  // const formik1 = useFormik({
-  //   initialValues: {
-  //     catagory_group_id: "",
-  //     name: "",
-  //     icon: "",
-  //     description: "",
-  //   },
-  //   validationSchema: validationSchema1,
-  //   onSubmit: async (values) => {
-  //     const formData = new FormData();
-  //     formData.append("category_group_id", values.catagory_group_id);
-  //     formData.append("name", values.name);
-  //     formData.append("icon", values.icon);
-  //     formData.append("description", values.description);
-
-  //     const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-  //     formData.append("slug", slug);
-
-  //     console.log("Form Data:", values);
-  //     try {
-  //       const response = await api.post(`vendor/categories/create`, formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //       console.log("Response", response);
-  //       if (response.status === 200) {
-  //         toast.success(response.data.message);
-  //         setShowModal(false);
-  //       } else {
-  //         toast.error(response.data.message);
-  //       }
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 422) {
-  //         const errors = error.response.data.errors;
-  //         if (errors) {
-  //           Object.keys(errors).forEach((key) => {
-  //             errors[key].forEach((errorMsg) => {
-  //               toast(errorMsg, {
-  //                 icon: <FiAlertTriangle className="text-warning" />,
-  //               });
-  //             });
-  //           });
-  //         }
-  //       } else {
-  //         console.error("API Error", error);
-  //         toast.error("An unexpected error occurred.");
-  //       }
-  //     } finally {
-  //       setLoadIndicator(false);
-  //       formik1.resetForm();
-  //     }
-  //   },
-  // });
 
   useEffect(() => {
     const getData1 = async () => {
@@ -336,18 +264,13 @@ function ProductAdd() {
     fetchCategory(formik.values.categoryGroupId);
   }, [formik.values.categoryGroupId]);
 
-  // const handleCategoryAdd = () => {
-  //   setShowModal(true);
-  //   formik1.resetForm();
-  // };
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        formik.setFieldError(
-          `image_url${index + 1}`,
-          "File size is too large. Max 2MB."
-        );
+        toast.error("File size is too large. Max 2MB.");
+        event.target.value = null;
+        formik.setFieldError(`image_url${index + 1}`, null);
         return;
       }
       const reader = new FileReader();
@@ -397,17 +320,24 @@ function ProductAdd() {
       crops[index],
       croppedAreas[index]
     );
-
+  
     const originalFileName = formik.values[`image_url${index + 1}_originalFileName`];
     const originalFileFormat = formik.values[`image_url${index + 1}_originalFileFormat`];
-
+  
     const file = new File([croppedImageBlob], originalFileName, {
       type: originalFileFormat,
     });
-
+  
+    // Update the Formik field with the new cropped file
     formik.setFieldValue(`image_url${index + 1}`, file);
-    console.log("file", file)
-
+  
+    // Display the cropped image as a preview
+    const reader = new FileReader();
+    reader.onload = () => {
+      formik.setFieldValue(`image${index + 1}`, reader.result); // Update preview
+    };
+    reader.readAsDataURL(file);
+  
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
@@ -531,16 +461,6 @@ function ProductAdd() {
                           {cat.name}
                         </option>
                       ))}
-                    {/* {selectedCategoryGroup && (
-                  <option
-                    value="add_new"
-                    style={{ background: "#1c2b36", color: "#fff" }}
-                    onClick={handleCategoryAdd}
-                  >
-                    <PiPlusSquareFill size={20} color="#fff" />
-                    Add New Category
-                  </option>
-                )} */}
                   </select>
                   {formik.touched.category_id && formik.errors.category_id && (
                     <div className="invalid-feedback">
@@ -885,4 +805,4 @@ function ProductAdd() {
   );
 }
 
-export default ProductAdd;
+export default ProductEdit;

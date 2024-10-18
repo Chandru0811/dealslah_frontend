@@ -99,7 +99,6 @@ const ForgotPage = () => {
                 ) : null}
               </div>
 
-              {/* <Link to="/"> */}
               <button
                 type="submit"
                 className="btn btn-primary btn-block mt-3 rounded-0 w-100"
@@ -107,16 +106,15 @@ const ForgotPage = () => {
               >
                 RESET PASSWORD
               </button>
-              {/* </Link> */}
             </form>
 
             <div className="text-center mt-3 mb-4">
-              {/* <Link to="/"> */}
+              <Link to="/">
               <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                 Go Back to &nbsp;
-                <span style={{ color: "#ef4444" }}>Login In</span>
+                <span style={{ color: "#ef4444" }}>Login</span>
               </p>
-              {/* </Link> */}
+              </Link>
             </div>
           </div>
         </div>
