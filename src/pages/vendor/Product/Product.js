@@ -117,7 +117,7 @@ const Product = () => {
                   </th>
                   <th className="text-center">Title</th>
                   <th className="text-center">Brand</th>
-                  <th className="text-center">Active</th>
+                  <th className="text-center">Status</th>
                   <th className="text-center">ACTION</th>
                 </tr>
               </thead>
