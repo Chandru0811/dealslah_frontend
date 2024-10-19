@@ -9,31 +9,94 @@ const validationSchema = Yup.object({
   daily_timing: Yup.object({
     monday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "monday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     tuesday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "tuesday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     wednesday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "wednesday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     thursday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "thursday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     friday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "friday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     saturday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "saturday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
     sunday: Yup.object({
       opening: Yup.string().nullable(),
-      closing: Yup.string().nullable(),
+      closing: Yup.string()
+        .nullable()
+        .test(
+          "sunday-closing-required",
+          "Closing time is required when opening time is filled",
+          function (value) {
+            const { opening } = this.parent;
+            return !opening || (opening && value);
+          }
+        ),
     }),
   }),
 });
@@ -57,6 +120,7 @@ function StoreHours() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      console.log(values);
       setLoadIndicator(true);
       values.shop_id = shop_id;
       try {
@@ -80,7 +144,7 @@ function StoreHours() {
       setLoading(true);
       try {
         const response = await api.get(`vendor/shop/hour/${shop_id}`);
-        formik.setValues(response.data.data || formik.initialValues);
+        // formik.setValues(response.data.data || formik.initialValues);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -189,6 +253,7 @@ function StoreHours() {
           ) : null}
           <form onSubmit={formik.handleSubmit} className="w-100">
             <div className="container">
+              {/* Monday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Monday Time Slots</Card.Header>
@@ -240,6 +305,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Tuesday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Tuesday Time Slots</Card.Header>
@@ -251,19 +318,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.tuesday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.tuesday.opening"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.opening`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.tuesday?.opening &&
                             formik.errors.daily_timing?.tuesday?.opening && (
@@ -281,19 +339,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.tuesday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.tuesday.closing"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.closing`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.tuesday?.closing &&
                             formik.errors.daily_timing?.tuesday?.closing && (
@@ -309,6 +358,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Wednesday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Wednesday Time Slots</Card.Header>
@@ -320,19 +371,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.wednesday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.wednesday.opening"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.opening`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.wednesday?.opening &&
                             formik.errors.daily_timing?.wednesday?.opening && (
@@ -350,19 +392,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.wednesday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.wednesday.closing"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.closing`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.wednesday?.closing &&
                             formik.errors.daily_timing?.wednesday?.closing && (
@@ -378,6 +411,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Thursday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Thursday Time Slots</Card.Header>
@@ -389,19 +424,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.thursday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.thursday.opening"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.opening`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.thursday?.opening &&
                             formik.errors.daily_timing?.thursday?.opening && (
@@ -419,19 +445,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.thursday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.thursday.closing"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.closing`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.thursday?.closing &&
                             formik.errors.daily_timing?.thursday?.closing && (
@@ -447,6 +464,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Friday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Friday Time Slots</Card.Header>
@@ -458,19 +477,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.friday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.friday.opening"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.opening`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.friday?.opening &&
                             formik.errors.daily_timing?.friday?.opening && (
@@ -488,19 +498,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.friday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.friday.closing"
                             )}
-                            onChange={(e) =>
-                              formik.setFieldValue(
-                                `daily_timing.monday.closing`,
-                                e.target.value
-                              )
-                            }
-                            disabled={
-                              sameForAllDays ||
-                              (sameForWeekdays && ["saturday", "sunday"])
-                            }
                           />
                           {formik.touched.daily_timing?.friday?.closing &&
                             formik.errors.daily_timing?.friday?.closing && (
@@ -516,6 +517,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Saturday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Saturday Time Slots</Card.Header>
@@ -527,22 +530,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.saturday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.saturday.opening"
                             )}
-                            onChange={(e) => {
-                              formik.setFieldValue(
-                                "daily_timing.saturday.opening",
-                                e.target.value
-                              );
-                              if (sameForAllDays) {
-                                formik.setFieldValue(
-                                  "daily_timing.monday.opening",
-                                  e.target.value
-                                );
-                              }
-                            }}
-                            disabled={sameForAllDays}
                           />
                           {formik.touched.daily_timing?.saturday?.opening &&
                             formik.errors.daily_timing?.saturday?.opening && (
@@ -560,22 +551,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.saturday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.saturday.closing"
                             )}
-                            onChange={(e) => {
-                              formik.setFieldValue(
-                                "daily_timing.saturday.closing",
-                                e.target.value
-                              );
-                              if (sameForAllDays) {
-                                formik.setFieldValue(
-                                  "daily_timing.monday.closing",
-                                  e.target.value
-                                );
-                              }
-                            }}
-                            disabled={sameForAllDays}
                           />
                           {formik.touched.daily_timing?.saturday?.closing &&
                             formik.errors.daily_timing?.saturday?.closing && (
@@ -591,6 +570,8 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
+
+              {/* Sunday Time Slots */}
               <div className="row mb-4">
                 <Card>
                   <Card.Header>Sunday Time Slots</Card.Header>
@@ -602,16 +583,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.sunday.opening"
                             {...formik.getFieldProps(
                               "daily_timing.sunday.opening"
                             )}
-                            onChange={(e) => {
-                              formik.setFieldValue("daily_timing.sunday.opening", e.target.value);
-                              if (sameForAllDays) {
-                                formik.setFieldValue("daily_timing.monday.opening", e.target.value);
-                              }
-                            }}
-                            disabled={sameForAllDays}
                           />
                           {formik.touched.daily_timing?.sunday?.opening &&
                             formik.errors.daily_timing?.sunday?.opening && (
@@ -629,16 +604,10 @@ function StoreHours() {
                           <input
                             type="time"
                             className="form-control"
+                            name="daily_timing.sunday.closing"
                             {...formik.getFieldProps(
                               "daily_timing.sunday.closing"
                             )}
-                            onChange={(e) => {
-                              formik.setFieldValue("daily_timing.sunday.closing", e.target.value);
-                              if (sameForAllDays) {
-                                formik.setFieldValue("daily_timing.monday.closing", e.target.value);
-                              }
-                            }}
-                            disabled={sameForAllDays}
                           />
                           {formik.touched.daily_timing?.sunday?.closing &&
                             formik.errors.daily_timing?.sunday?.closing && (
@@ -654,23 +623,24 @@ function StoreHours() {
                   </Card.Body>
                 </Card>
               </div>
-            </div>
 
-            <div className="text-end mt-4 mb-3">
+              {/* Submit Button */}
               <div className="text-end mt-4 mb-3">
-                <button
-                  type="submit"
-                  className="btn btn-button btn-sm"
-                  disabled={loadIndicator}
-                >
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Update
-                </button>
+                <div className="text-end mt-4 mb-3">
+                  <button
+                    type="submit"
+                    className="btn btn-button btn-sm"
+                    disabled={loadIndicator}
+                  >
+                    {loadIndicator && (
+                      <span
+                        className="spinner-border spinner-border-sm me-2"
+                        aria-hidden="true"
+                      ></span>
+                    )}
+                    Update
+                  </button>
+                </div>
               </div>
             </div>
           </form>
