@@ -1,13 +1,10 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import deals from "../../assets/deals.png";
-import { BsBarChartFill, BsHouseDoorFill } from "react-icons/bs";
-import { BiSolidCategory, BiLogOut, BiCart } from "react-icons/bi";
-import { MdCategory } from "react-icons/md";
-import { IoSettings } from "react-icons/io5";
-import ImageURL from "../../config/ImageURL";
+import { BsBarChartFill } from "react-icons/bs";
+import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 
-function VendorSidebar({ handleLogout, logo }) {
+function VendorSidebar({ handleLogout }) {
   const navigate = useNavigate();
   const handelLogOutClick = () => {
     handleLogout();
@@ -20,11 +17,11 @@ function VendorSidebar({ handleLogout, logo }) {
 
   return (
     <nav
-      className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom h-screen border-bottom-lg-0 border-end-lg overflow-y-auto"
+      className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom border-bottom-lg-0 border-end-lg"
       id="navbarVertical"
     >
       <div className="container-fluid">
-        <button
+      <button
           className="navbar-toggler mx-2 p-1"
           type="button"
           data-bs-toggle="collapse"
@@ -40,81 +37,73 @@ function VendorSidebar({ handleLogout, logo }) {
             leadMenuOpen || activeSubmenu ? "active" : ""
           }`}
           to="/"
+          // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
         >
-          {logo !== null ? (
-            <img
-              src={`${ImageURL}${logo}`}
-              alt="shop logo"
-              className="img-fluid p-1"
-              style={{
-                background: "#fff",
-                borderRadius: "5px",
-              }}
-            />
-          ) : (
-            <img
-              src={deals}
-              alt="deals"
-              className="img-fluid sidebar-logo rounded-circle"
-              style={{
-                background: "#fff",
-                borderRadius: "5px",
-                width: "50px",
-                height: "50px",
-              }}
-            />
-          )}
-          {logo === null && <p className="text-white">Dealslah</p>}
+          <img
+            src={deals}
+            alt="deals"
+            className="img-fluid sidebar-logo rounded-circle"
+            style={{
+              background: "#fff",
+              borderRadius: "5px",
+              width: "45px",
+              height: "45px",
+            }}
+          />
+          <p className="text-white">Dealslah</p>
         </NavLink>
         <div
           className="collapse navbar-collapse"
           id="sidebarCollapse"
-          style={{ marginTop: "5rem" }}
+          // style={{ marginTop: "5rem" }}
         >
           <ul className="navbar-nav">
-            {/* Dashboard */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
-                <BsBarChartFill /> Dashboard
+                <BsBarChartFill />
+                Dashboard
               </NavLink>
             </li>
-
-            {/* Home */}
             {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/home">
-                <BsHouseDoorFill /> Home
+              <NavLink className="nav-link" to="/slider">
+                <BiSolidCategory />
+                Slider
               </NavLink>
             </li> */}
-            {/* Category */}
             {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/category">
-                <MdCategory /> Category
+              <NavLink className="nav-link" to="/banner">
+                <BiSolidCategory />Banner
+               
               </NavLink>
             </li> */}
-            {/* Products */}
+            {/* <li className="nav-item">
+              <NavLink className="nav-link" to="/categorygroup">
+                <MdCategory />
+                Category Groups
+              </NavLink>
+            </li> */}
+            {/* <li className="nav-item">
+              <NavLink className="nav-link" to="/categories">
+                <BiSolidCategory />
+                Categories
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/dealcategories">
+                <BiSolidCategory />
+                Deal Categories
+              </NavLink>
+            </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/product">
-                <BiSolidCategory /> Deals
+                <BiSolidCategory />
+                Deals
               </NavLink>
             </li>
-
-            {/* Orders */}
             {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/orders">
-                <BiCart /> Orders
-              </NavLink>
-            </li> */}
-
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/dealcategory">
-                <MdCategory /> Deal Category
-              </NavLink>
-            </li> */}
-
-            {/* Settings */}
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/settings">
-                <IoSettings /> Settings
+              <NavLink className="nav-link" to="/shop">
+                <TbShoppingCartFilled />
+                Company
               </NavLink>
             </li> */}
           </ul>
@@ -124,7 +113,7 @@ function VendorSidebar({ handleLogout, logo }) {
                 <button
                   to={"#"}
                   style={{ width: "100%" }}
-                  className="nav-link ps-6"
+                  className="nav-link ps-6 logout_button"
                   onClick={handelLogOutClick}
                 >
                   <BiLogOut />

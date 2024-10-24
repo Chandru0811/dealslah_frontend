@@ -205,7 +205,6 @@
     z-index: 99;
     box-shadow: 2px 2px 4px #bdbdbd;
     background-color: var(--admin-header-color) !important;
-    /* color:var(--admin-primary-color) !important; */
 
 }
 .admin-settings{
@@ -7832,7 +7831,7 @@ fieldset:disabled .btn {
 .dropdown-menu {
   position: absolute;
   z-index: 1000;
-  display: none;
+  /* display: none; */
   min-width: 12rem;
   padding: 0.5rem 0rem;
   margin: 0;
@@ -8069,7 +8068,7 @@ fieldset:disabled .btn {
   padding: 0.5rem 1rem;
   clear: both;
   font-weight: 400;
-  color: #16192c;
+  /* color: #16192c; */
   text-align: inherit;
   white-space: nowrap;
   background-color: transparent;
@@ -9934,7 +9933,9 @@ fieldset:disabled .btn {
 .navbar-nav .dropdown-menu {
   position: static;
 }
-
+.logout_button{
+  background: #ef4444 !important;
+}
 .navbar-text {
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
@@ -23574,6 +23575,7 @@ a.text-current:hover {
 
 .cursor-pointer {
   cursor: pointer !important;
+  width: 100%;
 }
 
 .cursor-pointer-hover:hover {

@@ -44,9 +44,9 @@ const ForgotPage = () => {
     <section>
       <div
         className="container-fluid d-flex justify-content-center align-items-center vh-100"
-        style={{ backgroundColor: "rgb(242, 242, 242)" }}
+        style={{  minHeight: "100vh",backgroundColor: "rgb(242, 242, 242)" }}
       >
-        <div className="row">
+        <div className="row mt-5">
           <div
             className="card shadow-lg p-3 mb-5 rounded"
             style={{ width: "100%", maxWidth: "400px" }}
@@ -54,11 +54,11 @@ const ForgotPage = () => {
             <h3
               className="cursor-pointer py-2 mb-3"
               style={{
-                borderBottom: "2px solid #ef4444",
+                borderBottom: "2px solid #ff0060",
                 paddingBottom: "5px",
                 width: "100%",
                 textAlign: "center",
-                color: "#ef4444",
+                color: "#ff0060",
               }}
             >
               Forgot Password
@@ -99,22 +99,24 @@ const ForgotPage = () => {
                 ) : null}
               </div>
 
+              {/* <Link to="/"> */}
               <button
                 type="submit"
-                className="btn btn-primary btn-block mt-3 rounded-0 w-100"
-                style={{ backgroundColor: "#ef4444", borderColor: "#ef4444" }}
+                className="btn btn-primary common-button btn-block mt-3 rounded-0 w-100"
+                style={{ backgroundColor: "#ff0060", borderColor: "#ff0060" }}
               >
                 RESET PASSWORD
               </button>
+              {/* </Link> */}
             </form>
 
             <div className="text-center mt-3 mb-4">
-              <Link to="/">
+              {/* <Link to="/"> */}
               <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                 Go Back to &nbsp;
-                <span style={{ color: "#ef4444" }}>Login</span>
+                <span style={{ color: "#ff0060" }}>Login In</span>
               </p>
-              </Link>
+              {/* </Link> */}
             </div>
           </div>
         </div>

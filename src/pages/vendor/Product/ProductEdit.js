@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+// import { Button, Modal } from "react-bootstrap";
+// import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import ImageURL from "../../../config/ImageURL";
 
-function ProductEdit() {
+function ProductAdd() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -62,6 +64,15 @@ function ProductEdit() {
         Yup.ref("original_price"),
         "The Discounted Price must be same or below the Original Price."
       ),
+    // start_date: Yup.date().required("Start Date is required").nullable(),
+    // end_date: Yup.date()
+    //   .required("End Date is required")
+    //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
+    //   .nullable(),
+    // stock: Yup.number()
+    //   .required("Stock is required")
+    //   .min(0, "Stock cannot be negative"),
+    // sku: Yup.string().required("SKU is required"),
     image_url1: imageValidation,
     image_url2: imageValidation,
     image_url3: imageValidation,
@@ -70,6 +81,12 @@ function ProductEdit() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
   });
+  // const validationSchema1 = Yup.object({
+  //   catagory_group_id: Yup.string().required("Category Group is required"),
+  //   name: Yup.string().required("Name is required"),
+  //   icon: Yup.string().required("Imagei s required"),
+  //   description: Yup.string().required("Description is required"),
+  // });
 
   const formik = useFormik({
     initialValues: {
@@ -79,6 +96,7 @@ function ProductEdit() {
       deal_type: "",
       brand: "",
       original_price: "",
+      coupon_code:"",
       discounted_price: "",
       discount_percentage: "",
       start_date: "",
@@ -99,14 +117,15 @@ function ProductEdit() {
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
       formData.append("deal_type", values.deal_type);
-      formData.append("brand", values.brand);
+      formData.append("brand", values.brand || "");
+      formData.append("coupon_code", values.coupon_code);
       formData.append("original_price", values.original_price);
       formData.append("discounted_price", values.discounted_price);
       formData.append("discount_percentage", values.discount_percentage);
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
-      formData.append("stock", values.stock);
-      formData.append("sku", values.sku);
+      formData.append("stock", values.stock || "");
+      formData.append("sku", values.sku || "");
       if (values.image_url1) {
         formData.append("image1", values.image_url1);
       }
@@ -167,6 +186,61 @@ function ProductEdit() {
     },
   });
 
+  // const formik1 = useFormik({
+  //   initialValues: {
+  //     catagory_group_id: "",
+  //     name: "",
+  //     icon: "",
+  //     description: "",
+  //   },
+  //   validationSchema: validationSchema1,
+  //   onSubmit: async (values) => {
+  //     const formData = new FormData();
+  //     formData.append("category_group_id", values.catagory_group_id);
+  //     formData.append("name", values.name);
+  //     formData.append("icon", values.icon);
+  //     formData.append("description", values.description);
+
+  //     const slug = values.name.toLowerCase().replace(/\s+/g, "_");
+  //     formData.append("slug", slug);
+
+  //     console.log("Form Data:", values);
+  //     try {
+  //       const response = await api.post(`vendor/categories/create`, formData, {
+  //         headers: {
+  //           "Content-Type": "multipart/form-data",
+  //         },
+  //       });
+  //       console.log("Response", response);
+  //       if (response.status === 200) {
+  //         toast.success(response.data.message);
+  //         setShowModal(false);
+  //       } else {
+  //         toast.error(response.data.message);
+  //       }
+  //     } catch (error) {
+  //       if (error.response && error.response.status === 422) {
+  //         const errors = error.response.data.errors;
+  //         if (errors) {
+  //           Object.keys(errors).forEach((key) => {
+  //             errors[key].forEach((errorMsg) => {
+  //               toast(errorMsg, {
+  //                 icon: <FiAlertTriangle className="text-warning" />,
+  //               });
+  //             });
+  //           });
+  //         }
+  //       } else {
+  //         console.error("API Error", error);
+  //         toast.error("An unexpected error occurred.");
+  //       }
+  //     } finally {
+  //       setLoadIndicator(false);
+  //       formik1.resetForm();
+  //     }
+  //   },
+  // });
+
   useEffect(() => {
     const getData1 = async () => {
       setLoading(true);
@@ -182,22 +256,6 @@ function ProductEdit() {
     getData();
   }, []);
 
-  useEffect(() => {
-    const { original_price, discount_percentage } = formik.values;
-
-    if (original_price) {
-      let discountedPrice;
-      if (discount_percentage === "" || discount_percentage === null) {
-        discountedPrice = original_price;
-      } else {
-        discountedPrice =
-          original_price - (original_price * discount_percentage) / 100;
-      }
-      // Round to two decimal places
-      discountedPrice = Math.round(discountedPrice * 100) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
-    }
-  }, [formik.values.discount_percentage, formik.values.original_price]);
 
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
@@ -224,10 +282,10 @@ function ProductEdit() {
         ...rest,
         start_date: rest.start_date
           ? new Date(rest.start_date).toISOString().split("T")[0]
-          : undefined,
+          : "",
         end_date: rest.end_date
           ? new Date(rest.end_date).toISOString().split("T")[0]
-          : undefined,
+          : "",
 
         image1: `${ImageURL}${image_url1}`,
         image2: `${ImageURL}${image_url2}`,
@@ -264,13 +322,18 @@ function ProductEdit() {
     fetchCategory(formik.values.categoryGroupId);
   }, [formik.values.categoryGroupId]);
 
+  // const handleCategoryAdd = () => {
+  //   setShowModal(true);
+  //   formik1.resetForm();
+  // };
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        toast.error("File size is too large. Max 2MB.");
-        event.target.value = null;
-        formik.setFieldError(`image_url${index + 1}`, null);
+        formik.setFieldError(
+          `image_url${index + 1}`,
+          "File size is too large. Max 2MB."
+        );
         return;
       }
       const reader = new FileReader();
@@ -320,24 +383,17 @@ function ProductEdit() {
       crops[index],
       croppedAreas[index]
     );
-  
+
     const originalFileName = formik.values[`image_url${index + 1}_originalFileName`];
     const originalFileFormat = formik.values[`image_url${index + 1}_originalFileFormat`];
-  
+
     const file = new File([croppedImageBlob], originalFileName, {
       type: originalFileFormat,
     });
-  
-    // Update the Formik field with the new cropped file
+
     formik.setFieldValue(`image_url${index + 1}`, file);
-  
-    // Display the cropped image as a preview
-    const reader = new FileReader();
-    reader.onload = () => {
-      formik.setFieldValue(`image${index + 1}`, reader.result); // Update preview
-    };
-    reader.readAsDataURL(file);
-  
+    console.log("file", file)
+
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
     setShowCropper(newShowCropper);
@@ -461,6 +517,16 @@ function ProductEdit() {
                           {cat.name}
                         </option>
                       ))}
+                    {/* {selectedCategoryGroup && (
+                  <option
+                    value="add_new"
+                    style={{ background: "#1c2b36", color: "#fff" }}
+                    onClick={handleCategoryAdd}
+                  >
+                    <PiPlusSquareFill size={20} color="#fff" />
+                    Add New Category
+                  </option>
+                )} */}
                   </select>
                   {formik.touched.category_id && formik.errors.category_id && (
                     <div className="invalid-feedback">
@@ -540,6 +606,20 @@ function ProductEdit() {
                   )}
                 </div>
                 <div className="col-md-6 col-12 mb-3">
+                  <label className="form-label">Coupon Code</label>
+                  <input
+                    type="text"
+                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code
+                      ? "is-invalid"
+                      : ""
+                      }`}
+                    {...formik.getFieldProps("coupon_code")}
+                  />
+                  {formik.touched.coupon_code && formik.errors.coupon_code && (
+                    <div className="invalid-feedback">{formik.errors.coupon_code}</div>
+                  )}
+                </div>
+                <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">
                     Original Price<span className="text-danger">*</span>
                   </label>
@@ -597,11 +677,12 @@ function ProductEdit() {
                   </label>
                   <input
                     type="text"
+                    readOnly
                     onInput={(event) => {
                       event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                        .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
-                        .slice(0, 5); // Limit the length if needed (5 characters for example)
+                        .replace(/[^0-9.]/g, "") 
+                        .replace(/(\..*?)\..*/g, "$1") 
+                        .slice(0, 5); 
                     }}
                     className={`form-control ${formik.touched.discount_percentage &&
                       formik.errors.discount_percentage
@@ -805,4 +886,4 @@ function ProductEdit() {
   );
 }
 
-export default ProductEdit;
+export default ProductAdd;
