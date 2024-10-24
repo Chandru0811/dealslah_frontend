@@ -96,7 +96,7 @@ function ProductAdd() {
       deal_type: "",
       brand: "",
       original_price: "",
-      coupon_code:"",
+      coupon_code: "",
       discounted_price: "",
       discount_percentage: "",
       start_date: "",
@@ -256,7 +256,6 @@ function ProductAdd() {
     getData();
   }, []);
 
-
   useEffect(() => {
     const { original_price, discounted_price } = formik.values;
     if (original_price) {
@@ -270,7 +269,7 @@ function ProductAdd() {
         formik.setFieldValue("discount_percentage", formattedPercentage);
       }
     }
-  }, [formik.values.discounted_price]);
+  }, [formik.values.discounted_price, formik.values.original_price]);
 
   const getData = async () => {
     try {
@@ -345,8 +344,14 @@ function ProductAdd() {
         const newShowCropper = [...showCropper];
         newShowCropper[index] = true;
         setShowCropper(newShowCropper);
-        formik.setFieldValue(`image_url${index + 1}_originalFileName`, file.name);
-        formik.setFieldValue(`image_url${index + 1}_originalFileFormat`, file.type);
+        formik.setFieldValue(
+          `image_url${index + 1}_originalFileName`,
+          file.name
+        );
+        formik.setFieldValue(
+          `image_url${index + 1}_originalFileFormat`,
+          file.type
+        );
       };
       reader.readAsDataURL(file);
     }
@@ -384,15 +389,17 @@ function ProductAdd() {
       croppedAreas[index]
     );
 
-    const originalFileName = formik.values[`image_url${index + 1}_originalFileName`];
-    const originalFileFormat = formik.values[`image_url${index + 1}_originalFileFormat`];
+    const originalFileName =
+      formik.values[`image_url${index + 1}_originalFileName`];
+    const originalFileFormat =
+      formik.values[`image_url${index + 1}_originalFileFormat`];
 
     const file = new File([croppedImageBlob], originalFileName, {
       type: originalFileFormat,
     });
 
     formik.setFieldValue(`image_url${index + 1}`, file);
-    console.log("file", file)
+    console.log("file", file);
 
     const newShowCropper = [...showCropper];
     newShowCropper[index] = false;
@@ -465,11 +472,12 @@ function ProductAdd() {
                     Category Group<span className="text-danger">*</span>
                   </label>
                   <select
-                    className={`form-select ${formik.touched.categoryGroupId &&
+                    className={`form-select ${
+                      formik.touched.categoryGroupId &&
                       formik.errors.categoryGroupId
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("categoryGroupId")}
                     onChange={handleCategorygroupChange}
                     value={formik.values.categoryGroupId} // Ensure value is set from Formik state
@@ -496,10 +504,11 @@ function ProductAdd() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.category_id && formik.errors.category_id
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-select ${
+                      formik.touched.category_id && formik.errors.category_id
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("category_id")}
                     onChange={(event) => {
                       const selectedValue = event.target.value;
@@ -540,10 +549,11 @@ function ProductAdd() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-select ${
+                      formik.touched.deal_type && formik.errors.deal_type
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("deal_type")}
                   >
                     <option></option>
@@ -562,10 +572,11 @@ function ProductAdd() {
                   <label className="form-label">Brand</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.brand && formik.errors.brand
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.brand && formik.errors.brand
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("brand")}
                   />
                   {formik.touched.brand && formik.errors.brand && (
@@ -580,10 +591,11 @@ function ProductAdd() {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.name && formik.errors.name
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.name && formik.errors.name
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("name")}
                     maxLength={825}
                   />
@@ -595,10 +607,11 @@ function ProductAdd() {
                   <label className="form-label">SKU</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.sku && formik.errors.sku
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.sku && formik.errors.sku
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("sku")}
                   />
                   {formik.touched.sku && formik.errors.sku && (
@@ -609,14 +622,17 @@ function ProductAdd() {
                   <label className="form-label">Coupon Code</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.coupon_code && formik.errors.coupon_code
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("coupon_code")}
                   />
                   {formik.touched.coupon_code && formik.errors.coupon_code && (
-                    <div className="invalid-feedback">{formik.errors.coupon_code}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.coupon_code}
+                    </div>
                   )}
                 </div>
                 <div className="col-md-6 col-12 mb-3">
@@ -630,11 +646,12 @@ function ProductAdd() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${formik.touched.original_price &&
+                    className={`form-control ${
+                      formik.touched.original_price &&
                       formik.errors.original_price
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("original_price")}
                   />
                   {formik.touched.original_price &&
@@ -656,11 +673,12 @@ function ProductAdd() {
                         .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
                         .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
                     }}
-                    className={`form-control ${formik.touched.discounted_price &&
+                    className={`form-control ${
+                      formik.touched.discounted_price &&
                       formik.errors.discounted_price
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("discounted_price")}
                   />
                   {formik.touched.discounted_price &&
@@ -680,15 +698,16 @@ function ProductAdd() {
                     readOnly
                     onInput={(event) => {
                       event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "") 
-                        .replace(/(\..*?)\..*/g, "$1") 
-                        .slice(0, 5); 
+                        .replace(/[^0-9.]/g, "")
+                        .replace(/(\..*?)\..*/g, "$1")
+                        .slice(0, 5);
                     }}
-                    className={`form-control ${formik.touched.discount_percentage &&
+                    className={`form-control ${
+                      formik.touched.discount_percentage &&
                       formik.errors.discount_percentage
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("discount_percentage")}
                   />
                   {formik.touched.discount_percentage &&
@@ -709,10 +728,11 @@ function ProductAdd() {
                         ""
                       );
                     }}
-                    className={`form-control ${formik.touched.stock && formik.errors.stock
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.stock && formik.errors.stock
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("stock")}
                   />
                   {formik.touched.stock && formik.errors.stock && (
@@ -726,10 +746,11 @@ function ProductAdd() {
                   <label className="form-label">Start Date</label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.start_date && formik.errors.start_date
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("start_date")}
                   />
                   {formik.touched.start_date && formik.errors.start_date && (
@@ -742,10 +763,11 @@ function ProductAdd() {
                   <label className="form-label">End Date</label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.end_date && formik.errors.end_date
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.end_date && formik.errors.end_date
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("end_date")}
                   />
                   {formik.touched.end_date && formik.errors.end_date && (
@@ -764,11 +786,12 @@ function ProductAdd() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${formik.touched[`image_url${num}`] &&
+                      className={`form-control ${
+                        formik.touched[`image_url${num}`] &&
                         formik.errors[`image_url${num}`]
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       name={`image_url${num}`}
                       onChange={(e) => handleFileChange(index, e)}
                       onBlur={formik.handleBlur}
@@ -853,10 +876,11 @@ function ProductAdd() {
                   <textarea
                     type="text"
                     rows={5}
-                    className={`form-control ${formik.touched.description && formik.errors.description
-                      ? "is-invalid"
-                      : ""
-                      }`}
+                    className={`form-control ${
+                      formik.touched.description && formik.errors.description
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     {...formik.getFieldProps("description")}
                   />
                   {formik.touched.description && formik.errors.description && (
@@ -867,8 +891,11 @@ function ProductAdd() {
                 </div>
               </div>
               <div className="hstack p-2">
-                <button type="submit" className="btn btn-sm btn-button"
-                  disabled={loadIndicator}>
+                <button
+                  type="submit"
+                  className="btn btn-sm btn-button"
+                  disabled={loadIndicator}
+                >
                   {loadIndicator && (
                     <span
                       className="spinner-border spinner-border-sm me-2"
