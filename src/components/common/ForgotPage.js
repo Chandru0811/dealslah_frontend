@@ -54,11 +54,11 @@ const ForgotPage = () => {
             <h3
               className="cursor-pointer py-2 mb-3"
               style={{
-                borderBottom: "2px solid #ff0060",
+                borderBottom: "2px solid #ef4444",
                 paddingBottom: "5px",
                 width: "100%",
                 textAlign: "center",
-                color: "#ff0060",
+                color: "#ef4444",
               }}
             >
               Forgot Password
@@ -103,7 +103,7 @@ const ForgotPage = () => {
               <button
                 type="submit"
                 className="btn btn-primary common-button btn-block mt-3 rounded-0 w-100"
-                style={{ backgroundColor: "#ff0060", borderColor: "#ff0060" }}
+                style={{ backgroundColor: "#ef4444", borderColor: "#ef4444" }}
               >
                 RESET PASSWORD
               </button>
@@ -114,7 +114,7 @@ const ForgotPage = () => {
               {/* <Link to="/"> */}
               <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                 Go Back to &nbsp;
-                <span style={{ color: "#ff0060" }}>Login In</span>
+                <span style={{ color: "#ef4444" }}>Login In</span>
               </p>
               {/* </Link> */}
             </div>
