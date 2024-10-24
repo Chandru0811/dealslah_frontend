@@ -358,7 +358,7 @@ function DashboardV() {
         <input
           type="week"
           className="form-control week-input ms-5"
-          style={{ boxShadow: "none" }}
+          style={{ boxShadow: "none", width: "250px" }}
           value={currentWeek}
           onChange={handleWeekChange} // Call function to fetch data for selected week
           max={maxWeek} // Disable selection for future weeks
