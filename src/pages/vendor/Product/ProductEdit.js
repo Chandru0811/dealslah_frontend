@@ -829,7 +829,7 @@ function ProductAdd() {
                             image={images[index]}
                             crop={crops[index]}
                             zoom={zooms[index]}
-                            aspect={400 / 266}
+                            aspect={320 / 240}
                             onCropChange={(crop) => {
                               const newCrops = [...crops];
                               newCrops[index] = crop;
