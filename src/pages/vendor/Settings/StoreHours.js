@@ -144,7 +144,7 @@ function StoreHours() {
       setLoading(true);
       try {
         const response = await api.get(`vendor/shop/hour/${shop_id}`);
-        // formik.setValues(response.data.data || formik.initialValues);
+        formik.setValues(response.data.data || formik.initialValues);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
