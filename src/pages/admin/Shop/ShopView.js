@@ -94,7 +94,7 @@ function ShopView() {
         </div>
       ) : (
         <>
-          <div className="card shadow border-0 mb-3">
+          <div className="border-0 mb-3">
             <div className="row p-3">
               <div className="d-flex justify-content-between align-items-center w-100">
                 <div>
@@ -112,35 +112,38 @@ function ShopView() {
                       <span>Back</span>
                     </button>
                   </Link>
-                  {shopStatus == 0 ? (
-                    <button
-                      type="button"
-                      onClick={handleActivate}
-                      className="btn btn-success btn-sm me-2"
-                      disabled={loading}
-                    >
-                      {loading && (
-                        <span
-                          className="spinner-border spinner-border-sm me-2"
-                          aria-hidden="true"
-                        ></span>
-                      )}
-                      Activate
-                    </button>
-                  ) : (
-                    <></>
-                  )}
+{/* 
+  {shopStatus == 0 ? (
+    <button
+      type="button"
+      onClick={handleActivate}
+      className="btn btn-success btn-sm me-2"
+      disabled={loading}
+    >
+      {loading && (
+        <span
+          className="spinner-border spinner-border-sm me-2"
+          aria-hidden="true"
+        ></span>
+      )}
+      Activate
+    </button>
+  ) : (
+    <></>
+  )}
 
-                  {shopStatus == 1 ? (
-                    <button
-                      onClick={handleOpenModal}
-                      className="btn btn-danger btn-sm me-2"
-                    >
-                      Deactivate
-                    </button>
-                  ) : (
-                    <></>
-                  )}
+  {shopStatus == 1 ? (
+    <button
+      onClick={handleOpenModal}
+      className="btn btn-danger btn-sm me-2"
+    >
+      Deactivate
+    </button>
+  ) : (
+    <></>
+  )}
+*/}
+
                 </div>
               </div>
             </div>
