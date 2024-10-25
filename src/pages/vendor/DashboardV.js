@@ -334,7 +334,7 @@ function DashboardV() {
           </Card>
         </div>
 
-        <div className="col-12 col-md-6 col-lg-3 mb-4">
+        {/* <div className="col-12 col-md-6 col-lg-3 mb-4">
           <Card
             style={{
               background: "#52ae55",
@@ -361,7 +361,7 @@ function DashboardV() {
               </div>
             </div>
           </Card>
-        </div>
+        </div> */}
       </div>
 
       <div className="row">
