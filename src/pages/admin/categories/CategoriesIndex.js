@@ -161,7 +161,7 @@ const CategoriesIndex = () => {
                       ) : (
                         <span className="dot" style={{ backgroundColor: 'green', width: '10px', height: '10px', display: 'inline-block', borderRadius: '50%' }}></span>
                       )}
-                      {data.active === "1" ? ' Active' : ' Inactive'}
+                      {data.active ? " Active" : " Inactive"}
                     </td>
 
                     <td className="text-center">
