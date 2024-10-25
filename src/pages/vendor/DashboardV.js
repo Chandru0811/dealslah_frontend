@@ -334,7 +334,7 @@ function DashboardV() {
           </Card>
         </div>
 
-        {/* <div className="col-12 col-md-6 col-lg-3 mb-4">
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
           <Card
             style={{
               background: "#52ae55",
@@ -344,13 +344,13 @@ function DashboardV() {
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
-                <h2 className="text-white">9.823</h2>
+                <h2 className="text-white">{data?.totalproductscount}</h2>
                 <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
                 </div>
               </div>
-              <p className="text-white mt-3">Members Online</p>
+              <p className="text-white mt-3">Active Products</p>
               <div className="flex-grow-1">
                 <img
                   src={graph7}
@@ -361,7 +361,7 @@ function DashboardV() {
               </div>
             </div>
           </Card>
-        </div> */}
+        </div>
       </div>
 
       <div className="row">
