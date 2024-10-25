@@ -25,7 +25,7 @@ const validationSchema = Yup.object({
     .url("Please enter a valid URL")
     .required("Map URL is required!"),
 
-  banner: Yup.mixed().required("Banner is required!"),
+  // banner: Yup.mixed().required("Banner is required!"),
   description: Yup.string().required("Description is required!"),
 });
 
@@ -50,7 +50,7 @@ const Store = () => {
       logo: null,
       external_url: "",
       map_url: "",
-      banner: null,
+      // banner: null,
       description: "",
       shop_ratings: "",
     },
@@ -408,7 +408,7 @@ const Store = () => {
                   </div>
                 )}
               </div> */}
-              <div className="col-md-4 col-12 mb-5">
+              {/* <div className="col-md-4 col-12 mb-5">
                 <label className="form-label">
                   Company Banner<span className="text-danger">*</span>
                 </label>
@@ -448,7 +448,7 @@ const Store = () => {
                     )}
                   </div>
                 )}
-              </div>
+              </div> */}
               {/* {formik.values.banner &&
                 typeof formik.values.banner === "string" && (
                   <div className="col-12 mb-3">
