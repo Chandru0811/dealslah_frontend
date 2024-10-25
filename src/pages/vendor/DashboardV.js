@@ -12,6 +12,9 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import { Card } from "react-bootstrap";
 import toast from "react-hot-toast";
 import api from "../../config/URL";
+import { Link } from "react-router-dom";
+import { PiIntersectSquareFill } from "react-icons/pi";
+
 
 function DashboardV() {
   const [currentWeek, setCurrentWeek] = useState("");
@@ -182,6 +185,13 @@ function DashboardV() {
 
   return (
     <div className="card shadow border-0 mx-4" style={{ minHeight: "90vh" }}>
+      <div className="d-flex justify-content-end pt-4 pe-5">
+        <Link to="/product/add">
+          <button className="btn btn-sm btn-button shadow-none border-none py-3">
+            <PiIntersectSquareFill size={20} /> Add Deal
+          </button>
+        </Link>
+      </div>
       <div className="row card-container p-5">
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <Card
@@ -334,13 +344,13 @@ function DashboardV() {
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
-                <h2 className="text-white">9.823</h2>
+                <h2 className="text-white">{data?.totalproductscount}</h2>
                 <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
                 </div>
               </div>
-              <p className="text-white mt-3">Members Online</p>
+              <p className="text-white mt-3">Active Products</p>
               <div className="flex-grow-1">
                 <img
                   src={graph7}
@@ -373,7 +383,10 @@ function DashboardV() {
               height={350}
             />
           ) : (
-            <p className="d-flex justify-content-center align-items-center py-5">A week has not yet been selected. Kindly select a week to view the chart.</p>
+            <p className="d-flex justify-content-center align-items-center py-5">
+              A week has not yet been selected. Kindly select a week to view the
+              chart.
+            </p>
           )}
         </div>
         <div className="col-12">
