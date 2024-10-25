@@ -10,6 +10,21 @@ const validationSchema = Yup.object({
   // shipping_policy: Yup.string().required("Shipping Policy is required"),
   // refund_policy: Yup.string().required("Refund Policy is required"),
   // cancellation_policy: Yup.string().required("Cancelation Policy is required"),
+  shipping_policy: Yup.string()
+    .test("is-not-empty", "*Shipping Policy is required", (value) => {
+      return value && value.trim() !== "" && value !== "<p><br></p>";
+    })
+    .required("*Shipping Policy is required"),
+    refund_policy: Yup.string()
+    .test("is-not-empty", "*Refund Policy is required", (value) => {
+      return value && value.trim() !== "" && value !== "<p><br></p>";
+    })
+    .required("*Refund Policy is required"),
+  cancellation_policy: Yup.string()
+    .test("is-not-empty", "*Cancellation/Return/Exchange Policy is required", (value) => {
+      return value && value.trim() !== "" && value !== "<p><br></p>";
+    })
+    .required("*Cancellation/Return/Exchange Policy is required"),
 });
 function StorePolicy() {
   const shop_id = sessionStorage.getItem("shop_id");
@@ -95,57 +110,63 @@ function StorePolicy() {
               {/* <h3 className="text-primary mb-4">Policies Setting</h3> */}
               <div className="mb-5">
                 <label className="form-label">
-                  <p className=" ">Shipping Policy </p>
+                  <p className=" ">Shipping Policy <span className="text-danger">*</span></p>
                 </label>
                 <ReactQuill
-                  ref={editor}
                   value={formik.values.shipping_policy}
-                  onChange={(newContent) =>
-                    formik.setFieldValue("shipping_policy", newContent)
-                  }
+                  onChange={(newContent) => {
+                    formik.setFieldValue("shipping_policy", newContent);
+                    formik.validateField("shipping_policy");
+                  }}
                   onBlur={() => formik.setFieldTouched("shipping_policy", true)}
                   modules={Editor.modules}
                 />
-
                 <div className="error text-danger">
-                  <small>{formik.errors.shipping_policy}</small>
+                  <small>
+                    {formik.touched.shipping_policy &&
+                      formik.errors.shipping_policy}
+                  </small>
                 </div>
               </div>
+
               <div className="mb-5">
                 <label className="form-label">
-                  <p className=" ">Refund Policy </p>
-                </label>
-                <ReactQuill
-                  ref={editor}
+                  <p className=" ">Refund Policy <span className="text-danger">*</span></p>
+                  </label>
+                  <ReactQuill
                   value={formik.values.refund_policy}
-                  onChange={(newContent) =>
-                    formik.setFieldValue("refund_policy", newContent)
-                  }
+                  onChange={(newContent) => {
+                    formik.setFieldValue("refund_policy", newContent);
+                    formik.validateField("refund_policy");
+                  }}
                   onBlur={() => formik.setFieldTouched("refund_policy", true)}
                   modules={Editor.modules}
                 />
-
                 <div className="error text-danger">
-                  <small>{formik.errors.refund_policy}</small>
+                  <small>
+                    {formik.touched.refund_policy &&
+                      formik.errors.refund_policy}
+                  </small>
                 </div>
               </div>
               <div className="mb-5">
                 <label className="form-label">
-                  <p className=" ">Cancellation/Return/Exchange Policy</p>
+                  <p className=" ">Cancellation/Return/Exchange Policy <span className="text-danger">*</span></p>
                 </label>
                 <ReactQuill
-                  ref={editor}
                   value={formik.values.cancellation_policy}
-                  onChange={(newContent) =>
-                    formik.setFieldValue("cancellation_policy", newContent)
-                  }
-                  onBlur={() =>
-                    formik.setFieldTouched("cancellation_policy", true)
-                  }
+                  onChange={(newContent) => {
+                    formik.setFieldValue("cancellation_policy", newContent);
+                    formik.validateField("cancellation_policy");
+                  }}
+                  onBlur={() => formik.setFieldTouched("cancellation_policy", true)}
                   modules={Editor.modules}
                 />
                 <div className="error text-danger">
-                  <small>{formik.errors.cancellation_policy}</small>
+                  <small>
+                    {formik.touched.cancellation_policy &&
+                      formik.errors.cancellation_policy}
+                  </small>
                 </div>
               </div>
               <div className="text-end mt-4 mb-3">

@@ -215,7 +215,7 @@ function DashboardV() {
                   src={dashgraph}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "auto" }}
+                  style={{ width: "100%", height: "75px" }}
                 />
               </div>
             </div>
@@ -243,7 +243,7 @@ function DashboardV() {
                 src={dashgraph2}
                 alt=""
                 className="img-fluid"
-                style={{ width: "100%", height: "auto" }}
+                style={{ width: "100%", height: "75px" }}
               />
             </div>
           </Card>
@@ -270,7 +270,7 @@ function DashboardV() {
                 src={graph5}
                 alt=""
                 className="img-fluid"
-                style={{ width: "100%", height: "auto" }}
+                style={{ width: "100%", height: "75px" }}
               />
             </div>
           </Card>
@@ -292,13 +292,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div>
               </div>
-              <p className="text-white mt-3">Deal Shares</p>
-              <div className="pt-5">
+              <p className="text-white mt-3 pt-1">Deal Shares</p>
+              <div className="flex-grow-1">
                 <img
                   src={graph4}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "auto" }}
+                  style={{ width: "100%", height: "75px" }}
                 />
               </div>
             </div>

@@ -111,12 +111,12 @@ const ForgotPage = () => {
             </form>
 
             <div className="text-center mt-3 mb-4">
-              {/* <Link to="/"> */}
+              <Link to="/">
               <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                 Go Back to &nbsp;
                 <span style={{ color: "#ef4444" }}>Login In</span>
               </p>
-              {/* </Link> */}
+              </Link>
             </div>
           </div>
         </div>
