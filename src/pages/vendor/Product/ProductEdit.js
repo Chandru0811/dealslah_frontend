@@ -204,7 +204,14 @@ function ProductEdit() {
   const getData = async () => {
     try {
       const response = await api.get(`vendor/product/${id}/get`);
-      const { image_url1, image_url2, image_url3, image_url4, coupon_code, ...rest } = response.data.data;
+      const {
+        image_url1,
+        image_url2,
+        image_url3,
+        image_url4,
+        coupon_code,
+        ...rest
+      } = response.data.data;
       setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
       formik.setValues({
         ...rest,
@@ -369,18 +376,26 @@ function ProductEdit() {
 
   useEffect(() => {
     if (isCouponChecked) {
-      const newCouponCode = `DEALSLAH${formatDiscountPercentage(formik.values.discount_percentage)}`;
+      const newCouponCode = `DEALSLAH${formatDiscountPercentage(
+        formik.values.discount_percentage
+      )}`;
       setCouponCode(newCouponCode);
       formik.setFieldValue("coupon_code", newCouponCode);
     }
   }, [formik.values.discount_percentage, isCouponChecked]);
 
-  const handleCouponToggle = (event) => {
-    const checked = event.target.checked;
-    setIsCouponChecked(checked);
-    const newCouponCode = checked
-      ? `DEALSLAH${formatDiscountPercentage(formik.values.discount_percentage)}`
-      : `DEALSLAHV${shop_id.padStart(2, "0")}`;
+  const handleRadioChange = (e) => {
+    const selectedValue = e.target.value;
+    setIsCouponChecked(selectedValue === "discount");
+
+    const formattedDiscount = formatDiscountPercentage(
+      formik.values.discounted_percentage
+    );
+    const newCouponCode =
+      selectedValue === "discount"
+        ? `DEALSLAH${formattedDiscount}`
+        : `DEALSLAHV${id.padStart(2, "0")}`;
+
     setCouponCode(newCouponCode);
     formik.setFieldValue("coupon_code", newCouponCode);
   };
@@ -422,11 +437,12 @@ function ProductEdit() {
                     Category Group<span className="text-danger">*</span>
                   </label>
                   <select
-                    className={`form-select ${formik.touched.categoryGroupId &&
-                        formik.errors.categoryGroupId
+                    className={`form-select ${
+                      formik.touched.categoryGroupId &&
+                      formik.errors.categoryGroupId
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("categoryGroupId")}
                     onChange={handleCategorygroupChange}
                     value={formik.values.categoryGroupId} // Ensure value is set from Formik state
@@ -453,10 +469,11 @@ function ProductEdit() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                    className={`form-select ${
+                      formik.touched.category_id && formik.errors.category_id
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("category_id")}
                     onChange={(event) => {
                       const selectedValue = event.target.value;
@@ -497,10 +514,11 @@ function ProductEdit() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                    className={`form-select ${
+                      formik.touched.deal_type && formik.errors.deal_type
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("deal_type")}
                   >
                     <option></option>
@@ -519,10 +537,11 @@ function ProductEdit() {
                   <label className="form-label">Brand</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.brand && formik.errors.brand
+                    className={`form-control ${
+                      formik.touched.brand && formik.errors.brand
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("brand")}
                   />
                   {formik.touched.brand && formik.errors.brand && (
@@ -537,10 +556,11 @@ function ProductEdit() {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.name && formik.errors.name
+                    className={`form-control ${
+                      formik.touched.name && formik.errors.name
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("name")}
                     maxLength={825}
                   />
@@ -552,10 +572,11 @@ function ProductEdit() {
                   <label className="form-label">SKU</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.sku && formik.errors.sku
+                    className={`form-control ${
+                      formik.touched.sku && formik.errors.sku
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("sku")}
                   />
                   {formik.touched.sku && formik.errors.sku && (
@@ -566,10 +587,11 @@ function ProductEdit() {
                   <label className="form-label">Coupon Code</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code
+                    className={`form-control ${
+                      formik.touched.coupon_code && formik.errors.coupon_code
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("coupon_code")}
                   />
                   {formik.touched.coupon_code && formik.errors.coupon_code && (
@@ -589,11 +611,12 @@ function ProductEdit() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${formik.touched.original_price &&
-                        formik.errors.original_price
+                    className={`form-control ${
+                      formik.touched.original_price &&
+                      formik.errors.original_price
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("original_price")}
                   />
                   {formik.touched.original_price &&
@@ -615,11 +638,12 @@ function ProductEdit() {
                         .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
                         .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
                     }}
-                    className={`form-control ${formik.touched.discounted_price &&
-                        formik.errors.discounted_price
+                    className={`form-control ${
+                      formik.touched.discounted_price &&
+                      formik.errors.discounted_price
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("discounted_price")}
                   />
                   {formik.touched.discounted_price &&
@@ -643,11 +667,12 @@ function ProductEdit() {
                         .replace(/(\..*?)\..*/g, "$1")
                         .slice(0, 5);
                     }}
-                    className={`form-control ${formik.touched.discount_percentage &&
-                        formik.errors.discount_percentage
+                    className={`form-control ${
+                      formik.touched.discount_percentage &&
+                      formik.errors.discount_percentage
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("discount_percentage")}
                   />
                   {formik.touched.discount_percentage &&
@@ -668,10 +693,11 @@ function ProductEdit() {
                         ""
                       );
                     }}
-                    className={`form-control ${formik.touched.stock && formik.errors.stock
+                    className={`form-control ${
+                      formik.touched.stock && formik.errors.stock
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("stock")}
                   />
                   {formik.touched.stock && formik.errors.stock && (
@@ -685,10 +711,11 @@ function ProductEdit() {
                   <label className="form-label">Start Date</label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                    className={`form-control ${
+                      formik.touched.start_date && formik.errors.start_date
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("start_date")}
                   />
                   {formik.touched.start_date && formik.errors.start_date && (
@@ -701,10 +728,11 @@ function ProductEdit() {
                   <label className="form-label">End Date</label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                    className={`form-control ${
+                      formik.touched.end_date && formik.errors.end_date
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("end_date")}
                   />
                   {formik.touched.end_date && formik.errors.end_date && (
@@ -723,11 +751,12 @@ function ProductEdit() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${formik.touched[`image_url${num}`] &&
-                          formik.errors[`image_url${num}`]
+                      className={`form-control ${
+                        formik.touched[`image_url${num}`] &&
+                        formik.errors[`image_url${num}`]
                           ? "is-invalid"
                           : ""
-                        }`}
+                      }`}
                       name={`image_url${num}`}
                       onChange={(e) => handleFileChange(index, e)}
                       onBlur={formik.handleBlur}
@@ -812,10 +841,11 @@ function ProductEdit() {
                   <textarea
                     type="text"
                     rows={5}
-                    className={`form-control ${formik.touched.description && formik.errors.description
+                    className={`form-control ${
+                      formik.touched.description && formik.errors.description
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("description")}
                   />
                   {formik.touched.description && formik.errors.description && (
@@ -824,29 +854,57 @@ function ProductEdit() {
                     </div>
                   )}
                 </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <div className="form-check form-switch mb-3">
-                    <input
-                      type="checkbox"
-                      role="switch"
-                      id="couponSwitch"
-                      className="form-check-input"
-                      style={{ boxShadow: "none" }}
-                      checked={isCouponChecked}
-                      onChange={handleCouponToggle}
-                    />
-                    <label className="form-label ms-2">Need to Change Coupon Code</label>
+                <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
+                  <div className="d-flex align-items-center">
+                    <div className="form-check mb-3">
+                      <input
+                        type="radio"
+                        name="changeCouponCode"
+                        id="vendorCoupon"
+                        value="fixed"
+                        className="form-check-input"
+                        style={{ boxShadow: "none" }}
+                        checked={!isCouponChecked}
+                        onChange={handleRadioChange}
+                      />
+                      <label htmlFor="vendorCoupon" className="form-label ms-2">
+                        Vendor Coupon code
+                      </label>
+                    </div>
+                    &nbsp; &nbsp; &nbsp;
+                    <div className="form-check mb-3">
+                      <input
+                        type="radio"
+                        name="changeCouponCode"
+                        id="genricCoupon"
+                        value="discount"
+                        className="form-check-input"
+                        style={{ boxShadow: "none" }}
+                        checked={isCouponChecked}
+                        onChange={handleRadioChange}
+                      />
+                      <label htmlFor="genricCoupon" className="form-label ms-2">
+                        Generic Coupon Code
+                      </label>
+                    </div>
                   </div>
-                  <label className="form-label" for="couponSwitch">Coupon Code</label>
+                </div>
+                <div className="col-md-6 col-12 mb-3">
+                  <label className="form-label">Coupon Code</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code ? "is-invalid" : ""}`}
+                    className={`form-control ${
+                      formik.touched.coupon_code && formik.errors.coupon_code
+                        ? "is-invalid"
+                        : ""
+                    }`}
                     value={couponCode}
-                    {...formik.getFieldProps("coupon_code")}
                     readOnly
                   />
                   {formik.touched.coupon_code && formik.errors.coupon_code && (
-                    <div className="invalid-feedback">{formik.errors.coupon_code}</div>
+                    <div className="invalid-feedback">
+                      {formik.errors.coupon_code}
+                    </div>
                   )}
                 </div>
               </div>
