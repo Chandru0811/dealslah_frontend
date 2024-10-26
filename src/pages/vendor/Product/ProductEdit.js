@@ -2,15 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-// import { Button, Modal } from "react-bootstrap";
-// import { PiPlusSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import ImageURL from "../../../config/ImageURL";
 
-function ProductAdd() {
+function ProductEdit() {
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -31,6 +29,8 @@ function ProductAdd() {
   const shop_id = sessionStorage.getItem("shop_id");
   const { id } = useParams();
   const navigate = useNavigate();
+  const [couponCode, setCouponCode] = useState("DEALSLAH");
+  const [isCouponChecked, setIsCouponChecked] = useState(false);
 
   const SUPPORTED_FORMATS = [
     "image/jpg",
@@ -64,15 +64,6 @@ function ProductAdd() {
         Yup.ref("original_price"),
         "The Discounted Price must be same or below the Original Price."
       ),
-    // start_date: Yup.date().required("Start Date is required").nullable(),
-    // end_date: Yup.date()
-    //   .required("End Date is required")
-    //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
-    //   .nullable(),
-    // stock: Yup.number()
-    //   .required("Stock is required")
-    //   .min(0, "Stock cannot be negative"),
-    // sku: Yup.string().required("SKU is required"),
     image_url1: imageValidation,
     image_url2: imageValidation,
     image_url3: imageValidation,
@@ -81,12 +72,6 @@ function ProductAdd() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
   });
-  // const validationSchema1 = Yup.object({
-  //   catagory_group_id: Yup.string().required("Category Group is required"),
-  //   name: Yup.string().required("Name is required"),
-  //   icon: Yup.string().required("Imagei s required"),
-  //   description: Yup.string().required("Description is required"),
-  // });
 
   const formik = useFormik({
     initialValues: {
@@ -186,61 +171,6 @@ function ProductAdd() {
     },
   });
 
-  // const formik1 = useFormik({
-  //   initialValues: {
-  //     catagory_group_id: "",
-  //     name: "",
-  //     icon: "",
-  //     description: "",
-  //   },
-  //   validationSchema: validationSchema1,
-  //   onSubmit: async (values) => {
-  //     const formData = new FormData();
-  //     formData.append("category_group_id", values.catagory_group_id);
-  //     formData.append("name", values.name);
-  //     formData.append("icon", values.icon);
-  //     formData.append("description", values.description);
-
-  //     const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-  //     formData.append("slug", slug);
-
-  //     console.log("Form Data:", values);
-  //     try {
-  //       const response = await api.post(`vendor/categories/create`, formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //       console.log("Response", response);
-  //       if (response.status === 200) {
-  //         toast.success(response.data.message);
-  //         setShowModal(false);
-  //       } else {
-  //         toast.error(response.data.message);
-  //       }
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 422) {
-  //         const errors = error.response.data.errors;
-  //         if (errors) {
-  //           Object.keys(errors).forEach((key) => {
-  //             errors[key].forEach((errorMsg) => {
-  //               toast(errorMsg, {
-  //                 icon: <FiAlertTriangle className="text-warning" />,
-  //               });
-  //             });
-  //           });
-  //         }
-  //       } else {
-  //         console.error("API Error", error);
-  //         toast.error("An unexpected error occurred.");
-  //       }
-  //     } finally {
-  //       setLoadIndicator(false);
-  //       formik1.resetForm();
-  //     }
-  //   },
-  // });
-
   useEffect(() => {
     const getData1 = async () => {
       setLoading(true);
@@ -274,11 +204,18 @@ function ProductAdd() {
   const getData = async () => {
     try {
       const response = await api.get(`vendor/product/${id}/get`);
-
-      const { image_url1, image_url2, image_url3, image_url4, ...rest } =
-        response.data.data;
+      const {
+        image_url1,
+        image_url2,
+        image_url3,
+        image_url4,
+        coupon_code,
+        ...rest
+      } = response.data.data;
+      setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
       formik.setValues({
         ...rest,
+        coupon_code: coupon_code,
         start_date: rest.start_date
           ? new Date(rest.start_date).toISOString().split("T")[0]
           : "",
@@ -291,6 +228,7 @@ function ProductAdd() {
         image3: `${ImageURL}${image_url3}`,
         image4: `${ImageURL}${image_url4}`,
       });
+      setCouponCode(coupon_code);
     } catch (error) {
       toast.error("Error Fetching Data", error.message);
     }
@@ -313,18 +251,14 @@ function ProductAdd() {
     const categoryGroup = event.target.value;
     setCategory([]);
     formik.setFieldValue("categoryGroupId", categoryGroup);
-    // formik1.setFieldValue("catagory_group_id", categoryGroup);
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
   };
+
   useEffect(() => {
     fetchCategory(formik.values.categoryGroupId);
   }, [formik.values.categoryGroupId]);
 
-  // const handleCategoryAdd = () => {
-  //   setShowModal(true);
-  //   formik1.resetForm();
-  // };
   const handleFileChange = (index, event) => {
     const file = event.target.files[0];
     if (file) {
@@ -438,6 +372,37 @@ function ProductAdd() {
         }, "image/jpeg");
       };
     });
+  };
+
+  useEffect(() => {
+    if (isCouponChecked) {
+      const newCouponCode = `DEALSLAH${formatDiscountPercentage(
+        formik.values.discount_percentage
+      )}`;
+      setCouponCode(newCouponCode);
+      formik.setFieldValue("coupon_code", newCouponCode);
+    }
+  }, [formik.values.discount_percentage, isCouponChecked]);
+
+  const handleRadioChange = (e) => {
+    const selectedValue = e.target.value;
+    setIsCouponChecked(selectedValue === "discount");
+
+    const formattedDiscount = formatDiscountPercentage(
+      formik.values.discounted_percentage
+    );
+    const newCouponCode =
+      selectedValue === "discount"
+        ? `DEALSLAH${formattedDiscount}`
+        : `DEALSLAHV${id.padStart(2, "0")}`;
+
+    setCouponCode(newCouponCode);
+    formik.setFieldValue("coupon_code", newCouponCode);
+  };
+
+  const formatDiscountPercentage = (value) => {
+    const percentage = Math.round(value || 0);
+    return percentage < 10 ? `0${percentage}` : `${percentage}`;
   };
 
   return (
@@ -889,6 +854,59 @@ function ProductAdd() {
                     </div>
                   )}
                 </div>
+                <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
+                  <div className="d-flex align-items-center">
+                    <div className="form-check mb-3">
+                      <input
+                        type="radio"
+                        name="changeCouponCode"
+                        id="vendorCoupon"
+                        value="fixed"
+                        className="form-check-input"
+                        style={{ boxShadow: "none" }}
+                        checked={!isCouponChecked}
+                        onChange={handleRadioChange}
+                      />
+                      <label htmlFor="vendorCoupon" className="form-label ms-2">
+                        Vendor Coupon code
+                      </label>
+                    </div>
+                    &nbsp; &nbsp; &nbsp;
+                    <div className="form-check mb-3">
+                      <input
+                        type="radio"
+                        name="changeCouponCode"
+                        id="genricCoupon"
+                        value="discount"
+                        className="form-check-input"
+                        style={{ boxShadow: "none" }}
+                        checked={isCouponChecked}
+                        onChange={handleRadioChange}
+                      />
+                      <label htmlFor="genricCoupon" className="form-label ms-2">
+                        Generic Coupon Code
+                      </label>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12 mb-3">
+                  <label className="form-label">Coupon Code</label>
+                  <input
+                    type="text"
+                    className={`form-control ${
+                      formik.touched.coupon_code && formik.errors.coupon_code
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                    value={couponCode}
+                    readOnly
+                  />
+                  {formik.touched.coupon_code && formik.errors.coupon_code && (
+                    <div className="invalid-feedback">
+                      {formik.errors.coupon_code}
+                    </div>
+                  )}
+                </div>
               </div>
               <div className="hstack p-2">
                 <button
@@ -913,4 +931,4 @@ function ProductAdd() {
   );
 }
 
-export default ProductAdd;
+export default ProductEdit;
