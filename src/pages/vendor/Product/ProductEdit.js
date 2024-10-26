@@ -29,7 +29,7 @@ function ProductEdit() {
   const shop_id = sessionStorage.getItem("shop_id");
   const { id } = useParams();
   const navigate = useNavigate();
-  const [couponCode, setCouponCode] = useState("DEALSLAH1V");
+  const [couponCode, setCouponCode] = useState("DEALSLAH");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
 
   const SUPPORTED_FORMATS = [
