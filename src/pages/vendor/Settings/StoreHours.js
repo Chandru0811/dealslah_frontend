@@ -101,7 +101,7 @@ const validationSchema = Yup.object({
   }),
 });
 
-function StoreHours() {
+function StoreHours({ setValueChange }) {
   const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -135,6 +135,7 @@ function StoreHours() {
         toast.error(error.message || "An error occurred");
       } finally {
         setLoadIndicator(false);
+        setValueChange(false);
       }
     },
   });
@@ -196,6 +197,11 @@ function StoreHours() {
   useEffect(() => {
     handleSameForAll();
   }, [sameForAllDays, sameForWeekdays]);
+
+  const handleFormikChange = (e) => {
+    formik.handleChange(e); 
+    setValueChange(true); 
+  };
 
   return (
     <div className="container mt-4">
@@ -269,6 +275,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.monday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.monday?.opening &&
                             formik.errors.daily_timing?.monday?.opening && (
@@ -290,6 +297,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.monday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.monday?.closing &&
                             formik.errors.daily_timing?.monday?.closing && (
@@ -322,6 +330,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.tuesday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.tuesday?.opening &&
                             formik.errors.daily_timing?.tuesday?.opening && (
@@ -343,6 +352,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.tuesday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.tuesday?.closing &&
                             formik.errors.daily_timing?.tuesday?.closing && (
@@ -375,6 +385,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.wednesday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.wednesday?.opening &&
                             formik.errors.daily_timing?.wednesday?.opening && (
@@ -396,6 +407,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.wednesday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.wednesday?.closing &&
                             formik.errors.daily_timing?.wednesday?.closing && (
@@ -428,6 +440,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.thursday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.thursday?.opening &&
                             formik.errors.daily_timing?.thursday?.opening && (
@@ -449,6 +462,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.thursday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.thursday?.closing &&
                             formik.errors.daily_timing?.thursday?.closing && (
@@ -481,6 +495,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.friday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.friday?.opening &&
                             formik.errors.daily_timing?.friday?.opening && (
@@ -502,6 +517,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.friday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.friday?.closing &&
                             formik.errors.daily_timing?.friday?.closing && (
@@ -534,6 +550,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.saturday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.saturday?.opening &&
                             formik.errors.daily_timing?.saturday?.opening && (
@@ -555,6 +572,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.saturday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.saturday?.closing &&
                             formik.errors.daily_timing?.saturday?.closing && (
@@ -587,6 +605,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.sunday.opening"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.sunday?.opening &&
                             formik.errors.daily_timing?.sunday?.opening && (
@@ -608,6 +627,7 @@ function StoreHours() {
                             {...formik.getFieldProps(
                               "daily_timing.sunday.closing"
                             )}
+                            onChange={handleFormikChange}
                           />
                           {formik.touched.daily_timing?.sunday?.closing &&
                             formik.errors.daily_timing?.sunday?.closing && (

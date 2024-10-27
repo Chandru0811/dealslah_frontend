@@ -334,21 +334,26 @@ function ProductAdd() {
     return roundedDiscount < 10 ? `0${roundedDiscount}` : `${roundedDiscount}`;
   };
 
-  const handleCheckboxChange = (e) => {
-    const isChecked = e.target.checked;
-    setIsCouponChecked(isChecked);
+  const handleRadioChange = (e) => {
+    const selectedValue = e.target.value;
+    setIsCouponChecked(selectedValue === "discount");
 
-    const formattedDiscount = formatDiscountPercentage(formik.values.discounted_percentage);
-    const newCouponCode = isChecked
-      ? `DEALSLAH${formattedDiscount}`
-      : `DEALSLAHV${id.padStart(2, "0")}`;
-    
+    const formattedDiscount = formatDiscountPercentage(
+      formik.values.discounted_percentage
+    );
+    const newCouponCode =
+      selectedValue === "discount"
+        ? `DEALSLAH${formattedDiscount}`
+        : `DEALSLAHV${id.padStart(2, "0")}`;
+
     setCouponCode(newCouponCode);
     formik.setFieldValue("coupon_code", newCouponCode);
   };
 
   useEffect(() => {
-    const formattedDiscount = formatDiscountPercentage(formik.values.discounted_percentage);
+    const formattedDiscount = formatDiscountPercentage(
+      formik.values.discounted_percentage
+    );
 
     if (isCouponChecked) {
       const updatedCoupon = `DEALSLAH${formattedDiscount}`;
@@ -378,7 +383,7 @@ function ProductAdd() {
         </div>
         <div className="container card shadow border-0 pb-5">
           <div className="row mt-3">
-          <div className="col-md-6 col-12 mb-3">
+            <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Category Group<span className="text-danger">*</span>
               </label>
@@ -738,26 +743,57 @@ function ProductAdd() {
                 </div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
-              <div className="form-check form-switch mb-3">
-                <input
-                  type="checkbox"
-                  role="switch"
-                  className="form-check-input"
-                  style={{ boxShadow: "none" }}
-                  onChange={handleCheckboxChange}
-                />
-                <label className="form-label ms-2">Need to Change Coupon Code</label>
+            <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
+              <div className="d-flex align-items-center">
+                <div className="form-check mb-3">
+                  <input
+                    type="radio"
+                    name="changeCouponCode"
+                    id="vendorCoupon"
+                    value="fixed"
+                    className="form-check-input"
+                    style={{ boxShadow: "none" }}
+                    checked={!isCouponChecked}
+                    onChange={handleRadioChange}
+                  />
+                  <label htmlFor="vendorCoupon" className="form-label ms-2">
+                    Vendor Coupon code
+                  </label>
+                </div>
+                &nbsp; &nbsp; &nbsp;
+                <div className="form-check mb-3">
+                  <input
+                    type="radio"
+                    name="changeCouponCode"
+                    id="genricCoupon"
+                    value="discount"
+                    className="form-check-input"
+                    style={{ boxShadow: "none" }}
+                    checked={isCouponChecked}
+                    onChange={handleRadioChange}
+                  />
+                  <label htmlFor="genricCoupon" className="form-label ms-2">
+                    Generic Coupon Code
+                  </label>
+                </div>
               </div>
+            </div>
+            <div className="col-md-6 col-12 mb-3">
               <label className="form-label">Coupon Code</label>
               <input
                 type="text"
-                className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code ? "is-invalid" : ""}`}
+                className={`form-control ${
+                  formik.touched.coupon_code && formik.errors.coupon_code
+                    ? "is-invalid"
+                    : ""
+                }`}
                 value={couponCode}
                 readOnly
               />
               {formik.touched.coupon_code && formik.errors.coupon_code && (
-                <div className="invalid-feedback">{formik.errors.coupon_code}</div>
+                <div className="invalid-feedback">
+                  {formik.errors.coupon_code}
+                </div>
               )}
             </div>
           </div>

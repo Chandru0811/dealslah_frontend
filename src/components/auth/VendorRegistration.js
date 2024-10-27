@@ -111,7 +111,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
             <div className="container-fluid p-1 d-flex align-items-center justify-content-center gap-2">
               {activeStep !== 0 && activeStep !== 2 && (
                 <button
-                  className="btn btn-button-register mb-3 w-50"
+                  className="btn btn-secondary mb-3" style={{width:"100%"}}
                   onClick={handleBack}
                 >
                   Back
@@ -121,9 +121,9 @@ export default function VendorRegistration({ handleVendorLogin }) {
               {activeStep !== steps.length - 1 && (
                 <>
                   <button
-                    type="submit"
+                    type="submit" style={{width:"100%"}}
                     onClick={handleButtonClick}
-                    className="btn btn-button mb-3 w-50"
+                    className="btn btn-button mb-3 w-100"
                     disabled={loadIndicator}
                   >
                     {loadIndicator && (

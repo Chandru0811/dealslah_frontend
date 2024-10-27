@@ -26,7 +26,7 @@ const validationSchema = Yup.object({
     })
     .required("*Cancellation/Return/Exchange Policy is required"),
 });
-function StorePolicy() {
+function StorePolicy({ setValueChange }) {
   const shop_id = sessionStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
@@ -52,6 +52,7 @@ function StorePolicy() {
       } catch (error) {
         toast.error(error.message || "An error occurred");
       } finally {
+        setValueChange(false);
         setLoadIndicator(false);
       }
     },
@@ -93,6 +94,11 @@ function StorePolicy() {
     },
   };
 
+  const handleFormikChange = (e) => {
+    formik.handleChange(e); 
+    setValueChange(true); 
+  };
+
   return (
     <div className="row m-0">
       <form onSubmit={formik.handleSubmit} className="w-100">
@@ -117,6 +123,7 @@ function StorePolicy() {
                   onChange={(newContent) => {
                     formik.setFieldValue("shipping_policy", newContent);
                     formik.validateField("shipping_policy");
+                    handleFormikChange({ target: { value: newContent } });
                   }}
                   onBlur={() => formik.setFieldTouched("shipping_policy", true)}
                   modules={Editor.modules}
@@ -138,6 +145,7 @@ function StorePolicy() {
                   onChange={(newContent) => {
                     formik.setFieldValue("refund_policy", newContent);
                     formik.validateField("refund_policy");
+                    handleFormikChange({ target: { value: newContent } });
                   }}
                   onBlur={() => formik.setFieldTouched("refund_policy", true)}
                   modules={Editor.modules}
@@ -158,6 +166,7 @@ function StorePolicy() {
                   onChange={(newContent) => {
                     formik.setFieldValue("cancellation_policy", newContent);
                     formik.validateField("cancellation_policy");
+                    handleFormikChange({ target: { value: newContent } });
                   }}
                   onBlur={() => formik.setFieldTouched("cancellation_policy", true)}
                   modules={Editor.modules}

@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import toast from "react-hot-toast";
 import api from "../../../config/URL";
 
-function Location() {
+function Location({ setValueChange }) {
   const id = sessionStorage.getItem("shop_id");
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -47,6 +47,7 @@ function Location() {
         toast.error(error.message);
       } finally {
         setLoadIndicator(false);
+        setValueChange(false);
       }
     },
   });
@@ -66,6 +67,12 @@ function Location() {
     };
     getData();
   }, [id]);
+
+  const handleFormikChange = (e) => {
+    formik.handleChange(e); 
+    setValueChange(true); 
+  };
+
   return (
     <section>
       <form onSubmit={formik.handleSubmit} className="w-100">
@@ -93,7 +100,7 @@ function Location() {
                     : ""
                     }`}
                   name="street"
-                  onChange={formik.handleChange}
+                  onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.street}
                 />
@@ -114,7 +121,7 @@ function Location() {
                     : ""
                     }`}
                   name="street2"
-                  onChange={formik.handleChange}
+                  onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.street2}
                 />
@@ -135,7 +142,7 @@ function Location() {
                     : ""
                     }`}
                   name="city"
-                  onChange={formik.handleChange}
+                  onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.city}
                 />
@@ -156,7 +163,7 @@ function Location() {
                     : ""
                     }`}
                   name="zip_code"
-                  onChange={formik.handleChange}
+                  onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.zip_code}
                 />
@@ -198,7 +205,7 @@ function Location() {
                     : ""
                     }`}
                   name="country"
-                  onChange={formik.handleChange}
+                  onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.country}
                 />
