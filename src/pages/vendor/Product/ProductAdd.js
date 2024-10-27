@@ -140,7 +140,7 @@ function ProductAdd() {
         if (response.status === 200) {
           toast.success(response.data.message);
           setShowModal(false);
-          navigate("/product");
+          navigate(`/product/print/${response.data.data.id}`);
         } else {
           toast.error(response.data.message);
         }
