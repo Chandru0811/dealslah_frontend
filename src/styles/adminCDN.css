@@ -6182,6 +6182,17 @@ fieldset:disabled .btn {
   border-color: #ff8c00;
 }
 
+.ok_btn{
+  color: #fff;
+  background-color: #ef4444;
+  border-color: #f36;
+}
+.ok_btn:hover{
+   color: #ef4444;
+  background-color: #fff;
+  border-color: #cc2952;
+}
+
 .btn-danger {
   color: #fff;
   background-color: #ef4444;
@@ -23604,6 +23615,7 @@ a.text-current:hover {
 
 .ls-tight {
   letter-spacing: -0.025em !important;
+  font
 }
 
 .ls-normal {
