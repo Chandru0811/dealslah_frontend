@@ -76,9 +76,9 @@ function ProductsView() {
   const handleCopy = async () => {
     try {
       if (data?.coupon_code) {
-        await navigator.clipboard.writeText(data.coupon_code); 
+        await navigator.clipboard.writeText(data.coupon_code);
         setIsCopied(true); // Set the copied state to true
-        setTimeout(() => setIsCopied(false));
+        setTimeout(() => setIsCopied(false), 2000);
       }
     } catch (err) {
       console.error("Failed to copy!", err);
@@ -141,28 +141,26 @@ function ProductsView() {
             style={{ minHeight: "80vh" }}
           >
             <div className="d-flex justify-content-end align-items-center mt-2">
-                <p>
-                  <span>Coupon Code</span>:&nbsp;
-                  <span className="text-muted" style={{ fontSize: "24px" }}>
-                    {data?.coupon_code}
-                  </span>
-                </p>
-                &nbsp;&nbsp;
-                <span
-                  onClick={handleCopy}
-                  style={{ cursor: "pointer" }}
-                  title={isCopied ? "Copied!" : "Click to copy"}
-                >
-                  {isCopied ? <LuCopyCheck /> : <FaRegCopy />}
+              <p>
+                <span>Coupon Code</span>:&nbsp;
+                <span className="text-muted" style={{ fontSize: "24px" }}>
+                  {data?.coupon_code}
                 </span>
-              </div>
+              </p>
+              &nbsp;&nbsp;
+              <span
+                onClick={handleCopy}
+                style={{ cursor: "pointer" }}
+                title={isCopied ? "Copied!" : "Click to copy"}
+              >
+                {isCopied ? <LuCopyCheck /> : <FaRegCopy />}
+              </span>
+            </div>
             <div className="row mt-5 p-3">
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Category Group
-                    </p>
+                    <p className="text-sm">Category Group</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -174,9 +172,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Category
-                    </p>
+                    <p className="text-sm">Category</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data.categoryName}</p>
@@ -186,9 +182,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Deal Type
-                    </p>
+                    <p className="text-sm">Deal Type</p>
                   </div>
                   <div className="col-6">
                     {console.log("Deal Type Value:", data.deal_type)}{" "}
@@ -197,10 +191,10 @@ function ProductsView() {
                       {data.deal_type === 1 || data.deal_type === "0"
                         ? "Product"
                         : data.deal_type === 2 || data.deal_type === "1"
-                          ? "Service"
-                          : data.deal_type === 3 || data.deal_type === "2"
-                            ? "Product and Service"
-                            : "Unknown"}
+                        ? "Service"
+                        : data.deal_type === 3 || data.deal_type === "2"
+                        ? "Product and Service"
+                        : "Unknown"}
                     </p>
                   </div>
                 </div>
@@ -208,9 +202,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Brand
-                    </p>
+                    <p className="text-sm">Brand</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data.brand}</p>
@@ -220,9 +212,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Slug
-                    </p>
+                    <p className="text-sm">Slug</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data.slug}</p>
@@ -232,9 +222,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                     Original Price
-                    </p>
+                    <p className="text-sm">Original Price</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -246,9 +234,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Discounted Percentage
-                    </p>
+                    <p className="text-sm">Discounted Percentage</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -260,9 +246,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Discounted Price
-                    </p>
+                    <p className="text-sm">Discounted Price</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -274,9 +258,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Start Date
-                    </p>
+                    <p className="text-sm">Start Date</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -288,9 +270,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      End Date
-                    </p>
+                    <p className="text-sm">End Date</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -326,9 +306,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Image 1
-                    </p>
+                    <p className="text-sm">Image 1</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -345,9 +323,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Image 2
-                    </p>
+                    <p className="text-sm">Image 2</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -364,9 +340,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Image 3
-                    </p>
+                    <p className="text-sm">Image 3</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -383,9 +357,7 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Image 4
-                    </p>
+                    <p className="text-sm">Image 4</p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">
@@ -402,9 +374,7 @@ function ProductsView() {
               <div className="col-12">
                 <div className="row mb-3">
                   <div className="col-3 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Description
-                    </p>
+                    <p className="text-sm">Description</p>
                   </div>
                   <div className="col-9">
                     <p className="text-muted text-sm">: {data.description}</p>
@@ -417,23 +387,17 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Company Name
-                    </p>
+                    <p className="text-sm">Company Name</p>
                   </div>
                   <div className="col-6">
-                    <p className="text-muted text-sm">
-                      : {data?.shop?.name}
-                    </p>
+                    <p className="text-muted text-sm">: {data?.shop?.name}</p>
                   </div>
                 </div>
               </div>
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Logo
-                    </p>
+                    <p className="text-sm">Logo</p>
                   </div>
                   <div className="col-12">
                     <p className="text-muted text-sm">
@@ -453,9 +417,7 @@ function ProductsView() {
               <div className="col-12">
                 <div className="row mb-3">
                   <div className="col-12 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                    Banner
-                    </p>
+                    <p className="text-sm">Banner</p>
                   </div>
                   <div className="col-12">
                     <p className="text-muted text-sm">

@@ -32,9 +32,9 @@ function ProductView() {
   const handleCopy = async () => {
     try {
       if (data?.coupon_code) {
-        await navigator.clipboard.writeText(data.coupon_code); 
+        await navigator.clipboard.writeText(data.coupon_code);
         setIsCopied(true); // Set the copied state to true
-        setTimeout(() => setIsCopied(false)); 
+        setTimeout(() => setIsCopied(false), 2000);
       }
     } catch (err) {
       console.error("Failed to copy!", err);
@@ -56,7 +56,7 @@ function ProductView() {
                 </Link>
               </div>
             </div>
-          </div> 
+          </div>
         </div>
         <div
           className="container card shadow border-0"
