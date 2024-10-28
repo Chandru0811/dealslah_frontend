@@ -88,7 +88,7 @@ function DealCategory() {
         <div className="container-fluid">
           <div className="row">
             <div className="col-12 p-2 d-flex justify-content-between align-items-center">
-              <h3 className="mb-0">Deal Category</h3>
+              <h3 className="mb-0 ls-tight">Deal Category</h3>
               <Link 
   to={isDisabled ? "#" : "/dealcategories/add"} // Disable navigation when disabled
   onClick={(e) => { if (isDisabled) e.preventDefault(); }} // Prevent link click if disabled

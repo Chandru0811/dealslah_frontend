@@ -29,7 +29,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Title</b>
+                  Title
                 </p>
               </div>
               <div className="col-6">
@@ -41,7 +41,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Order</b>
+                 Order
                 </p>
               </div>
               <div className="col-6">
@@ -53,7 +53,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Link</b>
+                  Link
                 </p>
               </div>
               <div className="col-6">
@@ -65,7 +65,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Link Label</b>
+                 Link Label
                 </p>
               </div>
               <div className="col-6">
@@ -77,7 +77,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-6 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Color</b>
+                  Color
                 </p>
               </div>
               <div className="col-6">
@@ -89,7 +89,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-12 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Image</b>
+                  Image
                 </p>
               </div>
               <div className="col-12 mt-3">
@@ -108,7 +108,7 @@ function BannerView() {
             <div className="row mb-3">
               <div className="col-12 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Description</b>
+                  Description
                 </p>
               </div>
               <div className="col-12 mt-1">

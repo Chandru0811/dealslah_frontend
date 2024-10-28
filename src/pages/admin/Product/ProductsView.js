@@ -5,6 +5,8 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import ImageURL from "../../../config/ImageURL";
 import noImage from "../../../assets/noimage.png";
+import { FaRegCopy } from "react-icons/fa";
+import { LuCopyCheck } from "react-icons/lu";
 
 function ProductsView() {
   const { id } = useParams();
@@ -69,6 +71,20 @@ function ProductsView() {
     getData();
   }, [id]);
 
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopy = async () => {
+    try {
+      if (data?.coupon_code) {
+        await navigator.clipboard.writeText(data.coupon_code); 
+        setIsCopied(true); // Set the copied state to true
+        setTimeout(() => setIsCopied(false));
+      }
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
+
   return (
     <section className="px-4">
       {loading ? (
@@ -85,7 +101,7 @@ function ProductsView() {
             <div className="row p-3">
               <div className="d-flex justify-content-between align-items-center w-100">
                 <div>
-                  <h3>View Deals</h3>
+                  <h3 className="ls-tight">View Deals</h3>
                 </div>
                 <div>
                   <Link to="/products">
@@ -124,12 +140,28 @@ function ProductsView() {
             className="container card shadow border-0"
             style={{ minHeight: "80vh" }}
           >
+            <div className="d-flex justify-content-end align-items-center mt-2">
+                <p>
+                  <span>Coupon Code</span>:&nbsp;
+                  <span className="text-muted" style={{ fontSize: "24px" }}>
+                    {data?.coupon_code}
+                  </span>
+                </p>
+                &nbsp;&nbsp;
+                <span
+                  onClick={handleCopy}
+                  style={{ cursor: "pointer" }}
+                  title={isCopied ? "Copied!" : "Click to copy"}
+                >
+                  {isCopied ? <LuCopyCheck /> : <FaRegCopy />}
+                </span>
+              </div>
             <div className="row mt-5 p-3">
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Category Group</b>
+                      Category Group
                     </p>
                   </div>
                   <div className="col-6">
@@ -143,7 +175,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Category</b>
+                      Category
                     </p>
                   </div>
                   <div className="col-6">
@@ -155,7 +187,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Deal Type</b>
+                      Deal Type
                     </p>
                   </div>
                   <div className="col-6">
@@ -177,7 +209,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Brand</b>
+                      Brand
                     </p>
                   </div>
                   <div className="col-6">
@@ -189,7 +221,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Slug</b>
+                      Slug
                     </p>
                   </div>
                   <div className="col-6">
@@ -201,7 +233,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Original Price</b>
+                     Original Price
                     </p>
                   </div>
                   <div className="col-6">
@@ -215,7 +247,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Discounted Percentage</b>
+                      Discounted Percentage
                     </p>
                   </div>
                   <div className="col-6">
@@ -229,7 +261,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Discounted Price</b>
+                      Discounted Price
                     </p>
                   </div>
                   <div className="col-6">
@@ -243,7 +275,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Start Date</b>
+                      Start Date
                     </p>
                   </div>
                   <div className="col-6">
@@ -257,7 +289,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>End Date</b>
+                      End Date
                     </p>
                   </div>
                   <div className="col-6">
@@ -267,11 +299,11 @@ function ProductsView() {
                   </div>
                 </div>
               </div>
-              <div className="col-md-6 col-12">
+              {/* <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Stock</b>
+                      Stock
                     </p>
                   </div>
                   <div className="col-6">
@@ -283,19 +315,19 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>SKU</b>
+                      SKU
                     </p>
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data.sku}</p>
                   </div>
                 </div>
-              </div>
+              </div> */}
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Image 1</b>
+                      Image 1
                     </p>
                   </div>
                   <div className="col-6">
@@ -314,7 +346,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Image 2</b>
+                      Image 2
                     </p>
                   </div>
                   <div className="col-6">
@@ -333,7 +365,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Image 3</b>
+                      Image 3
                     </p>
                   </div>
                   <div className="col-6">
@@ -352,7 +384,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Image 4</b>
+                      Image 4
                     </p>
                   </div>
                   <div className="col-6">
@@ -371,7 +403,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-3 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Description</b>
+                      Description
                     </p>
                   </div>
                   <div className="col-9">
@@ -386,7 +418,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Company Name</b>
+                      Company Name
                     </p>
                   </div>
                   <div className="col-6">
@@ -400,7 +432,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Logo</b>
+                      Logo
                     </p>
                   </div>
                   <div className="col-12">
@@ -422,7 +454,7 @@ function ProductsView() {
                 <div className="row mb-3">
                   <div className="col-12 d-flex justify-content-start align-items-center">
                     <p className="text-sm">
-                      <b>Banner</b>
+                    Banner
                     </p>
                   </div>
                   <div className="col-12">

@@ -38,7 +38,7 @@ function LoginDetails() {
               <div className="row mb-3">
                 <div className="col-3 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
-                    <b>Name</b>
+                    Name
                   </p>
                 </div>
                 <div className="col-9">
@@ -50,7 +50,7 @@ function LoginDetails() {
               <div className="row mb-3">
                 <div className="col-3 d-flex justify-content-start align-items-center">
                   <p className="text-sm">
-                    <b>Email</b>
+                    Email
                   </p>
                 </div>
                 <div className="col-9">

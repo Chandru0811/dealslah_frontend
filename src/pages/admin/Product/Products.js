@@ -84,7 +84,7 @@ const Products = () => {
           <div className="row align-items-center">
             <div className="col p-2">
               <div className="d-flex justify-content-between align-items-center">
-                <h3 className="mb-0">Deals</h3>
+                <h3 className="mb-0 ls-tight">Deals</h3>
               </div>
             </div>
           </div>
