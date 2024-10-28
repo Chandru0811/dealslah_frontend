@@ -23615,7 +23615,7 @@ a.text-current:hover {
 
 .ls-tight {
   letter-spacing: -0.025em !important;
-  font
+  font-weight: 400;
 }
 
 .ls-normal {
