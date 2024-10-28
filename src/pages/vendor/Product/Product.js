@@ -9,6 +9,7 @@ import { PiIntersectSquareFill } from "react-icons/pi";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import ImageURL from "../../../config/ImageURL";
+import { MdAddBox } from "react-icons/md";
 
 const Product = () => {
   const tableRef = useRef(null);
@@ -86,7 +87,7 @@ const Product = () => {
                 <h3 className="mb-0">Deals</h3>
                 <Link to="/product/add">
                   <button className="btn btn-sm btn-button shadow-none border-none py-3">
-                    <PiIntersectSquareFill size={20} /> Add Deal
+                    <MdAddBox size={20} /> Add Deal
                   </button>
                 </Link>
               </div>

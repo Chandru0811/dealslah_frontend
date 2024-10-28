@@ -40,8 +40,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Company Name</b>
-                </p>
+                  Company Name                </p>
               </div>
               <div className="col-9">
                 <p className="text-muted text-sm">: {data?.name}</p>
@@ -52,7 +51,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-4 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Company Legal Name</b>
+                 Company Legal Name
                 </p>
               </div>
               <div className="col-8">
@@ -64,7 +63,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Company Email</b>
+                  Company Email
                 </p>
               </div>
               <div className="col-9">
@@ -76,7 +75,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-4 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Company Phone</b>
+                  Company Phone
                 </p>
               </div>
               <div className="col-8">
@@ -88,7 +87,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Company Type</b>
+                  Company Type
                 </p>
               </div>
               <div className="col-9">
@@ -111,7 +110,7 @@ function Stores() {
             <div className="row mb-3 flex-wrap">
               <div className="col-4 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Logo</b>
+                  Logo
                 </p>
               </div>
               <div className="col-8">
@@ -130,7 +129,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-3 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>External URL</b>
+                  External URL
                 </p>
               </div>
               <div className="col-9">
@@ -141,7 +140,7 @@ function Stores() {
           <div className="row mb-3">
             <div className="col-3 d-flex justify-content-start align-items-center">
               <p className="text-sm">
-                <b>Company Description</b>
+                Company Description
               </p>
             </div>
             <div className="col-9">
@@ -152,7 +151,7 @@ function Stores() {
             <div className="row mb-3">
               <div className="col-4 d-flex justify-content-start align-items-center">
                 <p className="text-sm">
-                  <b>Shop Rating</b>
+                  Shop Rating
                 </p>
               </div>
               <div className="col-8">

@@ -98,13 +98,13 @@ function ShopView() {
             <div className="row p-3">
               <div className="d-flex justify-content-between align-items-center w-100">
                 <div>
-                  {selectedItem === "Shop" && <h3>General Settings</h3>}
-                  {selectedItem === "Location" && <h3>Shop Address</h3>}
-                  {/* {selectedItem === "Payment" && <h3>Payment Settings</h3>} */}
-                  {selectedItem === "Shop Policies" && <h3>Policies Settings</h3>}
-                  {selectedItem === "Shop Hours" && <h3>Hours Settings</h3>}
-                  {selectedItem === "Products" && <h3>Products</h3>}
-                  {selectedItem === "Login Details" && <h3>Login Details</h3>}
+                  {selectedItem === "Shop" && <h3 className="ls-tight">General Settings</h3>}
+                  {selectedItem === "Location" && <h3 className="ls-tight">Shop Address</h3>}
+                  {/* {selectedItem === "Payment" && <h3 className="ls-tight">Payment Settings</h3>} */}
+                  {selectedItem === "Shop Policies" && <h3 className="ls-tight">Policies Settings</h3>}
+                  {selectedItem === "Shop Hours" && <h3 className="ls-tight">Hours Settings</h3>}
+                  {selectedItem === "Products" && <h3 className="ls-tight">Products</h3>}
+                  {selectedItem === "Login Details" && <h3 className="ls-tight">Login Details</h3>}
                 </div>
                 <div>
                   <Link to="/shop">

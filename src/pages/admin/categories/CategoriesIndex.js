@@ -84,7 +84,7 @@ const CategoriesIndex = () => {
         <div className="container-fluid">
           <div className="row">
             <div className="col-12 p-2 d-flex justify-content-between align-items-center">
-              <h3 class="mb-0">Categories</h3>
+              <h3 class="mb-0 ls-tight">Categories</h3>
               <div class="container-fluid d-flex justify-content-end">
                 <Link to="/categories/add">
                   <button
