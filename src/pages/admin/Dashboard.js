@@ -114,148 +114,180 @@ function Dashboard() {
   return (
     <div className="card shadow border-0 mx-4" style={{ minHeight: "90vh" }}>
        <div className="row card-container p-5">
-  <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <div className="card h-100 p-5" 
-      style={{
-        background: "#1A2E86",
-        borderRadius: "8px",
-        backgroundImage: `url(${dashgraph})`, 
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom center"
-      }}
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">9.823</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div 
+            style={{
+              background: "#1A2E86",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Deal Clicks</p>
+              <div className="flex-grow-1">
+                <img
+                  src={dashgraph}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%",height: "60px" }}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Deal Clicks</p>
-      </div>
-    </div>
-  </div>
 
-  <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <div className="card h-100 p-5"
-      style={{
-        background: "#237BFF",
-        borderRadius: "8px",
-        backgroundImage: `url(${dashgraph2})`, 
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom center"
-      }}
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">9.823</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div
+            style={{
+              background: "#237BFF",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Deal Views</p>
+              <div className="flex-grow-1">
+              <img
+                src={dashgraph2}
+                alt=""
+                className="img-fluid"
+                style={{ width: "100%",height: "60px"}}
+              />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Deal Views</p>
-      </div>
-    </div>
-  </div>
 
-  <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <div className="card h-100 p-5"
-      style={{
-        background: "#FFB63A",
-        borderRadius: "8px",
-        backgroundImage: `url(${graph5})`, 
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom center"
-      }}
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">9.823</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div
+            style={{
+              background: "#FFB63A",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Discount Copied</p>
+              <div className="flex-grow-1">
+              <img
+                src={graph5}
+                alt=""
+                className="img-fluid"
+                style={{ width: "100%",height: "60px"}}
+              />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Discount Copied</p>
-      </div>
-    </div>
-  </div>
 
-  <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <div className="card h-100 p-5"
-      style={{
-        background: "#eb4034",
-        borderRadius: "8px",
-        backgroundImage: `url(${graph4})`,
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom center"
-      }}
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">9.823</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div
+            style={{
+              background: "#eb4034",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Deal Shares</p>
+                <div className="flex-grow-1">
+                <img
+                  src={graph4}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%",height: "60px"}}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Deal Shares</p>
-      </div>
-    </div>
-  </div>
 
-  <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <div className="card h-100 p-5"
-      style={{
-        background: "#fb8b33",
-        borderRadius: "8px",
-        backgroundImage: `url(${graph6})`,
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-        backgroundPosition: "bottom center"
-      }}
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">9.823</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div
+            style={{
+              background: "#fb8b33",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Deal Enquiries</p>
+              <div className="flex-grow-1">
+                <img
+                  src={graph6}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Deal Enquiries</p>
-      </div>
-    </div>
-  </div>
 
-  {/* Uncomment to add more cards */}
-  {/* <div className="col-12 col-md-6 col-lg-3 mb-4">
-    <Card
-      style={{
-        background: "#52ae55",
-        borderRadius: "8px",
-      }}
-      className="h-100"
-    >
-      <div className="card-content p-2">
-        <div className="d-flex justify-content-between">
-          <h2 className="text-white">{data?.totalproductscount}</h2>
-          <div>
-            <IoSettingsOutline className="text-white" />
-            <IoMdArrowDropdown className="text-white" />
+        <div className="col-12 col-md-6 col-lg-3 mb-4">
+          <div
+            style={{
+              background: "#52ae55",
+              borderRadius: "8px",
+            }}
+            className="card h-100"
+          >
+            <div className="card-content p-2">
+              <div className="d-flex justify-content-between">
+                <h2 className="text-white">9.823</h2>
+                {/* <div>
+                  <IoSettingsOutline className="text-white" />
+                  <IoMdArrowDropdown className="text-white" />
+                </div> */}
+              </div>
+              <p className="text-white mt-3">Members Online</p>
+              <div className="flex-grow-1">
+                <img
+                  src={graph7}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
+            </div>
           </div>
         </div>
-        <p className="text-white mt-3">Active Products</p>
       </div>
-    </Card>
-  </div> */}
-</div>
 <div className="row">
         <input
           type="week"

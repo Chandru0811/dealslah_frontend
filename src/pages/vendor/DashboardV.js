@@ -219,125 +219,145 @@ function DashboardV() {
       <div className="row card-container p-5">
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <div
-            className="card h-100 p-5"
+            className="card h-100"
             style={{
               background: "#1A2E86",
               borderRadius: "8px",
-              backgroundImage: `url(${dashgraph})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "bottom center",
             }}
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
                 <h2 className="text-white">{data?.totaldealclicks}</h2>
-                <div>
+                {/* <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
-                </div>
+                </div> */}
               </div>
               <p className="text-white mt-3">Deal Clicks</p>
+              <div className="flex-grow-1">
+                <img
+                  src={dashgraph}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <div
-            className="card h-100 p-5"
+            className="card h-100"
             style={{
               background: "#237BFF",
               borderRadius: "8px",
-              backgroundImage: `url(${dashgraph2})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "bottom center",
             }}
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
                 <h2 className="text-white">{data?.totaldealviews}</h2>
-                <div>
+                {/* <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
-                </div>
+                </div> */}
               </div>
               <p className="text-white mt-3">Deal Views</p>
+              <div className="flex-grow-1">
+                <img
+                  src={dashgraph2}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <div
-            className="card h-100 p-5"
+            className="card h-100"
             style={{
               background: "#FFB63A",
               borderRadius: "8px",
-              backgroundImage: `url(${graph5})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "bottom center",
             }}
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
                 <h2 className="text-white">{data?.totaldiscountcopied}</h2>
-                <div>
+                {/* <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
-                </div>
+                </div> */}
               </div>
               <p className="text-white mt-3">Discount Copied</p>
+              <div className="flex-grow-1">
+                <img
+                  src={graph5}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <div
-            className="card h-100 p-5"
+            className="card h-100"
             style={{
               background: "#eb4034",
               borderRadius: "8px",
-              backgroundImage: `url(${graph4})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "bottom center",
             }}
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
                 <h2 className="text-white">{data?.totaldealshared}</h2>
-                <div>
+                {/* <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
-                </div>
+                </div> */}
               </div>
               <p className="text-white mt-3">Deal Shares</p>
+              <div className="flex-grow-1">
+                <img
+                  src={graph4}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
             </div>
           </div>
         </div>
 
         <div className="col-12 col-md-6 col-lg-3 mb-4">
           <div
-            className="card h-100 p-5"
+            className="card h-100"
             style={{
               background: "#fb8b33",
               borderRadius: "8px",
-              backgroundImage: `url(${graph6})`,
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "bottom center",
             }}
           >
             <div className="card-content p-2">
               <div className="d-flex justify-content-between">
                 <h2 className="text-white">{data?.totaldealenquired}</h2>
-                <div>
+                {/* <div>
                   <IoSettingsOutline className="text-white" />
                   <IoMdArrowDropdown className="text-white" />
-                </div>
+                </div> */}
               </div>
               <p className="text-white mt-3">Deal Enquiries</p>
+              <div className="flex-grow-1">
+                <img
+                  src={graph6}
+                  alt=""
+                  className="img-fluid"
+                  style={{ width: "100%", height: "60px"}}
+                />
+              </div>
             </div>
           </div>
         </div>
