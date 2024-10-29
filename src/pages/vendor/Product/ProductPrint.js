@@ -11,6 +11,7 @@ function ProductPrint() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const getData = async () => {
       setLoading(true);
       try {
@@ -70,9 +71,6 @@ function ProductPrint() {
     const lineSpacingDetails = 13;
     const descriptionText = 10;
 
-    const formatDate = (dateString) => {
-      return new Date(dateString).toISOString().slice(0, 10);
-    };
 
     const addField = (label, value) => {
       doc.text(label, startX, detailStartY);
@@ -98,11 +96,12 @@ function ProductPrint() {
     doc.setFontSize(14);
     addField("Coupon Code", `: ${data?.coupon_code}` || "");
     doc.setFontSize(14);
-    addField("Deal Price", `: ${data?.discounted_price}` || "");
+    addField("Deal Price", `: ${data?.discounted_price || ""}`);
     doc.setFontSize(14);
-    addField("Start Date", `: ${formatDate(data?.start_date)}` || "");
+    addField("Start Date", `: ${data?.start_date?.toISOString(0, 10) || "--"}`);
     doc.setFontSize(14);
-    addField("End Date", `: ${formatDate(data?.end_date)}` || "");
+    addField("End Date", `: ${data?.end_date?.toISOString(0, 10) || "--"}`);
+
 
     detailStartY += 12;
     doc.setFontSize(12);
@@ -124,8 +123,10 @@ function ProductPrint() {
     detailStartY += 8;
     doc.text("Team Dealslah,", 155, detailStartY);
 
-    doc.save("Product_Details.pdf");
+    doc.save(`${data?.name}.pdf`);
   };
+
+
 
   return (
     <section className="px-5">
@@ -153,11 +154,11 @@ function ProductPrint() {
                     Your deal has been added and will appear on our website soon
                     once the administrator verifies it
                   </h3>
-                  <div className="row py-2">
+                  <div className="row py-2 pt-3">
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         Name
                       </h2>
@@ -165,7 +166,7 @@ function ProductPrint() {
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         : {data?.name}
                       </h2>
@@ -175,7 +176,7 @@ function ProductPrint() {
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         Coupon Code
                       </h2>
@@ -183,7 +184,7 @@ function ProductPrint() {
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         : {data?.coupon_code}
                       </h2>
@@ -193,7 +194,7 @@ function ProductPrint() {
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         Deal Price
                       </h2>
@@ -201,7 +202,7 @@ function ProductPrint() {
                     <div className="col-6">
                       <h2
                         className="text-muted"
-                        style={{ fontWeight: "normal" }}
+                        style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
                         : {data?.discounted_price}
                       </h2>
@@ -216,7 +217,7 @@ function ProductPrint() {
                     <div>
                       <i
                         class="fa-duotone fa-solid fa-print"
-                        style={{ fontSize: "2.5rem", cursor: "pointer" }}
+                        style={{ fontSize: "2rem", cursor: "pointer" }}
                         title="Print Product"
                       ></i>
                     </div>
@@ -229,7 +230,12 @@ function ProductPrint() {
                 </Link>
               </div>
 
-              <div className="d-flex justify-content-end align-items-center p-3">
+              <div className="d-flex justify-content-between align-items-center p-3">
+                <p>
+                  You are requested to kindly honor this coupon code for all
+                  transactions during the deal period. Please make the necessary
+                  arrangements in your system.
+                </p>
                 <Link to="/product">
                   <button className="btn btn-sm ok_btn">OK</button>
                 </Link>
