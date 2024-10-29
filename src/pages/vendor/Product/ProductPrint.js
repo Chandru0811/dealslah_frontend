@@ -57,7 +57,7 @@ function ProductPrint() {
     doc.line(10, startY + 10, pageWidth - 10, startY + 10);
     startY += lineSpacing;
 
-    doc.setFontSize(30);
+    doc.setFontSize(24);
     doc.text("About this Deal", pageWidth / 2, startY + 20, {
       align: "center",
     });
