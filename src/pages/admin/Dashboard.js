@@ -162,7 +162,7 @@ function Dashboard() {
               <p className="text-white">Deal Views</p>
               <div className="flex-grow-1">
               <img
-                src={dashboardcard2}
+                src={dashboardcard4}
                 alt=""
                 className="img-fluid"
                 style={{ width: "100%"}}
@@ -220,7 +220,7 @@ function Dashboard() {
               <p className="text-white">Deal Shares</p>
                 <div className="flex-grow-1">
                 <img
-                  src={dashboardcard4}
+                  src={dashboardcard5}
                   alt=""
                   className="img-fluid"
                   style={{ width: "100%"}}
@@ -249,7 +249,7 @@ function Dashboard() {
               <p className="text-white">Deal Enquiries</p>
               <div className="flex-grow-1">
                 <img
-                  src={dashboardcard5}
+                  src={dashboardcard2}
                   alt=""
                   className="img-fluid"
                   style={{ width: "100%"}}
