@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import "./../../styles/Vendor.css";
-import dashgraph from "../../assets/dashgraph.png";
-import dashgraph2 from "../../assets/dashgraph2.png";
-import graph5 from "../../assets/graph5.png";
-import graph4 from "../../assets/graph4.png";
-import graph6 from "../../assets/Graph1.png";
+import dashboardcard1 from "../../assets/dashboard card1.webp";
+import dashboardcard2 from "../../assets/dashboard card2.webp";
+import dashboardcard3 from "../../assets/dashboard card3.webp";
+import dashboardcard4 from "../../assets/dashboard card4.webp";
+import dashboardcard5 from "../../assets/dashboard card5.webp";
 import graph7 from "../../assets/Graph2.png";
 import { IoSettingsOutline } from "react-icons/io5";
 import { IoMdArrowDropdown } from "react-icons/io";
@@ -233,13 +233,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div> */}
               </div>
-              <p className="text-white mt-3">Deal Clicks</p>
+              <p className="text-white">Deal Clicks</p>
               <div className="flex-grow-1">
                 <img
-                  src={dashgraph}
+                  src={dashboardcard1}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "60px"}}
+                  style={{ width: "100%"}}
                 />
               </div>
             </div>
@@ -262,13 +262,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div> */}
               </div>
-              <p className="text-white mt-3">Deal Views</p>
+              <p className="text-white">Deal Views</p>
               <div className="flex-grow-1">
                 <img
-                  src={dashgraph2}
+                  src={dashboardcard2}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "60px"}}
+                  style={{ width: "100%"}}
                 />
               </div>
             </div>
@@ -291,13 +291,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div> */}
               </div>
-              <p className="text-white mt-3">Discount Copied</p>
+              <p className="text-white">Discount Copied</p>
               <div className="flex-grow-1">
                 <img
-                  src={graph5}
+                  src={dashboardcard3}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "60px"}}
+                  style={{ width: "100%"}}
                 />
               </div>
             </div>
@@ -320,13 +320,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div> */}
               </div>
-              <p className="text-white mt-3">Deal Shares</p>
+              <p className="text-white">Deal Shares</p>
               <div className="flex-grow-1">
                 <img
-                  src={graph4}
+                  src={dashboardcard4}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "60px"}}
+                  style={{ width: "100%"}}
                 />
               </div>
             </div>
@@ -349,13 +349,13 @@ function DashboardV() {
                   <IoMdArrowDropdown className="text-white" />
                 </div> */}
               </div>
-              <p className="text-white mt-3">Deal Enquiries</p>
+              <p className="text-white">Deal Enquiries</p>
               <div className="flex-grow-1">
                 <img
-                  src={graph6}
+                  src={dashboardcard5}
                   alt=""
                   className="img-fluid"
-                  style={{ width: "100%", height: "60px"}}
+                  style={{ width: "100%"}}
                 />
               </div>
             </div>
