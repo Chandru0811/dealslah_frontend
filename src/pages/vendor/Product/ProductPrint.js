@@ -216,7 +216,7 @@ function ProductPrint() {
                     <div>
                       <i
                         class="fa-duotone fa-solid fa-print"
-                        style={{ fontSize: "4rem", cursor: "pointer" }}
+                        style={{ fontSize: "2.5rem", cursor: "pointer" }}
                         title="Print Product"
                       ></i>
                     </div>
