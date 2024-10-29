@@ -5,7 +5,7 @@ import Form2 from "./Register/AddRegister/Form2";
 import Form3 from "./Register/AddRegister/Form3";
 import Form4 from "./Register/AddRegister/Form4";
 
-const steps = ["Company", "Location", "Ready!"];
+const steps = ["Company", "Ready!"];
 
 export default function VendorRegistration({ handleVendorLogin }) {
   const [activeStep, setActiveStep] = useState(0);
@@ -27,11 +27,11 @@ export default function VendorRegistration({ handleVendorLogin }) {
           childRef.current.form1();
         }
         break;
-      case "1":
-        if (childRef.current) {
-          childRef.current.form4();
-        }
-        break;
+      // case "1":
+      //   if (childRef.current) {
+      //     childRef.current.form4();
+      //   }
+      //   break;
       // case "2":
       //   if (childRef.current) {
       //     childRef.current.form2();
@@ -80,7 +80,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 setLoadIndicators={setLoadIndicator}
               />
             )}
-            {activeStep === 1 && (
+            {/* {activeStep === 1 && (
               <Form4
                 formData={formData}
                 ref={childRef}
@@ -88,7 +88,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 handleNext={handleNext}
                 setLoadIndicators={setLoadIndicator}
               />
-            )}
+            )} */}
             {/* {activeStep === 2 && (
               <Form2
                 formData={formData}
@@ -98,7 +98,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 setLoadIndicators={setLoadIndicator}
               />
             )} */}
-            {activeStep === 2 && (
+            {activeStep === 1 && (
               <Form3
                 formData={formData}
                 ref={childRef}
@@ -109,14 +109,14 @@ export default function VendorRegistration({ handleVendorLogin }) {
               />
             )}
             <div className="container-fluid p-1 d-flex align-items-center justify-content-center gap-2">
-              {activeStep !== 0 && activeStep !== 2 && (
+              {/* {activeStep !== 0 && activeStep !== 2 && (
                 <button
                   className="btn btn-secondary mb-3" style={{width:"100%"}}
                   onClick={handleBack}
                 >
                   Back
                 </button>
-              )}
+              )} */}
 
               {activeStep !== steps.length - 1 && (
                 <>
