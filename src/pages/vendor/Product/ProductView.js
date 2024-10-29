@@ -74,7 +74,7 @@ function ProductView() {
             <>
               <div className="d-flex justify-content-end align-items-center mt-2">
                 <p>
-                  <span>Coupon Code</span>:&nbsp;
+                  <span>Coupon Code</span>&nbsp;&nbsp;:
                   <span className="text-muted" style={{ fontSize: "24px" }}>
                     {data?.coupon_code}
                   </span>
