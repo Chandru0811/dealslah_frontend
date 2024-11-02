@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import headerlogo from "../../../src/assets/logo_dealslah.png";
 
 function ForgotSuccess() {
   return (
@@ -7,6 +8,12 @@ function ForgotSuccess() {
       className="d-flex flex-column align-items-center justify-content-center"
       style={{ backgroundColor: "#f2f2f2", minHeight: "100vh" }}
     >
+      <div
+        className="d-flex justify-content-center align-items-center mb-3"
+        style={{ backgroundColor: "rgb(242, 242, 242)" }}
+      >
+        <img src={headerlogo} className="img-fluid" alt="img" />
+      </div>
       <h2
         className="d-flex justify-content-center mb-5"
         style={{ color: "#ef4444" }}

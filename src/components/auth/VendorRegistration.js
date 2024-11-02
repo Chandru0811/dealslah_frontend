@@ -4,6 +4,7 @@ import Form1 from "./Register/AddRegister/Form1";
 import Form2 from "./Register/AddRegister/Form2";
 import Form3 from "./Register/AddRegister/Form3";
 import Form4 from "./Register/AddRegister/Form4";
+import headerlogo from "../../../src/assets/logo_dealslah.png";
 
 const steps = ["Company", "Ready!"];
 
@@ -49,9 +50,16 @@ export default function VendorRegistration({ handleVendorLogin }) {
 
   return (
     <div
-      className="container-fluid minHeight d-flex justify-content-center align-items-center"
+      className="container-fluid  m-0 vh-100"
       style={{ minHeight: "100vh", backgroundColor: "#f2f2f2" }}
     >
+       <div
+        className="d-flex justify-content-center align-items-center m-0 pt-2 mb-4"
+        style={{ backgroundColor: "rgb(242, 242, 242)" }}
+      >
+        <img src={headerlogo} className="img-fluid" alt="img" />
+      </div>
+      <div className=" d-flex  justify-content-center align-items-center mt-5">
       <div className="container">
         <h2
           className="d-flex justify-content-center"
@@ -139,6 +147,7 @@ export default function VendorRegistration({ handleVendorLogin }) {
             </div>
           </React.Fragment>
         </div>
+      </div>
       </div>
     </div>
   );
