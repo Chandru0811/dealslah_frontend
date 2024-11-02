@@ -92,32 +92,35 @@ function ProductPrint() {
     };
 
     doc.setFontSize(14);
-    addField("Product Name", `: ${data?.name}` || "");
-    doc.setFontSize(14);
-    addField("Coupon Code", `: ${data?.coupon_code}` || "");
-    doc.setFontSize(14);
-    addField("Deal Price", `: ${data?.discounted_price || ""}`);
-    doc.setFontSize(14);
-    addField("Start Date", `: ${data?.start_date?.toISOString(0, 10) || "--"}`);
-    doc.setFontSize(14);
-    addField("End Date", `: ${data?.end_date?.toISOString(0, 10) || "--"}`);
+    addField("Product Name", `: ${data?.name || "N/A"}`);
+    addField("Coupon Code", `: ${data?.coupon_code || "N/A"}`);
+    addField("Deal Price", `: ${data?.discounted_price || "N/A"}`);
 
+    // Convert start and end dates to ISO strings or fallback to "--" if invalid
+    const startDate = data?.start_date ? new Date(data.start_date) : null;
+    const endDate = data?.end_date ? new Date(data.end_date) : null;
+
+    addField(
+      "Start Date",
+      `: ${startDate && !isNaN(startDate) ? startDate.toISOString().slice(0, 10) : "--"}`
+    );
+    addField(
+      "End Date",
+      `: ${endDate && !isNaN(endDate) ? endDate.toISOString().slice(0, 10) : "--"}`
+    );
 
     detailStartY += 12;
     doc.setFontSize(12);
     addMultilineField("Dear Vendor,");
     detailStartY += 6;
-    doc.setFontSize(12);
     addMultilineField(
       "You are requested to kindly honor this coupon code for all transactions during the deal period. Please make the necessary arrangements in your system."
     );
     detailStartY += 6;
-    doc.setFontSize(12);
     addMultilineField(
       "You can find these details and more through your dashboard any time."
     );
 
-    // text start left side 160
     detailStartY += 6;
     doc.text("Thanks,", 155, detailStartY);
     detailStartY += 8;
@@ -125,8 +128,6 @@ function ProductPrint() {
 
     doc.save(`${data?.name}.pdf`);
   };
-
-
 
   return (
     <section className="px-5">
