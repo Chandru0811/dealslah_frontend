@@ -101,7 +101,17 @@ function ProductsView() {
             <div className="row p-3">
               <div className="d-flex justify-content-between align-items-center w-100">
                 <div>
-                  <h3 className="ls-tight">View Deals</h3>
+                  <h3 className="ls-tight">
+                    View Deals{" "}
+                    <span>
+                      {data?.ownerEmailVerifiedAt !== null && (
+                        <i
+                          className="fa-duotone fa-solid fa-badge-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      )}
+                    </span>
+                  </h3>
                 </div>
                 <div>
                   <Link to="/products">
@@ -391,6 +401,49 @@ function ProductsView() {
                   </div>
                   <div className="col-6">
                     <p className="text-muted text-sm">: {data?.shop?.name}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Shop Status</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      :{" "}
+                      {data?.shop?.active === 1 ? (
+                        <>
+                          <span
+                            className="dot"
+                            style={{
+                              backgroundColor: "green",
+                              width: "10px",
+                              height: "10px",
+                              display: "inline-block",
+                              borderRadius: "50%",
+                              marginRight: "3px",
+                            }}
+                          ></span>
+                          Active
+                        </>
+                      ) : (
+                        <>
+                          <span
+                            className="dot"
+                            style={{
+                              backgroundColor: "red",
+                              width: "10px",
+                              height: "10px",
+                              display: "inline-block",
+                              borderRadius: "50%",
+                              marginRight: "3px",
+                            }}
+                          ></span>
+                          Inactive
+                        </>
+                      )}
+                    </p>
                   </div>
                 </div>
               </div>
