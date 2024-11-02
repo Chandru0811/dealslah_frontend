@@ -90,7 +90,7 @@ const Form1 = forwardRef(
           state: place.state,
           shop_lattitude: markerPosition?.lat, 
           shop_longtitude: markerPosition?.lng, 
-          map_url: place.map_url,
+          // map_url: place.map_url,
         };
     
         const transformedSlug = formDataWithAddress.name.toLowerCase().replace(/\s+/g, "_");
