@@ -71359,5 +71359,5 @@ a.text-current:hover {
 .apexcharts-legend-text {
     /* position: relative; */
     font-size: 14px;
-    font-family: "Kanit sans-serif" !important;
+    font-family: "Kanit", sans-serif !important;
 }
