@@ -368,7 +368,7 @@ const Form4 = forwardRef(
                     {/* Google Map */}
                     <GoogleMap
                       center={center}
-                      zoom={13}
+                      zoom={15}
                       mapContainerStyle={{ width: "100%", height: "400px" }}
                       options={{
                         zoomControl: true,

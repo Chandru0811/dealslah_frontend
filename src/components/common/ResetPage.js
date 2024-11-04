@@ -5,8 +5,8 @@ import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import api from "../../config/URL";
 import toast from "react-hot-toast";
+import headerlogo from "../../assets/logo_dealslah.png";
 
-// Updated validation schema
 const validationSchema = Yup.object({
   email: Yup.string()
     .email("*Invalid email address")
@@ -23,7 +23,6 @@ const ResetPage = () => {
 
   const [searchParams] = useSearchParams();
 
-  // Extract token and email from the URL
   const token = searchParams.get("token");
   const email = searchParams.get("email");
 
@@ -80,7 +79,10 @@ const ResetPage = () => {
         className="container-fluid d-flex justify-content-center align-items-center"
         style={{ backgroundColor: "rgb(242, 242, 242)", minHeight: "100vh" }}
       >
-        <div className="row">
+        <div style={{ maxWidth: "400px", width: "100%" }}>
+          <div className="text-center my-5">
+            <img src={headerlogo} className="img-fluid" alt="Logo" style={{ maxWidth: "200px" }} />
+          </div>
           <div
             className="card shadow-lg p-3 my-5 rounded"
             style={{ width: "100%", maxWidth: "400px" }}
@@ -113,11 +115,10 @@ const ResetPage = () => {
                   type="email"
                   id="email"
                   name="email"
-                  className={`form-control rounded-0 ${
-                    formik.touched.email && formik.errors.email
+                  className={`form-control rounded-0 ${formik.touched.email && formik.errors.email
                       ? "is-invalid"
                       : ""
-                  }`}
+                    }`}
                   placeholder="Email Address"
                   value={formik.values.email}
                   onChange={formik.handleChange}
@@ -139,15 +140,14 @@ const ResetPage = () => {
                     type={passwordVisible ? "text" : "password"}
                     id="password"
                     name="password"
-                    className={`form-control ${
-                      formik.touched.password && formik.errors.password
+                    className={`form-control ${formik.touched.password && formik.errors.password
                         ? "is-invalid"
                         : ""
-                    }`}
+                      }`}
                     placeholder="Password"
                     value={formik.values.password}
                     onChange={formik.handleChange}
-                    // onBlur={formik.handleBlur}
+                  // onBlur={formik.handleBlur}
                   />
                   <span
                     className="input-group-text"
@@ -173,12 +173,11 @@ const ResetPage = () => {
                     type={confirmPasswordVisible ? "text" : "password"}
                     id="password_confirmation"
                     name="password_confirmation"
-                    className={`form-control rounded-0 ${
-                      formik.touched.password_confirmation &&
-                      formik.errors.password_confirmation
+                    className={`form-control rounded-0 ${formik.touched.password_confirmation &&
+                        formik.errors.password_confirmation
                         ? "is-invalid"
                         : ""
-                    }`}
+                      }`}
                     placeholder="Confirm Password"
                     value={formik.values.password_confirmation}
                     onChange={formik.handleChange}
@@ -214,7 +213,7 @@ const ResetPage = () => {
               <Link to="/">
                 <p className="text-muted" style={{ fontSize: "0.9rem" }}>
                   Go Back to &nbsp;
-                  <span style={{ color: "#ef4444" }}>Login In</span>
+                  <span style={{ color: "#ef4444" }}>Login</span>
                 </p>
               </Link>
             </div>
