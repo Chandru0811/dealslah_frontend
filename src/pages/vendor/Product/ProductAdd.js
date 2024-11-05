@@ -78,7 +78,6 @@ function ProductAdd() {
     image3: imageValidation,
     image4: imageValidation,
     description: Yup.string()
-      .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
       end_date: Yup.date()
       .test("endDateValidation", "End date must be the same or after the start date", function (value) {
@@ -100,8 +99,6 @@ function ProductAdd() {
       discounted_percentage: "",
       start_date: "",
       end_date: "",
-      // stock: "",
-      // sku: "",
       coupon_code: couponCode,
       image1: null,
       image2: null,
@@ -122,9 +119,7 @@ function ProductAdd() {
       formData.append("discount_percentage", values.discounted_percentage);
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
-      // formData.append("stock", values.stock);
       formData.append("coupon_code", values.coupon_code);
-      // formData.append("sku", values.sku);
       formData.append("image1", values.image1);
       formData.append("image2", values.image2);
       formData.append("image3", values.image3);
@@ -494,19 +489,6 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.name}</div>
               )}
             </div>
-            {/* <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">SKU</label>
-              <input
-                type="text"
-                className={`form-control ${
-                  formik.touched.sku && formik.errors.sku ? "is-invalid" : ""
-                }`}
-                {...formik.getFieldProps("sku")}
-              />
-              {formik.touched.sku && formik.errors.sku && (
-                <div className="invalid-feedback">{formik.errors.sku}</div>
-              )}
-            </div> */}
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Original Price<span className="text-danger">*</span>
@@ -590,29 +572,6 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-
-            {/* <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">Stock</label>
-              <input
-                type="text"
-                onInput={(event) => {
-                  event.target.value = event.target.value.replace(
-                    /[^0-9]/g,
-                    ""
-                  );
-                }}
-                className={`form-control ${
-                  formik.touched.stock && formik.errors.stock
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("stock")}
-              />
-              {formik.touched.stock && formik.errors.stock && (
-                <div className="invalid-feedback">{formik.errors.stock}</div>
-              )}
-            </div> */}
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">Start Date</label>
               <input
