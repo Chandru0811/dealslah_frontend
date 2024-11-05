@@ -254,7 +254,7 @@ function Location({ setValueChange }) {
   }
 
   return (
-    <section>
+    <section className="mt-4">
       <form onSubmit={formik.handleSubmit} className="w-100">
         {loading ? (
           <div className="loader-container">

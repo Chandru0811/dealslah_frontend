@@ -14,7 +14,7 @@ function AdminHeader() {
             </div>
             <div className="col-sm-6 col-12 text-sm-end">
               <div className="mx-n1">
-                <span className="position-relative mx-2">
+                {/* <span className="position-relative mx-2">
                   <i className="bi bi-bell admin-icons"></i>
                   <span className="badge rounded-pill bg-danger position-absolute top-0 start-100 translate-middle icon-badge">
                     4
@@ -38,7 +38,7 @@ function AdminHeader() {
                 <span className="position-relative mx-2">
                   <i className="bi bi-journal admin-icons"></i>
                 </span>
-                &nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp; */}
                 <span style={{ fontSize: "24px" }}>
                   <img src={user} className="img-fluid header-user" alt="img" />
                 </span>
