@@ -48,50 +48,50 @@ function ProductAdd() {
     .test("fileSize", "File size is too large. Max 2MB.", (value) => {
       return !value || (value && value.size <= MAX_FILE_SIZE);
     });
-  const validationSchema = Yup.object({
-    shop_id: Yup.string().required("Caategory Group is required"),
-    name: Yup.string()
-      .max(25, "Name must be 25 characters or less")
-      .required("Name is required"),
-    category_id: Yup.string().required("Category Id is required"),
-    start_date: Yup.string().required("Start Date is required"),
-    end_date: Yup.date()
-      .required("End date is required")
-      .test(
-        "endDateValidation",
-        "End date must be the same or after the start date",
-        function (value) {
-          const { start_date } = this.parent;
-          if (!start_date || !value) return true;
-          return new Date(value) >= new Date(start_date);
-        }
-      ),
-    coupon_code: Yup.string()
-      .matches(
-        /^[A-Za-z]+[0-9]{0,2}$/,
-        "Coupon code must end with up to 2 digits"
-      )
-      .required("Coupon code is required"),
-    deal_type: Yup.string().required("Deal Type is required"),
-    original_price: Yup.number()
-      .required("Original Price is required")
-      .min(1, "Original Price must be greater than zero"),
-    discounted_percentage: Yup.number()
-      .required("Discount is required")
-      .max(100, "Discount must be less than 100"),
-    discounted_price: Yup.number()
-      .required("Discounted Price is required")
-      .max(
-        Yup.ref("original_price"),
-        "The Discounted Price must be same or below the Original Price."
-      ),
-    image1: imageValidation,
-    image2: imageValidation,
-    image3: imageValidation,
-    image4: imageValidation,
-    description: Yup.string()
-      .min(10, "Description must be at least 10 characters long"),
-  });
+    const validationSchema = Yup.object({
+      shop_id: Yup.string().required("Category Group is required"),
+      category_id: Yup.string().required("Category is required"),
+      name: Yup.string()
+        .max(25, "Name must be 25 characters or less")
+        .required("Name is required"),
+      deal_type: Yup.string().required("Deal Type is required"),
+      original_price: Yup.number()
+        .required("Original Price is required")
+        .min(1, "Original Price must be greater than zero"),
+      discounted_price: Yup.number()
+        .required("Discounted Price is required")
+        .max(
+          Yup.ref("original_price"),
+          "The Discounted Price must be same or below the Original Price."
+        ),
+      discounted_percentage: Yup.number()
+        .required("Discount is required")
+        .max(100, "Discount must be less than 100"),
+      start_date: Yup.string().required("Start Date is required"),
+      end_date: Yup.date()
+        .required("End date is required")
+        .test(
+          "endDateValidation",
+          "End date must be the same or after the start date",
+          function (value) {
+            const { start_date } = this.parent;
+            if (!start_date || !value) return true;
+            return new Date(value) >= new Date(start_date);
+          }
+        ),
+      image1: imageValidation,
+      image2: imageValidation,
+      image3: imageValidation,
+      image4: imageValidation,
+      description: Yup.string()
+        .min(10, "Description must be at least 10 characters long"),
+      coupon_code: Yup.string()
+        .matches(
+          /^[A-Za-z]+[0-9]{0,2}$/,
+          "Coupon code must end with up to 2 digits"
+        )
+        .required("Coupon code is required"),
+    });  
 
   const formik = useFormik({
     initialValues: {
@@ -172,6 +172,67 @@ function ProductAdd() {
       }
     },
   });
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    formik.validateForm().then((errors) => {
+      formik.setTouched({
+        shop_id: true,
+        name: true,
+        category_id: true,
+        deal_type: true,
+        brand: true,
+        original_price: true,
+        discounted_price: true,
+        discounted_percentage: true,
+        start_date: true,
+        end_date: true,
+        coupon_code: true,
+        image1: true,
+        image2: true,
+        image3: true,
+        image4: true,
+        description: true,
+      });
+
+      const formErrors = formik.errors;
+      if (Object.keys(formErrors).length > 0) {
+        const fieldLabels = {
+          shop_id: "Category Group",
+          name: "Name",
+          category_id: "Category",
+          deal_type: "Deal Type",
+          brand: "Brand",
+          original_price: "Original Price",
+          discounted_price: "Discounted Price",
+          discounted_percentage: "Discounted Percentage",
+          start_date: "Start Date",
+          end_date: "End Date",
+          coupon_code: "Coupon Code",
+          image1: "Image 1",
+          image2: "Image 2",
+          image3: "Image 3",
+          image4: "Image 4",
+          description: "Description",
+        };
+
+        const missedFields = Object.keys(formErrors)
+          .map((key) => fieldLabels[key])
+          .join(", ");
+
+        toast.error(`Please fill in the following required fields: ${missedFields}`, {
+          icon: (
+            <FiAlertTriangle
+              className="text-warning"
+              style={{ fontSize: '1.5em', marginRight: '8px' }}
+            />
+          ),
+          style: { maxWidth: '1000px' },
+        });
+        return;
+      }
+    });
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -779,6 +840,7 @@ function ProductAdd() {
               type="submit"
               className="btn btn-sm btn-button"
               disabled={loadIndicator}
+              onClick={handlePlaceOrder}
             >
               {loadIndicator && (
                 <span
