@@ -19,11 +19,23 @@ function ProductsAdd() {
                 Yup.ref("original_price"),
                 "Discounted Price must be less than Original Price"
             ),
-        start_date: Yup.date().required("Start Date is required").nullable(),
-        end_date: Yup.date()
-            .required("End Date is required")
-            .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
-            .nullable(),
+            start_date: Yup.string().required("Start Date is required"),
+            end_date: Yup.date()
+              .required("End date is required")
+              .test(
+                "endDateValidation",
+                "End date must be the same or after the start date",
+                function (value) {
+                  const { start_date } = this.parent;
+                  if (!start_date || !value) return true;
+                  return new Date(value) >= new Date(start_date);
+                }
+              ),
+        // start_date: Yup.date().required("Start Date is required").nullable(),
+        // end_date: Yup.date()
+        //     .required("End Date is required")
+        //     .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
+        //     .nullable(),
         // stock: Yup.number()
         //     .required("Stock is required")
         //     .min(0, "Stock cannot be negative"),
@@ -232,39 +244,39 @@ function ProductsAdd() {
                                 )}
                         </div>
                         <div className="col-md-6 col-12 mb-3">
-                            <label className="form-label">
-                                Start Date<span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="date"
-                                className={`form-control ${formik.touched.start_date && formik.errors.start_date
-                                    ? "is-invalid"
-                                    : ""
-                                    }`}
-                                {...formik.getFieldProps("start_date")}
-                            />
-                            {formik.touched.start_date && formik.errors.start_date && (
-                                <div className="invalid-feedback">
-                                    {formik.errors.start_date}
-                                </div>
-                            )}
-                        </div>
-                        <div className="col-md-6 col-12 mb-3">
-                            <label className="form-label">
-                                End Date<span className="text-danger">*</span>
-                            </label>
-                            <input
-                                type="date"
-                                className={`form-control ${formik.touched.end_date && formik.errors.end_date
-                                    ? "is-invalid"
-                                    : ""
-                                    }`}
-                                {...formik.getFieldProps("end_date")}
-                            />
-                            {formik.touched.end_date && formik.errors.end_date && (
-                                <div className="invalid-feedback">{formik.errors.end_date}</div>
-                            )}
-                        </div>
+              <label className="form-label">Start Date <span className="text-danger">*</span></label>
+              <input
+                type="date"
+                className={`form-control ${formik.touched.start_date &&
+                  formik.errors.start_date
+                  ? "is-invalid"
+                  : ""
+                }`}
+                {...formik.getFieldProps("start_date")}
+              />
+                {formik.touched.start_date &&
+                formik.errors.start_date && (
+                  <div className="invalid-feedback">
+                    {formik.errors.start_date}
+                  </div>
+                )}
+            </div>
+            
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">End Date <span className="text-danger">*</span></label>
+              <input
+                type="date"
+                className={`form-control ${formik?.touched?.end_date && formik.errors.end_date ? "is-invalid" : ""
+                }`}
+                {...formik.getFieldProps("end_date")}
+              />
+                {formik.touched.end_date &&
+                formik.errors.end_date && (
+                  <div className="invalid-feedback">
+                    {formik.errors.end_date}
+                  </div>
+                )}
+            </div>
                         <div className="col-md-6 col-12 mb-3">
                             <label className="form-label">
                                 Discounted Percentage<span className="text-danger">*</span>
