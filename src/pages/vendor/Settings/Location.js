@@ -408,7 +408,7 @@ function Location({ setValueChange }) {
                   >
                     <Autocomplete
                       onLoad={(autoC) => {
-                        autoC.setComponentRestrictions({ country: "IN" });
+                        autoC.setComponentRestrictions({ country: ["sg", "in"] });
                         setAutocomplete(autoC);
                       }}
                       onPlaceChanged={onPlaceChanged}
