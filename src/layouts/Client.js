@@ -65,7 +65,7 @@ function Client({
             />
             <Route path="/forgot" element={<ForgotPage />} />
             <Route path="/resetpassword" element={<ResetPage />} />
-            <Route path="/emailverifysuccess/:id" element={<EmailVerifySuccess />}/>
+            <Route path="/emailverifysuccess" element={<EmailVerifySuccess />}/>
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>

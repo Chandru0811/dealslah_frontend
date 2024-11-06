@@ -27,7 +27,7 @@ const validationSchema = Yup.object({
     .required("*Cancellation/Return/Exchange Policy is required"),
 });
 function StorePolicy({ setValueChange }) {
-  const shop_id = sessionStorage.getItem("shop_id");
+  const shop_id = localStorage.getItem("shop_id");
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
   const editor = useRef(null);
@@ -100,7 +100,7 @@ function StorePolicy({ setValueChange }) {
   };
 
   return (
-    <div className="row m-0">
+    <div className="row m-0 mt-4">
       <form onSubmit={formik.handleSubmit} className="w-100">
         {loading ? (
           <div className="loader-container">

@@ -26,7 +26,7 @@ function ProductEdit() {
   const [zooms, setZooms] = useState([1, 1, 1, 1]);
   const [showCropper, setShowCropper] = useState([false, false, false, false]);
   const [category, setCategory] = useState([]);
-  const shop_id = sessionStorage.getItem("shop_id");
+  const shop_id = localStorage.getItem("shop_id");
   const { id } = useParams();
   const navigate = useNavigate();
   const [couponCode, setCouponCode] = useState("DEALSLAH");
@@ -46,37 +46,48 @@ function ProductEdit() {
       return !value || (value && SUPPORTED_FORMATS.includes(value.type));
     });
   const validationSchema = Yup.object({
-    categoryGroupId: Yup.string().required("Shop Id is required"),
+    categoryGroupId: Yup.string().required("Category Group is required"),
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
       .required("Name is required"),
-    category_id: Yup.string().required("Category Id is required"),
-    // brand: Yup.string().required("Brand is required"),
+    category_id: Yup.string().required("Category is required"),
+    deal_type: Yup.string().required("Deal Type is required"),
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
-    discount_percentage: Yup.number()
-      .required("Discount is required")
-      .max(100, "Discount must be less than 100"),
     discounted_price: Yup.number()
       .required("Discounted Price is required")
       .max(
         Yup.ref("original_price"),
         "The Discounted Price must be same or below the Original Price."
       ),
+    discount_percentage: Yup.number()
+      .required("Discount is required")
+      .max(100, "Discount must be less than 100"),
+    start_date: Yup.string().required("Start Date is required"),
+    end_date: Yup.date()
+      .required("End date is required")
+      .test(
+        "endDateValidation",
+        "End date must be the same or after the start date",
+        function (value) {
+          const { start_date } = this.parent;
+          if (!start_date || !value) return true;
+          return new Date(value) >= new Date(start_date);
+        }
+      ),
     image_url1: imageValidation,
     image_url2: imageValidation,
     image_url3: imageValidation,
     image_url4: imageValidation,
     description: Yup.string()
-      .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
-    end_date: Yup.date()
-      .test("endDateValidation", "End date must be the same or after the start date", function (value) {
-        const { start_date } = this.parent;
-        if (!start_date || !value) return true;
-        return new Date(value) >= new Date(start_date);
-      }),
+    coupon_code: Yup.string()
+      .matches(
+        /^[A-Za-z]+[0-9]{0,2}$/,
+        "Coupon code must end with up to 2 digits"
+      )
+      .required("Coupon code is required"),
   });
 
   const formik = useFormik({
@@ -92,8 +103,6 @@ function ProductEdit() {
       discount_percentage: "",
       start_date: "",
       end_date: "",
-      // stock: "",
-      // sku: "",
       image_url1: null,
       image_url2: null,
       image_url3: null,
@@ -115,8 +124,6 @@ function ProductEdit() {
       formData.append("discount_percentage", values.discount_percentage);
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
-      // formData.append("stock", values.stock || "");
-      // formData.append("sku", values.sku || "");
       if (values.image_url1) {
         formData.append("image1", values.image_url1);
       }
@@ -176,6 +183,67 @@ function ProductEdit() {
       }
     },
   });
+
+  const handlePlaceOrder = (e) => {
+    e.preventDefault();
+    formik.validateForm().then((errors) => {
+      formik.setTouched({
+        categoryGroupId: true,
+        name: true,
+        category_id: true,
+        deal_type: true,
+        brand: true,
+        original_price: true,
+        discounted_price: true,
+        discounted_percentage: true,
+        start_date: true,
+        end_date: true,
+        coupon_code: true,
+        image_url1: true,
+        image_url2: true,
+        image_url3: true,
+        image_url4: true,
+        description: true,
+      });
+
+      const formErrors = formik.errors;
+      if (Object.keys(formErrors).length > 0) {
+        const fieldLabels = {
+          categoryGroupId: "Category Group",
+          name: "Name",
+          category_id: "Category",
+          deal_type: "Deal Type",
+          brand: "Brand",
+          original_price: "Original Price",
+          discounted_price: "Discounted Price",
+          discounted_percentage: "Discounted Percentage",
+          start_date: "Start Date",
+          end_date: "End Date",
+          coupon_code: "Coupon Code",
+          image_url1: "Image 1",
+          image_url2: "Image 2",
+          image_url3: "Image 3",
+          image_url4: "Image 4",
+          description: "Description",
+        };
+
+        const missedFields = Object.keys(formErrors)
+          .map((key) => fieldLabels[key])
+          .join(", ");
+
+        toast.error(`Please fill in the following required fields: ${missedFields}`, {
+          icon: (
+            <FiAlertTriangle
+              className="text-warning"
+              style={{ fontSize: '1.5em', marginRight: '8px' }}
+            />
+          ),
+          style: { maxWidth: '1000px' },
+        });
+        return;
+      }
+    });
+  };
 
   useEffect(() => {
     const getData1 = async () => {
@@ -495,16 +563,6 @@ function ProductEdit() {
                           {cat.name}
                         </option>
                       ))}
-                    {/* {selectedCategoryGroup && (
-                  <option
-                    value="add_new"
-                    style={{ background: "#1c2b36", color: "#fff" }}
-                    onClick={handleCategoryAdd}
-                  >
-                    <PiPlusSquareFill size={20} color="#fff" />
-                    Add New Category
-                  </option>
-                )} */}
                   </select>
                   {formik.touched.category_id && formik.errors.category_id && (
                     <div className="invalid-feedback">
@@ -569,21 +627,6 @@ function ProductEdit() {
                     <div className="invalid-feedback">{formik.errors.name}</div>
                   )}
                 </div>
-                {/* <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">SKU</label>
-                  <input
-                    type="text"
-                    className={`form-control ${
-                      formik.touched.sku && formik.errors.sku
-                        ? "is-invalid"
-                        : ""
-                    }`}
-                    {...formik.getFieldProps("sku")}
-                  />
-                  {formik.touched.sku && formik.errors.sku && (
-                    <div className="invalid-feedback">{formik.errors.sku}</div>
-                  )}
-                </div> */}
                 <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">Coupon Code</label>
                   <input
@@ -679,44 +722,32 @@ function ProductEdit() {
                       </div>
                     )}
                 </div>
-
-                {/* <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">stock</label>
+                <div className="col-md-6 col-12 mb-3">
+                  <label className="form-label">
+                    Start Date <span className="text-danger">*</span>
+                  </label>
                   <input
-                    type="text"
-                    onInput={(event) => {
-                      event.target.value = event.target.value.replace(
-                        /[^0-9]/g,
-                        ""
-                      );
-                    }}
-                    className={`form-control ${
-                      formik.touched.stock && formik.errors.stock
+                    type="date"
+                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
                         ? "is-invalid"
                         : ""
-                    }`}
-                    {...formik.getFieldProps("stock")}
-                  />
-                  {formik.touched.stock && formik.errors.stock && (
-                    <div className="invalid-feedback">
-                      {formik.errors.stock}
-                    </div>
-                  )}
-                </div> */}
-
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">Start Date</label>
-                  <input
-                    type="date"
-                    className={`form-control`}
+                      }`}
                     {...formik.getFieldProps("start_date")}
                   />
+                  {formik.touched.start_date && formik.errors.start_date && (
+                    <div className="invalid-feedback">
+                      {formik.errors.start_date}
+                    </div>
+                  )}
                 </div>
+
                 <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">End Date</label>
+                  <label className="form-label">
+                    End Date <span className="text-danger">*</span>
+                  </label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.end_date && formik.errors.end_date
+                    className={`form-control ${formik?.touched?.end_date && formik.errors.end_date
                         ? "is-invalid"
                         : ""
                       }`}
@@ -897,6 +928,7 @@ function ProductEdit() {
                   type="submit"
                   className="btn btn-sm btn-button"
                   disabled={loadIndicator}
+                  onClick={handlePlaceOrder}
                 >
                   {loadIndicator && (
                     <span
