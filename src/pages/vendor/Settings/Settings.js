@@ -22,11 +22,13 @@ function Settings() {
       );
       if (userConfirmed) {
         setSelectedItem(item);
+        setValueChange(false);
       } else {
         console.log("User canceled action.");
       }
     } else {
       setSelectedItem(item);
+      setValueChange(false);
     }
   };
 
