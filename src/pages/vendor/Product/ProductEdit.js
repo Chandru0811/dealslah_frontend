@@ -243,6 +243,7 @@ function ProductEdit() {
         return;
       }
     });
+    formik.handleSubmit();
   };
 
   useEffect(() => {

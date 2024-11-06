@@ -48,50 +48,52 @@ function ProductAdd() {
     .test("fileSize", "File size is too large. Max 2MB.", (value) => {
       return !value || (value && value.size <= MAX_FILE_SIZE);
     });
-    const validationSchema = Yup.object({
-      shop_id: Yup.string().required("Category Group is required"),
-      category_id: Yup.string().required("Category is required"),
-      name: Yup.string()
-        .max(25, "Name must be 25 characters or less")
-        .required("Name is required"),
-      deal_type: Yup.string().required("Deal Type is required"),
-      original_price: Yup.number()
-        .required("Original Price is required")
-        .min(1, "Original Price must be greater than zero"),
-      discounted_price: Yup.number()
-        .required("Discounted Price is required")
-        .max(
-          Yup.ref("original_price"),
-          "The Discounted Price must be same or below the Original Price."
-        ),
-      discounted_percentage: Yup.number()
-        .required("Discount is required")
-        .max(100, "Discount must be less than 100"),
-      start_date: Yup.string().required("Start Date is required"),
-      end_date: Yup.date()
-        .required("End date is required")
-        .test(
-          "endDateValidation",
-          "End date must be the same or after the start date",
-          function (value) {
-            const { start_date } = this.parent;
-            if (!start_date || !value) return true;
-            return new Date(value) >= new Date(start_date);
-          }
-        ),
-      image1: imageValidation,
-      image2: imageValidation,
-      image3: imageValidation,
-      image4: imageValidation,
-      description: Yup.string()
-        .min(10, "Description must be at least 10 characters long"),
-      coupon_code: Yup.string()
-        .matches(
-          /^[A-Za-z]+[0-9]{0,2}$/,
-          "Coupon code must end with up to 2 digits"
-        )
-        .required("Coupon code is required"),
-    });  
+  const validationSchema = Yup.object({
+    shop_id: Yup.string().required("Category Group is required"),
+    category_id: Yup.string().required("Category is required"),
+    name: Yup.string()
+      .max(25, "Name must be 25 characters or less")
+      .required("Name is required"),
+    deal_type: Yup.string().required("Deal Type is required"),
+    original_price: Yup.number()
+      .required("Original Price is required")
+      .min(1, "Original Price must be greater than zero"),
+    discounted_price: Yup.number()
+      .required("Discounted Price is required")
+      .max(
+        Yup.ref("original_price"),
+        "The Discounted Price must be same or below the Original Price."
+      ),
+    discounted_percentage: Yup.number()
+      .required("Discount is required")
+      .max(100, "Discount must be less than 100"),
+    start_date: Yup.string().required("Start Date is required"),
+    end_date: Yup.date()
+      .required("End date is required")
+      .test(
+        "endDateValidation",
+        "End date must be the same or after the start date",
+        function (value) {
+          const { start_date } = this.parent;
+          if (!start_date || !value) return true;
+          return new Date(value) >= new Date(start_date);
+        }
+      ),
+    image1: imageValidation,
+    image2: imageValidation,
+    image3: imageValidation,
+    image4: imageValidation,
+    description: Yup.string().min(
+      10,
+      "Description must be at least 10 characters long"
+    ),
+    coupon_code: Yup.string()
+      .matches(
+        /^[A-Za-z]+[0-9]{0,2}$/,
+        "Coupon code must end with up to 2 digits"
+      )
+      .required("Coupon code is required"),
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -175,6 +177,7 @@ function ProductAdd() {
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
+
     formik.validateForm().then((errors) => {
       formik.setTouched({
         shop_id: true,
@@ -220,18 +223,22 @@ function ProductAdd() {
           .map((key) => fieldLabels[key])
           .join(", ");
 
-        toast.error(`Please fill in the following required fields: ${missedFields}`, {
-          icon: (
-            <FiAlertTriangle
-              className="text-warning"
-              style={{ fontSize: '1.5em', marginRight: '8px' }}
-            />
-          ),
-          style: { maxWidth: '1000px' },
-        });
+        toast.error(
+          `Please fill in the following required fields: ${missedFields}`,
+          {
+            icon: (
+              <FiAlertTriangle
+                className="text-warning"
+                style={{ fontSize: "1.5em", marginRight: "8px" }}
+              />
+            ),
+            style: { maxWidth: "1000px" },
+          }
+        );
         return;
       }
     });
+    formik.handleSubmit();
   };
 
   useEffect(() => {
