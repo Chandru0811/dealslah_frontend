@@ -98,7 +98,7 @@ const Form1 = forwardRef(
             state: place.state,
             shop_lattitude: markerPosition?.lat,
             shop_longtitude: markerPosition?.lng,
-            // map_url: place.map_url,
+            map_url: place.map_url,
           };
 
           const transformedSlug = formDataWithAddress.name
@@ -124,7 +124,7 @@ const Form1 = forwardRef(
             if (response.status === 200) {
               toast.success(response.data.message);
               localStorage.setItem("shop_id", response.data.data.id);
-              handleNext(); // Move this inside the success block
+              handleNext();
             } else {
               toast.error(response.data.message);
             }
