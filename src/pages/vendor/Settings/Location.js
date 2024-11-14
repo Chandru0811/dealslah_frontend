@@ -34,12 +34,7 @@ function Location({ setValueChange }) {
     lng: "",
   });
   const validationSchema = Yup.object({
-    street: Yup.string().required("Street 1 is required"),
-    // street2: Yup.string().required("Street 2 is required"),
-    // city: Yup.string().required("City is required"),
-    zip_code: Yup.string().required("Zip Code is required"),
     country: Yup.string().required("Country is required"),
-    // state: Yup.string().required("State is required"),
   });
 
   const { isLoaded } = useJsApiLoader({
@@ -54,11 +49,10 @@ function Location({ setValueChange }) {
       city: "",
       zip_code: "",
       country: "",
-      // state: "",
+      state: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (data) => {
-      console.log("Form Data", data);
       try {
         setLoadIndicator(true);
         
@@ -278,10 +272,8 @@ function Location({ setValueChange }) {
                   Address<span className="text-danger">*</span>
                 </label>
               </div>
-              <div className="col-md-9 col-12 mb-5">
-                {`${data.street},${data.city},${data.zip_code},${data.state},${data.country}`}
-              </div>
-               {/*<div className="col-md-4 col-12 mb-5">
+              <div className="col-md-9 col-12 mb-5">{data.address}</div>
+              {/*<div className="col-md-4 col-12 mb-5">
                 <label className="form-label">Street2</label>
               </div>
               <div className="col-md-8 col-12 mb-5">
@@ -395,61 +387,61 @@ function Location({ setValueChange }) {
                 )}
               </div> */}
               <div className="col-12">
-                  <GoogleMap
-                    center={center}
-                    zoom={15}
-                    mapContainerStyle={{ width: "100%", height: "400px" }}
-                    options={{
-                      zoomControl: true,
-                      streetViewControl: true,
-                      mapTypeControl: true,
-                      fullscreenControl: true,
+                <GoogleMap
+                  center={center}
+                  zoom={15}
+                  mapContainerStyle={{ width: "100%", height: "400px" }}
+                  options={{
+                    zoomControl: true,
+                    streetViewControl: true,
+                    mapTypeControl: true,
+                    fullscreenControl: true,
+                  }}
+                >
+                  <Autocomplete
+                    onLoad={(autoC) => {
+                      autoC.setComponentRestrictions({ country: ["sg", "in"] });
+                      setAutocomplete(autoC);
                     }}
+                    onPlaceChanged={onPlaceChanged}
                   >
-                    <Autocomplete
-                      onLoad={(autoC) => {
-                        autoC.setComponentRestrictions({ country: ["sg", "in"] });
-                        setAutocomplete(autoC);
+                    <input
+                      type="text"
+                      placeholder="Enter a location"
+                      className="form-control mt-2 mb-3"
+                      style={{
+                        boxSizing: "border-box",
+                        border: "1px solid transparent",
+                        width: "400px",
+                        height: "40px",
+                        padding: "0 12px",
+                        borderRadius: "3px",
+                        boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
+                        fontSize: "14px",
+                        outline: "none",
+                        textOverflow: "ellipses",
+                        position: "absolute",
+                        left: "50%",
+                        marginLeft: "-130px",
                       }}
-                      onPlaceChanged={onPlaceChanged}
-                    >
-                      <input
-                        type="text"
-                        placeholder="Enter a location"
-                        className="form-control mt-2 mb-3"
-                        style={{
-                          boxSizing: "border-box",
-                          border: "1px solid transparent",
-                          width: "400px",
-                          height: "40px",
-                          padding: "0 12px",
-                          borderRadius: "3px",
-                          boxShadow: "0 2px 6px rgba(0, 0, 0, 0.3)",
-                          fontSize: "14px",
-                          outline: "none",
-                          textOverflow: "ellipses",
-                          position: "absolute",
-                          left: "50%",
-                          marginLeft: "-130px",
-                        }}
-                      />
-                    </Autocomplete>
-                    {markerPosition ? (
-                      <MarkerF
-                        position={markerPosition}
-                        icon={{
-                          url: RedMarker,
-                          scaledSize: new window.google.maps.Size(40, 40),
-                        }}
-                      />
-                    ):null}
-                  </GoogleMap>
-                  {formik.errors.street && (
-                    <div className="error text-danger">
-                      <small>{formik.errors.street}</small>
-                    </div>
-                  )}
-                </div>
+                    />
+                  </Autocomplete>
+                  {markerPosition ? (
+                    <MarkerF
+                      position={markerPosition}
+                      icon={{
+                        url: RedMarker,
+                        scaledSize: new window.google.maps.Size(40, 40),
+                      }}
+                    />
+                  ) : null}
+                </GoogleMap>
+                {formik.errors.street && (
+                  <div className="error text-danger">
+                    <small>{formik.errors.street}</small>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}
