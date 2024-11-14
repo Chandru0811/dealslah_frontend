@@ -1,7 +1,12 @@
-import React, { forwardRef, useImperativeHandle, useState } from "react";
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import api from "../../../../config/URL";
 import { FiAlertTriangle } from "react-icons/fi";
@@ -35,6 +40,9 @@ const libraries = ["places"];
 const Form1 = forwardRef(
   ({ formData, setFormData, handleNext, setLoadIndicators }, ref) => {
     const { id } = useParams();
+    const [searchParams] = useSearchParams();
+    const name = searchParams.get("name");
+    const email = searchParams.get("email");
     const [center, setCenter] = useState({ lat: 13.0843007, lng: 80.2704622 });
     const [markerPosition, setMarkerPosition] = useState(null);
     const [autocomplete, setAutocomplete] = useState(null);
@@ -56,10 +64,10 @@ const Form1 = forwardRef(
     const formik = useFormik({
       initialValues: {
         owner_id: id,
-        name: formData.name || "",
+        name: formData.name || name || "",
         legal_name: formData.legal_name || "",
         company_registeration_no: formData.company_registeration_no || "",
-        email: formData.email || "",
+        email: formData.email || email || "",
         mobile: formData.mobile || "",
         external_url: formData.external_url || "",
         shop_ratings: 0,
@@ -77,71 +85,73 @@ const Form1 = forwardRef(
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
-      if(markerPosition){
-        setLoadIndicators(true);
-        
-        const formDataWithAddress = {
-          ...data,
-          address:place.address,
-          street: place.street,
-          city: place.city,
-          zip_code: place.zip_code,
-          country: place.country,
-          state: place.state,
-          shop_lattitude: markerPosition?.lat, 
-          shop_longtitude: markerPosition?.lng, 
-          // map_url: place.map_url,
-        };
-    
-        const transformedSlug = formDataWithAddress.name.toLowerCase().replace(/\s+/g, "_");
-        
-        const finalDataToSend = {
-          ...formDataWithAddress,
-          slug: transformedSlug,
-        };
-    
-        setFormData((prev) => ({
-          ...prev,
-          ...finalDataToSend,
-        }));
-    
-        try {
-          const response = await api.post(
-            `vendor/shopregistration`,
-            finalDataToSend
-          );
-          console.log("Response", response);
-          if (response.status === 200) {
-            toast.success(response.data.message);
-            localStorage.setItem("shop_id", response.data.data.id);
-            handleNext(); // Move this inside the success block
-          } else {
-            toast.error(response.data.message);
-          }
-        } catch (error) {
-          if (error.response && error.response.status === 422) {
-            const errors = error.response.data.error;
-            if (errors) {
-              Object.keys(errors).forEach((key) => {
-                errors[key].forEach((errorMsg) => {
-                  toast(errorMsg, {
-                    icon: <FiAlertTriangle className="text-warning" />,
+        if (markerPosition) {
+          setLoadIndicators(true);
+
+          const formDataWithAddress = {
+            ...data,
+            address: place.address,
+            street: place.street,
+            city: place.city,
+            zip_code: place.zip_code,
+            country: place.country,
+            state: place.state,
+            shop_lattitude: markerPosition?.lat,
+            shop_longtitude: markerPosition?.lng,
+            // map_url: place.map_url,
+          };
+
+          const transformedSlug = formDataWithAddress.name
+            .toLowerCase()
+            .replace(/\s+/g, "_");
+
+          const finalDataToSend = {
+            ...formDataWithAddress,
+            slug: transformedSlug,
+          };
+
+          setFormData((prev) => ({
+            ...prev,
+            ...finalDataToSend,
+          }));
+
+          try {
+            const response = await api.post(
+              `vendor/shopregistration`,
+              finalDataToSend
+            );
+            console.log("Response", response);
+            if (response.status === 200) {
+              toast.success(response.data.message);
+              localStorage.setItem("shop_id", response.data.data.id);
+              handleNext(); // Move this inside the success block
+            } else {
+              toast.error(response.data.message);
+            }
+          } catch (error) {
+            if (error.response && error.response.status === 422) {
+              const errors = error.response.data.error;
+              if (errors) {
+                Object.keys(errors).forEach((key) => {
+                  errors[key].forEach((errorMsg) => {
+                    toast(errorMsg, {
+                      icon: <FiAlertTriangle className="text-warning" />,
+                    });
                   });
                 });
-              });
+              }
+            } else {
+              console.error("API Error", error);
+              toast.error("An unexpected error occurred.");
             }
-          } else {
-            console.error("API Error", error);
-            toast.error("An unexpected error occurred.");
+          } finally {
+            setLoadIndicators(false);
           }
-        } finally {
-          setLoadIndicators(false);
+        } else {
+          toast("Enter the location", {
+            icon: <FiAlertTriangle className="text-warning" />,
+          });
         }
-      }else{
-        toast("Enter the location", {
-          icon: <FiAlertTriangle className="text-warning" />,
-        });
-      }
       },
     });
 
@@ -159,37 +169,37 @@ const Form1 = forwardRef(
           zip_code: "",
           country: "",
         });
-    
+
         const origin = autocomplete.getPlace();
-    
+
         if (!origin.geometry) {
           console.error("No details available for input:", origin);
           return;
         }
-    
+
         const location = origin.geometry.location;
         const lat = location.lat();
         const lng = location.lng();
-    
+
         // Set formatted address directly
         setPlace((prev) => ({
           ...prev,
           address: origin.formatted_address,
-          map_url:origin.url,
+          map_url: origin.url,
         }));
-    
-        let streetParts = []; 
-    
+
+        let streetParts = [];
+
         origin.address_components.forEach((component) => {
           const types = component.types;
-    
+
           if (types.includes("plus_code")) {
             streetParts.push(component.long_name);
           }
           if (types.includes("street_number")) {
             streetParts.push(component.long_name);
           }
-    
+
           if (types.includes("route")) {
             streetParts.push(component.long_name);
           }
@@ -199,35 +209,35 @@ const Form1 = forwardRef(
           if (types.includes("route")) {
             streetParts.push(component.long_name);
           }
-    
+
           if (
             types.includes("sublocality_level_2") ||
             types.includes("sublocality")
           ) {
             streetParts.push(component.long_name);
           }
-    
+
           if (types.includes("locality")) {
             setPlace((prev) => ({
               ...prev,
               city: component.long_name,
             }));
           }
-    
+
           if (types.includes("administrative_area_level_1")) {
             setPlace((prev) => ({
               ...prev,
               state: component.long_name,
             }));
           }
-    
+
           if (types.includes("postal_code")) {
             setPlace((prev) => ({
               ...prev,
               zip_code: component.long_name,
             }));
           }
-    
+
           if (types.includes("country")) {
             setPlace((prev) => ({
               ...prev,
@@ -235,15 +245,15 @@ const Form1 = forwardRef(
             }));
           }
         });
-    
+
         setPlace((prev) => ({
           ...prev,
           street: streetParts.join(", "),
         }));
-    
+
         console.log("Updated place data:", origin);
         console.log("Latitude:", lat, "Longitude:", lng);
-    
+
         // Update center and marker position on the map
         setCenter({ lat, lng });
         setMarkerPosition({ lat, lng });
@@ -259,6 +269,7 @@ const Form1 = forwardRef(
         </div>
       );
     }
+
     return (
       <div className="container-fluid py-5">
         <form onSubmit={formik.handleSubmit} className="w-100">
@@ -268,7 +279,7 @@ const Form1 = forwardRef(
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
-                      Name<span className="text-danger">*</span>
+                      Company Name<span className="text-danger">*</span>
                     </label>
                     <div className="col-md-8">
                       <input
@@ -294,7 +305,7 @@ const Form1 = forwardRef(
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
-                      Legal Name<span className="text-danger">*</span>
+                      Company Legal Name<span className="text-danger">*</span>
                     </label>
                     <div className="col-md-8">
                       <input
@@ -352,7 +363,7 @@ const Form1 = forwardRef(
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
-                      E-mail<span className="text-danger">*</span>
+                      Company E-mail<span className="text-danger">*</span>
                     </label>
                     <div className="col-md-8">
                       <input
@@ -379,7 +390,7 @@ const Form1 = forwardRef(
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
-                      Mobile<span className="text-danger">*</span>
+                      Company Mobile<span className="text-danger">*</span>
                     </label>
                     <div className="col-md-8">
                       <input
@@ -410,7 +421,9 @@ const Form1 = forwardRef(
                 </div>
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
-                    <label className="col-md-4 form-label">Website Url</label>
+                    <label className="col-md-4 form-label">
+                      Company Website Url
+                    </label>
                     <div className="col-md-8">
                       <input
                         type="text"
@@ -470,7 +483,7 @@ const Form1 = forwardRef(
                 <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label ">
-                      Description<span className="text-danger">*</span>
+                      Company Description<span className="text-danger">*</span>
                     </label>
                     <div className="col-md-8">
                       <textarea
@@ -510,7 +523,9 @@ const Form1 = forwardRef(
                   >
                     <Autocomplete
                       onLoad={(autoC) => {
-                        autoC.setComponentRestrictions({ country: ["sg", "in"] });
+                        autoC.setComponentRestrictions({
+                          country: ["sg", "in"],
+                        });
                         setAutocomplete(autoC);
                       }}
                       onPlaceChanged={onPlaceChanged}
