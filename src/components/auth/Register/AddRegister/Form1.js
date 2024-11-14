@@ -368,6 +368,7 @@ const Form1 = forwardRef(
                     <div className="col-md-8">
                       <input
                         type="email"
+                        readOnly
                         className={`form-control ${
                           formik.touched.email && formik.errors.email
                             ? "is-invalid"
