@@ -629,22 +629,6 @@ function ProductEdit() {
                   )}
                 </div>
                 <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">Coupon Code</label>
-                  <input
-                    type="text"
-                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code
-                        ? "is-invalid"
-                        : ""
-                      }`}
-                    {...formik.getFieldProps("coupon_code")}
-                  />
-                  {formik.touched.coupon_code && formik.errors.coupon_code && (
-                    <div className="invalid-feedback">
-                      {formik.errors.coupon_code}
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
                   <label className="form-label">
                     Original Price<span className="text-danger">*</span>
                   </label>

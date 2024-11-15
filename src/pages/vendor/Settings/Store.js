@@ -20,9 +20,6 @@ const validationSchema = Yup.object({
     "Company Registration is required!"
   ),
   logo: Yup.mixed().required("Logo is required"),
-  external_url: Yup.string()
-    .url("Please enter a valid URL")
-    .required("External URL is required!"),
   // map_url: Yup.string()
   //   .url("Please enter a valid URL")
   //   .required("Map URL is required!"),
@@ -391,21 +388,12 @@ const Store = ({ setValueChange }) => {
               <div className="col-md-8 col-12 mb-5">
                 <input
                   type="text"
-                  className={`form-control ${
-                    formik.touched.external_url && formik.errors.external_url
-                      ? "is-invalid"
-                      : ""
-                  }`}
+                  className={`form-control`}
                   name="external_url"
                   onChange={handleFormikChange}
                   onBlur={formik.handleBlur}
                   value={formik.values.external_url}
                 />
-                {formik.touched.external_url && formik.errors.external_url && (
-                  <div className="error text-danger">
-                    <small>{formik.errors.external_url}</small>
-                  </div>
-                )}
               </div>
               {/* <div className="col-md-4 col-12 mb-5">
                 <label className="form-label">
