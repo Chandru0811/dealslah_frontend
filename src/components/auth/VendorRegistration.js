@@ -117,16 +117,15 @@ export default function VendorRegistration({ handleVendorLogin }) {
                 />
               )}
               <div className="container-fluid p-1 d-flex align-items-center justify-content-center gap-2">
-                {activeStep > 0 ||
-                  (activeStep !== steps.length - 1 && (
-                    <button
-                      className="btn btn-secondary mb-3"
-                      style={{ width: "100%" }}
-                      onClick={handleBack}
-                    >
-                      Back
-                    </button>
-                  ))}
+                {activeStep > 0 && activeStep < steps.length - 1 && (
+                  <button
+                    className="btn btn-secondary mb-3"
+                    style={{ width: "100%" }}
+                    onClick={handleBack}
+                  >
+                    Back
+                  </button>
+                )}
 
                 {activeStep !== steps.length - 1 && (
                   <>
