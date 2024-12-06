@@ -80,12 +80,14 @@ function ProductEdit() {
     image_url2: imageValidation,
     image_url3: imageValidation,
     image_url4: imageValidation,
-    description: Yup.string()
-      .min(10, "Description must be at least 10 characters long"),
+    description: Yup.string().min(
+      10,
+      "Description must be at least 10 characters long"
+    ),
     coupon_code: Yup.string()
       .matches(
-        /^[A-Za-z]+[0-9]{0,2}$/,
-        "Coupon code must end with up to 2 digits"
+        /^[A-Za-z]+[0-9]{0,4}$/,
+        "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
   });

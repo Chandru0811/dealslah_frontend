@@ -98,8 +98,8 @@ function ProductAdd() {
     ),
     coupon_code: Yup.string()
       .matches(
-        /^[A-Za-z]+[0-9]{0,2}$/,
-        "Coupon code must end with up to 2 digits"
+        /^[A-Za-z]+[0-9]{0,4}$/,
+        "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
   });
