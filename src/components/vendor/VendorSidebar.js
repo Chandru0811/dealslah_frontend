@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import deals from "../../assets/deals.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
+import { FaBoxOpen } from "react-icons/fa";
 
 function VendorSidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -98,6 +99,12 @@ function VendorSidebar({ handleLogout }) {
               <NavLink className="nav-link" to="/product">
                 <BiSolidCategory />
                 Deals
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/order">
+                <FaBoxOpen />
+                Orders
               </NavLink>
             </li>
             {/* <li className="nav-item">

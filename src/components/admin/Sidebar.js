@@ -5,6 +5,7 @@ import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { TbShoppingCartFilled } from "react-icons/tb";
+import { FaBoxOpen, FaUser } from "react-icons/fa";
 
 function Sidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -106,6 +107,18 @@ function Sidebar({ handleLogout }) {
               <NavLink className="nav-link" to="/shop">
                 <TbShoppingCartFilled />
                 Company
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/user">
+                <FaUser />
+                User
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/order">
+                <FaBoxOpen />
+                Orders
               </NavLink>
             </li>
           </ul>

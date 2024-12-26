@@ -39,9 +39,9 @@ function AdminHeader() {
                   <i className="bi bi-journal admin-icons"></i>
                 </span>
                 &nbsp;&nbsp;&nbsp; */}
-                <span style={{ fontSize: "24px" }}>
+                {/* <span style={{ fontSize: "24px" }}>
                   <img src={user} className="img-fluid header-user" alt="img" />
-                </span>
+                </span> */}
               </div>
             </div>
           </div>
