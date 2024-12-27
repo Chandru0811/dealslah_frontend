@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 
 function ProductAdd() {
@@ -43,8 +44,8 @@ function ProductAdd() {
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
-    const month = String(today.getMonth() + 1).padStart(2, '0');
-    const day = String(today.getDate()).padStart(2, '0');
+    const month = String(today.getMonth() + 1).padStart(2, "0");
+    const day = String(today.getDate()).padStart(2, "0");
     return `${year}-${month}-${day}`;
   };
 
@@ -96,6 +97,12 @@ function ProductAdd() {
       10,
       "Description must be at least 10 characters long"
     ),
+    linkAndOrder: Yup.array().of(
+      Yup.object().shape({
+        youTube: Yup.string().url("Please enter a valid URL").nullable(),
+        orderList: Yup.string(),
+      })
+    ),
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
@@ -122,6 +129,7 @@ function ProductAdd() {
       image3: null,
       image4: null,
       description: "",
+      linkAndOrder: [{ youTube: "", orderList: "" }],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -142,6 +150,10 @@ function ProductAdd() {
       formData.append("image3", values.image3);
       formData.append("image4", values.image4);
       formData.append("description", values.description);
+      values.linkAndOrder.forEach((item, index) => {
+        formData.append(`linkAndOrder[${index}].youTube`, item.youTube);
+        formData.append(`linkAndOrder[${index}].orderList`, item.orderList);
+      });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
@@ -205,6 +217,12 @@ function ProductAdd() {
         image3: true,
         image4: true,
         description: true,
+        linkAndOrder: [
+          {
+            youTube: true,
+            orderList: true,
+          },
+        ],
       });
 
       const formErrors = formik.errors;
@@ -450,6 +468,19 @@ function ProductAdd() {
     }
   }, [formik.values.discounted_percentage, isCouponChecked]);
 
+  const addRow = () => {
+    formik.setFieldValue("linkAndOrder", [
+      ...formik.values.linkAndOrder,
+      { youTube: "", orderList: "" },
+    ]);
+  };
+
+  const removeRow = (index) => {
+    const updatedRows = [...formik.values.linkAndOrder];
+    updatedRows.splice(index, 1);
+    formik.setFieldValue("linkAndOrder", updatedRows);
+  };
+
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -472,7 +503,7 @@ function ProductAdd() {
                 Category Group<span className="text-danger">*</span>
               </label>
               <select
-                className={`form-select ${
+                className={`form-select form-select-sm ${
                   formik.touched.shop_id && formik.errors.shop_id
                     ? "is-invalid"
                     : ""
@@ -500,7 +531,7 @@ function ProductAdd() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
+                className={`form-select form-select-sm ${
                   formik.touched.category_id && formik.errors.category_id
                     ? "is-invalid"
                     : ""
@@ -527,7 +558,7 @@ function ProductAdd() {
               </label>
               <select
                 type="text"
-                className={`form-select ${
+                className={`form-select form-select-sm ${
                   formik.touched.deal_type && formik.errors.deal_type
                     ? "is-invalid"
                     : ""
@@ -550,7 +581,7 @@ function ProductAdd() {
               <label className="form-label">Brand</label>
               <input
                 type="text"
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.brand && formik.errors.brand
                     ? "is-invalid"
                     : ""
@@ -567,7 +598,7 @@ function ProductAdd() {
               </label>
               <input
                 type="text"
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.name && formik.errors.name ? "is-invalid" : ""
                 }`}
                 {...formik.getFieldProps("name")}
@@ -589,7 +620,7 @@ function ProductAdd() {
                     ""
                   );
                 }}
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.original_price && formik.errors.original_price
                     ? "is-invalid"
                     : ""
@@ -616,7 +647,7 @@ function ProductAdd() {
                     .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
                     .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
                 }}
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.discounted_price &&
                   formik.errors.discounted_price
                     ? "is-invalid"
@@ -649,7 +680,7 @@ function ProductAdd() {
                   formik.setFieldValue("discounted_percentage", value);
                 }}
                 {...formik.getFieldProps("discounted_percentage")}
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.discounted_percentage &&
                   formik.errors.discounted_percentage
                     ? "is-invalid"
@@ -669,7 +700,7 @@ function ProductAdd() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.start_date && formik.errors.start_date
                     ? "is-invalid"
                     : ""
@@ -689,7 +720,7 @@ function ProductAdd() {
               </label>
               <input
                 type="date"
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik?.touched?.end_date && formik.errors.end_date
                     ? "is-invalid"
                     : ""
@@ -710,7 +741,7 @@ function ProductAdd() {
                 <input
                   type="file"
                   accept=".png,.jpeg,.jpg,.svg,.webp"
-                  className={`form-control ${
+                  className={`form-control form-control-sm ${
                     formik.touched[`image${num}`] &&
                     formik.errors[`image${num}`]
                       ? "is-invalid"
@@ -776,6 +807,72 @@ function ProductAdd() {
               </div>
             ))}
 
+            <div className="d-flex justify-content-end">
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-primary mt-3"
+                onClick={addRow}
+              >
+                <FaPlus />
+              </button>
+            </div>
+            {formik.values.linkAndOrder.map((row, index) => (
+              <div key={index} className="row mt-3">
+                <div className="col-lg-6 col-md-6 col-12">
+                  <label>YouTube</label>
+                  <input
+                    className="form-control form-control-sm"
+                    type="text"
+                    name={`linkAndOrder[${index}].youTube`}
+                    value={formik.values.linkAndOrder[index]?.youTube}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  />
+                  {formik.touched.linkAndOrder?.[index]?.youTube &&
+                    formik.errors.linkAndOrder?.[index]?.youTube && (
+                      <div className="text-danger">
+                        {formik.errors.linkAndOrder[index].youTube}
+                      </div>
+                    )}
+                </div>
+                <div className="col-lg-5 col-md-5 col-12">
+                  <label>Order List</label>
+                  <select
+                    className="form-select form-select-sm"
+                    name={`linkAndOrder[${index}].orderList`}
+                    value={formik.values.linkAndOrder[index]?.orderList}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
+                  >
+                    <option value="">Select</option>
+                    {[...Array(10)].map((_, i) => (
+                      <option key={i} value={i + 1}>
+                        {i + 1}
+                      </option>
+                    ))}
+                  </select>
+                  {formik.touched.linkAndOrder?.[index]?.orderList &&
+                    formik.errors.linkAndOrder?.[index]?.orderList && (
+                      <div className="text-danger">
+                        {formik.errors.linkAndOrder[index].orderList}
+                      </div>
+                    )}
+                </div>
+                <div
+                  className="col-lg-1 col-md-1 col-12 "
+                  style={{ top: "25px", position: "relative" }}
+                >
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-danger"
+                    onClick={() => removeRow(index)}
+                    disabled={formik.values.linkAndOrder.length === 1}
+                  >
+                    <FaTrash />
+                  </button>
+                </div>
+              </div>
+            ))}
             <div className="col-12 mb-5">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
@@ -783,7 +880,7 @@ function ProductAdd() {
               <textarea
                 type="text"
                 rows={5}
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.description && formik.errors.description
                     ? "is-invalid"
                     : ""
@@ -835,7 +932,7 @@ function ProductAdd() {
               <label className="form-label">Coupon Code</label>
               <input
                 type="text"
-                className={`form-control ${
+                className={`form-control form-control-sm ${
                   formik.touched.coupon_code && formik.errors.coupon_code
                     ? "is-invalid"
                     : ""

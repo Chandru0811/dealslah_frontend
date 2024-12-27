@@ -5,6 +5,7 @@ import * as Yup from "yup";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
+import { FaPlus, FaTrash } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 import ImageURL from "../../../config/ImageURL";
 
@@ -84,6 +85,12 @@ function ProductEdit() {
       10,
       "Description must be at least 10 characters long"
     ),
+    linkAndOrder: Yup.array().of(
+      Yup.object().shape({
+        youTube: Yup.string().url("Please enter a valid URL").nullable(),
+        orderList: Yup.string(),
+      })
+    ),
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
@@ -110,6 +117,7 @@ function ProductEdit() {
       image_url3: null,
       image_url4: null,
       description: "",
+      linkAndOrder: [{ youTube: "", orderList: "" }],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -139,7 +147,10 @@ function ProductEdit() {
         formData.append("image4", values.image_url4);
       }
       formData.append("description", values.description);
-
+      values.linkAndOrder.forEach((item, index) => {
+        formData.append(`linkAndOrder[${index}].youTube`, item.youTube);
+        formData.append(`linkAndOrder[${index}].orderList`, item.orderList);
+      });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${shop_id}`;
       formData.append("slug", finalSlug);
@@ -206,6 +217,12 @@ function ProductEdit() {
         image_url3: true,
         image_url4: true,
         description: true,
+        linkAndOrder: [
+          {
+            youTube: true,
+            orderList: true,
+          },
+        ],
       });
 
       const formErrors = formik.errors;
@@ -233,15 +250,18 @@ function ProductEdit() {
           .map((key) => fieldLabels[key])
           .join(", ");
 
-        toast.error(`Please fill in the following required fields: ${missedFields}`, {
-          icon: (
-            <FiAlertTriangle
-              className="text-warning"
-              style={{ fontSize: '1.5em', marginRight: '8px' }}
-            />
-          ),
-          style: { maxWidth: '1000px' },
-        });
+        toast.error(
+          `Please fill in the following required fields: ${missedFields}`,
+          {
+            icon: (
+              <FiAlertTriangle
+                className="text-warning"
+                style={{ fontSize: "1.5em", marginRight: "8px" }}
+              />
+            ),
+            style: { maxWidth: "1000px" },
+          }
+        );
         return;
       }
     });
@@ -482,6 +502,19 @@ function ProductEdit() {
     return percentage < 10 ? `0${percentage}` : `${percentage}`;
   };
 
+  const addRow = () => {
+    formik.setFieldValue("linkAndOrder", [
+      ...formik.values.linkAndOrder,
+      { youTube: "", orderList: "" },
+    ]);
+  };
+
+  const removeRow = (index) => {
+    const updatedRows = [...formik.values.linkAndOrder];
+    updatedRows.splice(index, 1);
+    formik.setFieldValue("linkAndOrder", updatedRows);
+  };
+
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -514,11 +547,12 @@ function ProductEdit() {
                     Category Group<span className="text-danger">*</span>
                   </label>
                   <select
-                    className={`form-select ${formik.touched.categoryGroupId &&
-                        formik.errors.categoryGroupId
+                    className={`form-select ${
+                      formik.touched.categoryGroupId &&
+                      formik.errors.categoryGroupId
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("categoryGroupId")}
                     onChange={handleCategorygroupChange}
                     value={formik.values.categoryGroupId} // Ensure value is set from Formik state
@@ -545,10 +579,11 @@ function ProductEdit() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.category_id && formik.errors.category_id
+                    className={`form-select ${
+                      formik.touched.category_id && formik.errors.category_id
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("category_id")}
                     onChange={(event) => {
                       const selectedValue = event.target.value;
@@ -579,10 +614,11 @@ function ProductEdit() {
                   </label>
                   <select
                     type="text"
-                    className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
+                    className={`form-select ${
+                      formik.touched.deal_type && formik.errors.deal_type
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("deal_type")}
                   >
                     <option></option>
@@ -601,10 +637,11 @@ function ProductEdit() {
                   <label className="form-label">Brand</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.brand && formik.errors.brand
+                    className={`form-control ${
+                      formik.touched.brand && formik.errors.brand
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("brand")}
                   />
                   {formik.touched.brand && formik.errors.brand && (
@@ -619,10 +656,11 @@ function ProductEdit() {
                   </label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.name && formik.errors.name
+                    className={`form-control ${
+                      formik.touched.name && formik.errors.name
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("name")}
                     maxLength={825}
                   />
@@ -641,11 +679,12 @@ function ProductEdit() {
                         .replace(/[^0-9.]/g, "")
                         .replace(/(\..*?)\..*/g, "$1");
                     }}
-                    className={`form-control ${formik.touched.original_price &&
-                        formik.errors.original_price
+                    className={`form-control ${
+                      formik.touched.original_price &&
+                      formik.errors.original_price
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("original_price")}
                   />
                   {formik.touched.original_price &&
@@ -667,11 +706,12 @@ function ProductEdit() {
                         .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
                         .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
                     }}
-                    className={`form-control ${formik.touched.discounted_price &&
-                        formik.errors.discounted_price
+                    className={`form-control ${
+                      formik.touched.discounted_price &&
+                      formik.errors.discounted_price
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("discounted_price")}
                   />
                   {formik.touched.discounted_price &&
@@ -695,11 +735,12 @@ function ProductEdit() {
                         .replace(/(\..*?)\..*/g, "$1")
                         .slice(0, 5);
                     }}
-                    className={`form-control ${formik.touched.discount_percentage &&
-                        formik.errors.discount_percentage
+                    className={`form-control ${
+                      formik.touched.discount_percentage &&
+                      formik.errors.discount_percentage
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("discount_percentage")}
                   />
                   {formik.touched.discount_percentage &&
@@ -715,10 +756,11 @@ function ProductEdit() {
                   </label>
                   <input
                     type="date"
-                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
+                    className={`form-control ${
+                      formik.touched.start_date && formik.errors.start_date
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("start_date")}
                   />
                   {formik.touched.start_date && formik.errors.start_date && (
@@ -734,10 +776,11 @@ function ProductEdit() {
                   </label>
                   <input
                     type="date"
-                    className={`form-control ${formik?.touched?.end_date && formik.errors.end_date
+                    className={`form-control ${
+                      formik?.touched?.end_date && formik.errors.end_date
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("end_date")}
                   />
                   {formik.touched.end_date && formik.errors.end_date && (
@@ -756,11 +799,12 @@ function ProductEdit() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${formik.touched[`image_url${num}`] &&
-                          formik.errors[`image_url${num}`]
+                      className={`form-control ${
+                        formik.touched[`image_url${num}`] &&
+                        formik.errors[`image_url${num}`]
                           ? "is-invalid"
                           : ""
-                        }`}
+                      }`}
                       name={`image_url${num}`}
                       onChange={(e) => handleFileChange(index, e)}
                       onBlur={formik.handleBlur}
@@ -838,6 +882,72 @@ function ProductEdit() {
                     )}
                   </div>
                 ))}
+                <div className="d-flex justify-content-end">
+                  <button
+                    type="button"
+                    className="btn btn-sm btn-outline-primary mt-3"
+                    onClick={addRow}
+                  >
+                    <FaPlus />
+                  </button>
+                </div>
+                {formik.values.linkAndOrder?.map((row, index) => (
+                  <div key={index} className="row mt-3">
+                    <div className="col-lg-6 col-md-6 col-12">
+                      <label>YouTube</label>
+                      <input
+                        className="form-control form-control-sm"
+                        type="text"
+                        name={`linkAndOrder[${index}].youTube`}
+                        value={formik.values.linkAndOrder[index]?.youTube}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      />
+                      {formik.touched.linkAndOrder?.[index]?.youTube &&
+                        formik.errors.linkAndOrder?.[index]?.youTube && (
+                          <div className="text-danger">
+                            {formik.errors.linkAndOrder[index].youTube}
+                          </div>
+                        )}
+                    </div>
+                    <div className="col-lg-5 col-md-5 col-12">
+                      <label>Order List</label>
+                      <select
+                        className="form-select form-select-sm"
+                        name={`linkAndOrder[${index}].orderList`}
+                        value={formik.values.linkAndOrder[index]?.orderList}
+                        onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
+                      >
+                        <option value="">Select</option>
+                        {[...Array(10)].map((_, i) => (
+                          <option key={i} value={i + 1}>
+                            {i + 1}
+                          </option>
+                        ))}
+                      </select>
+                      {formik.touched.linkAndOrder?.[index]?.orderList &&
+                        formik.errors.linkAndOrder?.[index]?.orderList && (
+                          <div className="text-danger">
+                            {formik.errors.linkAndOrder[index].orderList}
+                          </div>
+                        )}
+                    </div>
+                    <div
+                      className="col-lg-1 col-md-1 col-12 "
+                      style={{ top: "25px", position: "relative" }}
+                    >
+                      <button
+                        type="button"
+                        className="btn btn-sm btn-outline-danger"
+                        onClick={() => removeRow(index)}
+                        disabled={formik.values.linkAndOrder.length === 1}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
                 <div className="col-12 mb-5">
                   <label className="form-label">
                     Description<span className="text-danger">*</span>
@@ -845,10 +955,11 @@ function ProductEdit() {
                   <textarea
                     type="text"
                     rows={5}
-                    className={`form-control ${formik.touched.description && formik.errors.description
+                    className={`form-control ${
+                      formik.touched.description && formik.errors.description
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     {...formik.getFieldProps("description")}
                   />
                   {formik.touched.description && formik.errors.description && (
@@ -896,10 +1007,11 @@ function ProductEdit() {
                   <label className="form-label">Coupon Code</label>
                   <input
                     type="text"
-                    className={`form-control ${formik.touched.coupon_code && formik.errors.coupon_code
+                    className={`form-control ${
+                      formik.touched.coupon_code && formik.errors.coupon_code
                         ? "is-invalid"
                         : ""
-                      }`}
+                    }`}
                     value={couponCode}
                     readOnly
                   />
