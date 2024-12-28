@@ -46,6 +46,7 @@ function Register() {
         email: values.email,
         password: values.password,
         password_confirmation: values.cpassword,
+        role: "2",
       };
       try {
         setLoadIndicator(true);
