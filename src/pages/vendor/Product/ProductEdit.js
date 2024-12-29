@@ -677,7 +677,8 @@ function ProductEdit() {
                     onInput={(event) => {
                       event.target.value = event.target.value
                         .replace(/[^0-9.]/g, "")
-                        .replace(/(\..*?)\..*/g, "$1");
+                        .replace(/(\..*)\./g, "$1")
+                        .replace(/(\.\d{1})./g, "$1");
                     }}
                     className={`form-control ${
                       formik.touched.original_price &&
@@ -702,9 +703,9 @@ function ProductEdit() {
                     type="text"
                     onInput={(event) => {
                       event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
-                        .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
-                        .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
+                        .replace(/[^0-9.]/g, "")
+                        .replace(/(\..*)\./g, "$1")
+                        .replace(/(\.\d{1})./g, "$1");
                     }}
                     className={`form-control ${
                       formik.touched.discounted_price &&
