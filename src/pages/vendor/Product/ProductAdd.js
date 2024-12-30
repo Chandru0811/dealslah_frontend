@@ -309,11 +309,11 @@ function ProductAdd() {
         if (discounted_price === null || discounted_price === "0") {
           formik.setFieldValue("discounted_percentage", 100);
         } else {
-          const discountedPercentage =
+          const discountedPercentage = 
             ((original_price - discounted_price) / original_price) * 100;
-
-          const formattedPercentage =
-            Math.round(discountedPercentage * 10) / 10;
+            
+          const formattedPercentage = 
+            parseFloat((Math.round(discountedPercentage * 10) / 10).toFixed(1));
           formik.setFieldValue("discounted_percentage", formattedPercentage);
         }
       }
@@ -568,7 +568,6 @@ function ProductAdd() {
                 <option></option>
                 <option value="1">Product</option>
                 <option value="2">Service</option>
-                <option value="3">Product and Service</option>
               </select>
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">

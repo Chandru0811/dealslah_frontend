@@ -19,9 +19,9 @@ function VendorHeader() {
         <div className="mb-npx">
           <div className="row align-items-center">
             <div className="col-sm-6 col-12 mb-4 mb-sm-0 admin-settings">
-              <span>
+              {/* <span>
                 <i className="bi bi-gear admin-icons"></i> Settings
-              </span>
+              </span> */}
             </div>
             <div className="col-sm-6 col-12 text-sm-end">
               <div className="mx-n1">

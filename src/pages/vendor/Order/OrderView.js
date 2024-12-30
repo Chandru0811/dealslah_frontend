@@ -44,7 +44,7 @@ function OrderView() {
               </p>
               &nbsp;
               <span
-                className={`badge text-capitalize ${data?.payment_status === "1"
+                className={`badge_warning text-capitalize ${data?.payment_status === "1"
                   ? "badge_warning"
                   : "badge_warning"
                   }`}
@@ -160,18 +160,20 @@ function OrderView() {
                           <p>{item?.deal_description}</p>
                           <p>
                             <del>
-                              ₹
+                              $
                               {new Intl.NumberFormat("en-IN", {
                                 maximumFractionDigits: 0,
+                                useGrouping: false
                               }).format(
                                 parseFloat(item?.deal_originalprice)
                               )}
                             </del>
                             &nbsp;&nbsp;
                             <span style={{ color: "#dc3545" }}>
-                              ₹
+                              $
                               {new Intl.NumberFormat("en-IN", {
                                 maximumFractionDigits: 0,
+                                useGrouping: false
                               }).format(
                                 parseFloat(item?.deal_price)
                               )}
@@ -323,10 +325,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
+                        useGrouping: false
                       }).format(
                         parseFloat(
                           data?.items?.[0]?.deal_originalprice || 0
@@ -344,10 +347,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
+                        useGrouping: false
                       }).format(
                         parseFloat(
                           (data?.items?.[0]?.deal_originalprice || 0) -
@@ -368,10 +372,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
+                        useGrouping: false
                       }).format(parseFloat(data.total))}
                     </span>
                   </div>
