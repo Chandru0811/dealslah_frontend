@@ -9,7 +9,7 @@ import { LuCopyCheck } from "react-icons/lu";
 
 function ProductView() {
   const { id } = useParams();
-  const [data, setData] = useState(null);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -17,7 +17,16 @@ function ProductView() {
       setLoading(true);
       try {
         const response = await api.get(`vendor/product/${id}/get`);
-        setData(response.data.data);
+        const { additional_details, ...rest } = response.data.data;
+
+        const decodedAdditionalDetails = additional_details
+          ? JSON.parse(additional_details)
+          : [];
+
+        setData({
+          ...rest,
+          additional_details: decodedAdditionalDetails,
+        });
       } catch (error) {
         toast.error("Error Fetching Data");
       }
@@ -267,32 +276,42 @@ function ProductView() {
                   </div>
                 </div>
               </div> */}
-              <div className="col-md-6 col-12">
-                  <div className="row mb-3">
-                    <div className="col-6 d-flex justify-content-start align-items-center">
-                      <p className="text-sm">YouTube</p>
+                {data?.additional_details &&
+                data.additional_details.length > 0 ? (
+                  data.additional_details.map((item, index) => (
+                    <div className="row" key={index}>
+                      <div className="col-md-6 col-12">
+                        <div className="row mb-3">
+                          <div className="col-6 d-flex justify-content-start align-items-center">
+                            <p className="text-sm">YouTube URL {index + 1}</p>
+                          </div>
+                          <div className="col-6">
+                            <p
+                              style={{ whiteSpace: "nowrap", overflow: "auto" }}
+                              className="text-muted text-sm"
+                            >
+                              : {item?.vedio_url || ""}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="ps-5 col-md-6 col-12">
+                        <div className="row mb-3">
+                          <div className="col-6 d-flex justify-content-start align-items-center">
+                            <p className="text-sm">Orders {index + 1}</p>
+                          </div>
+                          <div className="col-6">
+                            <p className="text-muted text-sm">
+                              : {item?.order || ""}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
                     </div>
-                    <div className="col-6">
-                      <p className="text-muted text-sm">
-                        :{" "}
-                        {data?.youTube || ""}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 col-12">
-                  <div className="row mb-3">
-                    <div className="col-6 d-flex justify-content-start align-items-center">
-                      <p className="text-sm">Orders</p>
-                    </div>
-                    <div className="col-6">
-                      <p className="text-muted text-sm">
-                        :{" "}
-                        {data?.orderList || ""}
-                      </p>
-                    </div>
-                  </div>
-                </div>
+                  ))
+                ) : (
+                  <p>No additional details available.</p>
+                )}
                 <div className="col-12">
                   <div className="row mb-3">
                     <div className="col-3 d-flex justify-content-start align-items-center">

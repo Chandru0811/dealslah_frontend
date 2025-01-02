@@ -97,10 +97,10 @@ function ProductAdd() {
       10,
       "Description must be at least 10 characters long"
     ),
-    linkAndOrder: Yup.array().of(
+    additional_details: Yup.array().of(
       Yup.object().shape({
-        youTube: Yup.string().url("Please enter a valid URL").nullable(),
-        orderList: Yup.string(),
+        vedio_url: Yup.string().url("Please enter a valid URL").nullable(),
+        order: Yup.string(),
       })
     ),
     coupon_code: Yup.string()
@@ -129,7 +129,7 @@ function ProductAdd() {
       image3: null,
       image4: null,
       description: "",
-      linkAndOrder: [{ youTube: "", orderList: "" }],
+      additional_details: [{ vedio_url: "", order: "" }],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -150,10 +150,10 @@ function ProductAdd() {
       formData.append("image3", values.image3);
       formData.append("image4", values.image4);
       formData.append("description", values.description);
-      values.linkAndOrder.forEach((item, index) => {
-        formData.append(`linkAndOrder[${index}].youTube`, item.youTube);
-        formData.append(`linkAndOrder[${index}].orderList`, item.orderList);
-      });
+     formData.append(
+       "additional_details",
+       JSON.stringify(values.additional_details)
+     );
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
@@ -217,10 +217,10 @@ function ProductAdd() {
         image3: true,
         image4: true,
         description: true,
-        linkAndOrder: [
+        additional_details: [
           {
-            youTube: true,
-            orderList: true,
+            vedio_url: true,
+            order: true,
           },
         ],
       });
@@ -469,16 +469,16 @@ function ProductAdd() {
   }, [formik.values.discounted_percentage, isCouponChecked]);
 
   const addRow = () => {
-    formik.setFieldValue("linkAndOrder", [
-      ...formik.values.linkAndOrder,
-      { youTube: "", orderList: "" },
+    formik.setFieldValue("additional_details", [
+      ...formik.values.additional_details,
+      { vedio_url: "", order: "" },
     ]);
   };
 
   const removeRow = (index) => {
-    const updatedRows = [...formik.values.linkAndOrder];
+    const updatedRows = [...formik.values.additional_details];
     updatedRows.splice(index, 1);
-    formik.setFieldValue("linkAndOrder", updatedRows);
+    formik.setFieldValue("additional_details", updatedRows);
   };
 
   return (
@@ -815,22 +815,22 @@ function ProductAdd() {
                 <FaPlus />
               </button>
             </div>
-            {formik.values.linkAndOrder.map((row, index) => (
+            {formik.values.additional_details.map((row, index) => (
               <div key={index} className="row mt-3">
                 <div className="col-lg-6 col-md-6 col-12">
                   <label>YouTube</label>
                   <input
                     className="form-control form-control-sm"
                     type="text"
-                    name={`linkAndOrder[${index}].youTube`}
-                    value={formik.values.linkAndOrder[index]?.youTube}
+                    name={`additional_details[${index}].vedio_url`}
+                    value={formik.values.additional_details[index]?.vedio_url}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.linkAndOrder?.[index]?.youTube &&
-                    formik.errors.linkAndOrder?.[index]?.youTube && (
+                  {formik.touched.additional_details?.[index]?.vedio_url &&
+                    formik.errors.additional_details?.[index]?.vedio_url && (
                       <div className="text-danger">
-                        {formik.errors.linkAndOrder[index].youTube}
+                        {formik.errors.additional_details[index].vedio_url}
                       </div>
                     )}
                 </div>
@@ -838,8 +838,8 @@ function ProductAdd() {
                   <label>Order List</label>
                   <select
                     className="form-select form-select-sm"
-                    name={`linkAndOrder[${index}].orderList`}
-                    value={formik.values.linkAndOrder[index]?.orderList}
+                    name={`additional_details[${index}].order`}
+                    value={formik.values.additional_details[index]?.order}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   >
@@ -850,10 +850,10 @@ function ProductAdd() {
                       </option>
                     ))}
                   </select>
-                  {formik.touched.linkAndOrder?.[index]?.orderList &&
-                    formik.errors.linkAndOrder?.[index]?.orderList && (
+                  {formik.touched.additional_details?.[index]?.order &&
+                    formik.errors.additional_details?.[index]?.order && (
                       <div className="text-danger">
-                        {formik.errors.linkAndOrder[index].orderList}
+                        {formik.errors.additional_details[index].order}
                       </div>
                     )}
                 </div>
@@ -865,7 +865,7 @@ function ProductAdd() {
                     type="button"
                     className="btn btn-sm btn-outline-danger"
                     onClick={() => removeRow(index)}
-                    disabled={formik.values.linkAndOrder.length === 1}
+                    disabled={formik.values.additional_details.length === 1}
                   >
                     <FaTrash />
                   </button>

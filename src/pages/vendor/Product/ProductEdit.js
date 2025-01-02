@@ -85,10 +85,10 @@ function ProductEdit() {
       10,
       "Description must be at least 10 characters long"
     ),
-    linkAndOrder: Yup.array().of(
+    additional_details: Yup.array().of(
       Yup.object().shape({
-        youTube: Yup.string().url("Please enter a valid URL").nullable(),
-        orderList: Yup.string(),
+        vedio_url: Yup.string().url("Please enter a valid URL").nullable(),
+        order: Yup.string(),
       })
     ),
     coupon_code: Yup.string()
@@ -117,7 +117,7 @@ function ProductEdit() {
       image_url3: null,
       image_url4: null,
       description: "",
-      linkAndOrder: [{ youTube: "", orderList: "" }],
+      additional_details: [{ vedio_url: "", order: "" }],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -147,10 +147,10 @@ function ProductEdit() {
         formData.append("image4", values.image_url4);
       }
       formData.append("description", values.description);
-      values.linkAndOrder.forEach((item, index) => {
-        formData.append(`linkAndOrder[${index}].youTube`, item.youTube);
-        formData.append(`linkAndOrder[${index}].orderList`, item.orderList);
-      });
+      formData.append(
+        "additional_details",
+        JSON.stringify(values.additional_details)
+      );
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${shop_id}`;
       formData.append("slug", finalSlug);
@@ -217,10 +217,10 @@ function ProductEdit() {
         image_url3: true,
         image_url4: true,
         description: true,
-        linkAndOrder: [
+        additional_details: [
           {
-            youTube: true,
-            orderList: true,
+            vedio_url: true,
+            order: true,
           },
         ],
       });
@@ -292,7 +292,7 @@ function ProductEdit() {
         const discountedPercentage =
           ((original_price - discounted_price) / original_price) * 100;
 
-        const formattedPercentage = parseFloat((Math.round(discountedPercentage * 10) / 10).toFixed(1));
+        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10;
         formik.setFieldValue("discount_percentage", formattedPercentage);
       }
     }
@@ -307,9 +307,14 @@ function ProductEdit() {
         image_url3,
         image_url4,
         coupon_code,
+        additional_details,
         ...rest
       } = response.data.data;
       setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
+      const parsedAdditionalDetails = additional_details
+        ? JSON.parse(additional_details)
+        : [];
+
       formik.setValues({
         ...rest,
         coupon_code: coupon_code,
@@ -324,6 +329,7 @@ function ProductEdit() {
         image2: `${ImageURL}${image_url2}`,
         image3: `${ImageURL}${image_url3}`,
         image4: `${ImageURL}${image_url4}`,
+        additional_details: parsedAdditionalDetails,
       });
       setCouponCode(coupon_code);
     } catch (error) {
@@ -503,16 +509,16 @@ function ProductEdit() {
   };
 
   const addRow = () => {
-    formik.setFieldValue("linkAndOrder", [
-      ...formik.values.linkAndOrder,
-      { youTube: "", orderList: "" },
+    formik.setFieldValue("additional_details", [
+      ...formik.values.additional_details,
+      { vedio_url: "", order: "" },
     ]);
   };
 
   const removeRow = (index) => {
-    const updatedRows = [...formik.values.linkAndOrder];
+    const updatedRows = [...formik.values.additional_details];
     updatedRows.splice(index, 1);
-    formik.setFieldValue("linkAndOrder", updatedRows);
+    formik.setFieldValue("additional_details", updatedRows);
   };
 
   return (
@@ -624,6 +630,7 @@ function ProductEdit() {
                     <option></option>
                     <option value="1">Product</option>
                     <option value="2">Service</option>
+                    <option value="3">Product & Service</option>
                   </select>
                   {formik.touched.deal_type && formik.errors.deal_type && (
                     <div className="invalid-feedback">
@@ -891,22 +898,25 @@ function ProductEdit() {
                     <FaPlus />
                   </button>
                 </div>
-                {formik.values.linkAndOrder?.map((row, index) => (
+                {formik.values.additional_details?.map((row, index) => (
                   <div key={index} className="row mt-3">
                     <div className="col-lg-6 col-md-6 col-12">
                       <label>YouTube</label>
                       <input
                         className="form-control form-control-sm"
                         type="text"
-                        name={`linkAndOrder[${index}].youTube`}
-                        value={formik.values.linkAndOrder[index]?.youTube}
+                        name={`additional_details[${index}].vedio_url`}
+                        value={
+                          formik.values.additional_details[index]?.vedio_url
+                        }
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       />
-                      {formik.touched.linkAndOrder?.[index]?.youTube &&
-                        formik.errors.linkAndOrder?.[index]?.youTube && (
+                      {formik.touched.additional_details?.[index]?.vedio_url &&
+                        formik.errors.additional_details?.[index]
+                          ?.vedio_url && (
                           <div className="text-danger">
-                            {formik.errors.linkAndOrder[index].youTube}
+                            {formik.errors.additional_details[index].vedio_url}
                           </div>
                         )}
                     </div>
@@ -914,8 +924,8 @@ function ProductEdit() {
                       <label>Order List</label>
                       <select
                         className="form-select form-select-sm"
-                        name={`linkAndOrder[${index}].orderList`}
-                        value={formik.values.linkAndOrder[index]?.orderList}
+                        name={`additional_details[${index}].order`}
+                        value={formik.values.additional_details[index]?.order}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
                       >
@@ -926,10 +936,10 @@ function ProductEdit() {
                           </option>
                         ))}
                       </select>
-                      {formik.touched.linkAndOrder?.[index]?.orderList &&
-                        formik.errors.linkAndOrder?.[index]?.orderList && (
+                      {formik.touched.additional_details?.[index]?.order &&
+                        formik.errors.additional_details?.[index]?.order && (
                           <div className="text-danger">
-                            {formik.errors.linkAndOrder[index].orderList}
+                            {formik.errors.additional_details[index].order}
                           </div>
                         )}
                     </div>
@@ -941,7 +951,7 @@ function ProductEdit() {
                         type="button"
                         className="btn btn-sm btn-outline-danger"
                         onClick={() => removeRow(index)}
-                        disabled={formik.values.linkAndOrder.length === 1}
+                        disabled={formik.values.additional_details.length === 1}
                       >
                         <FaTrash />
                       </button>
