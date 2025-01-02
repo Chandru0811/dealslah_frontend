@@ -403,7 +403,7 @@ function ProductsView() {
                             style={{ whiteSpace: "nowrap", overflow: "auto" }}
                             className="text-muted text-sm"
                           >
-                            : {item?.vedio_url || ""}
+                            : {item?.video_url || ""}
                           </p>
                         </div>
                       </div>

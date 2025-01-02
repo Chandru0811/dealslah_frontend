@@ -99,7 +99,7 @@ function ProductAdd() {
     ),
     additional_details: Yup.array().of(
       Yup.object().shape({
-        vedio_url: Yup.string().url("Please enter a valid URL").nullable(),
+        video_url: Yup.string().url("Please enter a valid URL").nullable(),
         order: Yup.string(),
       })
     ),
@@ -129,7 +129,7 @@ function ProductAdd() {
       image3: null,
       image4: null,
       description: "",
-      additional_details: [{ vedio_url: "", order: "" }],
+      additional_details: [{ video_url: "", order: "" }],
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -219,7 +219,7 @@ function ProductAdd() {
         description: true,
         additional_details: [
           {
-            vedio_url: true,
+            video_url: true,
             order: true,
           },
         ],
@@ -471,7 +471,7 @@ function ProductAdd() {
   const addRow = () => {
     formik.setFieldValue("additional_details", [
       ...formik.values.additional_details,
-      { vedio_url: "", order: "" },
+      { video_url: "", order: "" },
     ]);
   };
 
@@ -822,15 +822,15 @@ function ProductAdd() {
                   <input
                     className="form-control form-control-sm"
                     type="text"
-                    name={`additional_details[${index}].vedio_url`}
-                    value={formik.values.additional_details[index]?.vedio_url}
+                    name={`additional_details[${index}].video_url`}
+                    value={formik.values.additional_details[index]?.video_url}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.additional_details?.[index]?.vedio_url &&
-                    formik.errors.additional_details?.[index]?.vedio_url && (
+                  {formik.touched.additional_details?.[index]?.video_url &&
+                    formik.errors.additional_details?.[index]?.video_url && (
                       <div className="text-danger">
-                        {formik.errors.additional_details[index].vedio_url}
+                        {formik.errors.additional_details[index].video_url}
                       </div>
                     )}
                 </div>
