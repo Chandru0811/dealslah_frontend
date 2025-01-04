@@ -93,10 +93,12 @@ function ProductAdd() {
     image2: imageValidation,
     image3: imageValidation,
     image4: imageValidation,
-    description: Yup.string().min(
-      10,
-      "Description must be at least 10 characters long"
-    ),
+    description: Yup.string()
+      .required("Description is required")
+      .min(10, "Description must be at least 10 characters long"),
+    specifications: Yup.string()
+      .required("Specification is required")
+      .min(10, "Specification must be at least 10 characters long"),
     additional_details: Yup.array().of(
       Yup.object().shape({
         video_url: Yup.string().url("Please enter a valid URL").nullable(),
@@ -129,6 +131,7 @@ function ProductAdd() {
       image3: null,
       image4: null,
       description: "",
+      specifications: "",
       additional_details: [{ video_url: "", order: "" }],
     },
     validationSchema: validationSchema,
@@ -150,10 +153,11 @@ function ProductAdd() {
       formData.append("image3", values.image3);
       formData.append("image4", values.image4);
       formData.append("description", values.description);
-     formData.append(
-       "additional_details",
-       JSON.stringify(values.additional_details)
-     );
+      formData.append("specifications", values.specifications);
+      formData.append(
+        "additional_details",
+        JSON.stringify(values.additional_details)
+      );
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
@@ -217,6 +221,7 @@ function ProductAdd() {
         image3: true,
         image4: true,
         description: true,
+        specifications: true,
         additional_details: [
           {
             video_url: true,
@@ -244,6 +249,7 @@ function ProductAdd() {
           image3: "Image 3",
           image4: "Image 4",
           description: "Description",
+          specifications: "Specification",
         };
 
         const missedFields = Object.keys(formErrors)
@@ -309,11 +315,12 @@ function ProductAdd() {
         if (discounted_price === null || discounted_price === "0") {
           formik.setFieldValue("discounted_percentage", 100);
         } else {
-          const discountedPercentage = 
+          const discountedPercentage =
             ((original_price - discounted_price) / original_price) * 100;
-            
-          const formattedPercentage = 
-            parseFloat((Math.round(discountedPercentage * 10) / 10).toFixed(1));
+
+          const formattedPercentage = parseFloat(
+            (Math.round(discountedPercentage * 10) / 10).toFixed(1)
+          );
           formik.setFieldValue("discounted_percentage", formattedPercentage);
         }
       }
@@ -891,6 +898,28 @@ function ProductAdd() {
                   {formik.errors.description}
                 </div>
               )}
+            </div>
+            <div className="col-12 mb-5">
+              <label className="form-label">
+                Specification<span className="text-danger">*</span>
+              </label>
+              <textarea
+                type="text"
+                rows={5}
+                className={`form-control form-control-sm ${
+                  formik.touched.specifications &&
+                  formik.errors.specifications
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("specifications")}
+              />
+              {formik.touched.specifications &&
+                formik.errors.specifications && (
+                  <div className="invalid-feedback">
+                    {formik.errors.specifications}
+                  </div>
+                )}
             </div>
             <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
               <div className="d-flex align-items-center">

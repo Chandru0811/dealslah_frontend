@@ -81,10 +81,12 @@ function ProductEdit() {
     image_url2: imageValidation,
     image_url3: imageValidation,
     image_url4: imageValidation,
-    description: Yup.string().min(
-      10,
-      "Description must be at least 10 characters long"
-    ),
+    description: Yup.string()
+      .required("Description is required")
+      .min(10, "Description must be at least 10 characters long"),
+    specifications: Yup.string()
+      .required("Specification is required")
+      .min(10, "Specification must be at least 10 characters long"),
     additional_details: Yup.array().of(
       Yup.object().shape({
         video_url: Yup.string().url("Please enter a valid URL").nullable(),
@@ -117,6 +119,7 @@ function ProductEdit() {
       image_url3: null,
       image_url4: null,
       description: "",
+      specifications: "",
       additional_details: [{ video_url: "", order: "" }],
     },
     validationSchema: validationSchema,
@@ -147,6 +150,7 @@ function ProductEdit() {
         formData.append("image4", values.image_url4);
       }
       formData.append("description", values.description);
+      formData.append("specifications", values.specifications);
       formData.append(
         "additional_details",
         JSON.stringify(values.additional_details)
@@ -217,6 +221,7 @@ function ProductEdit() {
         image_url3: true,
         image_url4: true,
         description: true,
+        specifications: true,
         additional_details: [
           {
             video_url: true,
@@ -244,6 +249,7 @@ function ProductEdit() {
           image_url3: "Image 3",
           image_url4: "Image 4",
           description: "Description",
+          specifications: "Specification",
         };
 
         const missedFields = Object.keys(formErrors)
@@ -977,6 +983,28 @@ function ProductEdit() {
                       {formik.errors.description}
                     </div>
                   )}
+                </div>
+                <div className="col-12 mb-5">
+                  <label className="form-label">
+                    Specification<span className="text-danger">*</span>
+                  </label>
+                  <textarea
+                    type="text"
+                    rows={5}
+                    className={`form-control form-control-sm ${
+                      formik.touched.specifications &&
+                      formik.errors.specifications
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                    {...formik.getFieldProps("specifications")}
+                  />
+                  {formik.touched.specifications &&
+                    formik.errors.specifications && (
+                      <div className="invalid-feedback">
+                        {formik.errors.specifications}
+                      </div>
+                    )}
                 </div>
                 <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
                   <div className="d-flex align-items-center">

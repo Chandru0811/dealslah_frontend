@@ -435,6 +435,18 @@ function ProductsView() {
                   </div>
                 </div>
               </div>
+              <div className="col-12">
+                <div className="row mb-3">
+                  <div className="col-3 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Specification</p>
+                  </div>
+                  <div className="col-9">
+                    <p className="text-muted text-sm">
+                      : {data?.specifications}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
             <div className="row p-3">
               <h4 className="mb-5">Company Information</h4>
