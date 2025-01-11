@@ -102,16 +102,14 @@ function ProductEdit() {
       )
       .required("Coupon code is required"),
     ...mediaFields.reduce((acc, field, index) => {
-      if (index === 0 || field.selectedType === "image") {
-        acc[`image-${index}`] =
-          field.selectedType === "image"
-            ? imageValidation
-            : Yup.mixed().nullable();
-      }
-      if (index !== 0 && field.selectedType === "video") {
+      if (field.selectedType === "image") {
+        acc[`image-${index}`] = Yup.mixed().required(
+          `Image ${index + 1} is required`
+        );
+      } else if (field.selectedType === "video") {
         acc[`video-${index}`] = Yup.string()
-          .url("Please enter a valid video URL")
-          .required("Video URL is required");
+          .url(`Youtube ${index + 1} must be a valid URL`)
+          .required(`Youtube ${index + 1} is required`);
       }
       return acc;
     }, {}),
@@ -245,12 +243,11 @@ function ProductEdit() {
         image: true,
         description: true,
         specifications: true,
-        additional_details: [
-          {
-            video_url: true,
-            order: true,
-          },
-        ],
+        ...mediaFields.reduce((acc, _, index) => {
+          acc[`image-${index}`] = true;
+          acc[`video-${index}`] = true;
+          return acc;
+        }, {}),
       });
 
       const formErrors = formik.errors;
@@ -270,6 +267,11 @@ function ProductEdit() {
           image: "Image",
           description: "Description",
           specifications: "Specification",
+          ...mediaFields.reduce((acc, _, index) => {
+            acc[`image-${index}`] = `Image ${index + 1}`;
+            acc[`video-${index}`] = `Youtube ${index + 1}`;
+            return acc;
+          }, {}),
         };
 
         const missedFields = Object.keys(formErrors)
@@ -436,8 +438,8 @@ function ProductEdit() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 900;
-        const targetHeight = 400;
+        const targetWidth = 320;
+        const targetHeight = 240;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -871,8 +873,7 @@ function ProductEdit() {
             <>
               {mediaFields.map((field, index) => (
                 <div key={index} className="row">
-                  {/* Radio Buttons for Selecting Type */}
-                  <p>Media Fields {index + 1}</p>
+                  <p>Thumbnail {index + 1}</p>
                   <div className="col-12 d-flex align-items-center mb-3">
                     <div className="form-check me-3">
                       <input
@@ -883,7 +884,7 @@ function ProductEdit() {
                         checked={
                           (index === 0 && field.selectedType === "image") ||
                           field.selectedType === "image"
-                        } // Default select image for the first row
+                        }
                         onChange={() => handleTypeChange(index, "image")}
                       />
                       <label
@@ -901,18 +902,17 @@ function ProductEdit() {
                         className="form-check-input"
                         checked={field.selectedType === "video"}
                         onChange={() => handleTypeChange(index, "video")}
-                        disabled={index === 0} // Disable video selection in the first row
+                        disabled={index === 0}
                       />
                       <label
                         className="form-check-label"
                         htmlFor={`video-${index}`}
                       >
-                        Video
+                        Youtube
                       </label>
                     </div>
                   </div>
 
-                  {/* Image Input */}
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
                       Image
@@ -946,7 +946,7 @@ function ProductEdit() {
                             image={imageSrc[index]}
                             crop={crop[index] || { x: 0, y: 0 }}
                             zoom={zoom[index] || 1}
-                            aspect={900 / 400}
+                            aspect={320 / 240}
                             onCropChange={(newCrop) =>
                               updateCrop(index, newCrop)
                             }
@@ -984,11 +984,9 @@ function ProductEdit() {
                       </button>
                     </div>
                   </div>
-
-                  {/* Video Input */}
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
-                      Video
+                      Youtube
                       {field.selectedType === "video" && (
                         <span className="text-danger">*</span>
                       )}
@@ -1003,7 +1001,7 @@ function ProductEdit() {
                       }`}
                       name={`video-${index}`}
                       value={formik.values[`video-${index}`]}
-                      disabled={field.selectedType !== "video"} // Disable if image is selected
+                      disabled={field.selectedType !== "video"}
                       onChange={formik.handleChange}
                       onBlur={formik.handleBlur}
                     />
@@ -1014,7 +1012,6 @@ function ProductEdit() {
                         </div>
                       )}
                   </div>
-                  {/* Delete Button */}
                   <div className="text-end">
                     {mediaFields.length > 1 &&
                       index > 0 &&
