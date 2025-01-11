@@ -5,33 +5,33 @@ import * as Yup from "yup";
 import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
-import { FaPlus, FaTrash } from "react-icons/fa";
 import Cropper from "react-easy-crop";
 
 function ProductAdd() {
+  const navigate = useNavigate();
   const [loadIndicator, setLoadIndicator] = useState(false);
-  const [imageSrc, setImageSrc] = useState(null);
-  const [crop, setCrop] = useState([
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
+
+  const [mediaFields, setMediaFields] = useState([
+    { image: "", video: "", selectedType: "image" },
   ]);
-  const [zooms, setZooms] = useState([1, 1, 1, 1]);
+  const [cropperStates, setCropperStates] = useState([]);
+  const [imageSrc, setImageSrc] = useState([]);
+  const [crop, setCrop] = useState([]);
+  const [zoom, setZoom] = useState([]);
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState([]);
+  const [originalFileName, setOriginalFileName] = useState([]);
+
+  const [originalFileType, setOriginalFileType] = useState("");
+  const MAX_FILE_SIZE = 2 * 1024 * 1024;
+
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
-  const [originalFileName, setOriginalFileName] = useState("");
-  const [originalFileType, setOriginalFileType] = useState("");
-  const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
-  const [images, setImages] = useState([null, null, null, null]);
-  const [croppedAreas, setCroppedAreas] = useState([null, null, null, null]);
-  const [showCropper, setShowCropper] = useState([false, false, false, false]);
   const id = localStorage.getItem("shop_id");
   const [couponCode, setCouponCode] = useState("DEALSLAH");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
-  const navigate = useNavigate();
+
   const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
@@ -49,7 +49,6 @@ function ProductAdd() {
     return `${year}-${month}-${day}`;
   };
 
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const imageValidation = Yup.mixed()
     .required("*Image is required")
     .test("fileFormat", "Unsupported format", (value) => {
@@ -58,6 +57,7 @@ function ProductAdd() {
     .test("fileSize", "File size is too large. Max 2MB.", (value) => {
       return !value || (value && value.size <= MAX_FILE_SIZE);
     });
+
   const validationSchema = Yup.object({
     shop_id: Yup.string().required("Category Group is required"),
     category_id: Yup.string().required("Category is required"),
@@ -89,28 +89,32 @@ function ProductAdd() {
           return new Date(value) >= new Date(start_date);
         }
       ),
-    image1: imageValidation,
-    image2: imageValidation,
-    image3: imageValidation,
-    image4: imageValidation,
     description: Yup.string()
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long"),
     specifications: Yup.string()
       .required("Specification is required")
       .min(10, "Specification must be at least 10 characters long"),
-    additional_details: Yup.array().of(
-      Yup.object().shape({
-        video_url: Yup.string().url("Please enter a valid URL").nullable(),
-        order: Yup.string(),
-      })
-    ),
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
         "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
+    ...mediaFields.reduce((acc, field, index) => {
+      if (index === 0 || field.selectedType === "image") {
+        acc[`image-${index}`] =
+          field.selectedType === "image"
+            ? imageValidation
+            : Yup.mixed().nullable();
+      }
+      if (index !== 0 && field.selectedType === "video") {
+        acc[`video-${index}`] = Yup.string()
+          .url("Please enter a valid video URL")
+          .required("Video URL is required");
+      }
+      return acc;
+    }, {}),
   });
 
   const formik = useFormik({
@@ -126,13 +130,14 @@ function ProductAdd() {
       start_date: getCurrentDate(),
       end_date: "",
       coupon_code: couponCode,
-      image1: null,
-      image2: null,
-      image3: null,
-      image4: null,
+      image: null,
       description: "",
       specifications: "",
-      additional_details: [{ video_url: "", order: "" }],
+      ...mediaFields.reduce((acc, _, index) => {
+        acc[`image-${index}`] = null;
+        acc[`video-${index}`] = "";
+        return acc;
+      }, {}),
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -148,16 +153,37 @@ function ProductAdd() {
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
       formData.append("coupon_code", values.coupon_code);
-      formData.append("image1", values.image1);
-      formData.append("image2", values.image2);
-      formData.append("image3", values.image3);
-      formData.append("image4", values.image4);
+      // formData.append("image-${index}", imageFile);
       formData.append("description", values.description);
       formData.append("specifications", values.specifications);
-      formData.append(
-        "additional_details",
-        JSON.stringify(values.additional_details)
-      );
+      const mediaArray = mediaFields.map((field, index) => {
+        const mediaItem = {
+          type: field.selectedType,
+          order: index + 1,
+        };
+
+        if (field.selectedType === "image") {
+          // For image fields, we'll append the file separately
+          // Just store the order in the media array
+          return mediaItem;
+        } else {
+          // For video fields, include the URL
+          return {
+            ...mediaItem,
+            url: values[`video-${index}`],
+          };
+        }
+      });
+
+      // Append media configuration as JSON
+      formData.append("media_config", JSON.stringify(mediaArray));
+
+      // Append image files separately
+      mediaFields.forEach((field, index) => {
+        if (field.selectedType === "image" && values[`image-${index}`]) {
+          formData.append(`image-${index}`, values[`image-${index}`]);
+        }
+      });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
@@ -216,10 +242,7 @@ function ProductAdd() {
         start_date: true,
         end_date: true,
         coupon_code: true,
-        image1: true,
-        image2: true,
-        image3: true,
-        image4: true,
+        image: true,
         description: true,
         specifications: true,
         additional_details: [
@@ -244,10 +267,7 @@ function ProductAdd() {
           start_date: "Start Date",
           end_date: "End Date",
           coupon_code: "Coupon Code",
-          image1: "Image 1",
-          image2: "Image 2",
-          image3: "Image 3",
-          image4: "Image 4",
+          image: "Image",
           description: "Description",
           specifications: "Specification",
         };
@@ -327,42 +347,58 @@ function ProductAdd() {
     }, 1000);
 
     return () => clearTimeout(timeoutId);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_price, formik.values.original_price]);
 
-  const handleFileChange = (index, event) => {
+  const updateCrop = (index, newCrop) => {
+    setCrop((prevCrop) => {
+      const newCropArray = [...prevCrop];
+      newCropArray[index] = newCrop;
+      return newCropArray;
+    });
+  };
+
+  const handleFileChange = (event, index, type) => {
     const file = event?.target?.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
         toast.error("File size is too large. Max 2MB.");
         event.target.value = null;
-        formik.setFieldValue(`image${index + 1}`, null);
         return;
       }
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        const updatedImages = [...images];
-        updatedImages[index] = reader.result;
-        setImages(updatedImages);
-        setOriginalFileName(file.name);
-        setOriginalFileType(file.type);
+      if (type === "image") {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const updatedImageSrc = [...imageSrc];
+          updatedImageSrc[index] = reader.result;
+          setImageSrc(updatedImageSrc);
 
-        // Correctly update showCropper as an array
-        const updatedShowCropper = [...showCropper];
-        updatedShowCropper[index] = true;
-        setShowCropper(updatedShowCropper);
-      };
-      reader.readAsDataURL(file);
+          // Update cropper state for this index
+          const updatedCropperStates = [...cropperStates];
+          updatedCropperStates[index] = true;
+          setCropperStates(updatedCropperStates);
+
+          setOriginalFileName((prev) => {
+            const updated = [...prev];
+            updated[index] = file.name;
+            return updated;
+          });
+        };
+        reader.readAsDataURL(file);
+      }
     }
   };
 
   const onCropComplete = (index, croppedArea, croppedAreaPixels) => {
-    const newCroppedAreas = [...croppedAreas];
-    newCroppedAreas[index] = croppedAreaPixels;
-    setCroppedAreas(newCroppedAreas);
+    setCroppedAreaPixels((prevState) => {
+      const updatedState = [...prevState];
+      updatedState[index] = croppedAreaPixels;
+      return updatedState;
+    });
   };
 
-  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
+  const getCroppedImg = (imageSrc, crop, croppedAreaPixels, index) => {
     return new Promise((resolve, reject) => {
       const image = new Image();
       image.src = imageSrc;
@@ -370,8 +406,8 @@ function ProductAdd() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 320;
-        const targetHeight = 240;
+        const targetWidth = 900;
+        const targetHeight = 400;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -392,50 +428,50 @@ function ProductAdd() {
             reject(new Error("Canvas is empty"));
             return;
           }
+          blob.name = `croppedImage-${index}.jpeg`;
           resolve(blob);
         }, "image/jpeg");
       };
-      image.onerror = (error) => reject(error);
     });
   };
 
   const handleCropSave = async (index) => {
     try {
       const croppedImageBlob = await getCroppedImg(
-        images[index],
+        imageSrc[index],
         crop[index],
-        croppedAreas[index]
+        croppedAreaPixels[index],
+        index
       );
-
-      const fileName = originalFileName || `cropped_image_${index}.jpeg`;
-      const file = new File([croppedImageBlob], fileName, {
-        type: originalFileType || "image/jpeg",
+      const file = new File([croppedImageBlob], originalFileName[index], {
+        type: "image/jpeg",
       });
 
-      // Update the specific image field in formik
-      formik.setFieldValue(`image${index + 1}`, file);
+      // Update formik values for the specific index
+      formik.setFieldValue(`image-${index}`, file);
 
-      // Update showCropper state to hide the cropper for the saved image
-      const updatedShowCropper = [...showCropper];
-      updatedShowCropper[index] = false;
-      setShowCropper(updatedShowCropper);
+      // Update cropper state
+      const updatedCropperStates = [...cropperStates];
+      updatedCropperStates[index] = false;
+      setCropperStates(updatedCropperStates);
     } catch (error) {
       console.error("Error cropping the image:", error);
-      toast.error("Failed to crop the image.");
     }
   };
 
   const handleCropCancel = (index) => {
-    const updatedShowCropper = [...showCropper];
-    updatedShowCropper[index] = false;
-    setShowCropper(updatedShowCropper);
+    const updatedCropperStates = [...cropperStates];
+    updatedCropperStates[index] = false;
+    setCropperStates(updatedCropperStates);
 
-    const updatedImages = [...images];
-    updatedImages[index] = null;
-    setImages(updatedImages);
+    const updatedImageSrc = [...imageSrc];
+    updatedImageSrc[index] = null;
+    setImageSrc(updatedImageSrc);
 
-    formik.setFieldValue(`image${index + 1}`, null);
-    document.querySelector(`input[name='image${index + 1}']`).value = "";
+    formik.setFieldValue(`image-${index}`, null);
+    // Reset the file input
+    const fileInput = document.querySelector(`input[name="image-${index}"]`);
+    if (fileInput) fileInput.value = "";
   };
 
   const formatDiscountPercentage = (discounted_percentage) => {
@@ -473,6 +509,7 @@ function ProductAdd() {
       setCouponCode(updatedCoupon);
       formik.setFieldValue("coupon_code", updatedCoupon);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_percentage, isCouponChecked]);
 
   const addRow = () => {
@@ -486,6 +523,75 @@ function ProductAdd() {
     const updatedRows = [...formik.values.additional_details];
     updatedRows.splice(index, 1);
     formik.setFieldValue("additional_details", updatedRows);
+  };
+
+  const handleDelete = (indexToDelete) => {
+    if (mediaFields.length > 1 && indexToDelete !== 0) {
+      // Remove the specific row from mediaFields
+      const updatedFields = mediaFields.filter(
+        (_, index) => index !== indexToDelete
+      );
+      setMediaFields(updatedFields);
+
+      // Create new form values without the deleted row
+      const newValues = { ...formik.values };
+      delete newValues[`image-${indexToDelete}`];
+      delete newValues[`video-${indexToDelete}`];
+
+      // Reindex the remaining fields after the deleted index
+      for (let i = indexToDelete; i < mediaFields.length - 1; i++) {
+        if (newValues[`image-${i + 1}`]) {
+          newValues[`image-${i}`] = newValues[`image-${i + 1}`];
+          delete newValues[`image-${i + 1}`];
+        }
+        if (newValues[`video-${i + 1}`]) {
+          newValues[`video-${i}`] = newValues[`video-${i + 1}`];
+          delete newValues[`video-${i + 1}`];
+        }
+      }
+
+      // Update formik values
+      formik.setValues(newValues);
+
+      // Update other state arrays
+      setImageSrc((prev) => prev.filter((_, index) => index !== indexToDelete));
+      setCrop((prev) => prev.filter((_, index) => index !== indexToDelete));
+      setCroppedAreaPixels((prev) =>
+        prev.filter((_, index) => index !== indexToDelete)
+      );
+      setOriginalFileName((prev) =>
+        prev.filter((_, index) => index !== indexToDelete)
+      );
+    }
+  };
+
+  const handleAddMore = () => {
+    if (mediaFields.length < 7) {
+      setMediaFields([
+        ...mediaFields,
+        { image: "", video: "", selectedType: "image" },
+      ]);
+    }
+  };
+
+  const handleTypeChange = (index, type) => {
+    const updatedFields = [...mediaFields];
+    updatedFields[index].selectedType = type;
+    setMediaFields(updatedFields);
+
+    // Reset the values and errors for the changed field
+    if (type === "image") {
+      formik.setFieldValue(`video-${index}`, "");
+      formik.setFieldError(`video-${index}`, undefined);
+      formik.setFieldTouched(`video-${index}`, false);
+    } else {
+      formik.setFieldValue(`image-${index}`, null);
+      formik.setFieldError(`image-${index}`, undefined);
+      formik.setFieldTouched(`image-${index}`, false);
+      const updatedImageSrc = [...imageSrc];
+      updatedImageSrc[index] = null;
+      setImageSrc(updatedImageSrc);
+    }
   };
 
   return (
@@ -531,7 +637,6 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.shop_id}</div>
               )}
             </div>
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Category<span className="text-danger">*</span>
@@ -582,7 +687,6 @@ function ProductAdd() {
                 </div>
               )}
             </div>
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">Brand</label>
               <input
@@ -640,7 +744,6 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Discounted Price<span className="text-danger">*</span>
@@ -669,7 +772,6 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Discounted Percentage (%)<span className="text-danger">*</span>
@@ -679,9 +781,9 @@ function ProductAdd() {
                 readOnly
                 onInput={(event) => {
                   let value = event.target.value
-                    .replace(/[^0-9.]/g, "") // Only allow numbers and a single decimal point
-                    .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
-                    .replace(/^(\d*\.\d{1}).*/, "$1"); // Limit to one decimal places
+                    .replace(/[^0-9.]/g, "")
+                    .replace(/(\..*)\./g, "$1")
+                    .replace(/^(\d*\.\d{1}).*/, "$1");
 
                   formik.setFieldValue("discounted_percentage", value);
                 }}
@@ -719,7 +821,6 @@ function ProductAdd() {
                 </div>
               )}
             </div>
-
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 End Date <span className="text-danger">*</span>
@@ -737,68 +838,112 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.end_date}</div>
               )}
             </div>
-
-            {[1, 2, 3, 4].map((num, index) => (
-              <div key={num} className="col-md-6 col-12 mb-3">
-                <label className="form-label">
-                  Image {num}
-                  <span className="text-danger">*</span>
-                </label>
-                <input
-                  type="file"
-                  accept=".png,.jpeg,.jpg,.svg,.webp"
-                  className={`form-control form-control-sm ${
-                    formik.touched[`image${num}`] &&
-                    formik.errors[`image${num}`]
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                  name={`image${num}`}
-                  onChange={(e) => handleFileChange(index, e)}
-                  onBlur={formik.handleBlur}
-                />
-                <p style={{ fontSize: "13px" }}>
-                  Note: Maximum file size is 2MB. Allowed: .png, .jpg, .jpeg,
-                  .svg, .webp.
-                </p>
-                {/* Show error message for each image */}
-                {formik.touched[`image${num}`] &&
-                  formik.errors[`image${num}`] && (
-                    <div className="invalid-feedback">
-                      {formik.errors[`image${num}`]}
-                    </div>
-                  )}
-
-                {showCropper[index] && (
-                  <>
-                    <div className="crop-container">
-                      <Cropper
-                        image={images[index]}
-                        crop={crop[index]}
-                        zoom={zooms[index]}
-                        aspect={320 / 240}
-                        onCropChange={(newCrop) => {
-                          const newCrops = [...crop];
-                          newCrops[index] = newCrop;
-                          setCrop(newCrops);
-                        }}
-                        onZoomChange={(newZoom) => {
-                          const newZooms = [...zooms];
-                          newZooms[index] = newZoom;
-                          setZooms(newZooms);
-                        }}
-                        onCropComplete={(croppedArea, croppedAreaPixels) =>
-                          onCropComplete(index, croppedArea, croppedAreaPixels)
-                        }
+            <>
+              {mediaFields.map((field, index) => (
+                <div key={index} className="row">
+                  {/* Radio Buttons for Selecting Type */}
+                  <p>Media Fields {index + 1}</p>
+                  <div className="col-12 d-flex align-items-center mb-3">
+                    <div className="form-check me-3">
+                      <input
+                        type="radio"
+                        name={`type-${index}`}
+                        id={`image-${index}`}
+                        className="form-check-input"
+                        checked={
+                          (index === 0 && field.selectedType === "image") ||
+                          field.selectedType === "image"
+                        } // Default select image for the first row
+                        onChange={() => handleTypeChange(index, "image")}
                       />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`image-${index}`}
+                      >
+                        Image
+                      </label>
                     </div>
+                    <div className="form-check">
+                      <input
+                        type="radio"
+                        name={`type-${index}`}
+                        id={`video-${index}`}
+                        className="form-check-input"
+                        checked={field.selectedType === "video"}
+                        onChange={() => handleTypeChange(index, "video")}
+                        disabled={index === 0} // Disable video selection in the first row
+                      />
+                      <label
+                        className="form-check-label"
+                        htmlFor={`video-${index}`}
+                      >
+                        Video
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Image Input */}
+                  <div className="col-md-6 col-12 mb-3">
+                    <label className="form-label">
+                      Image
+                      {field.selectedType === "image" && (
+                        <span className="text-danger">*</span>
+                      )}
+                    </label>
+                    <input
+                      type="file"
+                      accept=".png,.jpeg,.jpg,.svg,.webp"
+                      className={`form-control ${
+                        formik.touched[`image-${index}`] &&
+                        formik.errors[`image-${index}`]
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      disabled={field.selectedType !== "image"}
+                      onChange={(e) => handleFileChange(e, index, "image")}
+                    />
+                    {formik.touched[`image-${index}`] &&
+                      formik.errors[`image-${index}`] && (
+                        <div className="invalid-feedback">
+                          {formik.errors[`image-${index}`]}
+                        </div>
+                      )}
+                    {cropperStates[index] &&
+                      imageSrc[index] &&
+                      field.selectedType === "image" && (
+                        <div className="crop-container">
+                          <Cropper
+                            image={imageSrc[index]}
+                            crop={crop[index] || { x: 0, y: 0 }}
+                            zoom={zoom[index] || 1}
+                            aspect={900 / 400}
+                            onCropChange={(newCrop) =>
+                              updateCrop(index, newCrop)
+                            }
+                            onZoomChange={(newZoom) =>
+                              setZoom((prevZoom) => {
+                                const updatedZoom = [...prevZoom];
+                                updatedZoom[index] = newZoom;
+                                return updatedZoom;
+                              })
+                            }
+                            onCropComplete={(croppedArea, croppedAreaPixels) =>
+                              onCropComplete(
+                                index,
+                                croppedArea,
+                                croppedAreaPixels
+                              )
+                            }
+                          />
+                        </div>
+                      )}
                     <div className="d-flex justify-content-start mt-3 gap-2">
                       <button
                         type="button"
                         className="btn btn-primary mt-3"
                         onClick={() => handleCropSave(index)}
                       >
-                        Save Cropped Image {num}
+                        Save Cropped Image
                       </button>
                       <button
                         type="button"
@@ -808,77 +953,66 @@ function ProductAdd() {
                         Cancel
                       </button>
                     </div>
-                  </>
-                )}
-              </div>
-            ))}
+                  </div>
 
-            <div className="d-flex justify-content-end">
-              <button
-                type="button"
-                className="btn btn-sm btn-outline-primary mt-3"
-                onClick={addRow}
-              >
-                <FaPlus />
-              </button>
-            </div>
-            {formik.values.additional_details.map((row, index) => (
-              <div key={index} className="row mt-3">
-                <div className="col-lg-6 col-md-6 col-12">
-                  <label>YouTube</label>
-                  <input
-                    className="form-control form-control-sm"
-                    type="text"
-                    name={`additional_details[${index}].video_url`}
-                    value={formik.values.additional_details[index]?.video_url}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.additional_details?.[index]?.video_url &&
-                    formik.errors.additional_details?.[index]?.video_url && (
-                      <div className="text-danger">
-                        {formik.errors.additional_details[index].video_url}
-                      </div>
-                    )}
+                  {/* Video Input */}
+                  <div className="col-md-6 col-12 mb-3">
+                    <label className="form-label">
+                      Video
+                      {field.selectedType === "video" && (
+                        <span className="text-danger">*</span>
+                      )}
+                    </label>
+                    <input
+                      type="text"
+                      className={`form-control ${
+                        formik.touched[`video-${index}`] &&
+                        formik.errors[`video-${index}`]
+                          ? "is-invalid"
+                          : ""
+                      }`}
+                      name={`video-${index}`}
+                      value={formik.values[`video-${index}`]}
+                      disabled={field.selectedType !== "video"} // Disable if image is selected
+                      onChange={formik.handleChange}
+                      onBlur={formik.handleBlur}
+                    />
+                    {formik.touched[`video-${index}`] &&
+                      formik.errors[`video-${index}`] && (
+                        <div className="invalid-feedback">
+                          {formik.errors[`video-${index}`]}
+                        </div>
+                      )}
+                  </div>
+                  {/* Delete Button */}
+                  <div className="text-end">
+                    {mediaFields.length > 1 &&
+                      index > 0 &&
+                      index === mediaFields.length - 1 && (
+                        <button
+                          type="button"
+                          className="btn btn-danger btn-sm"
+                          onClick={() => handleDelete(index)}
+                        >
+                          Delete
+                        </button>
+                      )}
+                  </div>
                 </div>
-                <div className="col-lg-5 col-md-5 col-12">
-                  <label>Order List</label>
-                  <select
-                    className="form-select form-select-sm"
-                    name={`additional_details[${index}].order`}
-                    value={formik.values.additional_details[index]?.order}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  >
-                    <option value="">Select</option>
-                    {[...Array(10)].map((_, i) => (
-                      <option key={i} value={i + 1}>
-                        {i + 1}
-                      </option>
-                    ))}
-                  </select>
-                  {formik.touched.additional_details?.[index]?.order &&
-                    formik.errors.additional_details?.[index]?.order && (
-                      <div className="text-danger">
-                        {formik.errors.additional_details[index].order}
-                      </div>
-                    )}
-                </div>
-                <div
-                  className="col-lg-1 col-md-1 col-12 "
-                  style={{ top: "25px", position: "relative" }}
-                >
+              ))}
+              <div className="text-end mt-3">
+                {mediaFields.length < 7 && (
                   <button
                     type="button"
-                    className="btn btn-sm btn-outline-danger"
-                    onClick={() => removeRow(index)}
-                    disabled={formik.values.additional_details.length === 1}
+                    onClick={handleAddMore}
+                    className="btn btn-success btn-sm"
                   >
-                    <FaTrash />
+                    Add More
                   </button>
-                </div>
+                )}
               </div>
-            ))}
+            </>
+
             <div className="col-12 mb-5">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
@@ -907,8 +1041,7 @@ function ProductAdd() {
                 type="text"
                 rows={5}
                 className={`form-control form-control-sm ${
-                  formik.touched.specifications &&
-                  formik.errors.specifications
+                  formik.touched.specifications && formik.errors.specifications
                     ? "is-invalid"
                     : ""
                 }`}
