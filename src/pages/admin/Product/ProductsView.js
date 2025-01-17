@@ -10,20 +10,121 @@ import { LuCopyCheck } from "react-icons/lu";
 
 function ProductsView() {
   const { id } = useParams();
-  const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [shopStatus, setShopStatus] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+
+  const data = {
+    id: 1,
+    shop_id: 1,
+    deal_type: 1,
+    category_id: 1,
+    brand: "OnePlus",
+    name: "OnePlus 12 12/256",
+    description:
+      "Upgrade to the OnePlus 12 with 12GB RAM 256 ROM for high-speed performance and sleek design! Get premium quality and power at an unbeatable value – limited time offer!",
+    slug: "oneplus_12",
+    original_price: "829.00",
+    discounted_price: "770.00",
+    discount_percentage: "7.10",
+    start_date: "2024-11-22T00:00:00.000Z",
+    end_date: "2024-12-22T00:00:00.000Z",
+    stock: 1,
+    sku: null,
+    active: 1,
+    deleted_at: null,
+    created_at: "2024-11-22T14:06:26.000Z",
+    updated_at: "2024-11-22T14:59:40.000Z",
+    coupon_code: "DEALSLAHV01",
+    specifications: null,
+    varient: "Red, Green, Blue",
+    categoryName: "Mobile Phones",
+    categoryGroupName: "Electronics",
+    categoryGroupId: 1,
+    product_media: [
+      {
+        id: 1,
+        path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+        order: 0,
+        type: "image",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 2,
+        path: "https://www.youtube.com/embed/jNQXAC9IVRw?si=-b4sOUB3e5Bx3cze",
+        order: 1,
+        type: "video",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 3,
+        path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+        order: 2,
+        type: "image",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 4,
+        path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+        order: 3,
+        type: "image",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 5,
+        path: "https://www.youtube.com/embed/PdVZRoLsYm4",
+        order: 4,
+        type: "video",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 6,
+        path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+        order: 5,
+        type: "image",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+      {
+        id: 7,
+        path: "https://www.youtube.com/embed/jNQXAC9IVRw?si=-b4sOUB3e5Bx3cze",
+        order: 1,
+        type: "video",
+        imageable_id: 1,
+        imageable_type: "App\\Models\\Product",
+        created_at: null,
+        updated_at: null,
+      },
+    ],
+  };
 
   const handleActivate = async () => {
     setLoadIndicator(true);
     try {
       const response = await api.post(`admin/deal/${id}/approve`);
       if (response.status === 200) {
-        getData();
+        // getData();
         toast.success("Product Activated Successfully!");
       } else {
         toast.error(response.data.message);
@@ -41,7 +142,7 @@ function ProductsView() {
     try {
       const response = await api.post(`admin/deal/${id}/disapprove`);
       if (response.status === 200) {
-        getData();
+        // getData();
         toast.success("Product DeActivated Successfully!");
         handleClose();
       } else {
@@ -55,31 +156,29 @@ function ProductsView() {
     }
   };
 
-  const getData = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get(`admin/product/${id}`);
-      const { additional_details, ...rest } = response.data.data;
+  // const getData = async () => {
+  //   setLoading(true);
+  //   try {
+  //     const response = await api.get(`admin/product/${id}`);
+  //     const { additional_details, ...rest } = response.data.data;
 
-      const decodedAdditionalDetails = additional_details
-        ? JSON.parse(additional_details)
-        : [];
-      setData({
-        ...rest,
-        additional_details: decodedAdditionalDetails,
-      });
-      setShopStatus(response.data.data.active);
-    } catch (error) {
-      toast.error("Error Fetching Data ", error);
-    }
-    setLoading(false);
-  };
+  //     const decodedAdditionalDetails = additional_details
+  //       ? JSON.parse(additional_details)
+  //       : [];
+  //     setData({
+  //       ...rest,
+  //       additional_details: decodedAdditionalDetails,
+  //     });
+  //     setShopStatus(response.data.data.active);
+  //   } catch (error) {
+  //     toast.error("Error Fetching Data ", error);
+  //   }
+  //   setLoading(false);
+  // };
 
-  useEffect(() => {
-    getData();
-  }, [id]);
-
-  const [isCopied, setIsCopied] = useState(false);
+  // useEffect(() => {
+  //   getData();
+  // }, [id]);
 
   const handleCopy = async () => {
     try {
@@ -127,7 +226,7 @@ function ProductsView() {
                       <span>Back</span>
                     </button>
                   </Link>
-                  {shopStatus == "0" ? (
+                  {shopStatus === "0" ? (
                     <button
                       type="button"
                       onClick={handleActivate}
@@ -276,6 +375,38 @@ function ProductsView() {
               <div className="col-md-6 col-12">
                 <div className="row mb-3">
                   <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Varient</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      :
+                      {data?.varient.split(",").map((variant, index) => (
+                        <div
+                          key={index}
+                          className="badge badge-success badge-outlined mx-1"
+                        >
+                          {variant.trim()}
+                        </div>
+                      ))}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Delivery Days</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data?.delivery_days}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
                     <p className="text-sm">Start Date</p>
                   </div>
                   <div className="col-6">
@@ -297,134 +428,6 @@ function ProductsView() {
                   </div>
                 </div>
               </div>
-              {/* <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      Stock
-                    </p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">: {data.stock}</p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">
-                      SKU
-                    </p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">: {data.sku}</p>
-                  </div>
-                </div>
-              </div> */}
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Image 1</p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">
-                      :{" "}
-                      <img
-                        src={`${ImageURL}${data.image_url1}`}
-                        alt="icon"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Image 2</p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">
-                      :{" "}
-                      <img
-                        src={`${ImageURL}${data.image_url2}`}
-                        alt="icon"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Image 3</p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">
-                      :{" "}
-                      <img
-                        src={`${ImageURL}${data.image_url3}`}
-                        alt="icon"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Image 4</p>
-                  </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">
-                      :{" "}
-                      <img
-                        src={`${ImageURL}${data.image_url4}`}
-                        alt="icon"
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {data?.additional_details &&
-              data.additional_details.length > 0 ? (
-                data.additional_details.map((item, index) => (
-                  <div className="row" key={index}>
-                    <div className="col-md-6 col-12">
-                      <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                          <p className="text-sm">YouTube URL {index + 1}</p>
-                        </div>
-                        <div className="col-6">
-                          <p
-                            style={{ whiteSpace: "nowrap", overflow: "auto" }}
-                            className="text-muted text-sm"
-                          >
-                            : {item?.video_url || ""}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="ps-5 col-md-6 col-12">
-                      <div className="row mb-3">
-                        <div className="col-6 d-flex justify-content-start align-items-center">
-                          <p className="text-sm">Orders {index + 1}</p>
-                        </div>
-                        <div className="col-6">
-                          <p className="text-muted text-sm">
-                            : {item?.order || ""}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <p>No additional details available.</p>
-              )}
               <div className="col-12">
                 <div className="row mb-3">
                   <div className="col-3 d-flex justify-content-start align-items-center">
@@ -447,101 +450,118 @@ function ProductsView() {
                   </div>
                 </div>
               </div>
-            </div>
-            <div className="row p-3">
-              <h4 className="mb-5">Company Information</h4>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Company Name</p>
+              <div className="row p-3">
+                <h4 className="mb-5">Company Information</h4>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Company Name</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">: {data?.shop?.name}</p>
+                    </div>
                   </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">: {data?.shop?.name}</p>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Shop Status</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        :{" "}
+                        {data?.shop?.active === 1 ? (
+                          <>
+                            <span
+                              className="dot"
+                              style={{
+                                backgroundColor: "green",
+                                width: "10px",
+                                height: "10px",
+                                display: "inline-block",
+                                borderRadius: "50%",
+                                marginRight: "3px",
+                              }}
+                            ></span>
+                            Active
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              className="dot"
+                              style={{
+                                backgroundColor: "red",
+                                width: "10px",
+                                height: "10px",
+                                display: "inline-block",
+                                borderRadius: "50%",
+                                marginRight: "3px",
+                              }}
+                            ></span>
+                            Inactive
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Logo</p>
+                    </div>
+                    <div className="col-12">
+                      <p className="text-muted text-sm">
+                        <img
+                          src={
+                            data?.shop?.logo !== null
+                              ? `${ImageURL}${data?.shop?.logo}`
+                              : noImage
+                          }
+                          alt={data?.shop?.name}
+                          style={{ maxWidth: "100px", maxHeight: "100px" }}
+                        />
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Shop Status</p>
+              <div className="row mt-5 p-3">
+                {data.product_media.map((item, index) => (
+                  <div className="col-md-4 col-12 mb-3" key={item.id}>
+                    {item.type === "image" ? (
+                      <>
+                        <p className="text-sm">Thumbnail {index + 1}</p>
+                        <img
+                          src={`${ImageURL}${
+                            item.path.startsWith("/")
+                              ? item.path
+                              : "/" + item.path
+                          }`}
+                          alt={`Media ${index + 1}`}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </>
+                    ) : (
+                      <>
+                        <p className="text-sm">Thumbnail {index + 1}</p>
+                        <iframe
+                          width="100%"
+                          height="90%"
+                          src={item.path}
+                          title={`YouTube Video ${index + 1}`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
+                      </>
+                    )}
                   </div>
-                  <div className="col-6">
-                    <p className="text-muted text-sm">
-                      :{" "}
-                      {data?.shop?.active === 1 ? (
-                        <>
-                          <span
-                            className="dot"
-                            style={{
-                              backgroundColor: "green",
-                              width: "10px",
-                              height: "10px",
-                              display: "inline-block",
-                              borderRadius: "50%",
-                              marginRight: "3px",
-                            }}
-                          ></span>
-                          Active
-                        </>
-                      ) : (
-                        <>
-                          <span
-                            className="dot"
-                            style={{
-                              backgroundColor: "red",
-                              width: "10px",
-                              height: "10px",
-                              display: "inline-block",
-                              borderRadius: "50%",
-                              marginRight: "3px",
-                            }}
-                          ></span>
-                          Inactive
-                        </>
-                      )}
-                    </p>
-                  </div>
-                </div>
+                ))}
               </div>
-              <div className="col-md-6 col-12">
-                <div className="row mb-3">
-                  <div className="col-6 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Logo</p>
-                  </div>
-                  <div className="col-12">
-                    <p className="text-muted text-sm">
-                      <img
-                        src={
-                          data?.shop?.logo !== null
-                            ? `${ImageURL}${data?.shop?.logo}`
-                            : noImage
-                        }
-                        alt={data?.shop?.name}
-                        style={{ maxWidth: "100px", maxHeight: "100px" }}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div>
-              {/* <div className="col-12">
-                <div className="row mb-3">
-                  <div className="col-12 d-flex justify-content-start align-items-center">
-                    <p className="text-sm">Banner</p>
-                  </div>
-                  <div className="col-12">
-                    <p className="text-muted text-sm">
-                      <img
-                        src={
-                          data?.shop?.banner !== null
-                            ? `${ImageURL}${data?.shop?.banner}`
-                            : noImage
-                        }
-                        alt={data?.shop?.name}
-                      />
-                    </p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
