@@ -6,6 +6,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
+import { FaTrash } from "react-icons/fa";
 
 function ProductEdit() {
   const navigate = useNavigate();
@@ -68,6 +69,7 @@ function ProductEdit() {
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
+    delivery_days: Yup.string().required("Delivery Days is required"),
     discounted_price: Yup.number()
       .required("Discounted Price is required")
       .max(
@@ -130,6 +132,8 @@ function ProductEdit() {
       coupon_code: couponCode,
       image: null,
       description: "",
+      variants: [{ id: Date.now(), value: "" }],
+      delivery_days: "",
       specifications: "",
       ...mediaFields.reduce((acc, _, index) => {
         acc[`image-${index}`] = null;
@@ -139,11 +143,17 @@ function ProductEdit() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
+      const formattedVariants = values.variants
+        .map((variant) => variant.value.trim())
+        .filter((value) => value !== "")
+        .map((value) => value.replace(/,\s*$/, ""));
       const formData = new FormData();
       formData.append("shop_id", id);
+      formData.append("_method", "PUT");
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
       formData.append("deal_type", values.deal_type);
+      formData.append("varient", formattedVariants);
       formData.append("brand", values.brand);
       formData.append("original_price", values.original_price);
       formData.append("discounted_price", values.discounted_price);
@@ -154,32 +164,12 @@ function ProductEdit() {
       // formData.append("image-${index}", imageFile);
       formData.append("description", values.description);
       formData.append("specifications", values.specifications);
-      const mediaArray = mediaFields.map((field, index) => {
-        const mediaItem = {
-          type: field.selectedType,
-          order: index + 1,
-        };
-
-        if (field.selectedType === "image") {
-          // For image fields, we'll append the file separately
-          // Just store the order in the media array
-          return mediaItem;
-        } else {
-          // For video fields, include the URL
-          return {
-            ...mediaItem,
-            url: values[`video-${index}`],
-          };
-        }
-      });
-
-      // Append media configuration as JSON
-      formData.append("media_config", JSON.stringify(mediaArray));
-
-      // Append image files separately
       mediaFields.forEach((field, index) => {
         if (field.selectedType === "image" && values[`image-${index}`]) {
-          formData.append(`image-${index}`, values[`image-${index}`]);
+          formData.append(`media[${index + 1}]`, values[`image-${index}`]);
+        }
+        if (field.selectedType === "video" && values[`video-${index}`]) {
+          formData.append(`media_url[${index + 1}]`, values[`video-${index}`]);
         }
       });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
@@ -189,7 +179,7 @@ function ProductEdit() {
       console.log("Form Data:", formData);
       setLoadIndicator(true);
       try {
-        const response = await api.post(`vendor/product`, formData, {
+        const response = await api.post(`vendor/product/133/update`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -224,6 +214,141 @@ function ProductEdit() {
     },
   });
 
+  useEffect(() => {
+    const getData = {
+      success: true,
+      status: 200,
+      data: {
+        id: 1,
+        shop_id: 1,
+        deal_type: 1,
+        category_id: 1,
+        brand: "OnePlus",
+        name: "OnePlus 12 12/256",
+        description:
+          "Upgrade to the OnePlus 12 with 12GB RAM 256 ROM for high-speed performance and sleek design!. Get premium quality and power at an unbeatable value – limited time offer!",
+        slug: "oneplus_12",
+        original_price: "829.00",
+        discounted_price: "770.00",
+        discount_percentage: "7.10",
+        start_date: "2024-11-22T00:00:00.000000Z",
+        end_date: "2024-12-22T00:00:00.000000Z",
+        stock: 1,
+        sku: null,
+        active: 1,
+        deleted_at: null,
+        created_at: "2024-11-22T14:06:26.000000Z",
+        updated_at: "2024-11-22T14:59:40.000000Z",
+        coupon_code: "DEALSLAHV01",
+        specifications: null,
+        varient: null,
+        categoryName: "Mobile Phones",
+        categoryGroupName: "Electronics",
+        categoryGroupId: 1,
+        product_media: [
+          {
+            id: 1,
+            path: "assets/products/images/1/oneplus_12/oneplus1.webp",
+            order: 0,
+            type: "image",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+          {
+            id: 2,
+            path: "https://youtu.be/eCXya4fqJ_E?si=NWQ1rwnaKcu2vQ6L",
+            order: 1,
+            type: "video",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+          {
+            id: 3,
+            path: "assets/products/images/1/oneplus_12/oneplus2.webp",
+            order: 2,
+            type: "image",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+          {
+            id: 4,
+            path: "assets/products/images/1/oneplus_12/oneplus3.webp",
+            order: 3,
+            type: "image",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+          {
+            id: 5,
+            path: "https://youtu.be/PdVZRoLsYm4?si=cDkGJOqYpPBXsKU4",
+            order: 4,
+            type: "video",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+          {
+            id: 6,
+            path: "assets/products/images/1/oneplus_12/oneplus4.webp",
+            order: 5,
+            type: "image",
+            imageable_id: 1,
+            imageable_type: "App\\Models\\Product",
+            created_at: null,
+            updated_at: null,
+          },
+        ],
+      },
+      message: "Product Retrieved Successfully!",
+    };
+    const mediaFields = getData.data.product_media.reduce(
+      (acc, mediaItem, index) => {
+        if (mediaItem.type === "image") {
+          acc[`image-${index}`] = mediaItem.path || null;
+        } else if (mediaItem.type === "video") {
+          acc[`video-${index}`] = mediaItem.path || "";
+        }
+        return acc;
+      },
+      {}
+    );
+    formik.setValues({
+      category_id: getData.data.category_id || "",
+      name: getData.data.name || "",
+      shop_id: getData.data.categoryGroupId || "",
+      deal_type: getData.data.deal_type || "",
+      brand: getData.data.brand || "",
+      original_price: getData.data.original_price || "",
+      discounted_price: getData.data.discounted_price || "",
+      discounted_percentage: getData.data.discount_percentage || "",
+      start_date: getData.data.start_date.slice(0, 10) || "",
+      end_date: getData.data.end_date.slice(0, 10) || "",
+      coupon_code: getData.data.coupon_code || "",
+      description: getData.data.description || "",
+      variants: getData.data.varient
+        ? getData.data.varient
+            .split(",")
+            .map((value) => ({ value: value.trim() }))
+        : [{ id: Date.now(), value: "" }],
+      specifications: getData.data.specifications || "",
+      mediaFields: getData.data.product_media.map((mediaItem, index) => ({
+        selectedType: mediaItem.type,
+        [`image-${index}`]: mediaItem.type === "image" ? mediaItem.path : null,
+        [`video-${index}`]: mediaItem.type === "video" ? mediaItem.path : "",
+      })),
+    });
+    fetchCategory(getData.data.categoryGroupId);
+  }, []);
+
   const handlePlaceOrder = (e) => {
     e.preventDefault();
 
@@ -233,6 +358,7 @@ function ProductEdit() {
         name: true,
         category_id: true,
         deal_type: true,
+        delivery_days: true,
         brand: true,
         original_price: true,
         discounted_price: true,
@@ -257,6 +383,7 @@ function ProductEdit() {
           name: "Name",
           category_id: "Category",
           deal_type: "Deal Type",
+          delivery_days: "Delivery Days",
           brand: "Brand",
           original_price: "Original Price",
           discounted_price: "Discounted Price",
@@ -264,9 +391,9 @@ function ProductEdit() {
           start_date: "Start Date",
           end_date: "End Date",
           coupon_code: "Coupon Code",
-          image: "Image",
+          image: "Main Image",
           description: "Description",
-          specifications: "Specification",
+          specifications: "Specifications",
           ...mediaFields.reduce((acc, _, index) => {
             acc[`image-${index}`] = `Image ${index + 1}`;
             acc[`video-${index}`] = `Youtube ${index + 1}`;
@@ -275,9 +402,10 @@ function ProductEdit() {
         };
 
         const missedFields = Object.keys(formErrors)
-          .map((key) => fieldLabels[key])
+          .map((key) => fieldLabels[key] || key) // Fallback to key if no label found
           .join(", ");
 
+        // Ensure toast is displayed
         toast.error(
           `Please fill in the following required fields: ${missedFields}`,
           {
@@ -292,8 +420,22 @@ function ProductEdit() {
         );
         return;
       }
+
+      // Proceed to submit the form
+      formik.handleSubmit();
     });
-    formik.handleSubmit();
+  };
+
+  const addVariant = () => {
+    const newVariant = { id: Date.now(), value: "" };
+    formik.setFieldValue("variants", [...formik.values.variants, newVariant]);
+  };
+
+  const removeVariant = (id) => {
+    const updatedVariants = formik.values.variants.filter(
+      (variant) => variant.id !== id
+    );
+    formik.setFieldValue("variants", updatedVariants);
   };
 
   useEffect(() => {
@@ -352,35 +494,35 @@ function ProductEdit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_price, formik.values.original_price]);
 
-  const getData = async () => {
-    try {
-      const response = await api.get(`vendor/product/${id}/get`);
-      const {
-        image_url1,
-        image_url2,
-        image_url3,
-        image_url4,
-        coupon_code,
-        additional_details,
-        ...rest
-      } = response.data.data;
-      setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
-      const parsedAdditionalDetails = additional_details
-        ? JSON.parse(additional_details)
-        : [];
+  // const getData = async () => {
+  //   try {
+  //     const response = await api.get(`vendor/product/${id}/get`);
+  //     const {
+  //       image_url1,
+  //       image_url2,
+  //       image_url3,
+  //       image_url4,
+  //       coupon_code,
+  //       additional_details,
+  //       ...rest
+  //     } = response.data.data;
+  //     setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
+  //     const parsedAdditionalDetails = additional_details
+  //       ? JSON.parse(additional_details)
+  //       : [];
 
-      formik.setValues({
-        ...rest,
-      });
-      setCouponCode(coupon_code);
-    } catch (error) {
-      toast.error("Error Fetching Data", error.message);
-    }
-  };
+  //     formik.setValues({
+  //       ...rest,
+  //     });
+  //     setCouponCode(coupon_code);
+  //   } catch (error) {
+  //     toast.error("Error Fetching Data", error.message);
+  //   }
+  // };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
 
   const updateCrop = (index, newCrop) => {
     setCrop((prevCrop) => {
@@ -607,7 +749,7 @@ function ProductEdit() {
   };
 
   const handleTypeChange = (index, type) => {
-    const updatedFields = [...mediaFields];
+    const updatedFields = [...formik.values.mediaFields];
     updatedFields[index].selectedType = type;
     setMediaFields(updatedFields);
 
@@ -716,6 +858,37 @@ function ProductEdit() {
               {formik.touched.deal_type && formik.errors.deal_type && (
                 <div className="invalid-feedback">
                   {formik.errors.deal_type}
+                </div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Delivery Days<span className="text-danger">*</span>
+              </label>
+              <select
+                type="text"
+                className={`form-select form-select-sm ${
+                  formik.touched.delivery_days && formik.errors.delivery_days
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("delivery_days")}
+              >
+                <option></option>
+                <option value="1">1 Days</option>
+                <option value="2">2 Days</option>
+                <option value="3">3 Days</option>
+                <option value="4">4 Days</option>
+                <option value="5">5 Days</option>
+                <option value="6">6 Days</option>
+                <option value="7">7 Days</option>
+                <option value="8">8 Days</option>
+                <option value="9">9 Days</option>
+                <option value="10">10 Days</option>
+              </select>
+              {formik.touched.delivery_days && formik.errors.delivery_days && (
+                <div className="invalid-feedback">
+                  {formik.errors.delivery_days}
                 </div>
               )}
             </div>
@@ -834,6 +1007,49 @@ function ProductEdit() {
                   </div>
                 )}
             </div>
+            <div className="col-md-12 mb-3">
+              <label className="form-label">Variants</label>
+              <div className="row">
+                {formik.values.variants.map((variant, index) => (
+                  <div className="col-md-6 col-12 mb-2" key={variant.id}>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control form-control-sm"
+                        name={`variants[${index}].value`}
+                        value={variant.value}
+                        onChange={(e) => {
+                          const valueWithoutComma = e.target.value.replace(
+                            /,/g,
+                            ""
+                          );
+                          formik.setFieldValue(
+                            `variants[${index}].value`,
+                            valueWithoutComma
+                          );
+                        }}
+                        placeholder={`Variant ${index + 1}`}
+                      />
+
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => removeVariant(variant.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-button"
+                onClick={addVariant}
+              >
+                Add Variant
+              </button>
+            </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Start Date <span className="text-danger">*</span>
@@ -871,7 +1087,7 @@ function ProductEdit() {
               )}
             </div>
             <>
-              {mediaFields.map((field, index) => (
+              {formik.values.mediaFields?.map((field, index) => (
                 <div key={index} className="row">
                   <p>Thumbnail {index + 1}</p>
                   <div className="col-12 d-flex align-items-center mb-3">
@@ -938,6 +1154,9 @@ function ProductEdit() {
                           {formik.errors[`image-${index}`]}
                         </div>
                       )}
+                    {field.selectedType === "image" && (
+                      <img src={`image-${index}`} alt="noImage" className="" />
+                    )}
                     {cropperStates[index] &&
                       imageSrc[index] &&
                       field.selectedType === "image" && (
@@ -1027,6 +1246,7 @@ function ProductEdit() {
                   </div>
                 </div>
               ))}
+
               <div className="text-end mt-3">
                 {mediaFields.length < 7 && (
                   <button
