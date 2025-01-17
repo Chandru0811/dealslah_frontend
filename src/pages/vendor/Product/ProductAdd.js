@@ -6,6 +6,7 @@ import api from "../../../config/URL";
 import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
+import { FaTrash } from "react-icons/fa";
 
 function ProductAdd() {
   const navigate = useNavigate();
@@ -65,6 +66,7 @@ function ProductAdd() {
       .max(25, "Name must be 25 characters or less")
       .required("Name is required"),
     deal_type: Yup.string().required("Deal Type is required"),
+    delivery_days: Yup.string().required("Delivery Days is required"),
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
@@ -101,20 +103,6 @@ function ProductAdd() {
         "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
-    // ...mediaFields.reduce((acc, field, index) => {
-    //   if (index === 0 || field.selectedType === "image") {
-    //     acc[`image-${index}`] =
-    //       field.selectedType === "image"
-    //         ? imageValidation
-    //         : Yup.mixed().nullable();
-    //   }
-    //   if (index !== 0 && field.selectedType === "video") {
-    //     acc[`video-${index}`] = Yup.string()
-    //       .url("Please enter a valid video URL")
-    //       .required("Video URL is required");
-    //   }
-    //   return acc;
-    // }, {}),
     ...mediaFields.reduce((acc, field, index) => {
       if (field.selectedType === "image") {
         acc[`image-${index}`] = Yup.mixed().required(
@@ -145,6 +133,8 @@ function ProductAdd() {
       image: null,
       description: "",
       specifications: "",
+      variants: [{ id: Date.now(), value: "" }],
+      delivery_days: "",
       ...mediaFields.reduce((acc, _, index) => {
         acc[`image-${index}`] = null;
         acc[`video-${index}`] = "";
@@ -153,7 +143,12 @@ function ProductAdd() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("values",values)
+      console.log("values", values);
+      const formattedVariants = values.variants
+        .map((variant) => variant.value.trim())
+        .filter((value) => value !== "")
+        .map((value) => value.replace(/,\s*$/, ""));
+
       const formData = new FormData();
       formData.append("shop_id", id);
       formData.append("name", values.name);
@@ -166,35 +161,17 @@ function ProductAdd() {
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
       formData.append("coupon_code", values.coupon_code);
+      formData.append("varient", formattedVariants);
       // formData.append("image-${index}", imageFile);
       formData.append("description", values.description);
+      formData.append("delivery_days", values.delivery_days);
       formData.append("specifications", values.specifications);
-      const mediaArray = mediaFields.map((field, index) => {
-        const mediaItem = {
-          type: field.selectedType,
-          order: index + 1,
-        };
-
-        if (field.selectedType === "image") {
-          // For image fields, we'll append the file separately
-          // Just store the order in the media array
-          return mediaItem;
-        } else {
-          // For video fields, include the URL
-          return {
-            ...mediaItem,
-            url: values[`video-${index}`],
-          };
-        }
-      });
-
-      // Append media configuration as JSON
-      formData.append("media_config", JSON.stringify(mediaArray));
-
-      // Append image files separately
       mediaFields.forEach((field, index) => {
         if (field.selectedType === "image" && values[`image-${index}`]) {
-          formData.append(`image-${index}`, values[`image-${index}`]);
+          formData.append(`media[${index + 1}]`, values[`image-${index}`]);
+        }
+        if (field.selectedType === "video" && values[`video-${index}`]) {
+          formData.append(`media_url[${index + 1}]`, values[`video-${index}`]);
         }
       });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
@@ -248,6 +225,7 @@ function ProductAdd() {
         name: true,
         category_id: true,
         deal_type: true,
+        delivery_days: true,
         brand: true,
         original_price: true,
         discounted_price: true,
@@ -272,6 +250,7 @@ function ProductAdd() {
           name: "Name",
           category_id: "Category",
           deal_type: "Deal Type",
+          delivery_days: "Delivery Days",
           brand: "Brand",
           original_price: "Original Price",
           discounted_price: "Discounted Price",
@@ -312,6 +291,17 @@ function ProductAdd() {
       // Proceed to submit the form
       formik.handleSubmit();
     });
+  };
+  const addVariant = () => {
+    const newVariant = { id: Date.now(), value: "" };
+    formik.setFieldValue("variants", [...formik.values.variants, newVariant]);
+  };
+
+  const removeVariant = (id) => {
+    const updatedVariants = formik.values.variants.filter(
+      (variant) => variant.id !== id
+    );
+    formik.setFieldValue("variants", updatedVariants);
   };
 
   useEffect(() => {
@@ -708,18 +698,34 @@ function ProductAdd() {
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">Brand</label>
-              <input
+              <label className="form-label">
+                Delivery Days<span className="text-danger">*</span>
+              </label>
+              <select
                 type="text"
-                className={`form-control form-control-sm ${
-                  formik.touched.brand && formik.errors.brand
+                className={`form-select form-select-sm ${
+                  formik.touched.delivery_days && formik.errors.delivery_days
                     ? "is-invalid"
                     : ""
                 }`}
-                {...formik.getFieldProps("brand")}
-              />
-              {formik.touched.brand && formik.errors.brand && (
-                <div className="invalid-feedback">{formik.errors.brand}</div>
+                {...formik.getFieldProps("delivery_days")}
+              >
+                <option></option>
+                <option value="1">1 Days</option>
+                <option value="2">2 Days</option>
+                <option value="3">3 Days</option>
+                <option value="4">4 Days</option>
+                <option value="5">5 Days</option>
+                <option value="6">6 Days</option>
+                <option value="7">7 Days</option>
+                <option value="8">8 Days</option>
+                <option value="9">9 Days</option>
+                <option value="10">10 Days</option>
+              </select>
+              {formik.touched.delivery_days && formik.errors.delivery_days && (
+                <div className="invalid-feedback">
+                  {formik.errors.delivery_days}
+                </div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
@@ -822,6 +828,49 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
+            <div className="col-md-12 mb-3">
+              <label className="form-label">Variants</label>
+              <div className="row">
+                {formik.values.variants.map((variant, index) => (
+                  <div className="col-md-6 col-12 mb-2" key={variant.id}>
+                    <div className="input-group">
+                      <input
+                        type="text"
+                        className="form-control form-control-sm"
+                        name={`variants[${index}].value`}
+                        value={variant.value}
+                        onChange={(e) => {
+                          const valueWithoutComma = e.target.value.replace(
+                            /,/g,
+                            ""
+                          );
+                          formik.setFieldValue(
+                            `variants[${index}].value`,
+                            valueWithoutComma
+                          );
+                        }}
+                        placeholder={`Variant ${index + 1}`}
+                      />
+
+                      <button
+                        type="button"
+                        className="btn btn-danger btn-sm"
+                        onClick={() => removeVariant(variant.id)}
+                      >
+                        <FaTrash />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <button
+                type="button"
+                className="btn btn-sm btn-button"
+                onClick={addVariant}
+              >
+                Add Variant
+              </button>
+            </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Start Date <span className="text-danger">*</span>
@@ -856,6 +905,21 @@ function ProductAdd() {
               />
               {formik.touched.end_date && formik.errors.end_date && (
                 <div className="invalid-feedback">{formik.errors.end_date}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">Brand</label>
+              <input
+                type="text"
+                className={`form-control form-control-sm ${
+                  formik.touched.brand && formik.errors.brand
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("brand")}
+              />
+              {formik.touched.brand && formik.errors.brand && (
+                <div className="invalid-feedback">{formik.errors.brand}</div>
               )}
             </div>
             <>
@@ -974,7 +1038,7 @@ function ProductAdd() {
                   </div>
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
-                    Youtube
+                      Youtube
                       {field.selectedType === "video" && (
                         <span className="text-danger">*</span>
                       )}
@@ -1027,7 +1091,6 @@ function ProductAdd() {
                 )}
               </div>
             </>
-
             <div className="col-12 mb-5">
               <label className="form-label">
                 Description<span className="text-danger">*</span>
