@@ -3,13 +3,15 @@ import "datatables.net-dt";
 import "datatables.net-responsive-dt";
 import $ from "jquery";
 import { Link } from "react-router-dom";
+// import DeleteModel from "../../../components/admin/DeleteModel";
 import api from "../../../config/URL";
+import ImageURL from "../../../config/ImageURL";
 
 const Orders = () => {
+  const id = localStorage.getItem("shop_id");
   const tableRef = useRef(null);
   const [datas, setDatas] = useState([]);
   const [loading, setLoading] = useState(false);
-  const id = localStorage.getItem("shop_id");
 
   const initializeDataTable = () => {
     if ($.fn.DataTable.isDataTable(tableRef.current)) {
@@ -39,7 +41,7 @@ const Orders = () => {
     destroyDataTable();
     setLoading(true);
     try {
-      const response = await api.get(`vendor/orders/${id}`);
+      const response = await api.get(`/vendor/orders/${id}`);
       setDatas(response.data.data);
     } catch (error) {
       console.error("Error refreshing data:", error);
@@ -52,7 +54,7 @@ const Orders = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await api.get(`vendor/orders/${id}`);
+        const response = await api.get(`/vendor/orders/${id}`);
         setDatas(response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -124,19 +126,7 @@ const Orders = () => {
                 {datas?.map((data, index) => (
                   <tr key={data.id}>
                     <td className="text-start align-middle">{index + 1}</td>
-                    <td className="text-start">
-                      {data.order_number} &nbsp;
-                      {data.approved !== 1 ? (
-                        <span
-                          class="badge text-bg-secondary"
-                          style={{ backgroundColor: "#ff0060" }}
-                        >
-                          New
-                        </span>
-                      ) : (
-                        ""
-                      )}
-                    </td>
+                    <td className="text-start">{data.order_number}</td>
                     <td className="align-middle text-start">
                       {data?.customer?.name}
                     </td>
@@ -145,11 +135,17 @@ const Orders = () => {
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false
+                        useGrouping: false,
                       }).format(parseFloat(data.total))}
                     </td>
                     <td className="align-middle text-start">
-                      {data.items?.[0]?.deal_name}
+                      <p>
+                        {`${data.items?.[0]?.product?.name || ""}${
+                          data.items?.[1]?.product?.name
+                            ? `, ${data.items?.[1]?.product?.name}`
+                            : ""
+                        }`}
+                      </p>
                     </td>
                     <td className="align-middle text-center">
                       <Link to={`/order/view/${data.id}`}>

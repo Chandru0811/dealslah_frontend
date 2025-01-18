@@ -9,6 +9,7 @@ function OrderView() {
   const { id } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log("first:", data.address);
 
   const getData = async () => {
     setLoading(true);
@@ -44,27 +45,28 @@ function OrderView() {
               </p>
               &nbsp;
               <span
-                className={`badge_warning text-capitalize ${data?.payment_status === "1"
-                  ? "badge_warning"
-                  : "badge_warning"
-                  }`}
+                className={`badge-warning text-capitalize ${
+                  data?.payment_status === "1"
+                    ? "badge_warning"
+                    : "badge_warning"
+                }`}
               >
                 {data?.payment_status === "1"
                   ? "Unpaid"
                   : data?.payment_status === "2"
-                    ? "Pending"
-                    : data?.payment_status === "3"
-                      ? "Paid"
-                      : data?.payment_status === "4"
-                        ? "Refund Initiated"
-                        : data?.payment_status === "5"
-                          ? "Refunded"
-                          : data?.payment_status === "6"
-                            ? "Refund Error"
-                            : "Unknown Status"}
+                  ? "Pending"
+                  : data?.payment_status === "3"
+                  ? "Paid"
+                  : data?.payment_status === "4"
+                  ? "Refund Initiated"
+                  : data?.payment_status === "5"
+                  ? "Refunded"
+                  : data?.payment_status === "6"
+                  ? "Refund Error"
+                  : "Unknown Status"}
               </span>
               &nbsp;&nbsp;
-              <span
+              {/* <span
                 className={
                   data?.order_type === "service"
                     ? "badge_default text-capitalize"
@@ -72,7 +74,7 @@ function OrderView() {
                 }
               >
                 {data?.order_type ?? "N/A"}
-              </span>
+              </span> */}
             </div>
 
             <Link to="/order">
@@ -93,18 +95,18 @@ function OrderView() {
                         {data?.status === "1"
                           ? "Created"
                           : data?.status === "2"
-                            ? "Payment Error"
-                            : data?.status === "3"
-                              ? "Confirmed"
-                              : data?.status === "4"
-                                ? "Awaiting Delivery"
-                                : data?.status === "5"
-                                  ? "Delivered"
-                                  : data?.status === "6"
-                                    ? "Returned"
-                                    : data?.status === "7"
-                                      ? "Cancelled"
-                                      : "Unknown Status"}
+                          ? "Payment Error"
+                          : data?.status === "3"
+                          ? "Confirmed"
+                          : data?.status === "4"
+                          ? "Awaiting Delivery"
+                          : data?.status === "5"
+                          ? "Delivered"
+                          : data?.status === "6"
+                          ? "Returned"
+                          : data?.status === "7"
+                          ? "Cancelled"
+                          : "Unknown Status"}
                       </span>
                       &nbsp;
                       <span className="badge_payment">
@@ -129,43 +131,46 @@ function OrderView() {
                         {" "}
                         {data?.created_at
                           ? new Date(data.created_at).toLocaleString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                          })
+                              hour: "2-digit",
+                              minute: "2-digit",
+                              hour12: true,
+                            })
                           : ""}
                       </span>
                     </span>
                   </div>
                 </div>
                 <div className="card-body m-0 p-4">
-                  {data.items?.map((item, index) =>
-                    item ? (
+                  {data.items?.map((items, index) =>
+                    items ? (
                       <div key={index} className="row align-items-center mb-3">
                         <div className="col-md-3">
                           <img
                             src={
-                              item?.product?.image_url1
-                                ? `${ImageURL}${item?.product?.image_url1}`
+                              items?.product?.product_media[0]?.type === "image"
+                                ? `${ImageURL}${items.product.product_media[0].path}`
                                 : noImage
                             }
-                            alt={item?.deal_name}
+                            alt={items?.product?.name || "Product Image"}
                             style={{ width: "100%" }}
                           />
                         </div>
                         <div className="col">
                           <h3 className="text-muted text-capitalize">
-                            {item?.deal_name}
+                            {items?.product.name}
                           </h3>
-                          <p>{item?.deal_description}</p>
+                          <p>
+                            {items?.product?.description?.length > 200
+                              ? `${items.product.description.slice(0, 200)}...`
+                              : items?.product?.description}
+                          </p>
                           <p>
                             <del>
                               $
                               {new Intl.NumberFormat("en-IN", {
                                 maximumFractionDigits: 0,
-                                useGrouping: false
                               }).format(
-                                parseFloat(item?.deal_originalprice)
+                                parseFloat(items?.product.original_price)
                               )}
                             </del>
                             &nbsp;&nbsp;
@@ -173,19 +178,31 @@ function OrderView() {
                               $
                               {new Intl.NumberFormat("en-IN", {
                                 maximumFractionDigits: 0,
-                                useGrouping: false
                               }).format(
-                                parseFloat(item?.deal_price)
+                                parseFloat(items?.product.discounted_price)
                               )}
                             </span>
                             &nbsp;&nbsp;
                             <span className="badge_danger">
                               {parseFloat(
-                                item?.discount_percentage
+                                items?.product.discount_percentage
                               ).toFixed(0)}
                               % saved
                             </span>
                           </p>
+                          {/* <p>
+                            Name :{" "}
+                            {data?.items?.shop?.name ?? ""}
+                          </p>
+                          <p>
+                            Email :{" "}
+                            {data?.address?.email ?? "No Email provided"}
+                          </p>
+                          <p>
+                            Phone :{" "}
+                            {data?.address?.mobile ??
+                              "No phone number provided"}
+                          </p> */}
                         </div>
                       </div>
                     ) : (
@@ -207,15 +224,15 @@ function OrderView() {
                             Service Time:{" "}
                             {data?.service_time
                               ? (() => {
-                                const [hours, minutes] = data.service_time
-                                  .split(":")
-                                  .map(Number);
-                                const period = hours >= 12 ? "PM" : "AM";
-                                const adjustedHours = hours % 12 || 12;
-                                return `${adjustedHours}:${minutes
-                                  .toString()
-                                  .padStart(2, "0")} ${period}`;
-                              })()
+                                  const [hours, minutes] = data.service_time
+                                    .split(":")
+                                    .map(Number);
+                                  const period = hours >= 12 ? "PM" : "AM";
+                                  const adjustedHours = hours % 12 || 12;
+                                  return `${adjustedHours}:${minutes
+                                    .toString()
+                                    .padStart(2, "0")} ${period}`;
+                                })()
                               : " "}
                           </p>
                         </div>
@@ -270,7 +287,7 @@ function OrderView() {
                             <p>Address</p>
                           </div>
                           <div className="col-md-9">
-                            <p>: {data.shop.street ?? "N/A"}</p>
+                            <p>: {data.shop.address ?? "N/A"}</p>
                           </div>
                         </div>
                       </div>
@@ -289,7 +306,7 @@ function OrderView() {
                     <span
                       className={
                         (data.payment_type?.replace(/_/g, " ") ?? "Pending") ===
-                          "online payment"
+                        "online payment"
                           ? "badge_default text-capitalize"
                           : "badge_payment text-capitalize"
                       }
@@ -301,16 +318,16 @@ function OrderView() {
                       {data?.payment_status === "1"
                         ? "Unpaid"
                         : data?.payment_status === "2"
-                          ? "Pending"
-                          : data?.payment_status === "3"
-                            ? "Paid"
-                            : data?.payment_status === "4"
-                              ? "Refund Initiated"
-                              : data?.payment_status === "5"
-                                ? "Refunded"
-                                : data?.payment_status === "6"
-                                  ? "Refund Error"
-                                  : "Unknown Status"}
+                        ? "Pending"
+                        : data?.payment_status === "3"
+                        ? "Paid"
+                        : data?.payment_status === "4"
+                        ? "Refund Initiated"
+                        : data?.payment_status === "5"
+                        ? "Refunded"
+                        : data?.payment_status === "6"
+                        ? "Refund Error"
+                        : "Unknown Status"}
                     </span>
                   </p>
                 </div>
@@ -329,11 +346,10 @@ function OrderView() {
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false
+                        useGrouping: false,
                       }).format(
-                        parseFloat(
-                          data?.items?.[0]?.deal_originalprice || 0
-                        ) * parseFloat(data?.quantity || 0)
+                        parseFloat(data?.items?.[0]?.deal_originalprice || 0) *
+                          parseFloat(data?.quantity || 0)
                       )}
                     </span>
                   </div>
@@ -351,13 +367,8 @@ function OrderView() {
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false
-                      }).format(
-                        parseFloat(
-                          (data?.items?.[0]?.deal_originalprice || 0) -
-                          (data?.items?.[0]?.deal_price || 0)
-                        ) * parseFloat(data?.quantity || 0)
-                      )}
+                        useGrouping: false,
+                      }).format(parseFloat(data.discount))}
                     </span>
                   </div>
 
@@ -376,7 +387,7 @@ function OrderView() {
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false
+                        useGrouping: false,
                       }).format(parseFloat(data.total))}
                     </span>
                   </div>
@@ -386,15 +397,14 @@ function OrderView() {
 
             {/* Right Column: Notes, Customer Info, Contact, and Address */}
             <div className="col-md-4">
-              {/* Notes */}
-              <div className="card mb-2">
+              {/* <div className="card mb-2">
                 <div className="card-header m-0 p-2">
                   <p className="mb-0">Notes</p>
                 </div>
                 <div className="card-body  m-0 p-4">
                   <p>{data.notes ?? "No notes available"}</p>
                 </div>
-              </div>
+              </div> */}
 
               {/* Customers */}
               <div className="card mb-2">
@@ -414,10 +424,18 @@ function OrderView() {
                 </div>
                 <div className="card-body  m-0 p-4">
                   <p>
-                    Name : {data.first_name ? `${data.first_name} ${data.last_name || ''}` : "N/A"}
+                    Name :{" "}
+                    {data?.address?.first_name
+                      ? `${data?.address?.first_name} ${
+                          data?.address?.last_name || ""
+                        }`
+                      : "N/A"}
                   </p>
-                  <p>Email : {data.email ?? "No Email provided"}</p>
-                  <p>Phone : {data?.mobile ?? "No phone number provided"}</p>
+                  <p>Email : {data?.address?.email ?? "No Email provided"}</p>
+                  <p>
+                    Phone :{" "}
+                    {data?.address?.mobile ?? "No phone number provided"}
+                  </p>
                 </div>
               </div>
 
@@ -427,7 +445,7 @@ function OrderView() {
                   <p className="mb-0">Address</p>
                 </div>
                 <div className="card-body m-0 p-4">
-                  {data.delivery_address ? (
+                  {/* {data.delivery_address ? (
                     (() => {
                       try {
                         const deliveryAddress = JSON.parse(
@@ -450,7 +468,11 @@ function OrderView() {
                     })()
                   ) : (
                     <p>No address found</p>
-                  )}
+                  )} */}
+                  <p>
+                    {data?.address?.unit ? `${data.address.unit}, ` : ""}
+                    {data?.address?.address}, {data?.address?.postalcode}.
+                  </p>
                 </div>
               </div>
             </div>

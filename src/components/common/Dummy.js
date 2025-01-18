@@ -1,892 +1,464 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useFormik } from "formik";
-import * as Yup from "yup";
-import { Button, Modal } from "react-bootstrap";
-import { PiPlusSquareFill } from "react-icons/pi";
-import api from "../../../config/URL";
+import { Link, useParams } from "react-router-dom";
+import noImage from "../../../assets/noimage.png";
 import toast from "react-hot-toast";
-import { FiAlertTriangle } from "react-icons/fi";
-import Cropper from "react-easy-crop";
+import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
 
-function ProductAdd() {
-  const [loadIndicator, setLoadIndicator] = useState(false);
+function OrderView() {
+  const { id } = useParams();
+  const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [showModal, setShowModal] = useState(false);
-  const [allCategorgroup, setAllCategorgroup] = useState([]);
-  const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
-  const [images, setImages] = useState([null, null, null, null]);
-  const [croppedAreas, setCroppedAreas] = useState([null, null, null, null]);
-  const [crops, setCrops] = useState([
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-    { x: 0, y: 0 },
-  ]);
-  const [zooms, setZooms] = useState([1, 1, 1, 1]);
-  const [showCropper, setShowCropper] = useState([false, false, false, false]);
-  const [category, setCategory] = useState([]);
-  const shop_id = localStorage.getItem("shop_id");
-  const { id } = useParams();
-  const navigate = useNavigate();
-
-  const SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/png",
-    "image/svg+xml",
-    "image/webp",
-  ];
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
-  const imageValidation = Yup.mixed()
-    .nullable()
-    .test("fileFormat", "Unsupported format", (value) => {
-      return !value || (value && SUPPORTED_FORMATS.includes(value.type));
-    });
-  const validationSchema = Yup.object({
-    categoryGroupId: Yup.string().required("Shop Id is required"),
-    name: Yup.string()
-      .max(25, "Name must be 25 characters or less")
-      .required("Name is required"),
-    category_id: Yup.string().required("Category Id is required"),
-    // brand: Yup.string().required("Brand is required"),
-    original_price: Yup.number()
-      .required("Original Price is required")
-      .min(1, "Original Price must be greater than zero"),
-    discount_percentage: Yup.number()
-      .required("Discount is required")
-      .max(100, "Discount must be less than 100"),
-    discounted_price: Yup.number()
-      .required("Discounted Price is required")
-      .max(
-        Yup.ref("original_price"),
-        "The Discounted Price must be same or below the Original Price."
-      ),
-    // start_date: Yup.date().required("Start Date is required").nullable(),
-    // end_date: Yup.date()
-    //   .required("End Date is required")
-    //   .min(Yup.ref("start_date"), "End Date cannot be before Start Date")
-    //   .nullable(),
-    // stock: Yup.number()
-    //   .required("Stock is required")
-    //   .min(0, "Stock cannot be negative"),
-    // sku: Yup.string().required("SKU is required"),
-    image_url1: imageValidation,
-    image_url2: imageValidation,
-    image_url3: imageValidation,
-    image_url4: imageValidation,
-    description: Yup.string()
-      .required("Description is required")
-      .min(10, "Description must be at least 10 characters long"),
-  });
-  // const validationSchema1 = Yup.object({
-  //   catagory_group_id: Yup.string().required("Category Group is required"),
-  //   name: Yup.string().required("Name is required"),
-  //   icon: Yup.string().required("Imagei s required"),
-  //   description: Yup.string().required("Description is required"),
-  // });
-
-  const formik = useFormik({
-    initialValues: {
-      categoryGroupId: "",
-      name: "",
-      category_id: "",
-      deal_type: "",
-      brand: "",
-      original_price: "",
-      discounted_price: "",
-      discount_percentage: "",
-      start_date: "",
-      end_date: "",
-      stock: "",
-      sku: "",
-      image_url1: null,
-      image_url2: null,
-      image_url3: null,
-      image_url4: null,
-      description: "",
-    },
-    validationSchema: validationSchema,
-    onSubmit: async (values) => {
-      const formData = new FormData();
-      formData.append("_method", "PUT");
-      formData.append("shop_id", shop_id);
-      formData.append("name", values.name);
-      formData.append("category_id", values.category_id);
-      formData.append("deal_type", values.deal_type);
-      formData.append("brand", values.brand);
-      formData.append("original_price", values.original_price);
-      formData.append("discounted_price", values.discounted_price);
-      formData.append("discount_percentage", values.discount_percentage);
-      formData.append("start_date", values.start_date);
-      formData.append("end_date", values.end_date);
-      formData.append("stock", values.stock);
-      formData.append("sku", values.sku);
-      if (values.image_url1) {
-        formData.append("image1", values.image_url1);
-      }
-      if (values.image_url2) {
-        formData.append("image2", values.image_url2);
-      }
-      if (values.image_url3) {
-        formData.append("image3", values.image_url3);
-      }
-      if (values.image_url4) {
-        formData.append("image4", values.image_url4);
-      }
-      formData.append("description", values.description);
-
-      const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-      const finalSlug = `${slug}_${shop_id}`;
-      formData.append("slug", finalSlug);
-
-      console.log("Form Data:", formData);
-      setLoadIndicator(true);
-      try {
-        const response = await api.post(
-          `vendor/product/${id}/update`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
-        console.log("Response", response);
-        if (response.status === 200) {
-          toast.success(response.data.message);
-          setShowModal(false);
-          navigate("/product");
-        } else {
-          toast.error(response.data.message);
-        }
-      } catch (error) {
-        if (error.response && error.response.status === 422) {
-          const errors = error.response.data.errors;
-          if (errors) {
-            Object.keys(errors).forEach((key) => {
-              errors[key].forEach((errorMsg) => {
-                toast(errorMsg, {
-                  icon: <FiAlertTriangle className="text-warning" />,
-                });
-              });
-            });
-          }
-        } else {
-          console.error("API Error", error);
-          toast.error("An unexpected error occurred.");
-        }
-      } finally {
-        setLoadIndicator(false);
-      }
-    },
-  });
-
-  // const formik1 = useFormik({
-  //   initialValues: {
-  //     catagory_group_id: "",
-  //     name: "",
-  //     icon: "",
-  //     description: "",
-  //   },
-  //   validationSchema: validationSchema1,
-  //   onSubmit: async (values) => {
-  //     const formData = new FormData();
-  //     formData.append("category_group_id", values.catagory_group_id);
-  //     formData.append("name", values.name);
-  //     formData.append("icon", values.icon);
-  //     formData.append("description", values.description);
-
-  //     const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-  //     formData.append("slug", slug);
-
-  //     console.log("Form Data:", values);
-  //     try {
-  //       const response = await api.post(`vendor/categories/create`, formData, {
-  //         headers: {
-  //           "Content-Type": "multipart/form-data",
-  //         },
-  //       });
-  //       console.log("Response", response);
-  //       if (response.status === 200) {
-  //         toast.success(response.data.message);
-  //         setShowModal(false);
-  //       } else {
-  //         toast.error(response.data.message);
-  //       }
-  //     } catch (error) {
-  //       if (error.response && error.response.status === 422) {
-  //         const errors = error.response.data.errors;
-  //         if (errors) {
-  //           Object.keys(errors).forEach((key) => {
-  //             errors[key].forEach((errorMsg) => {
-  //               toast(errorMsg, {
-  //                 icon: <FiAlertTriangle className="text-warning" />,
-  //               });
-  //             });
-  //           });
-  //         }
-  //       } else {
-  //         console.error("API Error", error);
-  //         toast.error("An unexpected error occurred.");
-  //       }
-  //     } finally {
-  //       setLoadIndicator(false);
-  //       formik1.resetForm();
-  //     }
-  //   },
-  // });
-
-  useEffect(() => {
-    const getData1 = async () => {
-      setLoading(true);
-      try {
-        const response = await api.get(`vendor/categorygroups`);
-        setAllCategorgroup(response.data.data);
-      } catch (error) {
-        toast.error("Error Fetching Data ", error.message);
-      }
-      setLoading(false);
-    };
-    getData1();
-    getData();
-  }, []);
-
-  useEffect(() => {
-    const { original_price, discount_percentage } = formik.values;
-
-    if (original_price) {
-      let discountedPrice;
-      if (discount_percentage === "" || discount_percentage === null) {
-        discountedPrice = original_price;
-      } else {
-        discountedPrice =
-          original_price - (original_price * discount_percentage) / 100;
-      }
-      // Round to two decimal places
-      discountedPrice = Math.round(discountedPrice * 100) / 100;
-      formik.setFieldValue("discounted_price", discountedPrice);
-    }
-  }, [formik.values.discount_percentage, formik.values.original_price]);
-
-  useEffect(() => {
-    const { original_price, discounted_price } = formik.values;
-    if (original_price) {
-      if (discounted_price === null || discounted_price === "0") {
-        formik.setFieldValue("discounted_percentage", 100);
-      } else {
-        const discountedPercentage =
-          ((original_price - discounted_price) / original_price) * 100;
-
-        const formattedPercentage = Math.floor(discountedPercentage * 10) / 10;
-        formik.setFieldValue("discount_percentage", formattedPercentage);
-      }
-    }
-  }, [formik.values.discounted_price]);
-
   const getData = async () => {
+    setLoading(true);
     try {
-      const response = await api.get(`vendor/product/${id}/get`);
-
-      const { image_url1, image_url2, image_url3, image_url4, ...rest } =
-        response.data.data;
-      formik.setValues({
-        ...rest,
-        start_date: rest.start_date
-          ? new Date(rest.start_date).toISOString().split("T")[0]
-          : "",
-        end_date: rest.end_date
-          ? new Date(rest.end_date).toISOString().split("T")[0]
-          : "",
-        stock: rest.stock?rest.stock: "",
-        brand: rest.brand?rest.brand: "",
-        sku: rest.sku?rest.sku: "",
-
-        image1: `${ImageURL}${image_url1}`,
-        image2: `${ImageURL}${image_url2}`,
-        image3: `${ImageURL}${image_url3}`,
-        image4: `${ImageURL}${image_url4}`,
-      });
+      const response = await api.get(`/vendor/order/${id}`);
+      setData(response.data.data);
     } catch (error) {
-      toast.error("Error Fetching Data", error.message);
+      toast.error("Error Fetching Data ", error);
     }
+    setLoading(false);
   };
 
-  const fetchCategory = async (categoryId) => {
-    if (categoryId) {
-      try {
-        const category = await api.get(
-          `vendor/categories/categorygroups/${categoryId}`
-        );
-        setCategory(category.data.data);
-      } catch (error) {
-        toast.error(error.message);
-      }
-    }
-  };
-
-  const handleCategorygroupChange = (event) => {
-    const categoryGroup = event.target.value;
-    setCategory([]);
-    formik.setFieldValue("categoryGroupId", categoryGroup);
-    // formik1.setFieldValue("catagory_group_id", categoryGroup);
-    setSelectedCategoryGroup(categoryGroup);
-    fetchCategory(categoryGroup);
-  };
   useEffect(() => {
-    fetchCategory(formik.values.categoryGroupId);
-  }, [formik.values.categoryGroupId]);
-
-  // const handleCategoryAdd = () => {
-  //   setShowModal(true);
-  //   formik1.resetForm();
-  // };
-  const handleFileChange = (index, event) => {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.size > MAX_FILE_SIZE) {
-        formik.setFieldError(
-          `image_url${index + 1}`,
-          "File size is too large. Max 2MB."
-        );
-        return;
-      }
-      const reader = new FileReader();
-      reader.onload = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result;
-        setImages(newImages);
-
-        const newShowCropper = [...showCropper];
-        newShowCropper[index] = true;
-        setShowCropper(newShowCropper);
-        formik.setFieldValue(`image_url${index + 1}_originalFileName`, file.name);
-        formik.setFieldValue(`image_url${index + 1}_originalFileFormat`, file.type);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const onCropComplete = (index, croppedArea, croppedAreaPixels) => {
-    const newCroppedAreas = [...croppedAreas];
-    newCroppedAreas[index] = croppedAreaPixels;
-    setCroppedAreas(newCroppedAreas);
-  };
-
-  const handleCropCancel = (index) => {
-    const newShowCropper = [...showCropper];
-    newShowCropper[index] = false; // Hide cropper for the specific index
-    setShowCropper(newShowCropper);
-
-    const newImages = [...images];
-    newImages[index] = null; // Clear the image for this specific index
-    setImages(newImages);
-
-    // Reset the Formik field value for this specific image field
-    formik.setFieldValue(`image${index + 1}`, "");
-
-    // Reset the specific file input by targeting it using its index
-    const fileInput = document.querySelectorAll("input[type='file']")[index];
-    if (fileInput) {
-      fileInput.value = ""; // Clear the file input value
-    }
-  };
-
-  const handleCropSave = async (index) => {
-    const croppedImageBlob = await getCroppedImg(
-      images[index],
-      crops[index],
-      croppedAreas[index]
-    );
-
-    const originalFileName = formik.values[`image_url${index + 1}_originalFileName`];
-    const originalFileFormat = formik.values[`image_url${index + 1}_originalFileFormat`];
-
-    const file = new File([croppedImageBlob], originalFileName, {
-      type: originalFileFormat,
-    });
-
-    formik.setFieldValue(`image_url${index + 1}`, file);
-    console.log("file", file)
-
-    const newShowCropper = [...showCropper];
-    newShowCropper[index] = false;
-    setShowCropper(newShowCropper);
-  };
-
-  const getCroppedImg = (imageSrc, crop, croppedAreaPixels) => {
-    return new Promise((resolve, reject) => {
-      const image = new Image();
-      image.src = imageSrc;
-      image.onload = () => {
-        const canvas = document.createElement("canvas");
-        const ctx = canvas.getContext("2d");
-        const targetWidth = 320;
-        const targetHeight = 240;
-        canvas.width = targetWidth;
-        canvas.height = targetHeight;
-        ctx.drawImage(
-          image,
-          croppedAreaPixels.x,
-          croppedAreaPixels.y,
-          croppedAreaPixels.width,
-          croppedAreaPixels.height,
-          0,
-          0,
-          targetWidth,
-          targetHeight
-        );
-        canvas.toBlob((blob) => {
-          if (!blob) {
-            reject(new Error("Canvas is empty"));
-            return;
-          }
-          blob.name = "croppedImage.jpeg";
-          resolve(blob);
-        }, "image/jpeg");
-      };
-    });
-  };
+    getData();
+  }, [id]);
 
   return (
     <section className="px-4">
-      <form onSubmit={formik.handleSubmit}>
-        {loading ? (
-          <div className="loader-container">
-            <div className="loader">
-              <svg viewBox="0 0 80 80">
-                <circle cx="40" cy="40" r="32"></circle>
-              </svg>
-            </div>
+      {loading ? (
+        <div className="loader-container">
+          <div className="loader">
+            <svg viewBox="0 0 80 80">
+              <circle cx="40" cy="40" r="32"></circle>
+            </svg>
           </div>
-        ) : (
-          <>
-            <div className="card shadow border-0 mb-3">
-              <div className="row p-3">
-                <div className="d-flex justify-content-between align-items-center">
-                  <h1 className="h4 ls-tight">Edit Deals</h1>
-                  <Link to="/product">
-                    <button type="button" className="btn btn-light btn-sm">
-                      <span>Back</span>
-                    </button>
-                  </Link>
-                </div>
-              </div>
+        </div>
+      ) : (
+        <div>
+          <div className="d-flex justify-content-between align-items-center mb-4">
+            <div className="d-flex align-items-center mb-4">
+              <p className="d-flex justify-content-center text-dark">
+                Order ID: {data.order_number ?? "N/A"}&nbsp;
+              </p>
+              &nbsp;
+              <span
+                className={`badge_warning text-capitalize ${data?.payment_status === "1"
+                  ? "badge_warning"
+                  : "badge_warning"
+                  }`}
+              >
+                {data?.payment_status === "1"
+                  ? "Unpaid"
+                  : data?.payment_status === "2"
+                    ? "Pending"
+                    : data?.payment_status === "3"
+                      ? "Paid"
+                      : data?.payment_status === "4"
+                        ? "Refund Initiated"
+                        : data?.payment_status === "5"
+                          ? "Refunded"
+                          : data?.payment_status === "6"
+                            ? "Refund Error"
+                            : "Unknown Status"}
+              </span>
+              &nbsp;&nbsp;
+              <span
+                className={
+                  data?.order_type === "service"
+                    ? "badge_default text-capitalize"
+                    : "badge_payment text-capitalize"
+                }
+              >
+                {data?.order_type ?? "N/A"}
+              </span>
             </div>
-            <div className="container card shadow border-0 pb-5">
-              <div className="row mt-3">
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Category Group<span className="text-danger">*</span>
-                  </label>
-                  <select
-                    className={`form-select ${formik.touched.categoryGroupId &&
-                      formik.errors.categoryGroupId
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("categoryGroupId")}
-                    onChange={handleCategorygroupChange}
-                    value={formik.values.categoryGroupId} // Ensure value is set from Formik state
-                  >
-                    <option value="">Select a category group</option>
-                    {allCategorgroup &&
-                      allCategorgroup.map((categorygroup) => (
-                        <option key={categorygroup.id} value={categorygroup.id}>
-                          {categorygroup.name}
-                        </option>
-                      ))}
-                  </select>
-                  {formik.touched.categoryGroupId &&
-                    formik.errors.categoryGroupId && (
-                      <div className="invalid-feedback">
-                        {formik.errors.categoryGroupId}
-                      </div>
-                    )}
-                </div>
 
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Category<span className="text-danger">*</span>
-                  </label>
-                  <select
-                    type="text"
-                    className={`form-select ${formik.touched.category_id && formik.errors.category_id
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("category_id")}
-                    onChange={(event) => {
-                      const selectedValue = event.target.value;
-                      if (selectedValue === "add_new") {
-                        setShowModal(true);
-                      } else {
-                        formik.setFieldValue("category_id", selectedValue);
-                      }
-                    }}
-                  >
-                    <option></option>
-                    {category &&
-                      category.map((cat) => (
-                        <option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </option>
-                      ))}
-                    {/* {selectedCategoryGroup && (
-                  <option
-                    value="add_new"
-                    style={{ background: "#1c2b36", color: "#fff" }}
-                    onClick={handleCategoryAdd}
-                  >
-                    <PiPlusSquareFill size={20} color="#fff" />
-                    Add New Category
-                  </option>
-                )} */}
-                  </select>
-                  {formik.touched.category_id && formik.errors.category_id && (
-                    <div className="invalid-feedback">
-                      {formik.errors.category_id}
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Deal Type<span className="text-danger">*</span>
-                  </label>
-                  <select
-                    type="text"
-                    className={`form-select ${formik.touched.deal_type && formik.errors.deal_type
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("deal_type")}
-                  >
-                    <option></option>
-                    <option value="1">Product</option>
-                    <option value="2">Service</option>
-                    <option value="3">Product & Service</option>
-                  </select>
-                  {formik.touched.deal_type && formik.errors.deal_type && (
-                    <div className="invalid-feedback">
-                      {formik.errors.deal_type}
-                    </div>
-                  )}
-                </div>
+            <Link to="/order">
+              <button className="btn btn-light btn-sm">Back</button>
+            </Link>
+          </div>
 
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">Brand</label>
-                  <input
-                    type="text"
-                    className={`form-control ${formik.touched.brand && formik.errors.brand
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("brand")}
-                  />
-                  {formik.touched.brand && formik.errors.brand && (
-                    <div className="invalid-feedback">
-                      {formik.errors.brand}
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Name<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    className={`form-control ${formik.touched.name && formik.errors.name
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("name")}
-                    maxLength={825}
-                  />
-                  {formik.touched.name && formik.errors.name && (
-                    <div className="invalid-feedback">{formik.errors.name}</div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">SKU</label>
-                  <input
-                    type="text"
-                    className={`form-control ${formik.touched.sku && formik.errors.sku
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("sku")}
-                  />
-                  {formik.touched.sku && formik.errors.sku && (
-                    <div className="invalid-feedback">{formik.errors.sku}</div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Original Price<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    onInput={(event) => {
-                      event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "")
-                        .replace(/(\..*?)\..*/g, "$1");
-                    }}
-                    className={`form-control ${formik.touched.original_price &&
-                      formik.errors.original_price
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("original_price")}
-                  />
-                  {formik.touched.original_price &&
-                    formik.errors.original_price && (
-                      <div className="invalid-feedback">
-                        {formik.errors.original_price}
-                      </div>
-                    )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Discounted Price<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    onInput={(event) => {
-                      event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "") // Allow only numbers and decimal point
-                        .replace(/(\..*)\./g, "$1") // Prevent multiple decimal points
-                        .replace(/(\.\d{1})./g, "$1"); // Allow only two decimal digits
-                    }}
-                    className={`form-control ${formik.touched.discounted_price &&
-                      formik.errors.discounted_price
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("discounted_price")}
-                  />
-                  {formik.touched.discounted_price &&
-                    formik.errors.discounted_price && (
-                      <div className="invalid-feedback">
-                        {formik.errors.discounted_price}
-                      </div>
-                    )}
-                </div>
-
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">
-                    Discounted Percentage<span className="text-danger">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    onInput={(event) => {
-                      event.target.value = event.target.value
-                        .replace(/[^0-9.]/g, "") // Allow digits and decimal point
-                        .replace(/(\..*?)\..*/g, "$1") // Ensure only one decimal point
-                        .slice(0, 5); // Limit the length if needed (5 characters for example)
-                    }}
-                    className={`form-control ${formik.touched.discount_percentage &&
-                      formik.errors.discount_percentage
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("discount_percentage")}
-                  />
-                  {formik.touched.discount_percentage &&
-                    formik.errors.discount_percentage && (
-                      <div className="invalid-feedback">
-                        {formik.errors.discount_percentage}
-                      </div>
-                    )}
-                </div>
-
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">Stock</label>
-                  <input
-                    type="text"
-                    onInput={(event) => {
-                      event.target.value = event.target.value.replace(
-                        /[^0-9]/g,
-                        ""
-                      );
-                    }}
-                    className={`form-control ${formik.touched.stock && formik.errors.stock
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("stock")}
-                  />
-                  {formik.touched.stock && formik.errors.stock && (
-                    <div className="invalid-feedback">
-                      {formik.errors.stock}
-                    </div>
-                  )}
-                </div>
-
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">Start Date</label>
-                  <input
-                    type="date"
-                    className={`form-control ${formik.touched.start_date && formik.errors.start_date
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("start_date")}
-                  />
-                  {formik.touched.start_date && formik.errors.start_date && (
-                    <div className="invalid-feedback">
-                      {formik.errors.start_date}
-                    </div>
-                  )}
-                </div>
-                <div className="col-md-6 col-12 mb-3">
-                  <label className="form-label">End Date</label>
-                  <input
-                    type="date"
-                    className={`form-control ${formik.touched.end_date && formik.errors.end_date
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("end_date")}
-                  />
-                  {formik.touched.end_date && formik.errors.end_date && (
-                    <div className="invalid-feedback">
-                      {formik.errors.end_date}
-                    </div>
-                  )}
-                </div>
-
-                {[1, 2, 3, 4].map((num, index) => (
-                  <div key={num} className="col-md-6 col-12 mb-3">
-                    <label className="form-label">
-                      Image {num}
-                      <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="file"
-                      accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${formik.touched[`image_url${num}`] &&
-                        formik.errors[`image_url${num}`]
-                        ? "is-invalid"
-                        : ""
-                        }`}
-                      name={`image_url${num}`}
-                      onChange={(e) => handleFileChange(index, e)}
-                      onBlur={formik.handleBlur}
-                    />
-                    <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg,
-                      .jpeg, .svg, .webp.
+          <div className="row">
+            {/* Left Column: Order Item & Order Summary */}
+            <div className="col-md-8">
+              {/* Order Item */}
+              <div className="card mb-4">
+                <div className="card-header m-0 p-2 d-flex justify-content-between gap-2 align-items-center">
+                  <div>
+                    <p className="mb-0">
+                      Order Item &nbsp;
+                      <span className="badge_danger text-capitalize">
+                        {data?.status === "1"
+                          ? "Created"
+                          : data?.status === "2"
+                            ? "Payment Error"
+                            : data?.status === "3"
+                              ? "Confirmed"
+                              : data?.status === "4"
+                                ? "Awaiting Delivery"
+                                : data?.status === "5"
+                                  ? "Delivered"
+                                  : data?.status === "6"
+                                    ? "Returned"
+                                    : data?.status === "7"
+                                      ? "Cancelled"
+                                      : "Unknown Status"}
+                      </span>
+                      &nbsp;
+                      <span className="badge_payment">
+                        {data.items?.length > 0 &&
+                          data.items[0]?.coupon_code && (
+                            <span>{data?.items[0]?.coupon_code}</span>
+                          )}
+                      </span>
                     </p>
-                    {formik.touched[`image_url${num}`] &&
-                      formik.errors[`image_url${num}`] && (
-                        <div className="invalid-feedback">
-                          {formik.errors[`image_url${num}`]}
-                        </div>
-                      )}
-
-                    {/* Show the image preview if it exists */}
-                    {formik.values[`image${num}`] && (
-                      <div className="image-preview mt-2">
-                        <img
-                          src={formik.values[`image${num}`]}
-                          alt={`Image ${num} Preview`}
-                          style={{
-                            width: "100px",
-                            height: "100px",
-                            borderRadius: "8px",
-                          }}
-                        />
-                      </div>
-                    )}
-
-                    {showCropper[index] && (
-                      <>
-                        <div className="crop-container">
-                          <Cropper
-                            image={images[index]}
-                            crop={crops[index]}
-                            zoom={zooms[index]}
-                            aspect={400 / 266}
-                            onCropChange={(crop) => {
-                              const newCrops = [...crops];
-                              newCrops[index] = crop;
-                              setCrops(newCrops);
-                            }}
-                            onZoomChange={(zoom) => {
-                              const newZooms = [...zooms];
-                              newZooms[index] = zoom;
-                              setZooms(newZooms);
-                            }}
-                            onCropComplete={(croppedArea, croppedAreaPixels) =>
-                              onCropComplete(
-                                index,
-                                croppedArea,
-                                croppedAreaPixels
-                              )
+                  </div>
+                  <div>
+                    <span>
+                      Date :{" "}
+                      {data?.created_at
+                        ? new Date(data.created_at).toISOString().split("T")[0]
+                        : ""}
+                    </span>{" "}
+                    &nbsp;
+                    <span>
+                      Time :{" "}
+                      <span className="text-uppercase">
+                        {" "}
+                        {data?.created_at
+                          ? new Date(data.created_at).toLocaleString("en-IN", {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })
+                          : ""}
+                      </span>
+                    </span>
+                  </div>
+                </div>
+                <div className="card-body m-0 p-4">
+                  {data.items?.map((item, index) =>
+                    item ? (
+                      <div key={index} className="row align-items-center mb-3">
+                        <div className="col-md-3">
+                          <img
+                            src={
+                              item?.product?.image_url1
+                                ? `${ImageURL}${item?.product?.image_url1}`
+                                : noImage
                             }
+                            alt={item?.deal_name}
+                            style={{ width: "100%" }}
                           />
                         </div>
-                        <div className="d-flex justify-content-start mt-3 gap-2">
-                          <button
-                            type="button"
-                            className="btn btn-primary mt-3"
-                            onClick={() => handleCropSave(index)}
-                          >
-                            Save Cropped Image {num}
-                          </button>
-                          <button
-                            type="button"
-                            className="btn btn-secondary mt-3"
-                            onClick={() => handleCropCancel(index)}
-                          >
-                            Cancel
-                          </button>
+                        <div className="col">
+                          <h3 className="text-muted text-capitalize">
+                            {item?.deal_name}
+                          </h3>
+                          <p>{item?.deal_description}</p>
+                          <p>
+                            <del>
+                              $
+                              {new Intl.NumberFormat("en-IN", {
+                                maximumFractionDigits: 0,
+                                useGrouping: false
+                              }).format(
+                                parseFloat(item?.deal_originalprice)
+                              )}
+                            </del>
+                            &nbsp;&nbsp;
+                            <span style={{ color: "#dc3545" }}>
+                              $
+                              {new Intl.NumberFormat("en-IN", {
+                                maximumFractionDigits: 0,
+                                useGrouping: false
+                              }).format(
+                                parseFloat(item?.deal_price)
+                              )}
+                            </span>
+                            &nbsp;&nbsp;
+                            <span className="badge_danger">
+                              {parseFloat(
+                                item?.discount_percentage
+                              ).toFixed(0)}
+                              % saved
+                            </span>
+                          </p>
                         </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-center my-5 py-5">
+                          No Product Data Found !
+                        </p>
                       </>
-                    )}
-                  </div>
-                ))}
-                <div className="col-12 mb-5">
-                  <label className="form-label">
-                    Description<span className="text-danger">*</span>
-                  </label>
-                  <textarea
-                    type="text"
-                    rows={5}
-                    className={`form-control ${formik.touched.description && formik.errors.description
-                      ? "is-invalid"
-                      : ""
-                      }`}
-                    {...formik.getFieldProps("description")}
-                  />
-                  {formik.touched.description && formik.errors.description && (
-                    <div className="invalid-feedback">
-                      {formik.errors.description}
+                    )
+                  )}
+
+                  <div className="row">
+                    <div className="col-md-3"></div>
+                    <div className="col-md-9">
+                      {data?.order_type === "service" ? (
+                        <div className="d-flex gap-4">
+                          <p>Service Date: {data?.service_date ?? " "}</p>
+                          <p>
+                            Service Time:{" "}
+                            {data?.service_time
+                              ? (() => {
+                                const [hours, minutes] = data.service_time
+                                  .split(":")
+                                  .map(Number);
+                                const period = hours >= 12 ? "PM" : "AM";
+                                const adjustedHours = hours % 12 || 12;
+                                return `${adjustedHours}:${minutes
+                                  .toString()
+                                  .padStart(2, "0")} ${period}`;
+                              })()
+                              : " "}
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="d-flex gap-4">
+                          <p>Quantity: {data?.quantity ?? " "}</p>
+                        </div>
+                      )}
                     </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* <div className="card mb-4">
+                <div className="card-header m-0 p-2 d-flex gap-2 align-items-center">
+                  <p className="mb-0">Shop Details</p>
+                </div>
+                <div className="card-body m-0 p-4">
+                  {data.shop ? (
+                    <div className="row align-items-center mb-3">
+                      <div className="col">
+                        <div className="row">
+                          <div className="col-md-3">
+                            <p>Company Name</p>
+                          </div>
+                          <div className="col-md-9">
+                            <p>: {data.shop.name ?? "N/A"}</p>
+                          </div>
+
+                          <div className="col-md-3">
+                            <p>Company Email</p>
+                          </div>
+                          <div className="col-md-9">
+                            <p>: {data.shop.email ?? "N/A"}</p>
+                          </div>
+
+                          <div className="col-md-3">
+                            <p>Company Mobile</p>
+                          </div>
+                          <div className="col-md-9">
+                            <p>: {data.shop.mobile ?? "N/A"}</p>
+                          </div>
+
+                          <div className="col-md-3">
+                            <p>Description</p>
+                          </div>
+                          <div className="col-md-9">
+                            <p>: {data.shop.description ?? "N/A"}</p>
+                          </div>
+
+                          <div className="col-md-3">
+                            <p>Address</p>
+                          </div>
+                          <div className="col-md-9">
+                            <p>: {data.shop.street ?? "N/A"}</p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <p>No Shop Details Available</p>
+                  )}
+                </div>
+              </div> */}
+
+              {/* Order Summary */}
+              <div className="card">
+                <div className="card-header m-0 p-2 d-flex justify-content-between align-items-center">
+                  <p className="mb-0">Order Summary</p>
+                  <p>
+                    <span
+                      className={
+                        (data.payment_type?.replace(/_/g, " ") ?? "Pending") ===
+                          "online payment"
+                          ? "badge_default text-capitalize"
+                          : "badge_payment text-capitalize"
+                      }
+                    >
+                      {data.payment_type?.replace(/_/g, " ") ?? "Pending"}
+                    </span>
+                    &nbsp;
+                    <span className="badge_warning text-capitalize">
+                      {data?.payment_status === "1"
+                        ? "Unpaid"
+                        : data?.payment_status === "2"
+                          ? "Pending"
+                          : data?.payment_status === "3"
+                            ? "Paid"
+                            : data?.payment_status === "4"
+                              ? "Refund Initiated"
+                              : data?.payment_status === "5"
+                                ? "Refunded"
+                                : data?.payment_status === "6"
+                                  ? "Refund Error"
+                                  : "Unknown Status"}
+                    </span>
+                  </p>
+                </div>
+                <div className="card-body  m-0 p-4">
+                  <div className="d-flex justify-content-between">
+                    <span>
+                      Subtotal&nbsp;
+                      {data?.quantity !== 1 && (
+                        <span style={{ fontSize: "smaller" }}>
+                          (x{data.quantity})
+                        </span>
+                      )}
+                    </span>
+                    <span>
+                      $
+                      {new Intl.NumberFormat("en-IN", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                        useGrouping: false
+                      }).format(
+                        parseFloat(
+                          data?.items?.[0]?.deal_originalprice || 0
+                        ) * parseFloat(data?.quantity || 0)
+                      )}
+                    </span>
+                  </div>
+                  <div className="d-flex justify-content-between">
+                    <span>
+                      Discount&nbsp;
+                      {data?.quantity !== 1 && (
+                        <span style={{ fontSize: "smaller" }}>
+                          (x{data.quantity})
+                        </span>
+                      )}
+                    </span>
+                    <span>
+                      $
+                      {new Intl.NumberFormat("en-IN", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                        useGrouping: false
+                      }).format(
+                        parseFloat(
+                          (data?.items?.[0]?.deal_originalprice || 0) -
+                          (data?.items?.[0]?.deal_price || 0)
+                        ) * parseFloat(data?.quantity || 0)
+                      )}
+                    </span>
+                  </div>
+
+                  <hr />
+                  <div className="d-flex justify-content-between pb-3">
+                    <span>
+                      Total{" "}
+                      {data?.quantity !== 1 && (
+                        <span style={{ fontSize: "smaller" }}>
+                          (x{data.quantity})
+                        </span>
+                      )}
+                    </span>
+                    <span>
+                      $
+                      {new Intl.NumberFormat("en-IN", {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                        useGrouping: false
+                      }).format(parseFloat(data.total))}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Notes, Customer Info, Contact, and Address */}
+            <div className="col-md-4">
+              {/* Notes */}
+              <div className="card mb-2">
+                <div className="card-header m-0 p-2">
+                  <p className="mb-0">Notes</p>
+                </div>
+                <div className="card-body  m-0 p-4">
+                  <p>{data.notes ?? "No notes available"}</p>
+                </div>
+              </div>
+
+              {/* Customers */}
+              <div className="card mb-2">
+                <div className="card-header m-0 p-2">
+                  <p className="mb-0">Customer</p>
+                </div>
+                <div className="card-body  m-0 p-4">
+                  <p>Name : {data?.customer?.name ?? "N/A"}</p>
+                  <p>Email : {data?.customer?.email ?? "N/A"}</p>
+                </div>
+              </div>
+
+              {/* Contact Information */}
+              <div className="card mb-2">
+                <div className="card-header m-0 p-2">
+                  <p className="mb-0">Contact Information</p>
+                </div>
+                <div className="card-body  m-0 p-4">
+                  <p>
+                    Name : {data.first_name ? `${data.first_name} ${data.last_name || ''}` : "N/A"}
+                  </p>
+                  <p>Email : {data.email ?? "No Email provided"}</p>
+                  <p>Phone : {data?.mobile ?? "No phone number provided"}</p>
+                </div>
+              </div>
+
+              {/* Shipping Address */}
+              <div className="card mb-2">
+                <div className="card-header m-0 p-2">
+                  <p className="mb-0">Address</p>
+                </div>
+                <div className="card-body m-0 p-4">
+                  {data.delivery_address ? (
+                    (() => {
+                      try {
+                        const deliveryAddress = JSON.parse(
+                          data.delivery_address
+                        );
+                        return (
+                          <>
+                            <p>
+                              {deliveryAddress.street}, {deliveryAddress.city},{" "}
+                              {deliveryAddress.state}, {deliveryAddress.country}
+                              , {deliveryAddress.zipCode}.
+                            </p>
+                            <p></p>
+                          </>
+                        );
+                      } catch (error) {
+                        console.error("Invalid JSON:", error);
+                        return <p>Invalid address format</p>;
+                      }
+                    })()
+                  ) : (
+                    <p>No address found</p>
                   )}
                 </div>
               </div>
-              <div className="hstack p-2">
-                <button type="submit" className="btn btn-sm btn-button"
-                  disabled={loadIndicator}>
-                  {loadIndicator && (
-                    <span
-                      className="spinner-border spinner-border-sm me-2"
-                      aria-hidden="true"
-                    ></span>
-                  )}
-                  Update
-                </button>
-              </div>
             </div>
-          </>
-        )}
-      </form>
+          </div>
+        </div>
+      )}
     </section>
   );
 }
 
-export default ProductAdd;
-
+export default OrderView;

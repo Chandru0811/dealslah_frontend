@@ -213,6 +213,38 @@ function ProductView() {
                 <div className="col-md-6 col-12">
                   <div className="row mb-3">
                     <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Varient</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        :{" "}
+                        {data?.varient.split(",").map((variant, index) => (
+                          <div
+                            key={index}
+                            className="badge badge-success badge-outlined mx-1"
+                          >
+                            {variant.trim()}
+                          </div>
+                        ))}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Delivery Days</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        : {data?.delivery_days}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
                       <p className="text-sm">Start Date</p>
                     </div>
                     <div className="col-6">
@@ -276,42 +308,6 @@ function ProductView() {
                   </div>
                 </div>
               </div> */}
-                {data?.additional_details &&
-                data.additional_details.length > 0 ? (
-                  data.additional_details.map((item, index) => (
-                    <div className="row" key={index}>
-                      <div className="col-md-6 col-12">
-                        <div className="row mb-3">
-                          <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">YouTube URL {index + 1}</p>
-                          </div>
-                          <div className="col-6">
-                            <p
-                              style={{ whiteSpace: "nowrap", overflow: "auto" }}
-                              className="text-muted text-sm"
-                            >
-                              : {item?.video_url || ""}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="ps-5 col-md-6 col-12">
-                        <div className="row mb-3">
-                          <div className="col-6 d-flex justify-content-start align-items-center">
-                            <p className="text-sm">Orders {index + 1}</p>
-                          </div>
-                          <div className="col-6">
-                            <p className="text-muted text-sm">
-                              : {item?.order || ""}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))
-                ) : (
-                  <p>No additional details available.</p>
-                )}
                 <div className="col-12">
                   <div className="row mb-3">
                     <div className="col-3 d-flex justify-content-start align-items-center">

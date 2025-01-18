@@ -134,11 +134,17 @@ const Orders = () => {
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false
+                        useGrouping: false,
                       }).format(parseFloat(data.total))}
                     </td>
                     <td className="align-middle text-start">
-                      {data.items?.[0]?.deal_name}
+                      <p>
+                        {`${data.items?.[0]?.product?.name || ""}${
+                          data.items?.[1]?.product?.name
+                            ? `, ${data.items?.[1]?.product?.name}`
+                            : ""
+                        }`}
+                      </p>
                     </td>
                     <td className="align-middle text-center">
                       <Link to={`/order/view/${data.id}`}>
