@@ -1,20 +1,176 @@
 import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import noImage from "../../../assets/noimage.png";
-import toast from "react-hot-toast";
+import Modal from "react-bootstrap/Modal";
 import api from "../../../config/URL";
+import toast from "react-hot-toast";
 import ImageURL from "../../../config/ImageURL";
+import noImage from "../../../assets/noimage.png";
+import { FaRegCopy } from "react-icons/fa";
+import { LuCopyCheck } from "react-icons/lu";
 
-function OrderView() {
+function ProductsView() {
   const { id } = useParams();
-  const [data, setData] = useState([]);
+  const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
+  const [loadIndicator, setLoadIndicator] = useState(false);
+  const [shopStatus, setShopStatus] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
+  const handleOpenModal = () => setShowModal(true);
+  const handleClose = () => setShowModal(false);
+
+  // const data = {
+  //   id: 1,
+  //   shop_id: 1,
+  //   deal_type: 1,
+  //   category_id: 1,
+  //   brand: "OnePlus",
+  //   name: "OnePlus 12 12/256",
+  //   description:
+  //     "Upgrade to the OnePlus 12 with 12GB RAM 256 ROM for high-speed performance and sleek design! Get premium quality and power at an unbeatable value – limited time offer!",
+  //   slug: "oneplus_12",
+  //   original_price: "829.00",
+  //   discounted_price: "770.00",
+  //   discount_percentage: "7.10",
+  //   start_date: "2024-11-22T00:00:00.000Z",
+  //   end_date: "2024-12-22T00:00:00.000Z",
+  //   stock: 1,
+  //   sku: null,
+  //   active: 1,
+  //   deleted_at: null,
+  //   created_at: "2024-11-22T14:06:26.000Z",
+  //   updated_at: "2024-11-22T14:59:40.000Z",
+  //   coupon_code: "DEALSLAHV01",
+  //   specifications: null,
+  //   varient: "Red, Green, Blue",
+  //   categoryName: "Mobile Phones",
+  //   categoryGroupName: "Electronics",
+  //   categoryGroupId: 1,
+  //   product_media: [
+  //     {
+  //       id: 1,
+  //       path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+  //       order: 0,
+  //       type: "image",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 2,
+  //       path: "https://www.youtube.com/embed/jNQXAC9IVRw?si=-b4sOUB3e5Bx3cze",
+  //       order: 1,
+  //       type: "video",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 3,
+  //       path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+  //       order: 2,
+  //       type: "image",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 4,
+  //       path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+  //       order: 3,
+  //       type: "image",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 5,
+  //       path: "https://www.youtube.com/embed/PdVZRoLsYm4",
+  //       order: 4,
+  //       type: "video",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 6,
+  //       path: "assets/images/products/20/1732009744_1_673c5f10dae30Infinix.webp",
+  //       order: 5,
+  //       type: "image",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //     {
+  //       id: 7,
+  //       path: "https://www.youtube.com/embed/jNQXAC9IVRw?si=-b4sOUB3e5Bx3cze",
+  //       order: 1,
+  //       type: "video",
+  //       imageable_id: 1,
+  //       imageable_type: "App\\Models\\Product",
+  //       created_at: null,
+  //       updated_at: null,
+  //     },
+  //   ],
+  // };
+
+  const handleActivate = async () => {
+    setLoadIndicator(true);
+    try {
+      const response = await api.post(`admin/deal/${id}/approve`);
+      if (response.status === 200) {
+        // getData();
+        toast.success("Product Activated Successfully!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while activating the product.");
+      console.error("Activation Error:", error);
+    } finally {
+      setLoadIndicator(false);
+    }
+  };
+
+  const handleDeActive = async () => {
+    setLoading(true);
+    try {
+      const response = await api.post(`admin/deal/${id}/disapprove`);
+      if (response.status === 200) {
+        // getData();
+        toast.success("Product DeActivated Successfully!");
+        handleClose();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("An error occurred while activating the product.");
+      console.error("DeActivation Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const getData = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/vendor/order/${id}`);
-      setData(response.data.data);
+      const response = await api.get(`admin/product/${id}`);
+      const { additional_details, ...rest } = response.data.data;
+
+      const decodedAdditionalDetails = additional_details
+        ? JSON.parse(additional_details)
+        : [];
+      setData({
+        ...rest,
+        additional_details: decodedAdditionalDetails,
+      });
+      setShopStatus(response.data.data.active);
     } catch (error) {
       toast.error("Error Fetching Data ", error);
     }
@@ -24,6 +180,18 @@ function OrderView() {
   useEffect(() => {
     getData();
   }, [id]);
+
+  const handleCopy = async () => {
+    try {
+      if (data?.coupon_code) {
+        await navigator.clipboard.writeText(data.coupon_code);
+        setIsCopied(true); // Set the copied state to true
+        setTimeout(() => setIsCopied(false), 2000);
+      }
+    } catch (err) {
+      console.error("Failed to copy!", err);
+    }
+  };
 
   return (
     <section className="px-4">
@@ -36,429 +204,402 @@ function OrderView() {
           </div>
         </div>
       ) : (
-        <div>
-          <div className="d-flex justify-content-between align-items-center mb-4">
-            <div className="d-flex align-items-center mb-4">
-              <p className="d-flex justify-content-center text-dark">
-                Order ID: {data.order_number ?? "N/A"}&nbsp;
+        <div className="">
+          <div className="card shadow border-0 mb-3">
+            <div className="row p-3">
+              <div className="d-flex justify-content-between align-items-center w-100">
+                <div>
+                  <h3 className="ls-tight">
+                    View Deals{" "}
+                    <span>
+                      {data?.ownerEmailVerifiedAt !== null && (
+                        <i
+                          className="fa-duotone fa-solid fa-badge-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      )}
+                    </span>
+                  </h3>
+                </div>
+                <div>
+                  <Link to="/products">
+                    <button type="button" className="btn btn-light btn-sm me-2">
+                      <span>Back</span>
+                    </button>
+                  </Link>
+                  {shopStatus === "0" ? (
+                    <button
+                      type="button"
+                      onClick={handleActivate}
+                      className="btn btn-success btn-sm me-2"
+                      disabled={loadIndicator}
+                    >
+                      {loadIndicator && (
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          aria-hidden="true"
+                        ></span>
+                      )}
+                      Activate
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleOpenModal}
+                      className="btn btn-danger btn-sm me-2"
+                    >
+                      Deactivate
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="container card shadow border-0"
+            style={{ minHeight: "80vh" }}
+          >
+            <div className="d-flex justify-content-end align-items-center mt-2">
+              <p>
+                <span>Coupon Code</span>&nbsp;&nbsp;:
+                <span className="text-muted" style={{ fontSize: "24px" }}>
+                  {data?.coupon_code}
+                </span>
               </p>
-              &nbsp;
-              <span
-                className={`badge_warning text-capitalize ${data?.payment_status === "1"
-                  ? "badge_warning"
-                  : "badge_warning"
-                  }`}
-              >
-                {data?.payment_status === "1"
-                  ? "Unpaid"
-                  : data?.payment_status === "2"
-                    ? "Pending"
-                    : data?.payment_status === "3"
-                      ? "Paid"
-                      : data?.payment_status === "4"
-                        ? "Refund Initiated"
-                        : data?.payment_status === "5"
-                          ? "Refunded"
-                          : data?.payment_status === "6"
-                            ? "Refund Error"
-                            : "Unknown Status"}
-              </span>
               &nbsp;&nbsp;
               <span
-                className={
-                  data?.order_type === "service"
-                    ? "badge_default text-capitalize"
-                    : "badge_payment text-capitalize"
-                }
+                onClick={handleCopy}
+                style={{ cursor: "pointer" }}
+                title={isCopied ? "Copied!" : "Click to copy"}
               >
-                {data?.order_type ?? "N/A"}
+                {isCopied ? <LuCopyCheck /> : <FaRegCopy />}
               </span>
             </div>
-
-            <Link to="/order">
-              <button className="btn btn-light btn-sm">Back</button>
-            </Link>
-          </div>
-
-          <div className="row">
-            {/* Left Column: Order Item & Order Summary */}
-            <div className="col-md-8">
-              {/* Order Item */}
-              <div className="card mb-4">
-                <div className="card-header m-0 p-2 d-flex justify-content-between gap-2 align-items-center">
-                  <div>
-                    <p className="mb-0">
-                      Order Item &nbsp;
-                      <span className="badge_danger text-capitalize">
-                        {data?.status === "1"
-                          ? "Created"
-                          : data?.status === "2"
-                            ? "Payment Error"
-                            : data?.status === "3"
-                              ? "Confirmed"
-                              : data?.status === "4"
-                                ? "Awaiting Delivery"
-                                : data?.status === "5"
-                                  ? "Delivered"
-                                  : data?.status === "6"
-                                    ? "Returned"
-                                    : data?.status === "7"
-                                      ? "Cancelled"
-                                      : "Unknown Status"}
-                      </span>
-                      &nbsp;
-                      <span className="badge_payment">
-                        {data.items?.length > 0 &&
-                          data.items[0]?.coupon_code && (
-                            <span>{data?.items[0]?.coupon_code}</span>
-                          )}
-                      </span>
+            <div className="row mt-5 p-3">
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Category Group</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data.categoryGroupName}
                     </p>
                   </div>
-                  <div>
-                    <span>
-                      Date :{" "}
-                      {data?.created_at
-                        ? new Date(data.created_at).toISOString().split("T")[0]
-                        : ""}
-                    </span>{" "}
-                    &nbsp;
-                    <span>
-                      Time :{" "}
-                      <span className="text-uppercase">
-                        {" "}
-                        {data?.created_at
-                          ? new Date(data.created_at).toLocaleString("en-IN", {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                            hour12: true,
-                          })
-                          : ""}
-                      </span>
-                    </span>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Category</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">: {data.categoryName}</p>
                   </div>
                 </div>
-                <div className="card-body m-0 p-4">
-                  {data.items?.map((item, index) =>
-                    item ? (
-                      <div key={index} className="row align-items-center mb-3">
-                        <div className="col-md-3">
-                          <img
-                            src={
-                              item?.product?.image_url1
-                                ? `${ImageURL}${item?.product?.image_url1}`
-                                : noImage
-                            }
-                            alt={item?.deal_name}
-                            style={{ width: "100%" }}
-                          />
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Deal Type</p>
+                  </div>
+                  <div className="col-6">
+                    {console.log("Deal Type Value:", data.deal_type)}{" "}
+                    <p className="text-muted text-sm">
+                      :{" "}
+                      {data.deal_type === 1 || data.deal_type === "0"
+                        ? "Product"
+                        : data.deal_type === 2 || data.deal_type === "1"
+                        ? "Service"
+                        : data.deal_type === 3 || data.deal_type === "2"
+                        ? "Product and Service"
+                        : "Unknown"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Brand</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">: {data.brand}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Slug</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">: {data.slug}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Original Price</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data.original_price}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Discounted Percentage</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data.discount_percentage}%
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Discounted Price</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data.discounted_price}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Varient</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      :
+                      {data?.varient?.split(",").map((variant, index) => (
+                        <div
+                          key={index}
+                          className="badge badge-success badge-outlined mx-1"
+                        >
+                          {variant.trim()}
                         </div>
-                        <div className="col">
-                          <h3 className="text-muted text-capitalize">
-                            {item?.deal_name}
-                          </h3>
-                          <p>{item?.deal_description}</p>
-                          <p>
-                            <del>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                                useGrouping: false
-                              }).format(
-                                parseFloat(item?.deal_originalprice)
-                              )}
-                            </del>
-                            &nbsp;&nbsp;
-                            <span style={{ color: "#dc3545" }}>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                                useGrouping: false
-                              }).format(
-                                parseFloat(item?.deal_price)
-                              )}
-                            </span>
-                            &nbsp;&nbsp;
-                            <span className="badge_danger">
-                              {parseFloat(
-                                item?.discount_percentage
-                              ).toFixed(0)}
-                              % saved
-                            </span>
-                          </p>
-                        </div>
-                      </div>
+                      ))}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Delivery Days</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {data?.delivery_days}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Start Date</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {new Date(data.start_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-md-6 col-12">
+                <div className="row mb-3">
+                  <div className="col-6 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">End Date</p>
+                  </div>
+                  <div className="col-6">
+                    <p className="text-muted text-sm">
+                      : {new Date(data.end_date).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="row mb-3">
+                  <div className="col-3 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Description</p>
+                  </div>
+                  <div className="col-9">
+                    <p className="text-muted text-sm">: {data.description}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="col-12">
+                <div className="row mb-3">
+                  <div className="col-3 d-flex justify-content-start align-items-center">
+                    <p className="text-sm">Specification</p>
+                  </div>
+                  <div className="col-9">
+                    <p className="text-muted text-sm">
+                      : {data?.specifications}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div className="row p-3">
+                <h4 className="mb-5">Company Information</h4>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Company Name</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">: {data?.shop?.name}</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Shop Status</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        :{" "}
+                        {data?.shop?.active === 1 ? (
+                          <>
+                            <span
+                              className="dot"
+                              style={{
+                                backgroundColor: "green",
+                                width: "10px",
+                                height: "10px",
+                                display: "inline-block",
+                                borderRadius: "50%",
+                                marginRight: "3px",
+                              }}
+                            ></span>
+                            Active
+                          </>
+                        ) : (
+                          <>
+                            <span
+                              className="dot"
+                              style={{
+                                backgroundColor: "red",
+                                width: "10px",
+                                height: "10px",
+                                display: "inline-block",
+                                borderRadius: "50%",
+                                marginRight: "3px",
+                              }}
+                            ></span>
+                            Inactive
+                          </>
+                        )}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Logo</p>
+                    </div>
+                    <div className="col-12">
+                      <p className="text-muted text-sm">
+                        <img
+                          src={
+                            data?.shop?.logo !== null
+                              ? `${ImageURL}${data?.shop?.logo}`
+                              : noImage
+                          }
+                          alt={data?.shop?.name}
+                          style={{ maxWidth: "100px", maxHeight: "100px" }}
+                        />
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row mt-5 p-3">
+                {data.product_media.map((item, index) => (
+                  <div className="col-md-4 col-12 mb-3" key={item.id}>
+                    {item.type === "image" ? (
+                      <>
+                        <p className="text-sm">Thumbnail {index + 1}</p>
+                        <img
+                          src={`${ImageURL}${
+                            item.path.startsWith("/")
+                              ? item.path
+                              : "/" + item.path
+                          }`}
+                          alt={`Media ${index + 1}`}
+                          style={{
+                            maxWidth: "100%",
+                            maxHeight: "100%",
+                            objectFit: "cover",
+                          }}
+                        />
+                      </>
                     ) : (
                       <>
-                        <p className="text-center my-5 py-5">
-                          No Product Data Found !
-                        </p>
+                        <p className="text-sm">Thumbnail {index + 1}</p>
+                        <iframe
+                          width="100%"
+                          height="90%"
+                          src={item.path}
+                          title={`YouTube Video ${index + 1}`}
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                          allowFullScreen
+                        />
                       </>
-                    )
-                  )}
-
-                  <div className="row">
-                    <div className="col-md-3"></div>
-                    <div className="col-md-9">
-                      {data?.order_type === "service" ? (
-                        <div className="d-flex gap-4">
-                          <p>Service Date: {data?.service_date ?? " "}</p>
-                          <p>
-                            Service Time:{" "}
-                            {data?.service_time
-                              ? (() => {
-                                const [hours, minutes] = data.service_time
-                                  .split(":")
-                                  .map(Number);
-                                const period = hours >= 12 ? "PM" : "AM";
-                                const adjustedHours = hours % 12 || 12;
-                                return `${adjustedHours}:${minutes
-                                  .toString()
-                                  .padStart(2, "0")} ${period}`;
-                              })()
-                              : " "}
-                          </p>
-                        </div>
-                      ) : (
-                        <div className="d-flex gap-4">
-                          <p>Quantity: {data?.quantity ?? " "}</p>
-                        </div>
-                      )}
-                    </div>
+                    )}
                   </div>
-                </div>
-              </div>
-
-              {/* <div className="card mb-4">
-                <div className="card-header m-0 p-2 d-flex gap-2 align-items-center">
-                  <p className="mb-0">Shop Details</p>
-                </div>
-                <div className="card-body m-0 p-4">
-                  {data.shop ? (
-                    <div className="row align-items-center mb-3">
-                      <div className="col">
-                        <div className="row">
-                          <div className="col-md-3">
-                            <p>Company Name</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.name ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Company Email</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.email ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Company Mobile</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.mobile ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Description</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.description ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Address</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.street ?? "N/A"}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <p>No Shop Details Available</p>
-                  )}
-                </div>
-              </div> */}
-
-              {/* Order Summary */}
-              <div className="card">
-                <div className="card-header m-0 p-2 d-flex justify-content-between align-items-center">
-                  <p className="mb-0">Order Summary</p>
-                  <p>
-                    <span
-                      className={
-                        (data.payment_type?.replace(/_/g, " ") ?? "Pending") ===
-                          "online payment"
-                          ? "badge_default text-capitalize"
-                          : "badge_payment text-capitalize"
-                      }
-                    >
-                      {data.payment_type?.replace(/_/g, " ") ?? "Pending"}
-                    </span>
-                    &nbsp;
-                    <span className="badge_warning text-capitalize">
-                      {data?.payment_status === "1"
-                        ? "Unpaid"
-                        : data?.payment_status === "2"
-                          ? "Pending"
-                          : data?.payment_status === "3"
-                            ? "Paid"
-                            : data?.payment_status === "4"
-                              ? "Refund Initiated"
-                              : data?.payment_status === "5"
-                                ? "Refunded"
-                                : data?.payment_status === "6"
-                                  ? "Refund Error"
-                                  : "Unknown Status"}
-                    </span>
-                  </p>
-                </div>
-                <div className="card-body  m-0 p-4">
-                  <div className="d-flex justify-content-between">
-                    <span>
-                      Subtotal&nbsp;
-                      {data?.quantity !== 1 && (
-                        <span style={{ fontSize: "smaller" }}>
-                          (x{data.quantity})
-                        </span>
-                      )}
-                    </span>
-                    <span>
-                      $
-                      {new Intl.NumberFormat("en-IN", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                        useGrouping: false
-                      }).format(
-                        parseFloat(
-                          data?.items?.[0]?.deal_originalprice || 0
-                        ) * parseFloat(data?.quantity || 0)
-                      )}
-                    </span>
-                  </div>
-                  <div className="d-flex justify-content-between">
-                    <span>
-                      Discount&nbsp;
-                      {data?.quantity !== 1 && (
-                        <span style={{ fontSize: "smaller" }}>
-                          (x{data.quantity})
-                        </span>
-                      )}
-                    </span>
-                    <span>
-                      $
-                      {new Intl.NumberFormat("en-IN", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                        useGrouping: false
-                      }).format(
-                        parseFloat(
-                          (data?.items?.[0]?.deal_originalprice || 0) -
-                          (data?.items?.[0]?.deal_price || 0)
-                        ) * parseFloat(data?.quantity || 0)
-                      )}
-                    </span>
-                  </div>
-
-                  <hr />
-                  <div className="d-flex justify-content-between pb-3">
-                    <span>
-                      Total{" "}
-                      {data?.quantity !== 1 && (
-                        <span style={{ fontSize: "smaller" }}>
-                          (x{data.quantity})
-                        </span>
-                      )}
-                    </span>
-                    <span>
-                      $
-                      {new Intl.NumberFormat("en-IN", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                        useGrouping: false
-                      }).format(parseFloat(data.total))}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Right Column: Notes, Customer Info, Contact, and Address */}
-            <div className="col-md-4">
-              {/* Notes */}
-              <div className="card mb-2">
-                <div className="card-header m-0 p-2">
-                  <p className="mb-0">Notes</p>
-                </div>
-                <div className="card-body  m-0 p-4">
-                  <p>{data.notes ?? "No notes available"}</p>
-                </div>
-              </div>
-
-              {/* Customers */}
-              <div className="card mb-2">
-                <div className="card-header m-0 p-2">
-                  <p className="mb-0">Customer</p>
-                </div>
-                <div className="card-body  m-0 p-4">
-                  <p>Name : {data?.customer?.name ?? "N/A"}</p>
-                  <p>Email : {data?.customer?.email ?? "N/A"}</p>
-                </div>
-              </div>
-
-              {/* Contact Information */}
-              <div className="card mb-2">
-                <div className="card-header m-0 p-2">
-                  <p className="mb-0">Contact Information</p>
-                </div>
-                <div className="card-body  m-0 p-4">
-                  <p>
-                    Name : {data.first_name ? `${data.first_name} ${data.last_name || ''}` : "N/A"}
-                  </p>
-                  <p>Email : {data.email ?? "No Email provided"}</p>
-                  <p>Phone : {data?.mobile ?? "No phone number provided"}</p>
-                </div>
-              </div>
-
-              {/* Shipping Address */}
-              <div className="card mb-2">
-                <div className="card-header m-0 p-2">
-                  <p className="mb-0">Address</p>
-                </div>
-                <div className="card-body m-0 p-4">
-                  {data.delivery_address ? (
-                    (() => {
-                      try {
-                        const deliveryAddress = JSON.parse(
-                          data.delivery_address
-                        );
-                        return (
-                          <>
-                            <p>
-                              {deliveryAddress.street}, {deliveryAddress.city},{" "}
-                              {deliveryAddress.state}, {deliveryAddress.country}
-                              , {deliveryAddress.zipCode}.
-                            </p>
-                            <p></p>
-                          </>
-                        );
-                      } catch (error) {
-                        console.error("Invalid JSON:", error);
-                        return <p>Invalid address format</p>;
-                      }
-                    })()
-                  ) : (
-                    <p>No address found</p>
-                  )}
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       )}
+
+      <Modal
+        show={showModal}
+        backdrop="static"
+        keyboard={false}
+        onHide={handleClose}
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Deactivate Deal</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to deactivate this Deal?</Modal.Body>
+        <Modal.Footer>
+          <button className="btn btn-sm btn-button" onClick={handleClose}>
+            Close
+          </button>
+          <button
+            className="btn-sm btn-danger"
+            type="submit"
+            onClick={handleDeActive}
+            disabled={loading}
+          >
+            {loading && (
+              <span
+                className="spinner-border spinner-border-sm me-2"
+                aria-hidden="true"
+              ></span>
+            )}
+            Deactivate
+          </button>
+        </Modal.Footer>
+      </Modal>
     </section>
   );
 }
 
-export default OrderView;
+export default ProductsView;

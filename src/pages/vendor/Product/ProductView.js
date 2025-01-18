@@ -218,7 +218,7 @@ function ProductView() {
                     <div className="col-6">
                       <p className="text-muted text-sm">
                         :{" "}
-                        {data?.varient.split(",").map((variant, index) => (
+                        {data?.varient?.split(",").map((variant, index) => (
                           <div
                             key={index}
                             className="badge badge-success badge-outlined mx-1"
