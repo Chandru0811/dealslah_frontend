@@ -218,7 +218,7 @@ function ProductView() {
                     <div className="col-6">
                       <p className="text-muted text-sm">
                         :{" "}
-                        {data?.varient.split(",").map((variant, index) => (
+                        {data?.varient?.split(",").map((variant, index) => (
                           <div
                             key={index}
                             className="badge badge-success badge-outlined mx-1"
@@ -226,18 +226,6 @@ function ProductView() {
                             {variant.trim()}
                           </div>
                         ))}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-md-6 col-12">
-                  <div className="row mb-3">
-                    <div className="col-6 d-flex justify-content-start align-items-center">
-                      <p className="text-sm">Delivery Days</p>
-                    </div>
-                    <div className="col-6">
-                      <p className="text-muted text-sm">
-                        : {data?.delivery_days}
                       </p>
                     </div>
                   </div>
@@ -268,6 +256,19 @@ function ProductView() {
                         {data?.end_date
                           ? new Date(data?.end_date).toLocaleDateString()
                           : ""}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Delivery Days</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        :{" "}
+                        {data?.delivery_days}
                       </p>
                     </div>
                   </div>
