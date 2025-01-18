@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import api from "../../../config/URL";
@@ -7,11 +7,12 @@ import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import { FaTrash } from "react-icons/fa";
+import ImageURL from "../../../config/ImageURL";
 
 function ProductEdit() {
   const navigate = useNavigate();
   const [loadIndicator, setLoadIndicator] = useState(false);
-
+  const { id } = useParams();
   const [mediaFields, setMediaFields] = useState([
     { image: "", video: "", selectedType: "image" },
   ]);
@@ -21,7 +22,7 @@ function ProductEdit() {
   const [zoom, setZoom] = useState([]);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState([]);
   const [originalFileName, setOriginalFileName] = useState([]);
-
+  const [apiValues, setApiValues] = useState(null);
   const [originalFileType, setOriginalFileType] = useState("");
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
 
@@ -29,7 +30,7 @@ function ProductEdit() {
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
-  const id = localStorage.getItem("shop_id");
+  const shop_id = localStorage.getItem("shop_id");
   const [couponCode, setCouponCode] = useState("DEALSLAH");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
 
@@ -103,18 +104,18 @@ function ProductEdit() {
         "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
-    ...mediaFields.reduce((acc, field, index) => {
-      if (field.selectedType === "image") {
-        acc[`image-${index}`] = Yup.mixed().required(
-          `Image ${index + 1} is required`
-        );
-      } else if (field.selectedType === "video") {
-        acc[`video-${index}`] = Yup.string()
-          .url(`Youtube ${index + 1} must be a valid URL`)
-          .required(`Youtube ${index + 1} is required`);
-      }
-      return acc;
-    }, {}),
+      ...mediaFields.reduce((acc, field, index) => {
+        if (field.selectedType === "image") {
+          acc[`image-${index}`] = Yup.mixed().required(
+            `Image ${index + 1} is required`
+          );
+        } else if (field.selectedType === "video") {
+          acc[`video-${index}`] = Yup.string()
+            .url(`Youtube ${index + 1} must be a valid URL`)
+            .required(`Youtube ${index + 1} is required`);
+        }
+        return acc;
+      }, {}),
   });
 
   const formik = useFormik({
@@ -135,55 +136,84 @@ function ProductEdit() {
       variants: [{ id: Date.now(), value: "" }],
       delivery_days: "",
       specifications: "",
-      ...mediaFields.reduce((acc, _, index) => {
-        acc[`image-${index}`] = null;
-        acc[`video-${index}`] = "";
-        return acc;
-      }, {}),
+       ...mediaFields?.reduce((acc, _, index) => {
+      acc[`image-${index}`] = null;
+      acc[`video-${index}`] = "";
+      return acc;
+    }, {}),
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const formattedVariants = values.variants
-        .map((variant) => variant.value.trim())
-        .filter((value) => value !== "")
-        .map((value) => value.replace(/,\s*$/, ""));
       const formData = new FormData();
-      formData.append("shop_id", id);
-      formData.append("_method", "PUT");
-      formData.append("name", values.name);
-      formData.append("category_id", values.category_id);
-      formData.append("deal_type", values.deal_type);
-      formData.append("varient", formattedVariants);
-      formData.append("brand", values.brand);
-      formData.append("original_price", values.original_price);
-      formData.append("discounted_price", values.discounted_price);
-      formData.append("discount_percentage", values.discounted_percentage);
-      formData.append("start_date", values.start_date);
-      formData.append("end_date", values.end_date);
-      formData.append("coupon_code", values.coupon_code);
-      // formData.append("image-${index}", imageFile);
-      formData.append("description", values.description);
-      formData.append("specifications", values.specifications);
-      mediaFields.forEach((field, index) => {
-        if (field.selectedType === "image" && values[`image-${index}`]) {
-          formData.append(`media[${index + 1}]`, values[`image-${index}`]);
+      const fields = [
+        "name",
+        "category_id",
+        "deal_type",
+        "delivery_days",
+        "brand",
+        "original_price",
+        "discounted_price",
+        "discounted_percentage",
+        "start_date",
+        "end_date",
+        "coupon_code",
+        "description",
+        "specifications",
+      ];
+      fields.forEach((field) => {
+        if (formik.values[field] !== apiValues[field]) {
+          formData.append(field, formik.values[field]);
         }
-        if (field.selectedType === "video" && values[`video-${index}`]) {
-          formData.append(`media_url[${index + 1}]`, values[`video-${index}`]);
+      });
+
+      if (
+        JSON.stringify(formik.values.variants) !==
+        JSON.stringify(apiValues.varient?.split(","))
+      ) {
+        const formattedVariants = values.variants
+          .map((variant) => variant.value.trim())
+          .filter((value) => value !== "")
+          .map((value) => value.replace(/,\s*$/, ""));
+        formData.append("varient", formattedVariants);
+      }
+
+      mediaFields.forEach((field, index) => {
+        const imageKey = `image-${index}`;
+        const videoKey = `video-${index}`;
+
+        if (
+          field.selectedType === "image" &&
+          formik.values[imageKey] !== apiValues[`image-${index}`]
+        ) {
+          formData.append(`media[${index + 1}]`, formik.values[imageKey]);
+        }
+
+        if (
+          field.selectedType === "video" &&
+          formik.values[videoKey] !== apiValues[`video-${index}`]
+        ) {
+          formData.append(`media_url[${index + 1}]`, formik.values[videoKey]);
         }
       });
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
-      const finalSlug = `${slug}_${id}`;
-      formData.append("slug", finalSlug);
+      const finalSlug = `${slug}_${shop_id}`;
+      if (formik.values.name !== apiValues.name) {
+        formData.append("slug", finalSlug);
+      }
 
       console.log("Form Data:", formData);
+      formData.append("_method", "PUT");
       setLoadIndicator(true);
       try {
-        const response = await api.post(`vendor/product/133/update`, formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
+        const response = await api.post(
+          `vendor/product/${id}/update`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
         console.log("Response", response);
         if (response.status === 200) {
           toast.success(response.data.message);
@@ -213,141 +243,6 @@ function ProductEdit() {
       }
     },
   });
-
-  useEffect(() => {
-    const getData = {
-      success: true,
-      status: 200,
-      data: {
-        id: 1,
-        shop_id: 1,
-        deal_type: 1,
-        category_id: 1,
-        brand: "OnePlus",
-        name: "OnePlus 12 12/256",
-        description:
-          "Upgrade to the OnePlus 12 with 12GB RAM 256 ROM for high-speed performance and sleek design!. Get premium quality and power at an unbeatable value – limited time offer!",
-        slug: "oneplus_12",
-        original_price: "829.00",
-        discounted_price: "770.00",
-        discount_percentage: "7.10",
-        start_date: "2024-11-22T00:00:00.000000Z",
-        end_date: "2024-12-22T00:00:00.000000Z",
-        stock: 1,
-        sku: null,
-        active: 1,
-        deleted_at: null,
-        created_at: "2024-11-22T14:06:26.000000Z",
-        updated_at: "2024-11-22T14:59:40.000000Z",
-        coupon_code: "DEALSLAHV01",
-        specifications: null,
-        varient: null,
-        categoryName: "Mobile Phones",
-        categoryGroupName: "Electronics",
-        categoryGroupId: 1,
-        product_media: [
-          {
-            id: 1,
-            path: "assets/products/images/1/oneplus_12/oneplus1.webp",
-            order: 0,
-            type: "image",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-          {
-            id: 2,
-            path: "https://youtu.be/eCXya4fqJ_E?si=NWQ1rwnaKcu2vQ6L",
-            order: 1,
-            type: "video",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-          {
-            id: 3,
-            path: "assets/products/images/1/oneplus_12/oneplus2.webp",
-            order: 2,
-            type: "image",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-          {
-            id: 4,
-            path: "assets/products/images/1/oneplus_12/oneplus3.webp",
-            order: 3,
-            type: "image",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-          {
-            id: 5,
-            path: "https://youtu.be/PdVZRoLsYm4?si=cDkGJOqYpPBXsKU4",
-            order: 4,
-            type: "video",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-          {
-            id: 6,
-            path: "assets/products/images/1/oneplus_12/oneplus4.webp",
-            order: 5,
-            type: "image",
-            imageable_id: 1,
-            imageable_type: "App\\Models\\Product",
-            created_at: null,
-            updated_at: null,
-          },
-        ],
-      },
-      message: "Product Retrieved Successfully!",
-    };
-    const mediaFields = getData.data.product_media.reduce(
-      (acc, mediaItem, index) => {
-        if (mediaItem.type === "image") {
-          acc[`image-${index}`] = mediaItem.path || null;
-        } else if (mediaItem.type === "video") {
-          acc[`video-${index}`] = mediaItem.path || "";
-        }
-        return acc;
-      },
-      {}
-    );
-    formik.setValues({
-      category_id: getData.data.category_id || "",
-      name: getData.data.name || "",
-      shop_id: getData.data.categoryGroupId || "",
-      deal_type: getData.data.deal_type || "",
-      brand: getData.data.brand || "",
-      original_price: getData.data.original_price || "",
-      discounted_price: getData.data.discounted_price || "",
-      discounted_percentage: getData.data.discount_percentage || "",
-      start_date: getData.data.start_date.slice(0, 10) || "",
-      end_date: getData.data.end_date.slice(0, 10) || "",
-      coupon_code: getData.data.coupon_code || "",
-      description: getData.data.description || "",
-      variants: getData.data.varient
-        ? getData.data.varient
-            .split(",")
-            .map((value) => ({ value: value.trim() }))
-        : [{ id: Date.now(), value: "" }],
-      specifications: getData.data.specifications || "",
-      mediaFields: getData.data.product_media.map((mediaItem, index) => ({
-        selectedType: mediaItem.type,
-        [`image-${index}`]: mediaItem.type === "image" ? mediaItem.path : null,
-        [`video-${index}`]: mediaItem.type === "video" ? mediaItem.path : "",
-      })),
-    });
-    fetchCategory(getData.data.categoryGroupId);
-  }, []);
 
   const handlePlaceOrder = (e) => {
     e.preventDefault();
@@ -494,35 +389,52 @@ function ProductEdit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_price, formik.values.original_price]);
 
-  // const getData = async () => {
-  //   try {
-  //     const response = await api.get(`vendor/product/${id}/get`);
-  //     const {
-  //       image_url1,
-  //       image_url2,
-  //       image_url3,
-  //       image_url4,
-  //       coupon_code,
-  //       additional_details,
-  //       ...rest
-  //     } = response.data.data;
-  //     setIsCouponChecked(/\d/.test(coupon_code.charAt(8))); // Check if 9th character is a digit
-  //     const parsedAdditionalDetails = additional_details
-  //       ? JSON.parse(additional_details)
-  //       : [];
+  const getData = async () => {
+    try {
+      const response = await api.get(`vendor/product/${id}/get`);
 
-  //     formik.setValues({
-  //       ...rest,
-  //     });
-  //     setCouponCode(coupon_code);
-  //   } catch (error) {
-  //     toast.error("Error Fetching Data", error.message);
-  //   }
-  // };
+      const data = response.data.data;
+      console.log("data",data.product_media)
+      setApiValues(data);
+      const mediaFieldsData = data.product_media?.map((media, index) => ({
+        selectedType: media.type || "image", // Default to 'image' if no type
+        selectedFile: media.type === "image" ? media.path : "", // Image path or video URL
+        selectedUrl: media.type === "video" ? media.path : "", // Video URL if media is video
+      }));
 
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+      formik.setValues({
+        category_id: data.category_id || "",
+        name: data.name || "",
+        shop_id: data.categoryGroupId || "",
+        deal_type: data.deal_type || "",
+        brand: data.brand || "",
+        original_price: data.original_price || "",
+        discounted_price: data.discounted_price || "",
+        discounted_percentage: data.discount_percentage || "",
+        start_date: data.start_date.slice(0, 10) || "",
+        end_date: data.end_date.slice(0, 10) || "",
+        coupon_code: data.coupon_code || "",
+        description: data.description || "",
+        variants: data.varient
+          ? data.varient.split(",").map((value) => ({ value: value.trim() }))
+          : [{ id: Date.now(), value: "" }],
+        specifications: data.specifications || "",
+        ...mediaFieldsData?.reduce((acc, _, index) => {
+          acc[`image-${index}`] = null;
+          acc[`video-${index}`] = "";
+          return acc;
+        }, {}),
+      });
+
+      fetchCategory(data.categoryGroupId);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
 
   const updateCrop = (index, newCrop) => {
     setCrop((prevCrop) => {
@@ -533,7 +445,7 @@ function ProductEdit() {
   };
 
   const handleFileChange = (event, index, type) => {
-    const file = event?.target?.files[0];
+    const file = event.target.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
         toast.error("File size is too large. Max 2MB.");
@@ -548,7 +460,6 @@ function ProductEdit() {
           updatedImageSrc[index] = reader.result;
           setImageSrc(updatedImageSrc);
 
-          // Update cropper state for this index
           const updatedCropperStates = [...cropperStates];
           updatedCropperStates[index] = true;
           setCropperStates(updatedCropperStates);
@@ -663,7 +574,7 @@ function ProductEdit() {
     const newCouponCode =
       selectedValue === "discount"
         ? `DEALSLAH${formattedDiscount}`
-        : `DEALSLAHV${id.padStart(2, "0")}`;
+        : `DEALSLAHV${shop_id.padStart(2, "0")}`;
 
     setCouponCode(newCouponCode);
     formik.setFieldValue("coupon_code", newCouponCode);
@@ -679,25 +590,12 @@ function ProductEdit() {
       setCouponCode(updatedCoupon);
       formik.setFieldValue("coupon_code", updatedCoupon);
     } else {
-      const updatedCoupon = `DEALSLAHV${id.padStart(2, "0")}`;
+      const updatedCoupon = `DEALSLAHV${shop_id.padStart(2, "0")}`;
       setCouponCode(updatedCoupon);
       formik.setFieldValue("coupon_code", updatedCoupon);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_percentage, isCouponChecked]);
-
-  const addRow = () => {
-    formik.setFieldValue("additional_details", [
-      ...formik.values.additional_details,
-      { video_url: "", order: "" },
-    ]);
-  };
-
-  const removeRow = (index) => {
-    const updatedRows = [...formik.values.additional_details];
-    updatedRows.splice(index, 1);
-    formik.setFieldValue("additional_details", updatedRows);
-  };
 
   const handleDelete = (indexToDelete) => {
     if (mediaFields.length > 1 && indexToDelete !== 0) {
@@ -749,7 +647,7 @@ function ProductEdit() {
   };
 
   const handleTypeChange = (index, type) => {
-    const updatedFields = [...formik.values.mediaFields];
+    const updatedFields = [...mediaFields];
     updatedFields[index].selectedType = type;
     setMediaFields(updatedFields);
 
@@ -1087,7 +985,8 @@ function ProductEdit() {
               )}
             </div>
             <>
-              {formik.values.mediaFields?.map((field, index) => (
+              <>
+              {mediaFields.map((field, index) => (
                 <div key={index} className="row">
                   <p>Thumbnail {index + 1}</p>
                   <div className="col-12 d-flex align-items-center mb-3">
@@ -1154,9 +1053,6 @@ function ProductEdit() {
                           {formik.errors[`image-${index}`]}
                         </div>
                       )}
-                    {field.selectedType === "image" && (
-                      <img src={`image-${index}`} alt="noImage" className="" />
-                    )}
                     {cropperStates[index] &&
                       imageSrc[index] &&
                       field.selectedType === "image" && (
@@ -1246,6 +1142,7 @@ function ProductEdit() {
                   </div>
                 </div>
               ))}
+              </>
 
               <div className="text-end mt-3">
                 {mediaFields.length < 7 && (
