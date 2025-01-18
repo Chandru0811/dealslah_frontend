@@ -190,19 +190,9 @@ function OrderView() {
                               % saved
                             </span>
                           </p>
-                          {/* <p>
-                            Name :{" "}
-                            {data?.items?.shop?.name ?? ""}
-                          </p>
-                          <p>
-                            Email :{" "}
-                            {data?.address?.email ?? "No Email provided"}
-                          </p>
-                          <p>
-                            Phone :{" "}
-                            {data?.address?.mobile ??
-                              "No phone number provided"}
-                          </p> */}
+                          <p>Name : {items?.shop?.name ?? ""}</p>
+                          <p>Email : {items?.shop?.email ?? ""}</p>
+                          <p>Phone : {items?.shop?.mobile ?? ""}</p>
                         </div>
                       </div>
                     ) : (
