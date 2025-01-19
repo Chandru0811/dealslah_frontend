@@ -6,7 +6,7 @@ import api from "../../../config/URL";
 import ImageURL from "../../../config/ImageURL";
 
 function OrderView() {
-  const { id } = useParams();
+  const { order_id, product_id } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
   console.log("first:", data.address);
@@ -14,7 +14,7 @@ function OrderView() {
   const getData = async () => {
     setLoading(true);
     try {
-      const response = await api.get(`/admin/order/${id}`);
+      const response = await api.get(`/admin/order/${order_id}/${product_id}`);
       setData(response.data.data);
     } catch (error) {
       toast.error("Error Fetching Data ", error);
@@ -24,7 +24,7 @@ function OrderView() {
 
   useEffect(() => {
     getData();
-  }, [id]);
+  }, [order_id, product_id]);
 
   return (
     <section className="px-4">
@@ -45,36 +45,35 @@ function OrderView() {
               </p>
               &nbsp;
               <span
-                className={`badge-warning text-capitalize ${
-                  data?.payment_status === "1"
-                    ? "badge_warning"
-                    : "badge_warning"
-                }`}
+                className={`badge-warning text-capitalize ${data?.payment_status === "1"
+                  ? "badge_warning"
+                  : "badge_warning"
+                  }`}
               >
                 {data?.payment_status === "1"
                   ? "Unpaid"
                   : data?.payment_status === "2"
-                  ? "Pending"
-                  : data?.payment_status === "3"
-                  ? "Paid"
-                  : data?.payment_status === "4"
-                  ? "Refund Initiated"
-                  : data?.payment_status === "5"
-                  ? "Refunded"
-                  : data?.payment_status === "6"
-                  ? "Refund Error"
-                  : "Unknown Status"}
+                    ? "Pending"
+                    : data?.payment_status === "3"
+                      ? "Paid"
+                      : data?.payment_status === "4"
+                        ? "Refund Initiated"
+                        : data?.payment_status === "5"
+                          ? "Refunded"
+                          : data?.payment_status === "6"
+                            ? "Refund Error"
+                            : "Unknown Status"}
               </span>
               &nbsp;&nbsp;
-              {/* <span
+              <span
                 className={
-                  data?.order_type === "service"
+                  data.product?.deal_type === "1"
                     ? "badge_default text-capitalize"
                     : "badge_payment text-capitalize"
                 }
               >
-                {data?.order_type ?? "N/A"}
-              </span> */}
+                {data.product?.deal_type === "1" ? "Product" : "Service"}
+              </span>
             </div>
 
             <Link to="/order">
@@ -95,18 +94,18 @@ function OrderView() {
                         {data?.status === "1"
                           ? "Created"
                           : data?.status === "2"
-                          ? "Payment Error"
-                          : data?.status === "3"
-                          ? "Confirmed"
-                          : data?.status === "4"
-                          ? "Awaiting Delivery"
-                          : data?.status === "5"
-                          ? "Delivered"
-                          : data?.status === "6"
-                          ? "Returned"
-                          : data?.status === "7"
-                          ? "Cancelled"
-                          : "Unknown Status"}
+                            ? "Payment Error"
+                            : data?.status === "3"
+                              ? "Confirmed"
+                              : data?.status === "4"
+                                ? "Awaiting Delivery"
+                                : data?.status === "5"
+                                  ? "Delivered"
+                                  : data?.status === "6"
+                                    ? "Returned"
+                                    : data?.status === "7"
+                                      ? "Cancelled"
+                                      : "Unknown Status"}
                       </span>
                       &nbsp;
                       <span className="badge_payment">
@@ -125,19 +124,19 @@ function OrderView() {
                         : ""}
                     </span>{" "}
                     &nbsp;
-                    <span>
+                    {/* <span>
                       Time :{" "}
                       <span className="text-uppercase">
                         {" "}
                         {data?.created_at
                           ? new Date(data.created_at).toLocaleString("en-IN", {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                              hour12: true,
-                            })
+                            hour: "2-digit",
+                            minute: "2-digit",
+                            hour12: true,
+                          })
                           : ""}
                       </span>
-                    </span>
+                    </span> */}
                   </div>
                 </div>
                 <div className="card-body m-0 p-4">
@@ -214,15 +213,15 @@ function OrderView() {
                             Service Time:{" "}
                             {data?.service_time
                               ? (() => {
-                                  const [hours, minutes] = data.service_time
-                                    .split(":")
-                                    .map(Number);
-                                  const period = hours >= 12 ? "PM" : "AM";
-                                  const adjustedHours = hours % 12 || 12;
-                                  return `${adjustedHours}:${minutes
-                                    .toString()
-                                    .padStart(2, "0")} ${period}`;
-                                })()
+                                const [hours, minutes] = data.service_time
+                                  .split(":")
+                                  .map(Number);
+                                const period = hours >= 12 ? "PM" : "AM";
+                                const adjustedHours = hours % 12 || 12;
+                                return `${adjustedHours}:${minutes
+                                  .toString()
+                                  .padStart(2, "0")} ${period}`;
+                              })()
                               : " "}
                           </p>
                         </div>
@@ -289,14 +288,14 @@ function OrderView() {
               </div> */}
 
               {/* Order Summary */}
-              <div className="card">
+              <div className="card mb-4">
                 <div className="card-header m-0 p-2 d-flex justify-content-between align-items-center">
                   <p className="mb-0">Order Summary</p>
                   <p>
                     <span
                       className={
                         (data.payment_type?.replace(/_/g, " ") ?? "Pending") ===
-                        "online payment"
+                          "online payment"
                           ? "badge_default text-capitalize"
                           : "badge_payment text-capitalize"
                       }
@@ -308,16 +307,16 @@ function OrderView() {
                       {data?.payment_status === "1"
                         ? "Unpaid"
                         : data?.payment_status === "2"
-                        ? "Pending"
-                        : data?.payment_status === "3"
-                        ? "Paid"
-                        : data?.payment_status === "4"
-                        ? "Refund Initiated"
-                        : data?.payment_status === "5"
-                        ? "Refunded"
-                        : data?.payment_status === "6"
-                        ? "Refund Error"
-                        : "Unknown Status"}
+                          ? "Pending"
+                          : data?.payment_status === "3"
+                            ? "Paid"
+                            : data?.payment_status === "4"
+                              ? "Refund Initiated"
+                              : data?.payment_status === "5"
+                                ? "Refunded"
+                                : data?.payment_status === "6"
+                                  ? "Refund Error"
+                                  : "Unknown Status"}
                     </span>
                   </p>
                 </div>
@@ -339,7 +338,7 @@ function OrderView() {
                         useGrouping: false,
                       }).format(
                         parseFloat(data?.items?.[0]?.deal_originalprice || 0) *
-                          parseFloat(data?.quantity || 0)
+                        parseFloat(data?.quantity || 0)
                       )}
                     </span>
                   </div>
@@ -383,6 +382,143 @@ function OrderView() {
                   </div>
                 </div>
               </div>
+
+              <div className="card mb-4">
+                <div className="card-header m-0 p-2 d-flex justify-content-between gap-2 align-items-center">
+                  <div>
+                    <p className="mb-0">
+                      Client Information &nbsp;
+                      {/* <span className="badge_danger text-capitalize">
+                        {data?.status === "1"
+                          ? "Created"
+                          : data?.status === "2"
+                            ? "Payment Error"
+                            : data?.status === "3"
+                              ? "Confirmed"
+                              : data?.status === "4"
+                                ? "Awaiting Delivery"
+                                : data?.status === "5"
+                                  ? "Delivered"
+                                  : data?.status === "6"
+                                    ? "Returned"
+                                    : data?.status === "7"
+                                      ? "Cancelled"
+                                      : "Unknown Status"}
+                      </span>
+                      &nbsp;
+                      <span className="badge_payment">
+                        {data.items?.length > 0 &&
+                          data.items[0]?.coupon_code && (
+                            <span>{data?.items[0]?.coupon_code}</span>
+                          )}
+                      </span> */}
+                    </p>
+                  </div>
+                  <div>
+                    <span>
+                      Date :{" "}
+                      {data?.created_at
+                        ? new Date(data.created_at).toISOString().split("T")[0]
+                        : ""}
+                    </span>{" "}
+                    &nbsp;
+                  </div>
+                </div>
+                <div className="card-body m-0 p-4">
+                  {data.items?.map((items, index) =>
+                    items ? (
+                      <div key={index} className="row align-items-center mb-3">
+                        <div className="col-md-3">
+                          <img
+                            src={
+                              items?.product?.product_media[0]?.type === "image"
+                                ? `${ImageURL}${items.product.product_media[0].path}`
+                                : noImage
+                            }
+                            alt={items?.product?.name || "Product Image"}
+                            style={{ width: "100%" }}
+                          />
+                        </div>
+                        <div className="col">
+                          <h3 className="text-muted text-capitalize">
+                            {items?.product.name}
+                          </h3>
+                          <p>
+                            {items?.product?.description?.length > 200
+                              ? `${items.product.description.slice(0, 200)}...`
+                              : items?.product?.description}
+                          </p>
+                          <p>
+                            <del>
+                              $
+                              {new Intl.NumberFormat("en-IN", {
+                                maximumFractionDigits: 0,
+                              }).format(
+                                parseFloat(items?.product.original_price)
+                              )}
+                            </del>
+                            &nbsp;&nbsp;
+                            <span style={{ color: "#dc3545" }}>
+                              $
+                              {new Intl.NumberFormat("en-IN", {
+                                maximumFractionDigits: 0,
+                              }).format(
+                                parseFloat(items?.product.discounted_price)
+                              )}
+                            </span>
+                            &nbsp;&nbsp;
+                            <span className="badge_danger">
+                              {parseFloat(
+                                items?.product.discount_percentage
+                              ).toFixed(0)}
+                              % saved
+                            </span>
+                          </p>
+                          <p>Name : {items?.shop?.name ?? ""}</p>
+                          <p>Email : {items?.shop?.email ?? ""}</p>
+                          <p>Phone : {items?.shop?.mobile ?? ""}</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <>
+                        <p className="text-center my-5 py-5">
+                          No Product Data Found !
+                        </p>
+                      </>
+                    )
+                  )}
+
+                  <div className="row">
+                    <div className="col-md-3"></div>
+                    <div className="col-md-9">
+                      {data?.order_type === "service" ? (
+                        <div className="d-flex gap-4">
+                          <p>Service Date: {data?.service_date ?? " "}</p>
+                          {/* <p>
+                            Service Time:{" "}
+                            {data?.service_time
+                              ? (() => {
+                                const [hours, minutes] = data.service_time
+                                  .split(":")
+                                  .map(Number);
+                                const period = hours >= 12 ? "PM" : "AM";
+                                const adjustedHours = hours % 12 || 12;
+                                return `${adjustedHours}:${minutes
+                                  .toString()
+                                  .padStart(2, "0")} ${period}`;
+                              })()
+                              : " "}
+                          </p> */}
+                        </div>
+                      ) : (
+                        <div className="d-flex gap-4">
+                          {/* <p>Quantity: {data?.quantity ?? " "}</p> */}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Right Column: Notes, Customer Info, Contact, and Address */}
@@ -416,9 +552,8 @@ function OrderView() {
                   <p>
                     Name :{" "}
                     {data?.address?.first_name
-                      ? `${data?.address?.first_name} ${
-                          data?.address?.last_name || ""
-                        }`
+                      ? `${data?.address?.first_name} ${data?.address?.last_name || ""
+                      }`
                       : "N/A"}
                   </p>
                   <p>Email : {data?.address?.email ?? "No Email provided"}</p>

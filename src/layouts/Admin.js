@@ -109,7 +109,7 @@ function Admin({ handleLogout }) {
 
                   {/* {/ Slider /} */}
                   <Route path="/order" element={<Orders />} />
-                  <Route path="/order/view/:id" element={<OrderView />} />
+                  <Route path="/order/view/:order_id/:product_id" element={<OrderView />} />
 
                   {/* {/ Slider /} */}
                   <Route path="/slider" element={<Slider />} />
