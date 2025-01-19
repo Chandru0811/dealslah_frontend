@@ -184,7 +184,7 @@ function ProductEdit() {
         .map((variant) => variant.value.trim())
         .filter((value) => value !== "")
         .map((value) => value.replace(/,\s*$/, ""));
-
+      console.log("Submitted value", values);
       const formData = new FormData();
       formData.append("shop_id", values.shop_id);
       formData.append("name", values.name);
@@ -242,7 +242,7 @@ function ProductEdit() {
         if (response.status === 200) {
           toast.success(response.data.message);
           setShowModal(false);
-          navigate(`/product/print/${response.data.data.id}`);
+          navigate(`/product/view/${response.data.data.id}`);
         } else {
           toast.error(response.data.message);
         }
@@ -287,7 +287,6 @@ function ProductEdit() {
         coupon_code: true,
         image: true,
         description: true,
-        specifications: true,
         mediaFields: true,
       });
 
@@ -308,7 +307,6 @@ function ProductEdit() {
           coupon_code: "Coupon Code",
           image: "Main Image",
           description: "Description",
-          specifications: "Specifications",
           mediaFields: "Media Fields",
         };
 
@@ -415,7 +413,7 @@ function ProductEdit() {
       formik.setValues({
         category_id: data.category_id || "",
         name: data.name || "",
-        shop_id: data.categoryGroupId || "",
+        shop_id: data.shop_id || "",
         deal_type: data.deal_type || "",
         delivery_days: data.delivery_days || "",
         brand: data.brand || "",
@@ -495,19 +493,28 @@ function ProductEdit() {
     ]);
   };
   const handleDelete = async (index, mediaId) => {
-    try {
-      const response = await api.delete(`product/media/${mediaId}/delete`);
+    if (mediaId) {
+      try {
+        const response = await api.delete(
+          `vendor/product/media/${mediaId}/delete`
+        );
 
-      if (response.status === 200) {
-        const updatedFields = [...formik.values.mediaFields];
-        updatedFields.splice(index, 1);
-        formik.setFieldValue("mediaFields", updatedFields);
-        toast.success("Media deleted successfully");
-      } else {
-        toast.error("Failed to delete media");
+        if (response.status === 200) {
+          const updatedFields = [...formik.values.mediaFields];
+          updatedFields.splice(index, 1);
+          formik.setFieldValue("mediaFields", updatedFields);
+          toast.success("Media deleted successfully");
+        } else {
+          toast.error("Failed to delete media");
+        }
+      } catch (error) {
+        toast.error("An error occurred while deleting the media");
       }
-    } catch (error) {
-      toast.error("An error occurred while deleting the media");
+    } else {
+      const updatedMediaFields = formik.values.mediaFields.filter(
+        (_, i) => i !== index
+      );
+      formik.setFieldValue("mediaFields", updatedMediaFields);
     }
   };
 
@@ -659,7 +666,7 @@ function ProductEdit() {
         <div className="card shadow border-0 mb-3">
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
-              <h1 className="h4 ls-tight">Add Deals</h1>
+              <h1 className="h4 ls-tight">Edit Deals</h1>
               <Link to="/product">
                 <button type="button" className="btn btn-light btn-sm">
                   <span>Back</span>
@@ -1131,7 +1138,7 @@ function ProductEdit() {
                         <button
                           type="button"
                           className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(index, field.id)}
+                          onClick={() => handleDelete(index, field.id ?? null)}
                         >
                           Delete
                         </button>

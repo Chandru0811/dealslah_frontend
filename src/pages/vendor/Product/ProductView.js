@@ -273,7 +273,10 @@ function ProductView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.delivery_days} Days
+                        :
+                        {data?.delivery_days
+                          ? ` ${data.delivery_days} Days`
+                          : "N/A"}
                       </p>
                     </div>
                   </div>

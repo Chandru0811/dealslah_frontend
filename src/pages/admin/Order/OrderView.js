@@ -15,6 +15,7 @@ function OrderView() {
     setLoading(true);
     try {
       const response = await api.get(`/admin/order/${order_id}/${product_id}`);
+      console.log("View Data ", response.data.data);
       setData(response.data.data);
     } catch (error) {
       toast.error("Error Fetching Data ", error);
@@ -41,38 +42,39 @@ function OrderView() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="d-flex align-items-center mb-4">
               <p className="d-flex justify-content-center text-dark">
-                Order ID: {data.order_number ?? "N/A"}&nbsp;
+                Order ID: {data?.order?.order_number ?? "N/A"}&nbsp;
               </p>
               &nbsp;
               <span
-                className={`badge-warning text-capitalize ${data?.payment_status === "1"
-                  ? "badge_warning"
-                  : "badge_warning"
-                  }`}
+                className={`badge-warning text-capitalize ${
+                  data?.order?.payment_status === "1"
+                    ? "badge_warning"
+                    : "badge_warning"
+                }`}
               >
-                {data?.payment_status === "1"
+                {data?.order?.payment_status === "1"
                   ? "Unpaid"
-                  : data?.payment_status === "2"
-                    ? "Pending"
-                    : data?.payment_status === "3"
-                      ? "Paid"
-                      : data?.payment_status === "4"
-                        ? "Refund Initiated"
-                        : data?.payment_status === "5"
-                          ? "Refunded"
-                          : data?.payment_status === "6"
-                            ? "Refund Error"
-                            : "Unknown Status"}
+                  : data?.order?.payment_status === "2"
+                  ? "Pending"
+                  : data?.order?.payment_status === "3"
+                  ? "Paid"
+                  : data?.order?.payment_status === "4"
+                  ? "Refund Initiated"
+                  : data?.order?.payment_status === "5"
+                  ? "Refunded"
+                  : data?.order?.payment_status === "6"
+                  ? "Refund Error"
+                  : "Unknown Status"}
               </span>
               &nbsp;&nbsp;
               <span
                 className={
-                  data.product?.deal_type === "1"
-                    ? "badge_default text-capitalize"
+                  data?.deal_type === "1"
+                    ? "badge_payment text-capitalize"
                     : "badge_payment text-capitalize"
                 }
               >
-                {data.product?.deal_type === "1" ? "Product" : "Service"}
+                {data?.deal_type === "1" ? "Product" : "Service"}
               </span>
             </div>
 
@@ -91,28 +93,25 @@ function OrderView() {
                     <p className="mb-0">
                       Order Item &nbsp;
                       <span className="badge_danger text-capitalize">
-                        {data?.status === "1"
+                        {data?.order?.status === "1"
                           ? "Created"
-                          : data?.status === "2"
-                            ? "Payment Error"
-                            : data?.status === "3"
-                              ? "Confirmed"
-                              : data?.status === "4"
-                                ? "Awaiting Delivery"
-                                : data?.status === "5"
-                                  ? "Delivered"
-                                  : data?.status === "6"
-                                    ? "Returned"
-                                    : data?.status === "7"
-                                      ? "Cancelled"
-                                      : "Unknown Status"}
+                          : data?.order?.status === "2"
+                          ? "Payment Error"
+                          : data?.order?.status === "3"
+                          ? "Confirmed"
+                          : data?.order?.status === "4"
+                          ? "Awaiting Delivery"
+                          : data?.order?.status === "5"
+                          ? "Delivered"
+                          : data?.order?.status === "6"
+                          ? "Returned"
+                          : data?.order?.status === "7"
+                          ? "Cancelled"
+                          : "Unknown Status"}
                       </span>
                       &nbsp;
                       <span className="badge_payment">
-                        {data.items?.length > 0 &&
-                          data.items[0]?.coupon_code && (
-                            <span>{data?.items[0]?.coupon_code}</span>
-                          )}
+                        <span>{data?.coupon_code}</span>
                       </span>
                     </p>
                   </div>
@@ -140,89 +139,72 @@ function OrderView() {
                   </div>
                 </div>
                 <div className="card-body m-0 p-4">
-                  {data.items?.map((items, index) =>
-                    items ? (
-                      <div key={index} className="row align-items-center mb-3">
-                        <div className="col-md-3">
-                          <img
-                            src={
-                              items?.product?.product_media[0]?.type === "image"
-                                ? `${ImageURL}${items.product.product_media[0].path}`
-                                : noImage
-                            }
-                            alt={items?.product?.name || "Product Image"}
-                            style={{ width: "100%" }}
-                          />
-                        </div>
-                        <div className="col">
-                          <h3 className="text-muted text-capitalize">
-                            {items?.product.name}
-                          </h3>
-                          <p>
-                            {items?.product?.description?.length > 200
-                              ? `${items.product.description.slice(0, 200)}...`
-                              : items?.product?.description}
-                          </p>
-                          <p>
-                            <del>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                              }).format(
-                                parseFloat(items?.product.original_price)
-                              )}
-                            </del>
-                            &nbsp;&nbsp;
-                            <span style={{ color: "#dc3545" }}>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                              }).format(
-                                parseFloat(items?.product.discounted_price)
-                              )}
-                            </span>
-                            &nbsp;&nbsp;
-                            <span className="badge_danger">
-                              {parseFloat(
-                                items?.product.discount_percentage
-                              ).toFixed(0)}
-                              % saved
-                            </span>
-                          </p>
-                          <p>Name : {items?.shop?.name ?? ""}</p>
-                          <p>Email : {items?.shop?.email ?? ""}</p>
-                          <p>Phone : {items?.shop?.mobile ?? ""}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="text-center my-5 py-5">
-                          No Product Data Found !
-                        </p>
-                      </>
-                    )
-                  )}
+                  <div className="row align-items-center ">
+                    <div className="col-md-3">
+                      <img
+                        src={
+                          data?.product?.product_media[0]?.type === "image"
+                            ? `${ImageURL}${data.product.product_media[0].path}`
+                            : noImage
+                        }
+                        alt={data?.product?.name || "Product Image"}
+                        style={{ width: "100%" }}
+                      />
+                    </div>
+                    <div className="col">
+                      <h3 className="text-muted text-capitalize">
+                        {data?.item_description}
+                      </h3>
+                      <p>
+                        {data?.product?.description?.length > 200
+                          ? `${data.product.description.slice(0, 200)}...`
+                          : data?.product?.description}
+                      </p>
+                      <p>
+                        <del>
+                          $
+                          {new Intl.NumberFormat("en-IN", {
+                            maximumFractionDigits: 0,
+                          }).format(parseFloat(data?.unit_price))}
+                        </del>
+                        &nbsp;&nbsp;
+                        <span style={{ color: "#dc3545" }}>
+                          $
+                          {new Intl.NumberFormat("en-IN", {
+                            maximumFractionDigits: 0,
+                          }).format(parseFloat(data?.discount))}
+                        </span>
+                        &nbsp;&nbsp;
+                        <span className="badge_danger">
+                          {parseFloat(data?.discount_percent).toFixed(0)}% saved
+                        </span>
+                      </p>
+                      {/* <p>Name : {items?.shop?.name ?? ""}</p>
+                      <p>Email : {items?.shop?.email ?? ""}</p>
+                      <p>Phone : {items?.shop?.mobile ?? ""}</p> */}
+                    </div>
+                  </div>
 
                   <div className="row">
                     <div className="col-md-3"></div>
                     <div className="col-md-9">
-                      {data?.order_type === "service" ? (
+                      {data?.deal_type === "2" ? (
                         <div className="d-flex gap-4">
-                          <p>Service Date: {data?.service_date ?? " "}</p>
+                          <p>Service Date: {data?.service_date ?? "N/A"}</p>
                           <p>
                             Service Time:{" "}
                             {data?.service_time
                               ? (() => {
-                                const [hours, minutes] = data.service_time
-                                  .split(":")
-                                  .map(Number);
-                                const period = hours >= 12 ? "PM" : "AM";
-                                const adjustedHours = hours % 12 || 12;
-                                return `${adjustedHours}:${minutes
-                                  .toString()
-                                  .padStart(2, "0")} ${period}`;
-                              })()
-                              : " "}
+                                  const [hours, minutes] = data.service_time
+                                    .split(":")
+                                    .map(Number);
+                                  const period = hours >= 12 ? "PM" : "AM";
+                                  const adjustedHours = hours % 12 || 12;
+                                  return `${adjustedHours}:${minutes
+                                    .toString()
+                                    .padStart(2, "0")} ${period}`;
+                                })()
+                              : "N/A"}
                           </p>
                         </div>
                       ) : (
@@ -235,57 +217,26 @@ function OrderView() {
                 </div>
               </div>
 
-              {/* <div className="card mb-4">
-                <div className="card-header m-0 p-2 d-flex gap-2 align-items-center">
-                  <p className="mb-0">Shop Details</p>
+              <div className="card mb-4">
+                <div className="card-header m-0 p-2 d-flex justify-content-between gap-2 align-items-center">
+                  <div>
+                    <p className="mb-0">Seller Information &nbsp;</p>
+                  </div>
                 </div>
                 <div className="card-body m-0 p-4">
-                  {data.shop ? (
-                    <div className="row align-items-center mb-3">
-                      <div className="col">
-                        <div className="row">
-                          <div className="col-md-3">
-                            <p>Company Name</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.name ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Company Email</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.email ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Company Mobile</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.mobile ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Description</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.description ?? "N/A"}</p>
-                          </div>
-
-                          <div className="col-md-3">
-                            <p>Address</p>
-                          </div>
-                          <div className="col-md-9">
-                            <p>: {data.shop.address ?? "N/A"}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <p>No Shop Details Available</p>
-                  )}
+                  <p>Seller Name : {data?.shop?.legal_name ?? "N/A"}</p>
+                  <p>Seller Email : {data?.shop?.email ?? "N/A"}</p>
+                  <p>Seller Phone : {data?.shop?.mobile ?? "N/A"}</p>
+                  {/* <p>Description : <br></br> {data?.shop?.description ?? "N/A"}</p> */}
+                  <p>
+                    Seller Address:{" "}
+                    {data?.shop?.street && `${data.shop.street}, `}
+                    {data?.shop?.city && `${data.shop.city}, `}
+                    {data?.shop?.country && `${data.shop.country}`}
+                    {data?.shop?.zip_code && ` - ${data.shop.zip_code}`}
+                  </p>
                 </div>
-              </div> */}
+              </div>
 
               {/* Order Summary */}
               <div className="card mb-4">
@@ -294,29 +245,30 @@ function OrderView() {
                   <p>
                     <span
                       className={
-                        (data.payment_type?.replace(/_/g, " ") ?? "Pending") ===
-                          "online payment"
+                        (data?.order?.payment_type?.replace(/_/g, " ") ??
+                          "Pending") === "online payment"
                           ? "badge_default text-capitalize"
                           : "badge_payment text-capitalize"
                       }
                     >
-                      {data.payment_type?.replace(/_/g, " ") ?? "Pending"}
+                      {data?.order?.payment_type?.replace(/_/g, " ") ??
+                        "Pending"}
                     </span>
                     &nbsp;
                     <span className="badge_warning text-capitalize">
-                      {data?.payment_status === "1"
+                      {data?.order?.payment_status === "1"
                         ? "Unpaid"
-                        : data?.payment_status === "2"
-                          ? "Pending"
-                          : data?.payment_status === "3"
-                            ? "Paid"
-                            : data?.payment_status === "4"
-                              ? "Refund Initiated"
-                              : data?.payment_status === "5"
-                                ? "Refunded"
-                                : data?.payment_status === "6"
-                                  ? "Refund Error"
-                                  : "Unknown Status"}
+                        : data?.order?.payment_status === "2"
+                        ? "Pending"
+                        : data?.order?.payment_status === "3"
+                        ? "Paid"
+                        : data?.order?.payment_status === "4"
+                        ? "Refund Initiated"
+                        : data?.order?.payment_status === "5"
+                        ? "Refunded"
+                        : data?.order?.payment_status === "6"
+                        ? "Refund Error"
+                        : "Unknown Status"}
                     </span>
                   </p>
                 </div>
@@ -337,8 +289,8 @@ function OrderView() {
                         maximumFractionDigits: 2,
                         useGrouping: false,
                       }).format(
-                        parseFloat(data?.items?.[0]?.deal_originalprice || 0) *
-                        parseFloat(data?.quantity || 0)
+                        parseFloat(data?.unit_price || 0) *
+                          parseFloat(data?.quantity || 0)
                       )}
                     </span>
                   </div>
@@ -357,7 +309,12 @@ function OrderView() {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
                         useGrouping: false,
-                      }).format(parseFloat(data.discount))}
+                      }).format(
+                        parseFloat(data?.unit_price || 0) *
+                          parseFloat(data?.quantity || 0) -
+                          parseFloat(data?.discount || 0) *
+                            parseFloat(data?.quantity || 0)
+                      )}
                     </span>
                   </div>
 
@@ -377,145 +334,11 @@ function OrderView() {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
                         useGrouping: false,
-                      }).format(parseFloat(data.total))}
-                    </span>
-                  </div>
-                </div>
-              </div>
-
-              <div className="card mb-4">
-                <div className="card-header m-0 p-2 d-flex justify-content-between gap-2 align-items-center">
-                  <div>
-                    <p className="mb-0">
-                      Client Information &nbsp;
-                      {/* <span className="badge_danger text-capitalize">
-                        {data?.status === "1"
-                          ? "Created"
-                          : data?.status === "2"
-                            ? "Payment Error"
-                            : data?.status === "3"
-                              ? "Confirmed"
-                              : data?.status === "4"
-                                ? "Awaiting Delivery"
-                                : data?.status === "5"
-                                  ? "Delivered"
-                                  : data?.status === "6"
-                                    ? "Returned"
-                                    : data?.status === "7"
-                                      ? "Cancelled"
-                                      : "Unknown Status"}
-                      </span>
-                      &nbsp;
-                      <span className="badge_payment">
-                        {data.items?.length > 0 &&
-                          data.items[0]?.coupon_code && (
-                            <span>{data?.items[0]?.coupon_code}</span>
-                          )}
-                      </span> */}
-                    </p>
-                  </div>
-                  <div>
-                    <span>
-                      Date :{" "}
-                      {data?.created_at
-                        ? new Date(data.created_at).toISOString().split("T")[0]
-                        : ""}
-                    </span>{" "}
-                    &nbsp;
-                  </div>
-                </div>
-                <div className="card-body m-0 p-4">
-                  {data.items?.map((items, index) =>
-                    items ? (
-                      <div key={index} className="row align-items-center mb-3">
-                        <div className="col-md-3">
-                          <img
-                            src={
-                              items?.product?.product_media[0]?.type === "image"
-                                ? `${ImageURL}${items.product.product_media[0].path}`
-                                : noImage
-                            }
-                            alt={items?.product?.name || "Product Image"}
-                            style={{ width: "100%" }}
-                          />
-                        </div>
-                        <div className="col">
-                          <h3 className="text-muted text-capitalize">
-                            {items?.product.name}
-                          </h3>
-                          <p>
-                            {items?.product?.description?.length > 200
-                              ? `${items.product.description.slice(0, 200)}...`
-                              : items?.product?.description}
-                          </p>
-                          <p>
-                            <del>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                              }).format(
-                                parseFloat(items?.product.original_price)
-                              )}
-                            </del>
-                            &nbsp;&nbsp;
-                            <span style={{ color: "#dc3545" }}>
-                              $
-                              {new Intl.NumberFormat("en-IN", {
-                                maximumFractionDigits: 0,
-                              }).format(
-                                parseFloat(items?.product.discounted_price)
-                              )}
-                            </span>
-                            &nbsp;&nbsp;
-                            <span className="badge_danger">
-                              {parseFloat(
-                                items?.product.discount_percentage
-                              ).toFixed(0)}
-                              % saved
-                            </span>
-                          </p>
-                          <p>Name : {items?.shop?.name ?? ""}</p>
-                          <p>Email : {items?.shop?.email ?? ""}</p>
-                          <p>Phone : {items?.shop?.mobile ?? ""}</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <>
-                        <p className="text-center my-5 py-5">
-                          No Product Data Found !
-                        </p>
-                      </>
-                    )
-                  )}
-
-                  <div className="row">
-                    <div className="col-md-3"></div>
-                    <div className="col-md-9">
-                      {data?.order_type === "service" ? (
-                        <div className="d-flex gap-4">
-                          <p>Service Date: {data?.service_date ?? " "}</p>
-                          {/* <p>
-                            Service Time:{" "}
-                            {data?.service_time
-                              ? (() => {
-                                const [hours, minutes] = data.service_time
-                                  .split(":")
-                                  .map(Number);
-                                const period = hours >= 12 ? "PM" : "AM";
-                                const adjustedHours = hours % 12 || 12;
-                                return `${adjustedHours}:${minutes
-                                  .toString()
-                                  .padStart(2, "0")} ${period}`;
-                              })()
-                              : " "}
-                          </p> */}
-                        </div>
-                      ) : (
-                        <div className="d-flex gap-4">
-                          {/* <p>Quantity: {data?.quantity ?? " "}</p> */}
-                        </div>
+                      }).format(
+                        parseFloat(data?.discount || 0) *
+                          parseFloat(data?.quantity || 0)
                       )}
-                    </div>
+                    </span>
                   </div>
                 </div>
               </div>
@@ -538,8 +361,8 @@ function OrderView() {
                   <p className="mb-0">Customer</p>
                 </div>
                 <div className="card-body  m-0 p-4">
-                  <p>Name : {data?.customer?.name ?? "N/A"}</p>
-                  <p>Email : {data?.customer?.email ?? "N/A"}</p>
+                  <p>Name : {data?.order?.customer?.name ?? "N/A"}</p>
+                  <p>Email : {data?.order?.customer?.email ?? "N/A"}</p>
                 </div>
               </div>
 
@@ -551,15 +374,18 @@ function OrderView() {
                 <div className="card-body  m-0 p-4">
                   <p>
                     Name :{" "}
-                    {data?.address?.first_name
-                      ? `${data?.address?.first_name} ${data?.address?.last_name || ""
-                      }`
+                    {data?.order?.address?.first_name
+                      ? `${data?.order?.address?.first_name} ${
+                          data?.order?.address?.last_name || ""
+                        }`
                       : "N/A"}
                   </p>
-                  <p>Email : {data?.address?.email ?? "No Email provided"}</p>
+                  <p>
+                    Email : {data?.order?.address?.email ?? "No Email provided"}
+                  </p>
                   <p>
                     Phone :{" "}
-                    {data?.address?.mobile ?? "No phone number provided"}
+                    {data?.order?.address?.phone ?? "No phone number provided"}
                   </p>
                 </div>
               </div>
@@ -570,33 +396,19 @@ function OrderView() {
                   <p className="mb-0">Address</p>
                 </div>
                 <div className="card-body m-0 p-4">
-                  {/* {data.delivery_address ? (
-                    (() => {
-                      try {
-                        const deliveryAddress = JSON.parse(
-                          data.delivery_address
-                        );
-                        return (
-                          <>
-                            <p>
-                              {deliveryAddress.street}, {deliveryAddress.city},{" "}
-                              {deliveryAddress.state}, {deliveryAddress.country}
-                              , {deliveryAddress.zipCode}.
-                            </p>
-                            <p></p>
-                          </>
-                        );
-                      } catch (error) {
-                        console.error("Invalid JSON:", error);
-                        return <p>Invalid address format</p>;
-                      }
-                    })()
-                  ) : (
-                    <p>No address found</p>
-                  )} */}
                   <p>
-                    {data?.address?.unit ? `${data.address.unit}, ` : ""}
-                    {data?.address?.address}, {data?.address?.postalcode}.
+                    {data?.order?.address?.unit && `${data.order.address.unit}`}
+                    {data?.order?.address?.unit &&
+                      data?.order?.address?.address &&
+                      `, `}
+                    {data?.order?.address?.address &&
+                      `${data.order.address.address}`}
+                    {(data?.order?.address?.unit ||
+                      data?.order?.address?.address) &&
+                      data?.order?.address?.postalcode &&
+                      ` - `}
+                    {data?.order?.address?.postalcode &&
+                      `${data.order.address.postalcode}`}
                   </p>
                 </div>
               </div>

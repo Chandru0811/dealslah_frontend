@@ -123,38 +123,36 @@ const Orders = () => {
                 </tr>
               </thead>
               <tbody>
-                {datas?.map((data, index) => (
-                  <tr key={data.id}>
-                    <td className="text-start align-middle">{index + 1}</td>
-                    <td className="text-start">{data.order_number}</td>
-                    <td className="align-middle text-start">
-                      {data?.customer?.name}
-                    </td>
-                    <td className="align-middle text-start">
-                      $
-                      {new Intl.NumberFormat("en-IN", {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                        useGrouping: false,
-                      }).format(parseFloat(data.total))}
-                    </td>
-                    <td className="align-middle text-start">
-                      <p>
-                        {`${data.items?.[0]?.product?.name || ""}${
-                          data.items?.[1]?.product?.name
-                            ? `, ${data.items?.[1]?.product?.name}`
-                            : ""
-                        }`}
-                      </p>
-                    </td>
-                    <td className="align-middle text-center">
-                      <Link to={`/order/view/${data.id}`}>
-                        <button className="button-btn btn-sm m-2">View</button>
-                      </Link>
-                      {/* <DeleteModel /> */}
-                    </td>
-                  </tr>
-                ))}
+                {datas?.map((data, index) => {
+                  const total = (
+                    parseFloat(data.quantity) * parseFloat(data.discount)
+                  ).toFixed(2); // Calculate total
+                  return (
+                    <tr key={data.id}>
+                      <td className="text-start align-middle">{index + 1}</td>
+                      <td className="text-start">
+                        {data?.order?.order_number}
+                      </td>
+                      <td className="align-middle text-start">
+                        {data?.order?.customer?.name}
+                      </td>
+                      <td className="align-middle text-start">{total}</td>
+                      <td className="align-middle text-start">
+                        {data.item_description}
+                      </td>
+                      <td className="align-middle text-center">
+                        <Link
+                          to={`/order/view/${data.order_id}/${data.product_id}`}
+                        >
+                          <button className="button-btn btn-sm m-2">
+                            View
+                          </button>
+                        </Link>
+                        {/* <DeleteModel /> */}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

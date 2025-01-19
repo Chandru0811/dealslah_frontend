@@ -124,12 +124,12 @@ const Orders = () => {
               </thead>
               <tbody>
                 {datas?.map((data, index) => {
-                  const total = (parseFloat(data.quantity) * parseFloat(data.discount_percent)).toFixed(2); // Calculate total
+                  const total = (parseFloat(data.quantity) * parseFloat(data.discount)).toFixed(2); // Calculate total
                   return (
                     <tr key={data.id}>
                       <td className="text-start align-middle">{index + 1}</td>
-                      <td className="text-start">{data.order_number}</td>
-                      <td className="align-middle text-start">{data?.customer?.name}</td>
+                      <td className="text-start">{data?.order?.order_number}</td>
+                      <td className="align-middle text-start">{data?.order?.customer?.name}</td>
                       <td className="align-middle text-start">{total}</td>
                       <td className="align-middle text-start">{data.item_description}</td>
                       <td className="align-middle text-start">{data?.shop?.legal_name}</td>
