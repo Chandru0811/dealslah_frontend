@@ -92,6 +92,13 @@ function ProductView() {
     }
   };
 
+  function extractVideoId(url) {
+    const regExp =
+      /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/([a-zA-Z0-9_-]+))|youtu\.be\/([a-zA-Z0-9_-]+))/;
+    const match = url?.match(regExp);
+    return match ? match[1] || match[2] : null;
+  }
+
   return (
     <section className="px-4">
       <>
@@ -110,12 +117,12 @@ function ProductView() {
                 </span>
               </h1>
               <div>
-                <Link to="/product">
+                <Link to="/products">
                   <button type="button" className="btn btn-light btn-sm me-2">
                     <span>Back</span>
                   </button>
                 </Link>
-                {shopStatus === "0" ? (
+                {shopStatus === 0 || shopStatus === "0" ? (
                   <button
                     type="button"
                     onClick={handleActivate}
@@ -302,7 +309,7 @@ function ProductView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.delivery_days}
+                        : {data?.delivery_days} Days
                       </p>
                     </div>
                   </div>
@@ -319,7 +326,7 @@ function ProductView() {
                           ? new Date(data?.start_date).toLocaleDateString()
                           : ""}
                       </p>
-                       {/* <p className="text-muted text-sm">
+                      {/* <p className="text-muted text-sm">
                         :{" "}
                         {data?.start_date}
                       </p> */}
@@ -425,19 +432,29 @@ function ProductView() {
                             }}
                           />
                         </>
-                      ) : (
+                      ) : item.type === "video" ? (
                         <>
-                          <p className="text-sm">Thumbnail {index + 1}</p>
-                          <iframe
-                            width="100%"
-                            height="90%"
-                            src={item.path}
-                            title={`YouTube Video ${index + 1}`}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
+                          <p className="text-sm">Video {index + 1}</p>
+                          <div
+                            className="d-flex gap-4"
+                            id={`video-container-${index}`}
+                          >
+                            {/* Embed YouTube video */}
+                            {item.path && (
+                              <iframe
+                                src={`https://www.youtube.com/embed/${extractVideoId(
+                                  item.path
+                                )}`}
+                                width="320" // Reduced width
+                                height="180" // Reduced height
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                title={`Video ${index + 1}`}
+                              ></iframe>
+                            )}
+                          </div>
                         </>
-                      )}
+                      ) : null}
                     </div>
                   ))}
                 </div>
@@ -445,38 +462,39 @@ function ProductView() {
             </>
           )}
         </div>
-      
 
-      <Modal
-        show={showModal}
-        backdrop="static"
-        keyboard={false}
-        onHide={handleClose}
-      >
-        <Modal.Header closeButton>
-          <Modal.Title>Deactivate Deal</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>Are you sure you want to deactivate this Deal?</Modal.Body>
-        <Modal.Footer>
-          <button className="btn btn-sm btn-button" onClick={handleClose}>
-            Close
-          </button>
-          <button
-            className="btn-sm btn-danger"
-            type="submit"
-            onClick={handleDeActive}
-            disabled={loading}
-          >
-            {loading && (
-              <span
-                className="spinner-border spinner-border-sm me-2"
-                aria-hidden="true"
-              ></span>
-            )}
-            Deactivate
-          </button>
-        </Modal.Footer>
-      </Modal>
+        <Modal
+          show={showModal}
+          backdrop="static"
+          keyboard={false}
+          onHide={handleClose}
+        >
+          <Modal.Header closeButton>
+            <Modal.Title>Deactivate Deal</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            Are you sure you want to deactivate this Deal?
+          </Modal.Body>
+          <Modal.Footer>
+            <button className="btn btn-sm btn-button" onClick={handleClose}>
+              Close
+            </button>
+            <button
+              className="btn-sm btn-danger"
+              type="submit"
+              onClick={handleDeActive}
+              disabled={loading}
+            >
+              {loading && (
+                <span
+                  className="spinner-border spinner-border-sm me-2"
+                  aria-hidden="true"
+                ></span>
+              )}
+              Deactivate
+            </button>
+          </Modal.Footer>
+        </Modal>
       </>
     </section>
   );

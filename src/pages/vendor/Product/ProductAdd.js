@@ -66,7 +66,19 @@ function ProductAdd() {
       .max(25, "Name must be 25 characters or less")
       .required("Name is required"),
     deal_type: Yup.string().required("Deal Type is required"),
-    delivery_days: Yup.string().required("Delivery Days is required"),
+    delivery_days: Yup.string()
+      .test(
+        "delivery-days-required",
+        "Delivery Days is required when Deal Type is Product",
+        function (value) {
+          const { deal_type } = this.parent;
+          if (deal_type === "1") {
+            return !!value;
+          }
+          return true;
+        }
+      )
+      .notRequired(),
     original_price: Yup.number()
       .required("Original Price is required")
       .min(1, "Original Price must be greater than zero"),
@@ -93,10 +105,14 @@ function ProductAdd() {
       ),
     description: Yup.string()
       .required("Description is required")
-      .min(10, "Description must be at least 10 characters long"),
+      .min(10, "Description must be at least 10 characters long")
+      .max(250, "Description cannot be more than 250 characters long"),
+
     specifications: Yup.string()
-      .required("Specification is required")
-      .min(10, "Specification must be at least 10 characters long"),
+      .notRequired("Specification is required")
+      .min(10, "Specification must be at least 10 characters long")
+      .max(250, "Specification cannot be more than 250 characters long"),
+
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
@@ -177,8 +193,6 @@ function ProductAdd() {
       const slug = values.name.toLowerCase().replace(/\s+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
-
-      console.log("Form Data:", formData);
       setLoadIndicator(true);
       try {
         const response = await api.post(`vendor/product`, formData, {
@@ -697,37 +711,40 @@ function ProductAdd() {
                 </div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Delivery Days<span className="text-danger">*</span>
-              </label>
-              <select
-                type="text"
-                className={`form-select form-select-sm ${
-                  formik.touched.delivery_days && formik.errors.delivery_days
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("delivery_days")}
-              >
-                <option></option>
-                <option value="1">1 Days</option>
-                <option value="2">2 Days</option>
-                <option value="3">3 Days</option>
-                <option value="4">4 Days</option>
-                <option value="5">5 Days</option>
-                <option value="6">6 Days</option>
-                <option value="7">7 Days</option>
-                <option value="8">8 Days</option>
-                <option value="9">9 Days</option>
-                <option value="10">10 Days</option>
-              </select>
-              {formik.touched.delivery_days && formik.errors.delivery_days && (
-                <div className="invalid-feedback">
-                  {formik.errors.delivery_days}
-                </div>
-              )}
-            </div>
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Delivery Days<span className="text-danger">*</span>
+                </label>
+                <select
+                  type="text"
+                  className={`form-select form-select-sm ${
+                    formik.touched.delivery_days && formik.errors.delivery_days
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  {...formik.getFieldProps("delivery_days")}
+                >
+                  <option></option>
+                  <option value="1">1 Day</option>
+                  <option value="2">2 Days</option>
+                  <option value="3">3 Days</option>
+                  <option value="4">4 Days</option>
+                  <option value="5">5 Days</option>
+                  <option value="6">6 Days</option>
+                  <option value="7">7 Days</option>
+                  <option value="8">8 Days</option>
+                  <option value="9">9 Days</option>
+                  <option value="10">10 Days</option>
+                </select>
+                {formik.touched.delivery_days &&
+                  formik.errors.delivery_days && (
+                    <div className="invalid-feedback">
+                      {formik.errors.delivery_days}
+                    </div>
+                  )}
+              </div>
+            )}
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Name<span className="text-danger">*</span>
@@ -828,49 +845,51 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-            <div className="col-md-12 mb-3">
-              <label className="form-label">Variants</label>
-              <div className="row">
-                {formik.values.variants.map((variant, index) => (
-                  <div className="col-md-6 col-12 mb-2" key={variant.id}>
-                    <div className="input-group">
-                      <input
-                        type="text"
-                        className="form-control form-control-sm"
-                        name={`variants[${index}].value`}
-                        value={variant.value}
-                        onChange={(e) => {
-                          const valueWithoutComma = e.target.value.replace(
-                            /,/g,
-                            ""
-                          );
-                          formik.setFieldValue(
-                            `variants[${index}].value`,
-                            valueWithoutComma
-                          );
-                        }}
-                        placeholder={`Variant ${index + 1}`}
-                      />
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-12 mb-3">
+                <label className="form-label">Variants</label>
+                <div className="row">
+                  {formik.values.variants.map((variant, index) => (
+                    <div className="col-md-6 col-12 mb-2" key={variant.id}>
+                      <div className="input-group mb-2">
+                        <input
+                          type="text"
+                          className="form-control form-control-sm"
+                          name={`variants[${index}].value`}
+                          value={variant.value}
+                          onChange={(e) => {
+                            const valueWithoutComma = e.target.value.replace(
+                              /,/g,
+                              ""
+                            );
+                            formik.setFieldValue(
+                              `variants[${index}].value`,
+                              valueWithoutComma
+                            );
+                          }}
+                          placeholder={`Variant ${index + 1}`}
+                        />
 
-                      <button
-                        type="button"
-                        className="btn btn-danger btn-sm"
-                        onClick={() => removeVariant(variant.id)}
-                      >
-                        <FaTrash />
-                      </button>
+                        <button
+                          type="button"
+                          className="btn btn-light btn-sm"
+                          onClick={() => removeVariant(variant.id)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-button"
+                  onClick={addVariant}
+                >
+                  Add Variant
+                </button>
               </div>
-              <button
-                type="button"
-                className="btn btn-sm btn-button"
-                onClick={addVariant}
-              >
-                Add Variant
-              </button>
-            </div>
+            )}
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Start Date <span className="text-danger">*</span>
@@ -993,48 +1012,53 @@ function ProductAdd() {
                     {cropperStates[index] &&
                       imageSrc[index] &&
                       field.selectedType === "image" && (
-                        <div className="crop-container">
-                          <Cropper
-                            image={imageSrc[index]}
-                            crop={crop[index] || { x: 0, y: 0 }}
-                            zoom={zoom[index] || 1}
-                            aspect={320 / 240}
-                            onCropChange={(newCrop) =>
-                              updateCrop(index, newCrop)
-                            }
-                            onZoomChange={(newZoom) =>
-                              setZoom((prevZoom) => {
-                                const updatedZoom = [...prevZoom];
-                                updatedZoom[index] = newZoom;
-                                return updatedZoom;
-                              })
-                            }
-                            onCropComplete={(croppedArea, croppedAreaPixels) =>
-                              onCropComplete(
-                                index,
+                        <>
+                          <div className="crop-container">
+                            <Cropper
+                              image={imageSrc[index]}
+                              crop={crop[index] || { x: 0, y: 0 }}
+                              zoom={zoom[index] || 1}
+                              aspect={320 / 240}
+                              onCropChange={(newCrop) =>
+                                updateCrop(index, newCrop)
+                              }
+                              onZoomChange={(newZoom) =>
+                                setZoom((prevZoom) => {
+                                  const updatedZoom = [...prevZoom];
+                                  updatedZoom[index] = newZoom;
+                                  return updatedZoom;
+                                })
+                              }
+                              onCropComplete={(
                                 croppedArea,
                                 croppedAreaPixels
-                              )
-                            }
-                          />
-                        </div>
+                              ) =>
+                                onCropComplete(
+                                  index,
+                                  croppedArea,
+                                  croppedAreaPixels
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="d-flex justify-content-start mt-3 gap-2">
+                            <button
+                              type="button"
+                              className="btn btn-primary mt-3"
+                              onClick={() => handleCropSave(index)}
+                            >
+                              Save Cropped Image
+                            </button>
+                            <button
+                              type="button"
+                              className="btn btn-secondary mt-3"
+                              onClick={() => handleCropCancel(index)}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        </>
                       )}
-                    <div className="d-flex justify-content-start mt-3 gap-2">
-                      <button
-                        type="button"
-                        className="btn btn-primary mt-3"
-                        onClick={() => handleCropSave(index)}
-                      >
-                        Save Cropped Image
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-secondary mt-3"
-                        onClick={() => handleCropCancel(index)}
-                      >
-                        Cancel
-                      </button>
-                    </div>
                   </div>
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
@@ -1112,9 +1136,7 @@ function ProductAdd() {
               )}
             </div>
             <div className="col-12 mb-5">
-              <label className="form-label">
-                Specification<span className="text-danger">*</span>
-              </label>
+              <label className="form-label">Specification</label>
               <textarea
                 type="text"
                 rows={5}

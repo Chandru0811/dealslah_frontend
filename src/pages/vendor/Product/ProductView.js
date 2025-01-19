@@ -49,6 +49,12 @@ function ProductView() {
       console.error("Failed to copy!", err);
     }
   };
+  function extractVideoId(url) {
+    const regExp =
+      /(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/([a-zA-Z0-9_-]+))|youtu\.be\/([a-zA-Z0-9_-]+))/;
+    const match = url?.match(regExp);
+    return match ? match[1] || match[2] : null;
+  }
 
   return (
     <section className="px-4">
@@ -267,8 +273,7 @@ function ProductView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        :{" "}
-                        {data?.delivery_days}
+                        : {data?.delivery_days} Days
                       </p>
                     </div>
                   </div>
@@ -353,19 +358,29 @@ function ProductView() {
                             }}
                           />
                         </>
-                      ) : (
+                      ) : item.type === "video" ? (
                         <>
-                          <p className="text-sm">Thumbnail {index + 1}</p>
-                          <iframe
-                            width="100%"
-                            height="90%"
-                            src={item.path}
-                            title={`YouTube Video ${index + 1}`}
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                          />
+                          <p className="text-sm">Video {index + 1}</p>
+                          <div
+                            className="d-flex gap-4"
+                            id={`video-container-${index}`}
+                          >
+                            {/* Embed YouTube video */}
+                            {item.path && (
+                              <iframe
+                                src={`https://www.youtube.com/embed/${extractVideoId(
+                                  item.path
+                                )}`}
+                                width="320" // Reduced width
+                                height="180" // Reduced height
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                title={`Video ${index + 1}`}
+                              ></iframe>
+                            )}
+                          </div>
                         </>
-                      )}
+                      ) : null}
                     </div>
                   ))}
                 </div>

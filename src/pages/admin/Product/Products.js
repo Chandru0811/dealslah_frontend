@@ -126,12 +126,12 @@ const Products = () => {
                   <tr key={data.id}>
                     <td className="text-start align-middle">{index + 1}</td>
                     <td className="text-start">
-                      <img
+                      {/* <img
                         src={`${ImageURL}${data.image_url1}`}
                         alt="Logo"
                         className="img-fluid w-25 me-3"
                         style={{ maxHeight: "70px", maxWidth: "70px" }}
-                      />
+                      /> */}
                       {data.name}
                     </td>
                     <td className="align-middle text-start">
