@@ -434,7 +434,7 @@ function ProductView() {
                         </>
                       ) : item.type === "video" ? (
                         <>
-                          <p className="text-sm">Video {index + 1}</p>
+                          <p className="text-sm">Thumbnail {index + 1}</p>
                           <div
                             className="d-flex gap-4"
                             id={`video-container-${index}`}
