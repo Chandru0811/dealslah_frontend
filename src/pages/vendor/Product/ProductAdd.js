@@ -60,7 +60,7 @@ function ProductAdd() {
     });
 
   const validationSchema = Yup.object({
-    shop_id: Yup.string().required("Category Group is required"),
+    categoryGroupId: Yup.string().required("Category Group is required"),
     category_id: Yup.string().required("Category is required"),
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
@@ -135,7 +135,7 @@ function ProductAdd() {
 
   const formik = useFormik({
     initialValues: {
-      shop_id: "",
+      categoryGroupId: "",
       name: "",
       category_id: "",
       deal_type: "",
@@ -169,6 +169,7 @@ function ProductAdd() {
       formData.append("shop_id", id);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
+      formData.append("categoryGroupId", values.categoryGroupId);
       formData.append("deal_type", values.deal_type);
       formData.append("brand", values.brand);
       formData.append("original_price", values.original_price);
@@ -235,7 +236,7 @@ function ProductAdd() {
 
     formik.validateForm().then((errors) => {
       formik.setTouched({
-        shop_id: true,
+        categoryGroupId: true,
         name: true,
         category_id: true,
         deal_type: true,
@@ -260,7 +261,7 @@ function ProductAdd() {
       const formErrors = formik.errors;
       if (Object.keys(formErrors).length > 0) {
         const fieldLabels = {
-          shop_id: "Category Group",
+          categoryGroupId: "Category Group",
           name: "Name",
           category_id: "Category",
           deal_type: "Deal Type",
@@ -274,7 +275,8 @@ function ProductAdd() {
           coupon_code: "Coupon Code",
           image: "Main Image",
           description: "Description",
-          specifications: "Specification cannot be more than 250 characters long",
+          specifications:
+            "Specification cannot be more than 250 characters long",
           ...mediaFields.reduce((acc, _, index) => {
             acc[`image-${index}`] = `Image ${index + 1}`;
             acc[`video-${index}`] = `Youtube ${index + 1}`;
@@ -345,7 +347,7 @@ function ProductAdd() {
     const categoryGroup = event.target.value;
     setCategory([]);
 
-    formik.setFieldValue("shop_id", categoryGroup);
+    formik.setFieldValue("categoryGroupId", categoryGroup);
 
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
@@ -492,7 +494,7 @@ function ProductAdd() {
     updatedImageSrc[index] = null;
     setImageSrc(updatedImageSrc);
 
-    formik.setFieldValue(`image-${index}`, null);
+    formik.setFieldValue(`image-${index}`, "");
     // Reset the file input
     const fileInput = document.querySelector(`input[name="image-${index}"]`);
     if (fileInput) fileInput.value = "";
@@ -628,13 +630,13 @@ function ProductAdd() {
               </label>
               <select
                 className={`form-select form-select-sm ${
-                  formik.touched.shop_id && formik.errors.shop_id
+                  formik.touched.categoryGroupId && formik.errors.categoryGroupId
                     ? "is-invalid"
                     : ""
                 }`}
-                {...formik.getFieldProps("shop_id")}
+                {...formik.getFieldProps("categoryGroupId")}
                 onChange={handleCategorygroupChange}
-                value={formik.values.shop_id}
+                value={formik.values.categoryGroupId}
               >
                 <option value="">Select a category group</option>
                 {allCategorgroup &&
@@ -644,8 +646,8 @@ function ProductAdd() {
                     </option>
                   ))}
               </select>
-              {formik.touched.shop_id && formik.errors.shop_id && (
-                <div className="invalid-feedback">{formik.errors.shop_id}</div>
+              {formik.touched.categoryGroupId && formik.errors.categoryGroupId && (
+                <div className="invalid-feedback">{formik.errors.categoryGroupId}</div>
               )}
             </div>
             <div className="col-md-6 col-12 mb-3">
@@ -692,6 +694,9 @@ function ProductAdd() {
                   formik.setFieldValue("deal_type", selectedDealType);
                   if (selectedDealType !== "1") {
                     formik.setFieldValue("delivery_days", "");
+                    formik.setFieldValue("variants", [
+                      { id: Date.now(), value: "" },
+                    ]);
                   }
                 }}
               >

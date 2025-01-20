@@ -42,7 +42,7 @@ function ProductEdit() {
   };
 
   const validationSchema = Yup.object({
-    shop_id: Yup.string().required("Category Group is required"),
+    categoryGroupId: Yup.string().required("Category Group is required"),
     category_id: Yup.string().required("Category is required"),
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
@@ -137,7 +137,7 @@ function ProductEdit() {
 
   const formik = useFormik({
     initialValues: {
-      shop_id: "",
+      categoryGroupId: "",
       name: "",
       category_id: "",
       deal_type: "",
@@ -164,6 +164,7 @@ function ProductEdit() {
       console.log("Submitted value", values);
       const formData = new FormData();
       formData.append("shop_id", values.shop_id);
+      formData.append("categoryGroupId", values.categoryGroupId);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
       formData.append("deal_type", values.deal_type);
@@ -250,7 +251,7 @@ function ProductEdit() {
 
     formik.validateForm().then((errors) => {
       formik.setTouched({
-        shop_id: true,
+        categoryGroupId: true,
         name: true,
         category_id: true,
         deal_type: true,
@@ -271,7 +272,7 @@ function ProductEdit() {
       const formErrors = formik.errors;
       if (Object.keys(formErrors).length > 0) {
         const fieldLabels = {
-          shop_id: "Category Group",
+          categoryGroupId: "Category Group",
           name: "Name",
           category_id: "Category",
           deal_type: "Deal Type",
@@ -324,7 +325,12 @@ function ProductEdit() {
     const updatedVariants = formik.values.variants.filter(
       (variant) => variant.id !== id
     );
-    formik.setFieldValue("variants", updatedVariants);
+    formik.setFieldValue(
+      "variants",
+      updatedVariants.length > 0
+        ? updatedVariants
+        : [{ id: Date.now(), value: "" }]
+    );
   };
 
   useEffect(() => {
@@ -354,7 +360,7 @@ function ProductEdit() {
     const categoryGroup = event.target.value;
     setCategory([]);
 
-    formik.setFieldValue("shop_id", categoryGroup);
+    formik.setFieldValue("categoryGroupId", categoryGroup);
 
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
@@ -398,6 +404,7 @@ function ProductEdit() {
         category_id: data.category_id || "",
         name: data.name || "",
         shop_id: data.shop_id || "",
+        categoryGroupId: data.categoryGroupId || "",
         deal_type: data.deal_type || "",
         delivery_days: data.delivery_days || "",
         brand: data.brand || "",
@@ -409,7 +416,10 @@ function ProductEdit() {
         coupon_code: data.coupon_code || "",
         description: data.description || "",
         variants: data.varient
-          ? data.varient.split(",").map((value) => ({ value: value.trim() }))
+          ? data.varient.split(",").map((value, index) => ({
+              id: Date.now() + index,
+              value: value.trim(),
+            }))
           : [{ id: Date.now(), value: "" }],
         specifications: data.specifications || "",
         mediaFields: data.product_media
@@ -439,36 +449,28 @@ function ProductEdit() {
     });
   };
 
-  const handleFileChange = (event, index, type) => {
+  const handleFileChange = (event, index) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-
+  
       // Read the file as a binary string
       reader.onload = () => {
         // Update the preview (imageSrc) for the cropper
         const updatedImageSrc = [...imageSrc];
         updatedImageSrc[index] = reader.result;
         setImageSrc(updatedImageSrc);
-
+  
         // Enable the cropper
         const updatedCropperStates = [...cropperStates];
         updatedCropperStates[index] = true;
         setCropperStates(updatedCropperStates);
-
-        // Update Formik values
-        const updatedFields = [...formik.values.mediaFields];
-        updatedFields[index] = {
-          ...updatedFields[index],
-          path: file.name, // Store the file name
-          binaryData: file, // Store the raw file
-        };
-        formik.setFieldValue("mediaFields", updatedFields);
       };
-
+  
       reader.readAsDataURL(file); // Read file for preview
     }
   };
+  
 
   const handleAddMediaField = () => {
     formik.setFieldValue("mediaFields", [
@@ -555,12 +557,12 @@ function ProductEdit() {
         croppedAreaPixels[index],
         index
       );
-
+  
       // Create a new File object
       const file = new File([croppedImageBlob], `croppedImage-${index}.jpeg`, {
         type: "image/jpeg",
       });
-
+  
       // Update Formik values for the specific index
       const updatedFields = [...formik.values.mediaFields];
       updatedFields[index] = {
@@ -569,30 +571,43 @@ function ProductEdit() {
         binaryData: file, // Store binary blob
       };
       formik.setFieldValue("mediaFields", updatedFields);
-
+  
       // Disable the cropper
       const updatedCropperStates = [...cropperStates];
       updatedCropperStates[index] = false;
       setCropperStates(updatedCropperStates);
+  
+      // Clear the temporary imageSrc for the index
+      const updatedImageSrc = [...imageSrc];
+      updatedImageSrc[index] = null;
+      setImageSrc(updatedImageSrc);
+  
+      console.log("Cropped image saved successfully!");
     } catch (error) {
       console.error("Error cropping the image:", error);
     }
   };
+  
 
   const handleCropCancel = (index) => {
+    // Reset the cropper state for the given index
     const updatedCropperStates = [...cropperStates];
     updatedCropperStates[index] = false;
     setCropperStates(updatedCropperStates);
-
+  
+    // Clear the image preview source for the given index
     const updatedImageSrc = [...imageSrc];
     updatedImageSrc[index] = null;
     setImageSrc(updatedImageSrc);
-
-    formik.setFieldValue(`image-${index}`, null);
+  
     // Reset the file input
     const fileInput = document.querySelector(`input[name="image-${index}"]`);
-    if (fileInput) fileInput.value = "";
+    if (fileInput) {
+      fileInput.value = "";
+    }
+    
   };
+  
 
   const formatDiscountPercentage = (discounted_percentage) => {
     const roundedDiscount = Math.round(discounted_percentage || 0);
@@ -667,13 +682,14 @@ function ProductEdit() {
               </label>
               <select
                 className={`form-select form-select-sm ${
-                  formik.touched.shop_id && formik.errors.shop_id
+                  formik.touched.categoryGroupId &&
+                  formik.errors.categoryGroupId
                     ? "is-invalid"
                     : ""
                 }`}
-                {...formik.getFieldProps("shop_id")}
+                {...formik.getFieldProps("categoryGroupId")}
                 onChange={handleCategorygroupChange}
-                value={formik.values.shop_id}
+                value={formik.values.categoryGroupId}
               >
                 <option value="">Select a category group</option>
                 {allCategorgroup &&
@@ -683,9 +699,12 @@ function ProductEdit() {
                     </option>
                   ))}
               </select>
-              {formik.touched.shop_id && formik.errors.shop_id && (
-                <div className="invalid-feedback">{formik.errors.shop_id}</div>
-              )}
+              {formik.touched.categoryGroupId &&
+                formik.errors.categoryGroupId && (
+                  <div className="invalid-feedback">
+                    {formik.errors.categoryGroupId}
+                  </div>
+                )}
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -726,6 +745,16 @@ function ProductEdit() {
                     : ""
                 }`}
                 {...formik.getFieldProps("deal_type")}
+                onChange={(e) => {
+                  const selectedDealType = e.target.value;
+                  formik.setFieldValue("deal_type", selectedDealType);
+                  if (selectedDealType !== "1") {
+                    formik.setFieldValue("delivery_days", "");
+                    formik.setFieldValue("variants", [
+                      { id: Date.now(), value: "" },
+                    ]);
+                  }
+                }}
               >
                 <option></option>
                 <option value="1">Product</option>
@@ -1162,7 +1191,6 @@ function ProductEdit() {
                           }}
                           placeholder={`Variant ${index + 1}`}
                         />
-
                         <button
                           type="button"
                           className="btn btn-light btn-sm"
@@ -1183,6 +1211,7 @@ function ProductEdit() {
                 </button>
               </div>
             )}
+
             <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
               <div className="d-flex align-items-center">
                 <div className="form-check mb-3">
@@ -1193,7 +1222,7 @@ function ProductEdit() {
                     value="fixed"
                     className="form-check-input"
                     style={{ boxShadow: "none" }}
-                    // checked={!isCouponChecked}
+                    checked={!isCouponChecked}
                     onChange={handleRadioChange}
                   />
                   <label htmlFor="vendorCoupon" className="form-label ms-2">
