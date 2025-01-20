@@ -171,11 +171,6 @@ function ProductEdit() {
       variants: [{ id: Date.now(), value: "" }],
       delivery_days: "",
       specifications: "",
-      // ...mediaFields?.reduce((acc, _, index) => {
-      //   acc[`image-${index}`] = null;
-      //   acc[`video-${index}`] = "";
-      //   return acc;
-      // }, {}),
       mediaFields: [{ selectedType: "image", path: "" }],
     },
     validationSchema: validationSchema,
@@ -287,6 +282,7 @@ function ProductEdit() {
         coupon_code: true,
         image: true,
         description: true,
+        specifications: true,
         mediaFields: true,
       });
 
@@ -308,6 +304,8 @@ function ProductEdit() {
           image: "Main Image",
           description: "Description",
           mediaFields: "Media Fields",
+          specifications:
+            "Specification cannot be more than 250 characters long",
         };
 
         const missedFields = Object.keys(formErrors)
@@ -645,7 +643,6 @@ function ProductEdit() {
       setCouponCode(updatedCoupon);
       formik.setFieldValue("coupon_code", updatedCoupon);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formik.values.discounted_percentage, isCouponChecked]);
 
   const handleVideoChange = (e, index) => {
@@ -1149,7 +1146,7 @@ function ProductEdit() {
               </>
 
               <div className="text-end mt-3">
-                {mediaFields.length < 7 && (
+                {formik.values.mediaFields.length < 7 && (
                   <button
                     type="button"
                     onClick={handleAddMediaField}
@@ -1210,7 +1207,7 @@ function ProductEdit() {
                     value="fixed"
                     className="form-check-input"
                     style={{ boxShadow: "none" }}
-                    checked={!isCouponChecked}
+                    checked= {formik.values.coupon_code === "DEALSLAHV02"}
                     onChange={handleRadioChange}
                   />
                   <label htmlFor="vendorCoupon" className="form-label ms-2">
@@ -1226,7 +1223,8 @@ function ProductEdit() {
                     value="discount"
                     className="form-check-input"
                     style={{ boxShadow: "none" }}
-                    checked={isCouponChecked}
+                    // checked={isCouponChecked}
+                    checked= {formik.values.coupon_code === "DEALSLAH23"}
                     onChange={handleRadioChange}
                   />
                   <label htmlFor="genricCoupon" className="form-label ms-2">
