@@ -770,7 +770,7 @@ function ProductAdd() {
                   event.target.value = event.target.value
                     .replace(/[^0-9.]/g, "")
                     .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{1})./g, "$1");
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control form-control-sm ${
                   formik.touched.original_price && formik.errors.original_price
@@ -796,7 +796,7 @@ function ProductAdd() {
                   event.target.value = event.target.value
                     .replace(/[^0-9.]/g, "")
                     .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{1})./g, "$1");
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control form-control-sm ${
                   formik.touched.discounted_price &&
@@ -948,6 +948,7 @@ function ProductAdd() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
+                      name={`image-${index}`}
                       className={`form-control ${
                         formik.touched[`image-${index}`] &&
                         formik.errors[`image-${index}`]

@@ -423,11 +423,13 @@ function ProductEdit() {
           : [{ id: Date.now(), value: "" }],
         specifications: data.specifications || "",
         mediaFields: data.product_media
-          ? data.product_media.map((mediaItem) => ({
-              id: mediaItem.id,
-              selectedType: mediaItem.type,
-              path: mediaItem.path,
-            }))
+          ? data.product_media
+              .sort((a, b) => a.order - b.order)
+              .map((mediaItem) => ({
+                id: mediaItem.id,
+                selectedType: mediaItem.type,
+                path: mediaItem.path,
+              }))
           : [],
       });
 
@@ -453,24 +455,23 @@ function ProductEdit() {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
-  
+
       // Read the file as a binary string
       reader.onload = () => {
         // Update the preview (imageSrc) for the cropper
         const updatedImageSrc = [...imageSrc];
         updatedImageSrc[index] = reader.result;
         setImageSrc(updatedImageSrc);
-  
+
         // Enable the cropper
         const updatedCropperStates = [...cropperStates];
         updatedCropperStates[index] = true;
         setCropperStates(updatedCropperStates);
       };
-  
+
       reader.readAsDataURL(file); // Read file for preview
     }
   };
-  
 
   const handleAddMediaField = () => {
     formik.setFieldValue("mediaFields", [
@@ -557,12 +558,12 @@ function ProductEdit() {
         croppedAreaPixels[index],
         index
       );
-  
+
       // Create a new File object
       const file = new File([croppedImageBlob], `croppedImage-${index}.jpeg`, {
         type: "image/jpeg",
       });
-  
+
       // Update Formik values for the specific index
       const updatedFields = [...formik.values.mediaFields];
       updatedFields[index] = {
@@ -571,43 +572,40 @@ function ProductEdit() {
         binaryData: file, // Store binary blob
       };
       formik.setFieldValue("mediaFields", updatedFields);
-  
+
       // Disable the cropper
       const updatedCropperStates = [...cropperStates];
       updatedCropperStates[index] = false;
       setCropperStates(updatedCropperStates);
-  
+
       // Clear the temporary imageSrc for the index
       const updatedImageSrc = [...imageSrc];
       updatedImageSrc[index] = null;
       setImageSrc(updatedImageSrc);
-  
+
       console.log("Cropped image saved successfully!");
     } catch (error) {
       console.error("Error cropping the image:", error);
     }
   };
-  
 
   const handleCropCancel = (index) => {
     // Reset the cropper state for the given index
     const updatedCropperStates = [...cropperStates];
     updatedCropperStates[index] = false;
     setCropperStates(updatedCropperStates);
-  
+
     // Clear the image preview source for the given index
     const updatedImageSrc = [...imageSrc];
     updatedImageSrc[index] = null;
     setImageSrc(updatedImageSrc);
-  
+
     // Reset the file input
     const fileInput = document.querySelector(`input[name="image-${index}"]`);
     if (fileInput) {
       fileInput.value = "";
     }
-    
   };
-  
 
   const formatDiscountPercentage = (discounted_percentage) => {
     const roundedDiscount = Math.round(discounted_percentage || 0);
@@ -843,7 +841,7 @@ function ProductEdit() {
                   event.target.value = event.target.value
                     .replace(/[^0-9.]/g, "")
                     .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{1})./g, "$1");
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control form-control-sm ${
                   formik.touched.original_price && formik.errors.original_price
@@ -869,7 +867,7 @@ function ProductEdit() {
                   event.target.value = event.target.value
                     .replace(/[^0-9.]/g, "")
                     .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{1})./g, "$1");
+                    .replace(/(\.\d{2})./g, "$1");
                 }}
                 className={`form-control form-control-sm ${
                   formik.touched.discounted_price &&
@@ -1004,6 +1002,7 @@ function ProductEdit() {
                       <input
                         type="file"
                         accept=".png,.jpeg,.jpg,.svg,.webp"
+                        name={`image-${index}`}
                         className={`form-control ${
                           formik.errors.mediaFields?.[index]?.path &&
                           field.selectedType === "image"
@@ -1016,7 +1015,7 @@ function ProductEdit() {
                       {field.selectedType === "image" && field.path && (
                         <div className="mt-3">
                           <img
-                            src={`${ImageURL}${field.path}`}
+                            src={imageSrc[index] || `${ImageURL}${field.path}`}
                             alt="Preview"
                             className="img-thumbnail"
                             style={{ maxWidth: "200px", maxHeight: "150px" }}
