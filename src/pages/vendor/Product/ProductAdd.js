@@ -69,7 +69,7 @@ function ProductAdd() {
     delivery_days: Yup.string()
       .test(
         "delivery-days-required",
-        "Delivery Days is required when Deal Type is Product",
+        "Delivery Days is required",
         function (value) {
           const { deal_type } = this.parent;
           if (deal_type === "1") {
@@ -79,18 +79,33 @@ function ProductAdd() {
         }
       )
       .notRequired(),
-    original_price: Yup.number()
-      .required("Original Price is required")
-      .min(1, "Original Price must be greater than zero"),
-    discounted_price: Yup.number()
-      .required("Discounted Price is required")
-      .max(
-        Yup.ref("original_price"),
-        "The Discounted Price must be same or below the Original Price."
-      ),
-    discounted_percentage: Yup.number()
-      .required("Discount is required")
-      .max(100, "Discount must be less than 100"),
+    original_price: Yup.string()
+      .test("Original Price is required", function (value) {
+        const { deal_type } = this.parent;
+        if (deal_type === "1") {
+          return !!value;
+        }
+        return true;
+      })
+      .notRequired(),
+    discounted_price: Yup.string()
+      .test("Discounted Price is required", function (value) {
+        const { deal_type } = this.parent;
+        if (deal_type === "1") {
+          return !!value;
+        }
+        return true;
+      })
+      .notRequired(),
+    discounted_percentage: Yup.string()
+      .test("Discounted Percentage is required", function (value) {
+        const { deal_type } = this.parent;
+        if (deal_type === "1") {
+          return !!value;
+        }
+        return true;
+      })
+      .notRequired(),
     start_date: Yup.string().required("Start Date is required"),
     end_date: Yup.date()
       .required("End date is required")
@@ -172,9 +187,9 @@ function ProductAdd() {
       formData.append("categoryGroupId", values.categoryGroupId);
       formData.append("deal_type", values.deal_type);
       formData.append("brand", values.brand);
-      formData.append("original_price", values.original_price);
-      formData.append("discounted_price", values.discounted_price);
-      formData.append("discount_percentage", values.discounted_percentage);
+      formData.append("original_price", values.original_price || 0);
+      formData.append("discounted_price", values.discounted_price || 0);
+      formData.append("discount_percentage", values.discounted_percentage || 0);
       formData.append("start_date", values.start_date);
       formData.append("end_date", values.end_date);
       formData.append("coupon_code", values.coupon_code);
@@ -191,7 +206,7 @@ function ProductAdd() {
           formData.append(`media_url[${index + 1}]`, values[`video-${index}`]);
         }
       });
-      const slug = values.name.toLowerCase().replace(/\s+/g, "_");
+      const slug = values.name.toLowerCase().replace(/[\s/\\]+/g, "_");
       const finalSlug = `${slug}_${id}`;
       formData.append("slug", finalSlug);
       setLoadIndicator(true);
@@ -274,7 +289,7 @@ function ProductAdd() {
           end_date: "End Date",
           coupon_code: "Coupon Code",
           image: "Main Image",
-          description: "Description",
+          description: "Description cannot be more than 250 characters long",
           specifications:
             "Specification cannot be more than 250 characters long",
           ...mediaFields.reduce((acc, _, index) => {
@@ -630,7 +645,8 @@ function ProductAdd() {
               </label>
               <select
                 className={`form-select form-select-sm ${
-                  formik.touched.categoryGroupId && formik.errors.categoryGroupId
+                  formik.touched.categoryGroupId &&
+                  formik.errors.categoryGroupId
                     ? "is-invalid"
                     : ""
                 }`}
@@ -646,9 +662,12 @@ function ProductAdd() {
                     </option>
                   ))}
               </select>
-              {formik.touched.categoryGroupId && formik.errors.categoryGroupId && (
-                <div className="invalid-feedback">{formik.errors.categoryGroupId}</div>
-              )}
+              {formik.touched.categoryGroupId &&
+                formik.errors.categoryGroupId && (
+                  <div className="invalid-feedback">
+                    {formik.errors.categoryGroupId}
+                  </div>
+                )}
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -760,90 +779,98 @@ function ProductAdd() {
                 <div className="invalid-feedback">{formik.errors.name}</div>
               )}
             </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Original Price<span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                onInput={(event) => {
-                  event.target.value = event.target.value
-                    .replace(/[^0-9.]/g, "")
-                    .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{2})./g, "$1");
-                }}
-                className={`form-control form-control-sm ${
-                  formik.touched.original_price && formik.errors.original_price
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("original_price")}
-              />
-              {formik.touched.original_price &&
-                formik.errors.original_price && (
-                  <div className="invalid-feedback">
-                    {formik.errors.original_price}
-                  </div>
-                )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Discounted Price<span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                onInput={(event) => {
-                  event.target.value = event.target.value
-                    .replace(/[^0-9.]/g, "")
-                    .replace(/(\..*)\./g, "$1")
-                    .replace(/(\.\d{2})./g, "$1");
-                }}
-                className={`form-control form-control-sm ${
-                  formik.touched.discounted_price &&
-                  formik.errors.discounted_price
-                    ? "is-invalid"
-                    : ""
-                }`}
-                {...formik.getFieldProps("discounted_price")}
-                value={formik.values.discounted_price}
-              />
-              {formik.touched.discounted_price &&
-                formik.errors.discounted_price && (
-                  <div className="invalid-feedback">
-                    {formik.errors.discounted_price}
-                  </div>
-                )}
-            </div>
-            <div className="col-md-6 col-12 mb-3">
-              <label className="form-label">
-                Discounted Percentage (%)<span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                readOnly
-                onInput={(event) => {
-                  let value = event.target.value
-                    .replace(/[^0-9.]/g, "")
-                    .replace(/(\..*)\./g, "$1")
-                    .replace(/^(\d*\.\d{1}).*/, "$1");
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Original Price<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  onInput={(event) => {
+                    event.target.value = event.target.value
+                      .replace(/[^0-9.]/g, "")
+                      .replace(/(\..*)\./g, "$1")
+                      .replace(/(\.\d{2})./g, "$1");
+                  }}
+                  className={`form-control form-control-sm ${
+                    formik.touched.original_price &&
+                    formik.errors.original_price
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  {...formik.getFieldProps("original_price")}
+                />
+                {formik.touched.original_price &&
+                  formik.errors.original_price && (
+                    <div className="invalid-feedback">
+                      {formik.errors.original_price}
+                    </div>
+                  )}
+              </div>
+            )}
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Discounted Price<span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  onInput={(event) => {
+                    event.target.value = event.target.value
+                      .replace(/[^0-9.]/g, "")
+                      .replace(/(\..*)\./g, "$1")
+                      .replace(/(\.\d{2})./g, "$1");
+                  }}
+                  className={`form-control form-control-sm ${
+                    formik.touched.discounted_price &&
+                    formik.errors.discounted_price
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                  {...formik.getFieldProps("discounted_price")}
+                  value={formik.values.discounted_price}
+                />
+                {formik.touched.discounted_price &&
+                  formik.errors.discounted_price && (
+                    <div className="invalid-feedback">
+                      {formik.errors.discounted_price}
+                    </div>
+                  )}
+              </div>
+            )}
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-6 col-12 mb-3">
+                <label className="form-label">
+                  Discounted Percentage (%)
+                  <span className="text-danger">*</span>
+                </label>
+                <input
+                  type="text"
+                  readOnly
+                  onInput={(event) => {
+                    let value = event.target.value
+                      .replace(/[^0-9.]/g, "")
+                      .replace(/(\..*)\./g, "$1")
+                      .replace(/^(\d*\.\d{1}).*/, "$1");
 
-                  formik.setFieldValue("discounted_percentage", value);
-                }}
-                {...formik.getFieldProps("discounted_percentage")}
-                className={`form-control form-control-sm ${
-                  formik.touched.discounted_percentage &&
-                  formik.errors.discounted_percentage
-                    ? "is-invalid"
-                    : ""
-                }`}
-              />
-              {formik.touched.discounted_percentage &&
-                formik.errors.discounted_percentage && (
-                  <div className="invalid-feedback">
-                    {formik.errors.discounted_percentage}
-                  </div>
-                )}
-            </div>
+                    formik.setFieldValue("discounted_percentage", value);
+                  }}
+                  {...formik.getFieldProps("discounted_percentage")}
+                  className={`form-control form-control-sm ${
+                    formik.touched.discounted_percentage &&
+                    formik.errors.discounted_percentage
+                      ? "is-invalid"
+                      : ""
+                  }`}
+                />
+                {formik.touched.discounted_percentage &&
+                  formik.errors.discounted_percentage && (
+                    <div className="invalid-feedback">
+                      {formik.errors.discounted_percentage}
+                    </div>
+                  )}
+              </div>
+            )}
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
                 Start Date <span className="text-danger">*</span>
@@ -1166,6 +1193,7 @@ function ProductAdd() {
                     style={{ boxShadow: "none" }}
                     checked={!isCouponChecked}
                     onChange={handleRadioChange}
+                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
                   />
                   <label htmlFor="vendorCoupon" className="form-label ms-2">
                     Vendor Coupon code
@@ -1182,6 +1210,7 @@ function ProductAdd() {
                     style={{ boxShadow: "none" }}
                     checked={isCouponChecked}
                     onChange={handleRadioChange}
+                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
                   />
                   <label htmlFor="genricCoupon" className="form-label ms-2">
                     Generic Coupon Code

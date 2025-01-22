@@ -413,50 +413,51 @@ function ProductView() {
                   </div>
                 </div>
                 <div className="row mt-5 p-3">
-                  {data.product_media?.map((item, index) => (
-                    <div className="col-md-4 col-12 mb-3" key={item.id}>
-                      {item.type === "image" ? (
-                        <>
-                          <p className="text-sm">Thumbnail {index + 1}</p>
-                          <img
-                            src={`${ImageURL}${
-                              item.path.startsWith("/")
-                                ? item.path
-                                : "/" + item.path
-                            }`}
-                            alt={`Media ${index + 1}`}
-                            style={{
-                              maxWidth: "100%",
-                              maxHeight: "100%",
-                              objectFit: "cover",
-                            }}
-                          />
-                        </>
-                      ) : item.type === "video" ? (
-                        <>
-                          <p className="text-sm">Thumbnail {index + 1}</p>
-                          <div
-                            className="d-flex gap-4"
-                            id={`video-container-${index}`}
-                          >
-                            {/* Embed YouTube video */}
-                            {item.path && (
-                              <iframe
-                                src={`https://www.youtube.com/embed/${extractVideoId(
-                                  item.path
-                                )}`}
-                                width="320" // Reduced width
-                                height="180" // Reduced height
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                allowFullScreen
-                                title={`Video ${index + 1}`}
-                              ></iframe>
-                            )}
-                          </div>
-                        </>
-                      ) : null}
-                    </div>
-                  ))}
+                  {data.product_media
+                    ?.sort((a, b) => a.order - b.order)
+                    .map((item, index) => (
+                      <div className="col-md-4 col-12 mb-3" key={item.id}>
+                        {item.type === "image" ? (
+                          <>
+                            <p className="text-sm">Thumbnail {index + 1}</p>
+                            <img
+                              src={`${ImageURL}${
+                                item.path.startsWith("/")
+                                  ? item.path
+                                  : "/" + item.path
+                              }`}
+                              alt={`Media ${index + 1}`}
+                              style={{
+                                maxWidth: "100%",
+                                maxHeight: "100%",
+                                objectFit: "cover",
+                              }}
+                            />
+                          </>
+                        ) : item.type === "video" ? (
+                          <>
+                            <p className="text-sm">Thumbnail {index + 1}</p>
+                            <div
+                              className="d-flex gap-4"
+                              id={`video-container-${index}`}
+                            >
+                              {item.path && (
+                                <iframe
+                                  src={`https://www.youtube.com/embed/${extractVideoId(
+                                    item.path
+                                  )}`}
+                                  width="280"
+                                  height="210" 
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowFullScreen
+                                  title={`Video ${index + 1}`}
+                                ></iframe>
+                              )}
+                            </div>
+                          </>
+                        ) : null}
+                      </div>
+                    ))}
                 </div>
               </div>
             </>
