@@ -121,28 +121,46 @@ function ProductEdit() {
           selectedType: Yup.string()
             .required("Media type is required")
             .oneOf(["image", "video"], "Invalid media type"),
-          path: Yup.string().test("pathValidation", function (value, context) {
-            const { selectedType } = context.parent;
-            // Validate only for the selectedType
-            if (selectedType === "image") {
-              return value && /\.(jpg|jpeg|png|gif|webp)$/i.test(value)
-                ? true
-                : this.createError({
-                    message: "Invalid image format or missing file",
+          path: Yup.string()
+            .nullable()
+            .test("pathValidation", function (value, context) {
+              const { selectedType, index } = context.parent;
+
+              if (!value) {
+                if (selectedType === "image") {
+                  return this.createError({
+                    message: `Image Link is required.`,
                   });
-            }
-            if (selectedType === "video") {
-              return value && /^(http|https):\/\/[^\s]+$/i.test(value)
-                ? true
-                : this.createError({
-                    message: "Invalid YouTube link or missing URL",
+                }
+                if (selectedType === "video") {
+                  return this.createError({
+                    message: `YouTube Link is required.`,
                   });
-            }
-            return true; // No validation if selectedType is missing
-          }),
+                }
+              }
+
+              // Validate based on selectedType
+              if (selectedType === "image") {
+                if (!/\.(jpg|jpeg|png|gif|webp)$/i.test(value)) {
+                  return this.createError({
+                    message: `Image ${index + 1}: Invalid image format.`,
+                  });
+                }
+              }
+
+              if (selectedType === "video") {
+                if (!/^(http|https):\/\/[^\s]+$/i.test(value)) {
+                  return this.createError({
+                    message: `YouTube ${index + 1}: Invalid YouTube link.`,
+                  });
+                }
+              }
+
+              return true;
+            }),
         })
       )
-      .required("Media fields are required"),
+      .required("At least one media field is required"),
   });
 
   const formik = useFormik({
@@ -302,10 +320,9 @@ function ProductEdit() {
         };
 
         const missedFields = Object.keys(formErrors)
-          .map((key) => fieldLabels[key] || key) // Fallback to key if no label found
+          .map((key) => fieldLabels[key] || key)
           .join(", ");
 
-        // Ensure toast is displayed
         toast.error(
           `Please fill in the following required fields: ${missedFields}`,
           {
@@ -466,20 +483,17 @@ function ProductEdit() {
     if (file) {
       const reader = new FileReader();
 
-      // Read the file as a binary string
       reader.onload = () => {
-        // Update the preview (imageSrc) for the cropper
         const updatedImageSrc = [...imageSrc];
         updatedImageSrc[index] = reader.result;
         setImageSrc(updatedImageSrc);
 
-        // Enable the cropper
         const updatedCropperStates = [...cropperStates];
         updatedCropperStates[index] = true;
         setCropperStates(updatedCropperStates);
       };
 
-      reader.readAsDataURL(file); // Read file for preview
+      reader.readAsDataURL(file);
     }
   };
 
@@ -569,28 +583,24 @@ function ProductEdit() {
         index
       );
 
-      // Create a new File object
       const file = new File([croppedImageBlob], `croppedImage-${index}.jpeg`, {
         type: "image/jpeg",
       });
 
-      // Update Formik values for the specific index
       const updatedFields = [...formik.values.mediaFields];
       updatedFields[index] = {
         ...updatedFields[index],
-        path: file.name, // Store file name
-        binaryData: file, // Store binary blob
+        path: file.name,
+        binaryData: file,
       };
       formik.setFieldValue("mediaFields", updatedFields);
 
-      // Disable the cropper
       const updatedCropperStates = [...cropperStates];
       updatedCropperStates[index] = false;
       setCropperStates(updatedCropperStates);
 
-      // Clear the temporary imageSrc for the index
       const updatedImageSrc = [...imageSrc];
-      updatedImageSrc[index] = null;
+      updatedImageSrc[index] = URL.createObjectURL(file);
       setImageSrc(updatedImageSrc);
 
       console.log("Cropped image saved successfully!");
@@ -600,21 +610,24 @@ function ProductEdit() {
   };
 
   const handleCropCancel = (index) => {
-    // Reset the cropper state for the given index
     const updatedCropperStates = [...cropperStates];
     updatedCropperStates[index] = false;
     setCropperStates(updatedCropperStates);
 
-    // Clear the image preview source for the given index
     const updatedImageSrc = [...imageSrc];
     updatedImageSrc[index] = null;
     setImageSrc(updatedImageSrc);
 
-    // Reset the file input
+    const updatedFields = [...formik.values.mediaFields];
+    updatedFields[index] = {
+      ...updatedFields[index],
+      path: null,
+      binaryData: null,
+    };
+
+    formik.setFieldValue("mediaFields", updatedFields);
     const fileInput = document.querySelector(`input[name="image-${index}"]`);
-    if (fileInput) {
-      fileInput.value = "";
-    }
+    if (fileInput) fileInput.value = "";
   };
 
   const formatDiscountPercentage = (discounted_percentage) => {
@@ -667,6 +680,7 @@ function ProductEdit() {
     updatedFields[index].path = "";
     formik.setFieldValue("mediaFields", updatedFields);
   };
+
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -1036,14 +1050,22 @@ function ProductEdit() {
                         disabled={field.selectedType !== "image"}
                         onChange={(e) => handleFileChange(e, index)}
                       />
-                      {field.selectedType === "image" && field.path && (
+                      {field.selectedType === "image" && (
                         <div className="mt-3">
-                          <img
-                            src={imageSrc[index] || `${ImageURL}${field.path}`}
-                            alt="Preview"
-                            className="img-thumbnail"
-                            style={{ maxWidth: "200px", maxHeight: "150px" }}
-                          />
+                          {(!cropperStates[index] && imageSrc[index]) ||
+                          (!cropperStates[index] && field.path) ? (
+                            <img
+                              src={
+                                imageSrc[index] || `${ImageURL}${field.path}`
+                              }
+                              alt="Preview"
+                              className="img-thumbnail"
+                              style={{
+                                maxWidth: "200px",
+                                maxHeight: "150px",
+                              }}
+                            />
+                          ) : null}
                         </div>
                       )}
                       {cropperStates[index] &&
@@ -1247,7 +1269,10 @@ function ProductEdit() {
                     style={{ boxShadow: "none" }}
                     checked={!isCouponChecked}
                     onChange={handleRadioChange}
-                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
+                    disabled={
+                      formik.values.deal_type === 2 ||
+                      formik.values.deal_type === "2"
+                    }
                   />
                   <label htmlFor="vendorCoupon" className="form-label ms-2">
                     Vendor Coupon code
@@ -1264,7 +1289,10 @@ function ProductEdit() {
                     style={{ boxShadow: "none" }}
                     checked={isCouponChecked}
                     onChange={handleRadioChange}
-                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
+                    disabled={
+                      formik.values.deal_type === 2 ||
+                      formik.values.deal_type === "2"
+                    }
                   />
                   <label htmlFor="genricCoupon" className="form-label ms-2">
                     Generic Coupon Code
