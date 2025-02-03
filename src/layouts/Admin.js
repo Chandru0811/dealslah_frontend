@@ -39,6 +39,10 @@ import User from "../pages/admin/User/User";
 import UserView from "../pages/admin/User/UserView";
 import Orders from "../pages/admin/Order/Order";
 import OrderView from "../pages/admin/Order/OrderView";
+import Referrer from "../pages/admin/Referrer/Referrer";
+import ReferrerAdd from "../pages/admin/Referrer/ReferrerAdd";
+import ReferrerEdit from "../pages/admin/Referrer/ReferrerEdit";
+import ReferrerDeatils from "../pages/admin/ReferrerDetails/ReferrerDetails";
 
 function Admin({ handleLogout }) {
   return (
@@ -104,18 +108,22 @@ function Admin({ handleLogout }) {
                   />
 
                   {/* {/ Slider /} */}
+                  <Route path="/slider" element={<Slider />} />
+                  <Route path="/slider/add" element={<SliderAdd />} />
+                  <Route path="/slider/edit/:id" element={<SliderEdit />} />
+                  <Route path="/slider/view/:id" element={<SliderView />} />
+
+                  {/* {/ Slider /} */}
                   <Route path="/user" element={<User />} />
                   <Route path="/user/view/:id" element={<UserView />} />
 
                   {/* {/ Slider /} */}
                   <Route path="/order" element={<Orders />} />
-                  <Route path="/order/view/:order_id/:product_id" element={<OrderView />} />
+                  <Route
+                    path="/order/view/:order_id/:product_id"
+                    element={<OrderView />}
+                  />
 
-                  {/* {/ Slider /} */}
-                  <Route path="/slider" element={<Slider />} />
-                  <Route path="/slider/add" element={<SliderAdd />} />
-                  <Route path="/slider/edit/:id" element={<SliderEdit />} />
-                  <Route path="/slider/view/:id" element={<SliderView />} />
                   {/* {/ Product /} */}
                   <Route path="/products" element={<Products />} />
                   <Route path="/products/add" element={<ProductsAdd />} />
@@ -126,6 +134,14 @@ function Admin({ handleLogout }) {
                   <Route path="/shop/view/:id" element={<ShopView />} />
                   <Route path="/stores" element={<Stores />} />
                   <Route path="/locations" element={<Locations />} />
+
+                  {/* Referral Amount */}
+                  <Route path="/referrer" element={<Referrer />} />
+                  <Route path="/referrer/add" element={<ReferrerAdd />} />
+                  <Route path="/referrer/edit/:id" element={<ReferrerEdit />} />
+
+                  {/* Referrer */}
+                  <Route path="/referrer_vendor" element={<ReferrerDeatils />} />
                 </Routes>
               </div>
               <AdminFooter />

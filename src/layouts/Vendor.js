@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import "../styles/adminCDN.css";
 import "../styles/admin.css";
@@ -23,8 +23,12 @@ import ProductPrint from "../pages/vendor/Product/ProductPrint";
 import EmailVerifySuccess from "../components/client/EmailVerifySuccess";
 import Orders from "../pages/vendor/Order/Orders";
 import OrderView from "../pages/vendor/Order/OrderView";
+import ReferrerDashboard from "../pages/vendor/ReferrerDashboard";
+import Vendors from "../pages/vendor/Vendors/Vendors";
+import VendorsAdd from "../pages/vendor/Vendors/VendorsAdd";
 
 function Vendor({ handleLogout }) {
+  const loginType = localStorage.getItem("type");
   return (
     <div>
       <BrowserRouter basename="/dealslahVendor">
@@ -33,30 +37,64 @@ function Vendor({ handleLogout }) {
           <VendorSidebar handleLogout={handleLogout} />
           <div className="flex-grow-1 h-screen overflow-y-auto">
             <VendorHeader />
-            <main className="pt-3 bg-surface-secondary">
+            <main className="pt-3" style={{ backgroundColor: "#f2f2f2" }}>
               <ScrollToTop />
               <div style={{ minHeight: "90vh" }}>
                 <Routes>
-                  <Route path="/" element={<DashboardV />} />
-                  <Route path="*" element={<DashboardV />} />
-
                   {/* {/ Slider /} */}
-                  <Route path="/product" element={<Product />} />
-                  <Route path="/product/add" element={<ProductAdd />} />
-                  <Route path="/product/edit/:id" element={<ProductEdit />} />
-                  <Route path="/product/view/:id" element={<ProductView />} />
-                  <Route path="/product/print/:id" element={<ProductPrint />} />
-                  <Route path="/settings" element={<Settings />} />
-                  <Route path="/product/view" element={<StorePolicy />} />
-                  <Route path="/category" element={<Category />} />
-                  <Route path="/categorys/add" element={<CategoryAdd />} />
-                  <Route path="/categorys/edit" element={<CategoryEdit />} />
-                  <Route path="/categorys/view" element={<CategoryView />} />
-                  <Route path="/order" element={<Orders />} />
-                  <Route
-                    path="/order/view/:order_id/:product_id"
-                    element={<OrderView />}
-                  />
+                  {(loginType === "vendor" ||
+                    loginType === "referrer-vendor") && (
+                    <>
+                      <Route path="/" element={<DashboardV />} />
+                      <Route path="*" element={<DashboardV />} />
+                      <Route path="/product" element={<Product />} />
+                      <Route path="/product/add" element={<ProductAdd />} />
+                      <Route
+                        path="/product/edit/:id"
+                        element={<ProductEdit />}
+                      />
+                      <Route
+                        path="/product/view/:id"
+                        element={<ProductView />}
+                      />
+                      <Route
+                        path="/product/print/:id"
+                        element={<ProductPrint />}
+                      />
+                      <Route path="/settings" element={<Settings />} />
+                      <Route path="/product/view" element={<StorePolicy />} />
+                      <Route path="/category" element={<Category />} />
+                      <Route path="/categorys/add" element={<CategoryAdd />} />
+                      <Route
+                        path="/categorys/edit"
+                        element={<CategoryEdit />}
+                      />
+                      <Route
+                        path="/categorys/view"
+                        element={<CategoryView />}
+                      />
+                      <Route path="/order" element={<Orders />} />
+                      <Route
+                        path="/order/view/:order_id/:product_id"
+                        element={<OrderView />}
+                      />
+                    </>
+                  )}
+
+                  {(loginType === "referrer" ||
+                    loginType === "referrer-vendor") && (
+                    <>
+                      {/* Referrer Dashboard */}
+                      <Route
+                        path="/referrer_dashboard"
+                        element={<ReferrerDashboard />}
+                      />
+                      <Route path="*" element={<ReferrerDashboard />} />
+                      {/* My Vendors */}
+                      <Route path="/my_vendors" element={<Vendors />} />
+                      <Route path="/my_vendors/add" element={<VendorsAdd />} />
+                    </>
+                  )}
                   <Route
                     path="/emailverifysuccess"
                     element={<EmailVerifySuccess />}

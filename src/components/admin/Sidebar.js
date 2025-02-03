@@ -5,7 +5,13 @@ import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { MdCategory } from "react-icons/md";
 import { TbShoppingCartFilled } from "react-icons/tb";
-import { FaBoxOpen, FaUser } from "react-icons/fa";
+import { FaBuilding } from "react-icons/fa6";
+import { FaUser } from "react-icons/fa";
+import { FaSliders } from "react-icons/fa6";
+import { BiSolidCategoryAlt } from "react-icons/bi";
+import { FaBoxOpen } from "react-icons/fa";
+import { AiFillPieChart } from "react-icons/ai";
+import { IoPeople } from "react-icons/io5";
 
 function Sidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -24,7 +30,7 @@ function Sidebar({ handleLogout }) {
       id="navbarVertical"
     >
       <div className="container-fluid">
-      <button
+        <button
           className="navbar-toggler mx-2 p-1"
           type="button"
           data-bs-toggle="collapse"
@@ -42,17 +48,27 @@ function Sidebar({ handleLogout }) {
           to="/"
           // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
         >
-          <img
-            src={deals}
-            alt="deals"
-            className="img-fluid sidebar-logo rounded-circle"
+          <div
             style={{
-              background: "#fff",
-              borderRadius: "5px",
+              // background: "#fff",
+              borderRadius: "50%",
               width: "45px",
               height: "45px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            <img
+              src={deals}
+              alt="deals"
+              className="img-fluid sidebar-logo"
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          </div>
           <p className="text-white">Dealslah</p>
         </NavLink>
         <div
@@ -69,7 +85,7 @@ function Sidebar({ handleLogout }) {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/slider">
-                <BiSolidCategory />
+                <FaSliders />
                 Slider
               </NavLink>
             </li>
@@ -81,7 +97,7 @@ function Sidebar({ handleLogout }) {
             </li> */}
             <li className="nav-item">
               <NavLink className="nav-link" to="/categorygroup">
-                <MdCategory />
+                <BiSolidCategoryAlt />
                 Category Groups
               </NavLink>
             </li>
@@ -93,7 +109,7 @@ function Sidebar({ handleLogout }) {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/dealcategories">
-                <BiSolidCategory />
+                <MdCategory />
                 Deal Categories
               </NavLink>
             </li>
@@ -105,7 +121,7 @@ function Sidebar({ handleLogout }) {
             </li>
             <li className="nav-item">
               <NavLink className="nav-link" to="/shop">
-                <TbShoppingCartFilled />
+                <FaBuilding />
                 Company
               </NavLink>
             </li>
@@ -119,6 +135,18 @@ function Sidebar({ handleLogout }) {
               <NavLink className="nav-link" to="/order">
                 <FaBoxOpen />
                 Orders
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/referrer_vendor">
+                <IoPeople />
+                Referrer
+              </NavLink>
+            </li>
+            <li className="nav-item">
+              <NavLink className="nav-link" to="/referrer">
+                <AiFillPieChart />
+                Referral Amount
               </NavLink>
             </li>
           </ul>

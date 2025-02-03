@@ -4,9 +4,13 @@ import deals from "../../assets/deals.png";
 import { BsBarChartFill } from "react-icons/bs";
 import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { FaBoxOpen } from "react-icons/fa";
+import { FaUser } from "react-icons/fa6";
+import { AiFillPieChart } from "react-icons/ai";
 
 function VendorSidebar({ handleLogout }) {
   const navigate = useNavigate();
+  const loginType = localStorage.getItem("type");
+
   const handelLogOutClick = () => {
     handleLogout();
     navigate("/");
@@ -22,7 +26,7 @@ function VendorSidebar({ handleLogout }) {
       id="navbarVertical"
     >
       <div className="container-fluid">
-      <button
+        <button
           className="navbar-toggler mx-2 p-1"
           type="button"
           data-bs-toggle="collapse"
@@ -40,17 +44,27 @@ function VendorSidebar({ handleLogout }) {
           to="/"
           // style={{position:"fixed",top:"0", minWidth:'18.1%'}}
         >
-          <img
-            src={deals}
-            alt="deals"
-            className="img-fluid sidebar-logo rounded-circle"
+          <div
             style={{
-              background: "#fff",
-              borderRadius: "5px",
+              // background: "#fff",
+              borderRadius: "50%",
               width: "45px",
               height: "45px",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
             }}
-          />
+          >
+            <img
+              src={deals}
+              alt="deals"
+              className="img-fluid sidebar-logo"
+              style={{
+                width: "40px",
+                height: "40px",
+              }}
+            />
+          </div>
           <p className="text-white">Dealslah</p>
         </NavLink>
         <div
@@ -59,60 +73,44 @@ function VendorSidebar({ handleLogout }) {
           // style={{ marginTop: "5rem" }}
         >
           <ul className="navbar-nav">
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/dashboard">
-                <BsBarChartFill />
-                Dashboard
-              </NavLink>
-            </li>
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/slider">
-                <BiSolidCategory />
-                Slider
-              </NavLink>
-            </li> */}
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/banner">
-                <BiSolidCategory />Banner
-               
-              </NavLink>
-            </li> */}
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/categorygroup">
-                <MdCategory />
-                Category Groups
-              </NavLink>
-            </li> */}
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/categories">
-                <BiSolidCategory />
-                Categories
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/dealcategories">
-                <BiSolidCategory />
-                Deal Categories
-              </NavLink>
-            </li> */}
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/product">
-                <BiSolidCategory />
-                Deals
-              </NavLink>
-            </li>
-            <li className="nav-item">
-              <NavLink className="nav-link" to="/order">
-                <FaBoxOpen />
-                Orders
-              </NavLink>
-            </li>
-            {/* <li className="nav-item">
-              <NavLink className="nav-link" to="/shop">
-                <TbShoppingCartFilled />
-                Company
-              </NavLink>
-            </li> */}
+            {(loginType === "vendor" || loginType === "referrer-vendor") && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/dashboard">
+                    <BsBarChartFill />
+                    Dashboard
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/product">
+                    <BiSolidCategory />
+                    Deals
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/order">
+                    <FaBoxOpen />
+                    Orders
+                  </NavLink>
+                </li>
+              </>
+            )}
+            {(loginType === "referrer" || loginType === "referrer-vendor") && (
+              <>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/referrer_dashboard">
+                    <AiFillPieChart />
+                    Referral Dashboard
+                  </NavLink>
+                </li>
+                <li className="nav-item">
+                  <NavLink className="nav-link" to="/my_vendors">
+                    <FaUser />
+                    My Vendors
+                  </NavLink>
+                </li>
+              </>
+            )}
           </ul>
           <div className="ps-4 mt-auto w-100 mb-4">
             <div className="navbar-nav">

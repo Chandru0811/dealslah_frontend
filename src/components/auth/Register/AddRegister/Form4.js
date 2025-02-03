@@ -7,8 +7,10 @@ import api from "../../../../config/URL";
 
 const validationSchema = Yup.object().shape({
   street: Yup.string().required("Street 1 is required"),
-  zip_code: Yup.string().required("Zip Code is required"),
+  city: Yup.string().required("City is required"),
+  state: Yup.string().required("State is required"),
   country: Yup.string().required("Country is required"),
+  zip_code: Yup.string().required("Zip Code is required"),
 });
 
 const Form4 = forwardRef(
@@ -17,13 +19,15 @@ const Form4 = forwardRef(
       initialValues: {
         street: formData.street,
         street2: formData.street2,
-        zip_code: formData.zip_code,
+        city: formData.city,
+        state: formData.state,
         country: formData.country,
+        zip_code: formData.zip_code,
       },
       validationSchema: validationSchema,
       onSubmit: async (data) => {
         setLoadIndicators(true);
-        const address = `${data.street}${data.street2 ? `, ${data.street2}` : ""}, ${data.country}, ${data.zip_code}`;
+        const address = `${data.street}${data.street2 ? `, ${data.street2}` : ""}, ${data.city}, ${data.state}, ${data.country}, ${data.zip_code}`;
         const completeFormData = {
           ...formData,
           ...data,
@@ -126,6 +130,60 @@ const Form4 = forwardRef(
                       {formik.touched.street2 && formik.errors.street2 && (
                         <div className="error text-danger">
                           <small>{formik.errors.street2}</small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* City */}
+                <div className="col-12">
+                  <div className="mb-3 row align-items-center">
+                    <label className="col-md-4 form-label">
+                      City<span className="text-danger">*</span>
+                    </label>
+                    <div className="col-md-8">
+                      <input
+                        type="text"
+                        className={`form-control ${formik.touched.city && formik.errors.city
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        name="city"
+                        onChange={handleFieldChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.city}
+                      />
+                      {formik.touched.city && formik.errors.city && (
+                        <div className="error text-danger">
+                          <small>{formik.errors.city}</small>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                {/* State */}
+                <div className="col-12">
+                  <div className="mb-3 row align-items-center">
+                    <label className="col-md-4 form-label">
+                      State<span className="text-danger">*</span>
+                    </label>
+                    <div className="col-md-8">
+                      <input
+                        type="text"
+                        className={`form-control ${formik.touched.state && formik.errors.state
+                            ? "is-invalid"
+                            : ""
+                          }`}
+                        name="state"
+                        onChange={handleFieldChange}
+                        onBlur={formik.handleBlur}
+                        value={formik.values.state}
+                      />
+                      {formik.touched.state && formik.errors.state && (
+                        <div className="error text-danger">
+                          <small>{formik.errors.state}</small>
                         </div>
                       )}
                     </div>

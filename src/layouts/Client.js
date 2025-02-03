@@ -15,8 +15,8 @@ import Register from "../components/auth/Register/AddRegister/Register";
 import ScrollToTop from "../pages/ScrollToTop";
 import ResetPage from "../components/common/ResetPage";
 import ForgotSuccess from "../components/common/ForgotSuccess";
-import EmailVerifySuccess from "../components/client/EmailVerifySuccess";
 // import NotFound from "../components/common/NotFound";
+import EmailVerifySuccess from "../components/client/EmailVerifySuccess";
 
 function Client({
   handleLogout,
@@ -56,7 +56,10 @@ function Client({
             />
             <Route path="/wellcomepage/:id" element={<Wellcomepage />} />
             <Route path="/forgotsuccess" element={<ForgotSuccess />} />
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/register"
+              element={<Register handleVendorLogin={handleVendorLogin} />}
+            />
             <Route
               path="/vendorregistration/:id"
               element={
@@ -65,7 +68,10 @@ function Client({
             />
             <Route path="/forgot" element={<ForgotPage />} />
             <Route path="/resetpassword" element={<ResetPage />} />
-            <Route path="/emailverifysuccess" element={<EmailVerifySuccess />}/>
+            <Route
+              path="/emailverifysuccess"
+              element={<EmailVerifySuccess />}
+            />
           </Routes>
           {/* <Footer /> */}
         </BrowserRouter>

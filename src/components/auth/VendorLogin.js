@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaEye, FaEyeSlash } from "react-icons/fa"; // Import eye icons
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate, Link } from "react-router-dom";
@@ -30,6 +30,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
     onSubmit: async (values) => {
       try {
         setLoadIndicator(true);
+
         let payload;
         if (values.email === "admin@gmail.com") {
           payload = { ...values, role: "1" };
@@ -45,6 +46,15 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
           localStorage.setItem("id", response.data.data.userDetails.id);
           localStorage.setItem("email", response.data.data.userDetails.email);
           localStorage.setItem("role", response.data.data.userDetails.role);
+          localStorage.setItem("type", response.data.data.userDetails.type);
+          localStorage.setItem(
+            "referral_code",
+            response.data.data.userDetails.referral_code
+          );
+          localStorage.setItem(
+            "referrer_code",
+            response.data.data.referrer_code
+          );
           localStorage.setItem("active", "0");
           localStorage.setItem(
             "shop_id",
@@ -54,8 +64,13 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
           if (response.data.data.userDetails.role === "1") {
             handleLogin(values);
           } else if (response.data.data.userDetails.role === "2") {
-            if (response.data.data.userDetails.shop_id === null) {
-              navigate(`/wellcomepage/${response.data.data.userDetails.id}`);
+            if (
+              response.data.data.userDetails.shop_id === null &&
+              response.data.data.userDetails.type !== "referrer"
+            ) {
+              navigate(
+                `/wellcomepage/${response.data.data.userDetails.id}?name=${response.data.data.userDetails.name}&email=${response.data.data.userDetails.email}`
+              );
             } else {
               navigate("/");
               handleVendorLogin(values);
@@ -214,7 +229,7 @@ function VendorLogin({ handleVendorLogin, handleLogin }) {
                     width: "100%",
                   }}
                 >
-                  Register as a Vendor
+                  Register
                 </Button>
               </Link>
             </div>
