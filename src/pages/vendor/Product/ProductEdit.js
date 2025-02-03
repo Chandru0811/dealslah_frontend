@@ -13,18 +13,12 @@ function ProductEdit() {
   const navigate = useNavigate();
   const [loadIndicator, setLoadIndicator] = useState(false);
   const { id } = useParams();
-  const [mediaFields, setMediaFields] = useState([
-    { image: "", video: "", selectedType: "image" },
-  ]);
   const [cropperStates, setCropperStates] = useState([]);
   const [imageSrc, setImageSrc] = useState([]);
+  console.log("Image is ", imageSrc);
   const [crop, setCrop] = useState([]);
   const [zoom, setZoom] = useState([]);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState([]);
-  const [originalFileName, setOriginalFileName] = useState([]);
-  const [originalFileType, setOriginalFileType] = useState("");
-  const MAX_FILE_SIZE = 2 * 1024 * 1024;
-
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
@@ -104,17 +98,55 @@ function ProductEdit() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long")
       .max(250, "Description cannot be more than 250 characters long"),
-
     specifications: Yup.string()
       .notRequired("Specification is required")
       .min(10, "Specification must be at least 10 characters long")
       .max(250, "Specification cannot be more than 250 characters long"),
+    brand: Yup.string()
+      .notRequired()
+      .max(250, "Brand cannot be more than 250 characters long"),
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
         "Coupon code must end with up to 4 digits"
       )
       .required("Coupon code is required"),
+    //(1) mediaFields: Yup.array()
+    //   .of(
+    //     Yup.object().shape({
+    //       selectedType: Yup.string()
+    //         .required("Media type is required")
+    //         .oneOf(["image", "video"], "Invalid media type"),
+    //       path: Yup.string().test("pathValidation", function (value, context) {
+    //         const { selectedType } = context.parent;
+    //         // Validate only for the selectedType
+    //         if (selectedType === "image") {
+    //           return value && /\.(jpg|jpeg|png|gif|webp)$/i.test(value)
+    //             ? true
+    //             : this.createError({
+    //                 message: "Invalid image format or missing file",
+    //               });
+    //         }
+    //         if (selectedType === "video") {
+    //           return value && /^(http|https):\/\/[^\s]+$/i.test(value)
+    //             ? true
+    //             : this.createError({
+    //                 message: "Invalid YouTube link or missing URL",
+    //               });
+    //         }
+    //         return true; // No validation if selectedType is missing
+    //       }),
+    //     })
+    //   )
+    //   .required("Media fields are required"),
+    // (4)
+    variants: Yup.array().of(
+      Yup.object().shape({
+        value: Yup.string()
+          .max(250, "Variant cannot be more than 250 characters long")
+          .notRequired(),
+      })
+    ),
     mediaFields: Yup.array()
       .of(
         Yup.object().shape({
@@ -139,7 +171,6 @@ function ProductEdit() {
                 }
               }
 
-              // Validate based on selectedType
               if (selectedType === "image") {
                 if (!/\.(jpg|jpeg|png|gif|webp)$/i.test(value)) {
                   return this.createError({
@@ -191,7 +222,7 @@ function ProductEdit() {
         .map((value) => value.replace(/,\s*$/, ""));
       console.log("Submitted value", values);
       const formData = new FormData();
-      formData.append("shop_id", values.shop_id);
+      formData.append("shop_id", shop_id);
       formData.append("categoryGroupId", values.categoryGroupId);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
@@ -231,6 +262,26 @@ function ProductEdit() {
           }
         }
       });
+
+      // formik.values.mediaFields.forEach((field, orderId) => {
+
+      //   if (field.selectedType === "image") {
+      //     if (
+      //       field.binaryData instanceof File ||
+      //       field.binaryData instanceof Blob
+      //     ) {
+      //       formData.append(
+      //         `media[${orderId}]`,
+      //         field.binaryData,
+      //         field.path
+      //       );
+      //     }
+      //   } else if (field.selectedType === "video") {
+      //     if (field.path) {
+      //       formData.append(`media_url[${orderId}]`, field.path);
+      //     }
+      //   }
+      // });
 
       formData.append("_method", "PUT");
       setLoadIndicator(true);
@@ -305,7 +356,7 @@ function ProductEdit() {
           category_id: "Category",
           deal_type: "Deal Type",
           delivery_days: "Delivery Days",
-          brand: "Brand",
+          brand: "Brand cannot be more than 250 characters long",
           original_price: "Original Price",
           discounted_price: "Discounted Price",
           discounted_percentage: "Discounted Percentage",
@@ -313,8 +364,10 @@ function ProductEdit() {
           end_date: "End Date",
           coupon_code: "Coupon Code",
           image: "Main Image",
+          // (5)
+          variants: "Variants cannot be more than 250 characters long",
           description: "Description cannot be more than 250 characters long",
-          mediaFields: "Media Fields",
+          mediaFields: "Image",
           specifications:
             "Specification cannot be more than 250 characters long",
         };
@@ -338,7 +391,6 @@ function ProductEdit() {
         return;
       }
 
-      // Proceed to submit the form
       formik.handleSubmit();
     });
   };
@@ -421,7 +473,6 @@ function ProductEdit() {
       const response = await api.get(`vendor/product/${id}/get`);
 
       const data = response.data.data;
-      console.log("data", data.product_media);
       const isDiscountCoupon =
         data.coupon_code.startsWith("DEALSLAH") &&
         !data.coupon_code.includes("V");
@@ -430,7 +481,6 @@ function ProductEdit() {
       formik.setValues({
         category_id: data.category_id || "",
         name: data.name || "",
-        shop_id: data.shop_id || "",
         categoryGroupId: data.categoryGroupId || "",
         deal_type: data.deal_type || "",
         delivery_days: data.delivery_days || "",
@@ -456,6 +506,7 @@ function ProductEdit() {
                 id: mediaItem.id,
                 selectedType: mediaItem.type,
                 path: mediaItem.path,
+                // orderId: mediaItem.order,
               }))
           : [],
       });
@@ -468,6 +519,7 @@ function ProductEdit() {
 
   useEffect(() => {
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const updateCrop = (index, newCrop) => {
@@ -478,7 +530,7 @@ function ProductEdit() {
     });
   };
 
-  const handleFileChange = (event, index) => {
+  const handleFileChange = (event, index, type) => {
     const file = event.target.files[0];
     if (file) {
       const reader = new FileReader();
@@ -491,6 +543,14 @@ function ProductEdit() {
         const updatedCropperStates = [...cropperStates];
         updatedCropperStates[index] = true;
         setCropperStates(updatedCropperStates);
+
+        const updatedFields = [...formik.values.mediaFields];
+        updatedFields[index] = {
+          ...updatedFields[index],
+          path: file.name,
+          binaryData: file,
+        };
+        formik.setFieldValue("mediaFields", updatedFields);
       };
 
       reader.readAsDataURL(file);
@@ -503,6 +563,7 @@ function ProductEdit() {
       { selectedType: "image", path: "" },
     ]);
   };
+
   const handleDelete = async (index, mediaId) => {
     if (mediaId) {
       try {
@@ -586,6 +647,7 @@ function ProductEdit() {
       const file = new File([croppedImageBlob], `croppedImage-${index}.jpeg`, {
         type: "image/jpeg",
       });
+      console.log("Image actual get", file);
 
       const updatedFields = [...formik.values.mediaFields];
       updatedFields[index] = {
@@ -608,6 +670,20 @@ function ProductEdit() {
       console.error("Error cropping the image:", error);
     }
   };
+
+  //(2) const handleCropCancel = (index) => {
+  //   const updatedCropperStates = [...cropperStates];
+  //   updatedCropperStates[index] = false;
+  //   setCropperStates(updatedCropperStates);
+
+  //   const updatedImageSrc = [...imageSrc];
+  //   updatedImageSrc[index] = null;
+  //   setImageSrc(updatedImageSrc);
+
+  //   formik.setFieldValue(`image-${index}`, null);
+  //   const fileInput = document.querySelector(`input[name="image-${index}"]`);
+  //   if (fileInput) fileInput.value = "";
+  // };
 
   const handleCropCancel = (index) => {
     const updatedCropperStates = [...cropperStates];
@@ -680,7 +756,6 @@ function ProductEdit() {
     updatedFields[index].path = "";
     formik.setFieldValue("mediaFields", updatedFields);
   };
-
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
@@ -867,10 +942,10 @@ function ProductEdit() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/(\..*)\./g, "$1")
-                      .replace(/(\.\d{2})./g, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.original_price &&
@@ -897,10 +972,10 @@ function ProductEdit() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/(\..*)\./g, "$1")
-                      .replace(/(\.\d{2})./g, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.discounted_price &&
@@ -991,172 +1066,189 @@ function ProductEdit() {
             </div>
             <>
               <>
-                {formik.values.mediaFields.map((field, index) => (
-                  <div key={index} className="row">
-                    <p>Thumbnail {index + 1}</p>
-                    <div className="col-12 d-flex align-items-center mb-3">
-                      <div className="form-check me-3">
-                        <input
-                          type="radio"
-                          name={`media-type-${index}`}
-                          id={`image-${index}`}
-                          className="form-check-input"
-                          checked={field.selectedType === "image"}
-                          onChange={() => handleTypeChange(index, "image")}
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`image-${index}`}
-                        >
-                          Image
-                        </label>
+                {formik.values.mediaFields
+                  .sort((a, b) => a.order - b.order)
+                  .map((field, index) => (
+                    <div key={index} className="row">
+                      <p>Thumbnail {index + 1}</p>
+                      <div className="col-12 d-flex align-items-center mb-3">
+                        <div className="form-check me-3">
+                          <input
+                            type="radio"
+                            name={`media-type-${index}`}
+                            id={`image-${index}`}
+                            className="form-check-input"
+                            checked={field.selectedType === "image"}
+                            onChange={() => handleTypeChange(index, "image")}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`image-${index}`}
+                          >
+                            Image
+                          </label>
+                        </div>
+                        <div className="form-check">
+                          <input
+                            type="radio"
+                            name={`media-type-${index}`}
+                            id={`video-${index}`}
+                            className="form-check-input"
+                            checked={field.selectedType === "video"}
+                            onChange={() => handleTypeChange(index, "video")}
+                            disabled={index === 0}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor={`video-${index}`}
+                          >
+                            Youtube
+                          </label>
+                        </div>
                       </div>
-                      <div className="form-check">
-                        <input
-                          type="radio"
-                          name={`media-type-${index}`}
-                          id={`video-${index}`}
-                          className="form-check-input"
-                          checked={field.selectedType === "video"}
-                          onChange={() => handleTypeChange(index, "video")}
-                          disabled={index === 0} // Disable video for the first entry
-                        />
-                        <label
-                          className="form-check-label"
-                          htmlFor={`video-${index}`}
-                        >
-                          Youtube
-                        </label>
-                      </div>
-                    </div>
 
-                    <div className="col-md-6 col-12 mb-3">
-                      <label className="form-label">
-                        {field.selectedType === "image" && "Image"}
-                        {field.selectedType === "image" && (
-                          <span className="text-danger">*</span>
-                        )}
-                      </label>
-                      <input
-                        type="file"
-                        accept=".png,.jpeg,.jpg,.svg,.webp"
-                        name={`image-${index}`}
-                        className={`form-control ${
-                          formik.errors.mediaFields?.[index]?.path &&
-                          field.selectedType === "image"
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        disabled={field.selectedType !== "image"}
-                        onChange={(e) => handleFileChange(e, index)}
-                      />
-                      {field.selectedType === "image" && (
-                        <div className="mt-3">
-                          {(!cropperStates[index] && imageSrc[index]) ||
-                          (!cropperStates[index] && field.path) ? (
+                      <div className="col-md-6 col-12 mb-3">
+                        <label className="form-label">
+                          {field.selectedType === "image" && "Image"}
+                          {field.selectedType === "image" && (
+                            <span className="text-danger">*</span>
+                          )}
+                        </label>
+                        <input
+                          type="file"
+                          accept=".png,.jpeg,.jpg,.svg,.webp"
+                          name={`image-${index}`}
+                          className={`form-control ${
+                            formik.errors.mediaFields?.[index]?.path &&
+                            field.selectedType === "image"
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          disabled={field.selectedType !== "image"}
+                          onChange={(e) => handleFileChange(e, index)}
+                        />
+                        {/* (3) {field.selectedType === "image" && field.path && (
+                          <div className="mt-3">
                             <img
                               src={
                                 imageSrc[index] || `${ImageURL}${field.path}`
                               }
                               alt="Preview"
                               className="img-thumbnail"
-                              style={{
-                                maxWidth: "200px",
-                                maxHeight: "150px",
-                              }}
+                              style={{ maxWidth: "200px", maxHeight: "150px" }}
                             />
-                          ) : null}
-                        </div>
-                      )}
-                      {cropperStates[index] &&
-                        imageSrc[index] &&
-                        field.selectedType === "image" && (
-                          <>
-                            <div className="crop-container">
-                              <Cropper
-                                image={imageSrc[index]}
-                                crop={crop[index] || { x: 0, y: 0 }}
-                                zoom={zoom[index] || 1}
-                                aspect={320 / 240}
-                                onCropChange={(newCrop) =>
-                                  updateCrop(index, newCrop)
+                          </div>
+                        )} */}
+                        {field.selectedType === "image" && (
+                          <div className="mt-3">
+                            {(!cropperStates[index] && imageSrc[index]) ||
+                            (!cropperStates[index] && field.path) ? (
+                              <img
+                                src={
+                                  imageSrc[index] || `${ImageURL}${field.path}`
                                 }
-                                onCropComplete={(
-                                  croppedArea,
-                                  croppedAreaPixels
-                                ) =>
-                                  onCropComplete(
-                                    index,
+                                alt="Preview"
+                                className="img-thumbnail"
+                                style={{
+                                  maxWidth: "200px",
+                                  maxHeight: "150px",
+                                }}
+                              />
+                            ) : null}
+                          </div>
+                        )}
+                        {cropperStates[index] &&
+                          imageSrc[index] &&
+                          field.selectedType === "image" && (
+                            <>
+                              <div className="crop-container">
+                                <Cropper
+                                  image={imageSrc[index]}
+                                  crop={crop[index] || { x: 0, y: 0 }}
+                                  zoom={zoom[index] || 1}
+                                  aspect={320 / 240}
+                                  onCropChange={(newCrop) =>
+                                    updateCrop(index, newCrop)
+                                  }
+                                  onCropComplete={(
                                     croppedArea,
                                     croppedAreaPixels
-                                  )
-                                }
-                              />
-                            </div>
-                            <div className="d-flex justify-content-start mt-3 gap-2">
-                              <button
-                                type="button"
-                                className="btn btn-primary"
-                                onClick={() => handleCropSave(index)}
-                              >
-                                Save Cropped Image
-                              </button>
-                              <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => handleCropCancel(index)}
-                              >
-                                Cancel
-                              </button>
-                            </div>
-                          </>
+                                  ) =>
+                                    onCropComplete(
+                                      index,
+                                      croppedArea,
+                                      croppedAreaPixels
+                                    )
+                                  }
+                                />
+                              </div>
+                              <div className="d-flex justify-content-start mt-3 gap-2">
+                                <button
+                                  type="button"
+                                  className="btn btn-primary"
+                                  onClick={() => handleCropSave(index)}
+                                >
+                                  Save Cropped Image
+                                </button>
+                                <button
+                                  type="button"
+                                  className="btn btn-secondary"
+                                  onClick={() => handleCropCancel(index)}
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </>
+                          )}
+                        <div className="invalid-feedback">
+                          {formik.errors.mediaFields?.[index]?.path &&
+                            formik.errors.mediaFields[index].path}
+                        </div>
+                      </div>
+
+                      <div className="col-md-6 col-12 mb-3">
+                        <label className="form-label">
+                          Youtube Link
+                          {field.selectedType === "video" && (
+                            <span className="text-danger">*</span>
+                          )}
+                        </label>
+                        <input
+                          type="text"
+                          className={`form-control ${
+                            formik.errors.mediaFields?.[index]?.path &&
+                            field.selectedType === "video"
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          value={
+                            field.selectedType === "video" ? field.path : ""
+                          }
+                          disabled={field.selectedType !== "video"}
+                          onChange={(e) => handleVideoChange(e, index)}
+                        />
+                        <div className="invalid-feedback">
+                          {formik.errors.mediaFields?.[index]?.path &&
+                            field.selectedType === "video" &&
+                            formik.errors.mediaFields[index].path}
+                        </div>
+                      </div>
+
+                      <div className="text-end">
+                        {formik.values.mediaFields.length > 1 && (
+                          <button
+                            type="button"
+                            className="btn btn-danger btn-sm"
+                            onClick={() =>
+                              handleDelete(index, field.id ?? null)
+                            }
+                          >
+                            Delete
+                          </button>
                         )}
-                      <div className="invalid-feedback">
-                        {formik.errors.mediaFields?.[index]?.path &&
-                          field.selectedType === "image" &&
-                          formik.errors.mediaFields[index].path}
                       </div>
                     </div>
-
-                    <div className="col-md-6 col-12 mb-3">
-                      <label className="form-label">
-                        Youtube Link
-                        {field.selectedType === "video" && (
-                          <span className="text-danger">*</span>
-                        )}
-                      </label>
-                      <input
-                        type="text"
-                        className={`form-control ${
-                          formik.errors.mediaFields?.[index]?.path &&
-                          field.selectedType === "video"
-                            ? "is-invalid"
-                            : ""
-                        }`}
-                        value={field.selectedType === "video" ? field.path : ""}
-                        disabled={field.selectedType !== "video"}
-                        onChange={(e) => handleVideoChange(e, index)}
-                      />
-                      <div className="invalid-feedback">
-                        {formik.errors.mediaFields?.[index]?.path &&
-                          field.selectedType === "video" &&
-                          formik.errors.mediaFields[index].path}
-                      </div>
-                    </div>
-
-                    <div className="text-end">
-                      {formik.values.mediaFields.length > 1 && (
-                        <button
-                          type="button"
-                          className="btn btn-danger btn-sm"
-                          onClick={() => handleDelete(index, field.id ?? null)}
-                        >
-                          Delete
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                ))}
+                  ))}
               </>
 
               <div className="text-end mt-3">
@@ -1211,10 +1303,10 @@ function ProductEdit() {
                   </div>
                 )}
             </div>
-            {(formik.values.deal_type === "1" ||
+            {/* {(formik.values.deal_type === "1" ||
               formik.values.deal_type === 1) && (
               <div className="col-md-12 mb-3">
-                <label className="form-label">Variants</label>
+                <label className="form-label">Variant</label>
                 <div className="row">
                   {formik.values.variants.map((variant, index) => (
                     <div className="col-md-6 col-12 mb-2" key={variant.id}>
@@ -1222,6 +1314,58 @@ function ProductEdit() {
                         <input
                           type="text"
                           className="form-control form-control-sm"
+                          name={`variants[${index}].value`}
+                          value={variant.value}
+                          onChange={(e) => {
+                            const valueWithoutComma = e.target.value.replace(
+                              /,/g,
+                              ""
+                            );
+                            formik.setFieldValue(
+                              `variants[${index}].value`,
+                              valueWithoutComma
+                            );
+                          }}
+                          placeholder={`Variant ${index + 1}`}
+                        />
+
+                        <button
+                          type="button"
+                          className="btn btn-light btn-sm"
+                          onClick={() => removeVariant(variant.id)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-button"
+                  onClick={addVariant}
+                >
+                  Add Variant
+                </button>
+              </div>
+            )} */}
+            {/* (5) */}
+            {(formik.values.deal_type === "1" ||
+              formik.values.deal_type === 1) && (
+              <div className="col-md-12 mb-3">
+                <label className="form-label">Variant</label>
+                <div className="row">
+                  {formik.values.variants.map((variant, index) => (
+                    <div className="col-md-6 col-12 mb-2" key={variant.id}>
+                      <div className="input-group mb-2">
+                        <input
+                          type="text"
+                          className={`form-control form-control-sm ${
+                            formik.touched.variants?.[index]?.value &&
+                            formik.errors.variants?.[index]?.value
+                              ? "is-invalid"
+                              : ""
+                          }`}
                           name={`variants[${index}].value`}
                           value={variant.value}
                           onChange={(e) => {
@@ -1244,6 +1388,12 @@ function ProductEdit() {
                           <FaTrash />
                         </button>
                       </div>
+                      {formik.touched.variants?.[index]?.value &&
+                        formik.errors.variants?.[index]?.value && (
+                          <div className="invalid-feedback">
+                            {formik.errors.variants[index].value}
+                          </div>
+                        )}
                     </div>
                   ))}
                 </div>
@@ -1256,7 +1406,6 @@ function ProductEdit() {
                 </button>
               </div>
             )}
-
             <div className="col-md-6 col-12 mt-5 d-flex align-items-center">
               <div className="d-flex align-items-center">
                 <div className="form-check mb-3">

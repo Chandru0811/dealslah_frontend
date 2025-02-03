@@ -113,14 +113,17 @@ function ProductPrint() {
     doc.setFontSize(12);
     addMultilineField("Dear Vendor,");
     detailStartY += 6;
+    doc.setFontSize(12);
     addMultilineField(
       "You are requested to kindly honor this coupon code for all transactions during the deal period. Please make the necessary arrangements in your system."
     );
     detailStartY += 6;
+    doc.setFontSize(12);
     addMultilineField(
       "You can find these details and more through your dashboard any time."
     );
 
+    // text start left side 160
     detailStartY += 6;
     doc.text("Thanks,", 155, detailStartY);
     detailStartY += 8;
@@ -205,7 +208,11 @@ function ProductPrint() {
                         className="text-muted"
                         style={{ fontWeight: "normal", fontSize: "24px" }}
                       >
-                        : {data?.discounted_price}
+                        : ₹{new Intl.NumberFormat("en-IN", {
+                          maximumFractionDigits: 0,
+                        }).format(
+                          parseFloat(data?.discounted_price)
+                        )}
                       </h2>
                     </div>
                   </div>

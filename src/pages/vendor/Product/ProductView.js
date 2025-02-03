@@ -56,6 +56,10 @@ function ProductView() {
     return match ? match[1] || match[2] : null;
   }
 
+  const numberWithCommas = (number) => {
+    return number?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  };
+
   return (
     <section className="px-4">
       <>
@@ -186,18 +190,26 @@ function ProductView() {
                   </div>
                 </div>
                 {data?.deal_type !== 2 && data?.deal_type !== "2" && (
-                  <div className="col-md-6 col-12">
-                    <div className="row mb-3">
-                      <div className="col-6 d-flex justify-content-start align-items-center">
-                        <p className="text-sm">Original Price</p>
-                      </div>
-                      <div className="col-6">
-                        <p className="text-muted text-sm">
-                          : {data?.original_price}
-                        </p>
+                  <>
+                    <div className="col-md-6 col-12">
+                      <div className="row mb-3">
+                        <div className="col-6 d-flex justify-content-start align-items-center">
+                          <p className="text-sm">Original Price</p>
+                        </div>
+                        <div className="col-6">
+                          <p className="text-muted text-sm">
+                            :{" "}
+                            {data?.original_price &&
+                              new Intl.NumberFormat("en-IN", {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 2,
+                                useGrouping: true,
+                              }).format(parseFloat(data?.original_price))}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  </>
                 )}
                 {data?.deal_type !== 2 && data?.deal_type !== "2" && (
                   <div className="col-md-6 col-12">
@@ -206,9 +218,15 @@ function ProductView() {
                         <p className="text-sm">Discounted Price</p>
                       </div>
                       <div className="col-6">
-                        <p className="text-muted text-sm">
-                          : {data?.discounted_price}
-                        </p>
+                      <p className="text-muted text-sm">
+                            :{" "}
+                            {data?.discounted_price &&
+                              new Intl.NumberFormat("en-IN", {
+                                minimumFractionDigits: 0,
+                                maximumFractionDigits: 2,
+                                useGrouping: true,
+                              }).format(parseFloat(data?.discounted_price))}
+                          </p>
                       </div>
                     </div>
                   </div>
@@ -231,18 +249,18 @@ function ProductView() {
                   <div className="col-md-6 col-12">
                     <div className="row mb-3">
                       <div className="col-6 d-flex justify-content-start align-items-center">
-                        <p className="text-sm">Varient</p>
+                        <p className="text-sm">Variant</p>
                       </div>
                       <div className="col-6">
                         <p className="text-muted text-sm">
                           :{" "}
-                          {data?.varient?.split(",").map((variant, index) => (
-                            <div
+                          {data?.varient?.split(",").map((varient, index) => (
+                            <span
                               key={index}
                               className="badge badge-success badge-outlined mx-1"
                             >
-                              {variant.trim()}
-                            </div>
+                              {varient.trim()}
+                            </span>
                           ))}
                         </p>
                       </div>
@@ -385,7 +403,6 @@ function ProductView() {
                               className="d-flex gap-4"
                               id={`video-container-${index}`}
                             >
-                              {/* Embed YouTube video */}
                               {item.path && (
                                 <iframe
                                   src={`https://www.youtube.com/embed/${extractVideoId(

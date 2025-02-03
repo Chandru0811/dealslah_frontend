@@ -11,36 +11,23 @@ import { FaTrash } from "react-icons/fa";
 function ProductAdd() {
   const navigate = useNavigate();
   const [loadIndicator, setLoadIndicator] = useState(false);
-
-  const [mediaFields, setMediaFields] = useState([
-    { image: "", video: "", selectedType: "image" },
-  ]);
   const [cropperStates, setCropperStates] = useState([]);
   const [imageSrc, setImageSrc] = useState([]);
   const [crop, setCrop] = useState([]);
   const [zoom, setZoom] = useState([]);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState([]);
   const [originalFileName, setOriginalFileName] = useState([]);
-
-  const [originalFileType, setOriginalFileType] = useState("");
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
-
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
   const id = localStorage.getItem("shop_id");
-  const [couponCode, setCouponCode] = useState("DEALSLAH");
+  const [couponCode, setCouponCode] = useState("DEALSMACHI");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
-
-  const SUPPORTED_FORMATS = [
-    "image/jpg",
-    "image/jpeg",
-    "image/png",
-    "image/gif",
-    "image/svg+xml",
-    "image/webp",
-  ];
+  const [mediaFields, setMediaFields] = useState([
+    { image: "", video: "", selectedType: "image" },
+  ]);
 
   const getCurrentDate = () => {
     const today = new Date();
@@ -50,17 +37,8 @@ function ProductAdd() {
     return `${year}-${month}-${day}`;
   };
 
-  const imageValidation = Yup.mixed()
-    .required("*Image is required")
-    .test("fileFormat", "Unsupported format", (value) => {
-      return !value || (value && SUPPORTED_FORMATS.includes(value.type));
-    })
-    .test("fileSize", "File size is too large. Max 2MB.", (value) => {
-      return !value || (value && value.size <= MAX_FILE_SIZE);
-    });
-
   const validationSchema = Yup.object({
-    categoryGroupId: Yup.string().required("Category Group is required"),
+    shop_id: Yup.string().required("Category Group is required"),
     category_id: Yup.string().required("Category is required"),
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
@@ -122,12 +100,21 @@ function ProductAdd() {
       .required("Description is required")
       .min(10, "Description must be at least 10 characters long")
       .max(250, "Description cannot be more than 250 characters long"),
-
     specifications: Yup.string()
       .notRequired("Specification is required")
       .min(10, "Specification must be at least 10 characters long")
       .max(250, "Specification cannot be more than 250 characters long"),
-
+    brand: Yup.string()
+      .notRequired()
+      .max(250, "Brand cannot be more than 250 characters long"),
+    // (1)
+    variants: Yup.array().of(
+      Yup.object().shape({
+        value: Yup.string()
+          .max(250, "Variant cannot be more than 250 characters long")
+          .notRequired(),
+      })
+    ),
     coupon_code: Yup.string()
       .matches(
         /^[A-Za-z]+[0-9]{0,4}$/,
@@ -150,7 +137,7 @@ function ProductAdd() {
 
   const formik = useFormik({
     initialValues: {
-      categoryGroupId: "",
+      shop_id: "",
       name: "",
       category_id: "",
       deal_type: "",
@@ -174,7 +161,6 @@ function ProductAdd() {
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      console.log("values", values);
       const formattedVariants = values.variants
         .map((variant) => variant.value.trim())
         .filter((value) => value !== "")
@@ -184,7 +170,6 @@ function ProductAdd() {
       formData.append("shop_id", id);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
-      formData.append("categoryGroupId", values.categoryGroupId);
       formData.append("deal_type", values.deal_type);
       formData.append("brand", values.brand);
       formData.append("original_price", values.original_price || 0);
@@ -251,7 +236,7 @@ function ProductAdd() {
 
     formik.validateForm().then((errors) => {
       formik.setTouched({
-        categoryGroupId: true,
+        shop_id: true,
         name: true,
         category_id: true,
         deal_type: true,
@@ -276,12 +261,12 @@ function ProductAdd() {
       const formErrors = formik.errors;
       if (Object.keys(formErrors).length > 0) {
         const fieldLabels = {
-          categoryGroupId: "Category Group",
+          shop_id: "Category Group",
           name: "Name",
           category_id: "Category",
           deal_type: "Deal Type",
           delivery_days: "Delivery Days",
-          brand: "Brand",
+          brand: "Brand cannot be more than 250 characters long",
           original_price: "Original Price",
           discounted_price: "Discounted Price",
           discounted_percentage: "Discounted Percentage",
@@ -289,6 +274,7 @@ function ProductAdd() {
           end_date: "End Date",
           coupon_code: "Coupon Code",
           image: "Main Image",
+          variants: "Variants cannot be more than 250 characters long",
           description: "Description cannot be more than 250 characters long",
           specifications:
             "Specification cannot be more than 250 characters long",
@@ -300,10 +286,9 @@ function ProductAdd() {
         };
 
         const missedFields = Object.keys(formErrors)
-          .map((key) => fieldLabels[key] || key) // Fallback to key if no label found
+          .map((key) => fieldLabels[key] || key)
           .join(", ");
 
-        // Ensure toast is displayed
         toast.error(
           `Please fill in the following required fields: ${missedFields}`,
           {
@@ -319,7 +304,6 @@ function ProductAdd() {
         return;
       }
 
-      // Proceed to submit the form
       formik.handleSubmit();
     });
   };
@@ -362,7 +346,7 @@ function ProductAdd() {
     const categoryGroup = event.target.value;
     setCategory([]);
 
-    formik.setFieldValue("categoryGroupId", categoryGroup);
+    formik.setFieldValue("shop_id", categoryGroup);
 
     setSelectedCategoryGroup(categoryGroup);
     fetchCategory(categoryGroup);
@@ -415,7 +399,6 @@ function ProductAdd() {
           updatedImageSrc[index] = reader.result;
           setImageSrc(updatedImageSrc);
 
-          // Update cropper state for this index
           const updatedCropperStates = [...cropperStates];
           updatedCropperStates[index] = true;
           setCropperStates(updatedCropperStates);
@@ -488,10 +471,7 @@ function ProductAdd() {
         type: "image/jpeg",
       });
 
-      // Update formik values for the specific index
       formik.setFieldValue(`image-${index}`, file);
-
-      // Update cropper state
       const updatedCropperStates = [...cropperStates];
       updatedCropperStates[index] = false;
       setCropperStates(updatedCropperStates);
@@ -509,9 +489,10 @@ function ProductAdd() {
     updatedImageSrc[index] = null;
     setImageSrc(updatedImageSrc);
 
-    formik.setFieldValue(`image-${index}`, "");
+    formik.setFieldValue(`image-${index}`, null);
     // Reset the file input
     const fileInput = document.querySelector(`input[name="image-${index}"]`);
+    console.log("File Input", fileInput);
     if (fileInput) fileInput.value = "";
   };
 
@@ -555,18 +536,15 @@ function ProductAdd() {
 
   const handleDelete = (indexToDelete) => {
     if (mediaFields.length > 1 && indexToDelete !== 0) {
-      // Remove the specific row from mediaFields
       const updatedFields = mediaFields.filter(
         (_, index) => index !== indexToDelete
       );
       setMediaFields(updatedFields);
 
-      // Create new form values without the deleted row
       const newValues = { ...formik.values };
       delete newValues[`image-${indexToDelete}`];
       delete newValues[`video-${indexToDelete}`];
 
-      // Reindex the remaining fields after the deleted index
       for (let i = indexToDelete; i < mediaFields.length - 1; i++) {
         if (newValues[`image-${i + 1}`]) {
           newValues[`image-${i}`] = newValues[`image-${i + 1}`];
@@ -578,10 +556,8 @@ function ProductAdd() {
         }
       }
 
-      // Update formik values
       formik.setValues(newValues);
 
-      // Update other state arrays
       setImageSrc((prev) => prev.filter((_, index) => index !== indexToDelete));
       setCrop((prev) => prev.filter((_, index) => index !== indexToDelete));
       setCroppedAreaPixels((prev) =>
@@ -645,14 +621,13 @@ function ProductAdd() {
               </label>
               <select
                 className={`form-select form-select-sm ${
-                  formik.touched.categoryGroupId &&
-                  formik.errors.categoryGroupId
+                  formik.touched.shop_id && formik.errors.shop_id
                     ? "is-invalid"
                     : ""
                 }`}
-                {...formik.getFieldProps("categoryGroupId")}
+                {...formik.getFieldProps("shop_id")}
                 onChange={handleCategorygroupChange}
-                value={formik.values.categoryGroupId}
+                value={formik.values.shop_id}
               >
                 <option value="">Select a category group</option>
                 {allCategorgroup &&
@@ -662,12 +637,9 @@ function ProductAdd() {
                     </option>
                   ))}
               </select>
-              {formik.touched.categoryGroupId &&
-                formik.errors.categoryGroupId && (
-                  <div className="invalid-feedback">
-                    {formik.errors.categoryGroupId}
-                  </div>
-                )}
+              {formik.touched.shop_id && formik.errors.shop_id && (
+                <div className="invalid-feedback">{formik.errors.shop_id}</div>
+              )}
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -787,10 +759,10 @@ function ProductAdd() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/(\..*)\./g, "$1")
-                      .replace(/(\.\d{2})./g, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.original_price &&
@@ -816,10 +788,10 @@ function ProductAdd() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/(\..*)\./g, "$1")
-                      .replace(/(\.\d{2})./g, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.discounted_price &&
@@ -1136,9 +1108,9 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-            {formik.values.deal_type === "1" && (
+            {/* {formik.values.deal_type === "1" && (
               <div className="col-md-12 mb-3">
-                <label className="form-label">Variants</label>
+                <label className="form-label">Variant</label>
                 <div className="row">
                   {formik.values.variants.map((variant, index) => (
                     <div className="col-md-6 col-12 mb-2" key={variant.id}>
@@ -1160,7 +1132,6 @@ function ProductAdd() {
                           }}
                           placeholder={`Variant ${index + 1}`}
                         />
-
                         <button
                           type="button"
                           className="btn btn-light btn-sm"
@@ -1169,6 +1140,62 @@ function ProductAdd() {
                           <FaTrash />
                         </button>
                       </div>
+                    </div>
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm btn-button"
+                  onClick={addVariant}
+                >
+                  Add Variant
+                </button>
+              </div>
+            )} */}
+            {/* (2) */}
+            {formik.values.deal_type === "1" && (
+              <div className="col-md-12 mb-3">
+                <label className="form-label">Variant</label>
+                <div className="row">
+                  {formik.values.variants.map((variant, index) => (
+                    <div className="col-md-6 col-12 mb-2" key={variant.id}>
+                      <div className="input-group mb-2">
+                        <input
+                          type="text"
+                          className={`form-control form-control-sm ${
+                            formik.touched.variants?.[index]?.value &&
+                            formik.errors.variants?.[index]?.value
+                              ? "is-invalid"
+                              : ""
+                          }`}
+                          name={`variants[${index}].value`}
+                          value={variant.value}
+                          onChange={(e) => {
+                            const valueWithoutComma = e.target.value.replace(
+                              /,/g,
+                              ""
+                            );
+                            formik.setFieldValue(
+                              `variants[${index}].value`,
+                              valueWithoutComma
+                            );
+                          }}
+                          placeholder={`Variant ${index + 1}`}
+                        />
+                        <button
+                          type="button"
+                          className="btn btn-light btn-sm"
+                          onClick={() => removeVariant(variant.id)}
+                        >
+                          <FaTrash />
+                        </button>
+                      </div>
+                      {formik.touched.variants?.[index]?.value &&
+                        formik.errors.variants?.[index]?.value && (
+                          <div className="invalid-feedback">
+                            {formik.errors.variants[index].value}
+                          </div>
+                        )}
                     </div>
                   ))}
                 </div>
@@ -1193,7 +1220,10 @@ function ProductAdd() {
                     style={{ boxShadow: "none" }}
                     checked={!isCouponChecked}
                     onChange={handleRadioChange}
-                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
+                    disabled={
+                      formik.values.deal_type === 2 ||
+                      formik.values.deal_type === "2"
+                    }
                   />
                   <label htmlFor="vendorCoupon" className="form-label ms-2">
                     Vendor Coupon code
@@ -1210,7 +1240,10 @@ function ProductAdd() {
                     style={{ boxShadow: "none" }}
                     checked={isCouponChecked}
                     onChange={handleRadioChange}
-                    disabled={formik.values.deal_type === 2 || formik.values.deal_type === "2"}
+                    disabled={
+                      formik.values.deal_type === 2 ||
+                      formik.values.deal_type === "2"
+                    }
                   />
                   <label htmlFor="genricCoupon" className="form-label ms-2">
                     Generic Coupon Code
