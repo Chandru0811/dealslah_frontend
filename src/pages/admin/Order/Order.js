@@ -124,18 +124,41 @@ const Orders = () => {
               </thead>
               <tbody>
                 {datas?.map((data, index) => {
-                  const total = (parseFloat(data.quantity) * parseFloat(data.discount)).toFixed(2); // Calculate total
+                  const total = new Intl.NumberFormat("en-IN", {
+                    minimumFractionDigits: 0,
+                    maximumFractionDigits: 2,
+                    useGrouping: true,
+                  }).format(parseFloat(data.quantity) * parseFloat(data.discount));
                   return (
                     <tr key={data.id}>
                       <td className="text-start align-middle">{index + 1}</td>
-                      <td className="text-start">{data?.order?.order_number}</td>
-                      <td className="align-middle text-start">{data?.order?.customer?.name}</td>
+                      <td>
+                        <div className="d-flex">
+                          {data?.item_number}
+                          {data?.viewed_by_vendor === 1 ? (
+                            <div
+                              className="active_dot"
+                              style={{ marginLeft: "5px" }}
+                            ></div>
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </td>
+                      <td className="align-middle text-start">
+                        {data?.order?.customer?.name}
+                      </td>
                       <td className="align-middle text-start">{total}</td>
-                      <td className="align-middle text-start">{data.item_description}</td>
-                      <td className="align-middle text-start">{data?.shop?.legal_name}</td>
+                      <td className="align-middle text-start">
+                        {data.item_description}
+                      </td>
                       <td className="align-middle text-center">
-                        <Link to={`/order/view/${data.order_id}/${data.product_id}`}>
-                          <button className="button-btn btn-sm m-2">View</button>
+                        <Link
+                          to={`/order/view/${data.order_id}/${data.product_id}`}
+                        >
+                          <button className="button-btn btn-sm m-2">
+                            View
+                          </button>
                         </Link>
                         {/* <DeleteModel /> */}
                       </td>

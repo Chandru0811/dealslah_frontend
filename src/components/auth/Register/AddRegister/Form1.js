@@ -11,10 +11,9 @@ const validationSchema = Yup.object().shape({
   email: Yup.string()
     .email("Invalid email format")
     .required("E-mail is required"),
-  mobile: Yup.string()
-    .required("Mobile is required")
-    .min(8, "Minimum digits is 8")
-    .max(10, "Maximum digits is 10"),
+mobile: Yup.string()
+    .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
+    .required("Mobile number is required"),
   shop_type: Yup.string().required("Shop Type is required"),
   description: Yup.string().required("Description is required"),
 });

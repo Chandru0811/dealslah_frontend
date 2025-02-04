@@ -12,9 +12,9 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-  mobile: Yup.string()
-    .matches(/^[0-9]+$/, "mobile number must be numeric")
-    .required("mobile number is required!"),
+mobile: Yup.string()
+    .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
+    .required("Mobile number is required"),
   shop_type: Yup.string().required("Shop Type is required!"),
   company_registeration_no: Yup.string().required(
     "Company Registration is required!"

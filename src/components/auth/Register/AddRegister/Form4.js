@@ -164,7 +164,7 @@ const Form4 = forwardRef(
                 </div>
 
                 {/* State */}
-                <div className="col-12">
+                {/* <div className="col-12">
                   <div className="mb-3 row align-items-center">
                     <label className="col-md-4 form-label">
                       State<span className="text-danger">*</span>
@@ -188,7 +188,7 @@ const Form4 = forwardRef(
                       )}
                     </div>
                   </div>
-                </div>
+                </div> */}
 
                 {/* Country */}
                 <div className="col-12">

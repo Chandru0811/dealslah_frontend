@@ -123,12 +123,12 @@ function Register({ handleVendorLogin }) {
   };
 
   const handleCheckboxChange = (value) => {
-    formik.setFieldValue(
-      "type",
-      formik.values.type.includes(value)
-        ? formik.values.type.filter((item) => item !== value)
-        : [...formik.values.type, value]
-    );
+    const updatedValues = formik.values.type.includes(value)
+      ? formik.values.type.filter((item) => item !== value) // Remove if already selected
+      : [...formik.values.type, value]; // Add if not selected
+
+    formik.setFieldValue("type", updatedValues);
+    formik.setTouched({ ...formik.touched, type: true }); // Mark field as touched for validation
   };
 
   return (
@@ -174,21 +174,27 @@ function Register({ handleVendorLogin }) {
           >
             <div className="col-md-1 d-flex justify-content-center align-items-center">
               <Link to="/">
-                  <IoMdArrowBack style={{color: "#ef4444", fontSize: "20px"}}  className="mt-3 ms-5"/>
+                <IoMdArrowBack
+                  style={{ color: "#ef4444", fontSize: "20px" }}
+                  className="mt-3 ms-5"
+                />
               </Link>
             </div>
-            <div className="col-md-11 d-flex justify-content-center align-items-center" style={{paddingRight: "50px"}}>
-                <h3
-                  className={`pt-3`}
-                  style={{
-                    paddingBottom: "5px",
-                    width: "100%",
-                    textAlign: "center",
-                    color: "#ef4444",
-                  }}
-                >
-                  Register
-                </h3>
+            <div
+              className="col-md-11 d-flex justify-content-center align-items-center"
+              style={{ paddingRight: "50px" }}
+            >
+              <h3
+                className={`pt-3`}
+                style={{
+                  paddingBottom: "5px",
+                  width: "100%",
+                  textAlign: "center",
+                  color: "#ef4444",
+                }}
+              >
+                Register
+              </h3>
             </div>
           </div>
           <Form onSubmit={formik.handleSubmit}>
@@ -312,20 +318,32 @@ function Register({ handleVendorLogin }) {
                 </Form.Control.Feedback>
               ) : null}
             </Form.Group>
-            <div className="d-flex align-items-center">
-              <Form.Check
-                type="checkbox"
-                label="Vendor"
-                className="me-3"
-                checked={formik.values.type.includes("vendor")}
-                onChange={() => handleCheckboxChange("vendor")}
-              />
-              <Form.Check
-                type="checkbox"
-                label="Referrer"
-                checked={formik.values.type.includes("referrer")}
-                onChange={() => handleCheckboxChange("referrer")}
-              />
+            <div className="mb-3">
+              <Form.Label>Select Type</Form.Label>
+              <div className="d-flex align-items-center">
+                <Form.Check
+                  type="checkbox"
+                  label="Vendor"
+                  className="me-3"
+                  checked={formik.values.type.includes("vendor")}
+                  onChange={() => handleCheckboxChange("vendor")}
+                  isInvalid={formik.touched.type && formik.errors.type}
+                />
+                <Form.Check
+                  type="checkbox"
+                  label="Referrer"
+                  checked={formik.values.type.includes("referrer")}
+                  onChange={() => handleCheckboxChange("referrer")}
+                  isInvalid={formik.touched.type && formik.errors.type}
+                />
+              </div>
+
+              {/* Manually displaying the error message */}
+              {formik.touched.type && formik.errors.type ? (
+                <div className="invalid" style={{ color: "#dc3545" }}>
+                  {formik.errors.type}
+                </div>
+              ) : null}
             </div>
 
             <Button

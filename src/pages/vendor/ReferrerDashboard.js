@@ -279,7 +279,7 @@ function ReferrerDashboard() {
             <div className="col-md-3 col-12">
               <p>This Months Earning</p>
               <b>
-                ₹{" "}
+                ${" "}
                 {Number(
                   dashboardData?.total_data?.this_month_earnings ?? 0
                 ).toLocaleString("en-IN")}
@@ -288,7 +288,7 @@ function ReferrerDashboard() {
             <div className="col-md-3 col-12">
               <p>Total Earnings</p>
               <b>
-                ₹{" "}
+                ${" "}
                 {Number(
                   dashboardData?.total_data?.total_earnings ?? 0
                 ).toLocaleString("en-IN")}

@@ -363,22 +363,34 @@ function OrderView() {
                 <div className="card-header m-0 p-2">
                   <p className="mb-0">Contact Information</p>
                 </div>
-                <div className="card-body  m-0 p-4">
-                  <p>
-                    Name :{" "}
-                    {data?.order?.address?.first_name
-                      ? `${data?.order?.address?.first_name} ${
-                          data?.order?.address?.last_name || ""
-                        }`
-                      : "N/A"}
-                  </p>
-                  <p>
-                    Email : {data?.order?.address?.email ?? "No Email provided"}
-                  </p>
-                  <p>
-                    Phone :{" "}
-                    {data?.order?.address?.phone ?? "No phone number provided"}
-                  </p>
+                <div className="card-body m-0 p-4">
+                  {data?.order?.delivery_address &&
+                    (() => {
+                      try {
+                        const deliveryAddress = JSON.parse(
+                          data.order.delivery_address
+                        );
+                        return (
+                          <>
+                            <p>
+                              Name: {deliveryAddress.first_name}{" "}
+                              {deliveryAddress.last_name || ""}
+                            </p>
+                            <p>
+                              Email:{" "}
+                              {deliveryAddress.email || "No Email provided"}
+                            </p>
+                            <p>
+                              Phone:{" "}
+                              {deliveryAddress.phone ||
+                                "No phone number provided"}
+                            </p>
+                          </>
+                        );
+                      } catch (error) {
+                        return <p>Invalid delivery address format</p>;
+                      }
+                    })()}
                 </div>
               </div>
 
@@ -402,6 +414,34 @@ function OrderView() {
                     {data?.order?.address?.postalcode &&
                       `${data.order.address.postalcode}`}
                   </p>
+                </div>
+              </div> <div className="card mb-2">
+                <div className="card-header m-0 p-2">
+                  <p className="mb-0">Address</p>
+                </div>
+                <div className="card-body m-0 p-4">
+                  {data?.order?.delivery_address &&
+                    (() => {
+                      try {
+                        const deliveryAddress = JSON.parse(
+                          data.order.delivery_address
+                        );
+                        return (
+                          <p>
+                          {deliveryAddress.address}, {deliveryAddress.city},{" "}
+                          {deliveryAddress.state},{" "}
+                          {deliveryAddress.postalcode} {" "}
+                          {/* {deliveryAddress.unit} */}
+                          {deliveryAddress.unit &&
+                            deliveryAddress.unit !== "null" &&
+                            deliveryAddress.unit.trim() !== "" &&
+                            ` - ${deliveryAddress.unit}`}
+                        </p>
+                        );
+                      } catch (error) {
+                        return <p>Invalid delivery address format</p>;
+                      }
+                    })()}
                 </div>
               </div>
             </div>
