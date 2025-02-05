@@ -8,7 +8,7 @@ import api from "../../../../config/URL";
 const validationSchema = Yup.object().shape({
   street: Yup.string().required("Street 1 is required"),
   city: Yup.string().required("City is required"),
-  state: Yup.string().required("State is required"),
+  // state: Yup.string().required("State is required"),
   country: Yup.string().required("Country is required"),
   zip_code: Yup.string().required("Zip Code is required"),
 });
