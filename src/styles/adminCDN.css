@@ -5013,7 +5013,7 @@ textarea.form-control.is-invalid {
 
 .was-validated .form-check-input:invalid~.form-check-label,
 .form-check-input.is-invalid~.form-check-label {
-  color: #f36;
+  color: #ef4444;
 }
 
 .form-check-inline .form-check-input~.invalid-feedback {

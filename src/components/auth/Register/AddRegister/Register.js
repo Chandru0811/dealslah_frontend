@@ -126,9 +126,8 @@ function Register({ handleVendorLogin }) {
     const updatedValues = formik.values.type.includes(value)
       ? formik.values.type.filter((item) => item !== value) // Remove if already selected
       : [...formik.values.type, value]; // Add if not selected
-
+  
     formik.setFieldValue("type", updatedValues);
-    formik.setTouched({ ...formik.touched, type: true }); // Mark field as touched for validation
   };
 
   return (
