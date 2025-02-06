@@ -55,6 +55,7 @@ const Orders = () => {
       try {
         const response = await api.get("/admin/orders");
         setDatas(response.data.data);
+        console.log("data" ,response.data.data);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -68,6 +69,7 @@ const Orders = () => {
       destroyDataTable();
       fetchData();
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -124,18 +126,18 @@ const Orders = () => {
               </thead>
               <tbody>
                 {datas?.map((data, index) => {
-                  const total = new Intl.NumberFormat("en-IN", {
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 2,
-                    useGrouping: true,
-                  }).format(parseFloat(data.quantity) * parseFloat(data.discount));
+                 const total = new Intl.NumberFormat("en-IN", {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 2,
+                  useGrouping: true,
+                }).format(parseFloat(data.quantity) * parseFloat(data.discount));
                   return (
                     <tr key={data.id}>
                       <td className="text-start align-middle">{index + 1}</td>
                       <td>
                         <div className="d-flex">
                           {data?.item_number}
-                          {data?.viewed_by_vendor === 1 ? (
+                          {data?.viewed_by_admin === 1 ? (
                             <div
                               className="active_dot"
                               style={{ marginLeft: "5px" }}
@@ -152,6 +154,9 @@ const Orders = () => {
                       <td className="align-middle text-start">
                         {data.item_description}
                       </td>
+                      <td className="align-middle text-start">
+                        {data?.shop?.legal_name}
+                      </td>
                       <td className="align-middle text-center">
                         <Link
                           to={`/order/view/${data.order_id}/${data.product_id}`}
@@ -166,7 +171,6 @@ const Orders = () => {
                   );
                 })}
               </tbody>
-
             </table>
           </div>
         )}

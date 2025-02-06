@@ -9,6 +9,7 @@ function OrderView() {
   const { order_id, product_id } = useParams();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
+  console.log("first:", data.address);
 
   const getData = async () => {
     setLoading(true);
@@ -21,7 +22,7 @@ function OrderView() {
     }
     setLoading(false);
   };
-  
+
   const calculateDeliveryDate = (createdAt, deliveryDays) => {
     if (!createdAt || !deliveryDays || deliveryDays === "N/A") return "N/A";
     const createdDate = new Date(createdAt);
@@ -31,7 +32,7 @@ function OrderView() {
 
   useEffect(() => {
     getData();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [order_id, product_id]);
 
   return (
@@ -49,7 +50,7 @@ function OrderView() {
           <div className="d-flex justify-content-between align-items-center mb-4">
             <div className="d-flex align-items-center mb-4">
               <p className="d-flex justify-content-center text-dark">
-                Order ID: {data?.order?.order_number ?? "N/A"}&nbsp;
+                Order ID: {data?.item_number ?? "N/A"}&nbsp;
               </p>
               &nbsp;
               <span
@@ -169,14 +170,14 @@ function OrderView() {
                       </p>
                       <p>
                         <del>
-                          $
+                        $
                           {new Intl.NumberFormat("en-IN", {
                             maximumFractionDigits: 0,
                           }).format(parseFloat(data?.unit_price))}
                         </del>
                         &nbsp;&nbsp;
                         <span style={{ color: "#dc3545" }}>
-                          $
+                        $
                           {new Intl.NumberFormat("en-IN", {
                             maximumFractionDigits: 0,
                           }).format(parseFloat(data?.discount))}
@@ -297,11 +298,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      $
+                    $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false,
+                        useGrouping: true,
                       }).format(
                         parseFloat(data?.unit_price || 0) *
                           parseFloat(data?.quantity || 0)
@@ -318,11 +319,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      $
+                    $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false,
+                        useGrouping: true,
                       }).format(
                         parseFloat(data?.unit_price || 0) *
                           parseFloat(data?.quantity || 0) -
@@ -343,11 +344,11 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      $
+                    $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
-                        useGrouping: false,
+                        useGrouping: true,
                       }).format(
                         parseFloat(data?.discount || 0) *
                           parseFloat(data?.quantity || 0)
@@ -430,15 +431,14 @@ function OrderView() {
                         );
                         return (
                           <p>
-                          {deliveryAddress.address}, {deliveryAddress.city},{" "}
-                          {deliveryAddress.state},{" "}
-                          {deliveryAddress.postalcode} {" "}
-                          {/* {deliveryAddress.unit} */}
-                          {deliveryAddress.unit &&
-                            deliveryAddress.unit !== "null" &&
-                            deliveryAddress.unit.trim() !== "" &&
-                            ` - ${deliveryAddress.unit}`}
-                        </p>
+                            {deliveryAddress.address}, {deliveryAddress.city},{" "}
+                            {deliveryAddress.postalcode} {" "}
+                            {/* {deliveryAddress.unit} */}
+                            {deliveryAddress.unit &&
+                              deliveryAddress.unit !== "null" &&
+                              deliveryAddress.unit.trim() !== "" &&
+                              ` - ${deliveryAddress.unit}`}
+                          </p>
                         );
                       } catch (error) {
                         return <p>Invalid delivery address format</p>;
