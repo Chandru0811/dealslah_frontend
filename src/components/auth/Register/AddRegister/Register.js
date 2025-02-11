@@ -9,7 +9,7 @@ import toast from "react-hot-toast";
 import api from "../../../../config/URL";
 import { FiAlertTriangle } from "react-icons/fi";
 import { IoEyeOffOutline, IoEyeOutline } from "react-icons/io5";
-import headerlogo from "../../../../assets/logo_dealslah.png";
+import headerlogo from "../../../../assets/header-logo.webp";
 
 function Register({ handleVendorLogin }) {
   const [showPassword, setShowPassword] = useState(false);
@@ -123,11 +123,12 @@ function Register({ handleVendorLogin }) {
   };
 
   const handleCheckboxChange = (value) => {
-    const updatedValues = formik.values.type.includes(value)
-      ? formik.values.type.filter((item) => item !== value) // Remove if already selected
-      : [...formik.values.type, value]; // Add if not selected
-  
-    formik.setFieldValue("type", updatedValues);
+    formik.setFieldValue(
+      "type",
+      formik.values.type.includes(value)
+        ? formik.values.type.filter((item) => item !== value)
+        : [...formik.values.type, value]
+    );
   };
 
   return (
@@ -146,35 +147,16 @@ function Register({ handleVendorLogin }) {
           className="card shadow-lg p-3 my-5 rounded"
           style={{ width: "100%", maxWidth: "400px" }}
         >
-          {/* <Link to="/">
-            <button className="btn btn-link text-start shadow-none h-0">
-              <IoMdArrowBack style={{ color: "#ef4444" }} />
-            </button>
-          </Link>
-          <div className="d-flex justify-content-around ">
-            <h3
-              className={`py-2`}
-              style={{
-                borderBottom: "2px solid #ef4444",
-                paddingBottom: "5px",
-                width: "100%",
-                textAlign: "center",
-                color: "#ef4444",
-              }}
-            >
-              Register
-            </h3>
-          </div> */}
           <div
             className="row pb-3"
             style={{
-              borderBottom: "2px solid #ef4444",
+              borderBottom: "2px solid #EF4444",
             }}
           >
             <div className="col-md-1 d-flex justify-content-center align-items-center">
               <Link to="/">
                 <IoMdArrowBack
-                  style={{ color: "#ef4444", fontSize: "20px" }}
+                  style={{ color: "#EF4444", fontSize: "20px" }}
                   className="mt-3 ms-5"
                 />
               </Link>
@@ -189,7 +171,7 @@ function Register({ handleVendorLogin }) {
                   paddingBottom: "5px",
                   width: "100%",
                   textAlign: "center",
-                  color: "#ef4444",
+                  color: "#EF4444",
                 }}
               >
                 Register
@@ -317,32 +299,20 @@ function Register({ handleVendorLogin }) {
                 </Form.Control.Feedback>
               ) : null}
             </Form.Group>
-            <div className="mb-3">
-              <Form.Label>Select Type</Form.Label>
-              <div className="d-flex align-items-center">
-                <Form.Check
-                  type="checkbox"
-                  label="Vendor"
-                  className="me-3"
-                  checked={formik.values.type.includes("vendor")}
-                  onChange={() => handleCheckboxChange("vendor")}
-                  isInvalid={formik.touched.type && formik.errors.type}
-                />
-                <Form.Check
-                  type="checkbox"
-                  label="Referrer"
-                  checked={formik.values.type.includes("referrer")}
-                  onChange={() => handleCheckboxChange("referrer")}
-                  isInvalid={formik.touched.type && formik.errors.type}
-                />
-              </div>
-
-              {/* Manually displaying the error message */}
-              {formik.touched.type && formik.errors.type ? (
-                <div className="invalid" style={{ color: "#dc3545" }}>
-                  {formik.errors.type}
-                </div>
-              ) : null}
+            <div className="d-flex align-items-center">
+              <Form.Check
+                type="checkbox"
+                label="Vendor"
+                className="me-3"
+                checked={formik.values.type.includes("vendor")}
+                onChange={() => handleCheckboxChange("vendor")}
+              />
+              <Form.Check
+                type="checkbox"
+                label="Referrer"
+                checked={formik.values.type.includes("referrer")}
+                onChange={() => handleCheckboxChange("referrer")}
+              />
             </div>
 
             <Button

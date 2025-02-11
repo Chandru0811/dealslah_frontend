@@ -152,8 +152,8 @@ function OrderView() {
                       <img
                         src={
                           data?.product?.product_media[0]?.type === "image"
-                            ? `${ImageURL}${data.product.product_media[0].path}`
-                            : noImage
+                          ? `${ImageURL}${data.product.product_media[0].resize_path}`
+                          : noImage
                         }
                         alt={data?.product?.name || "Product Image"}
                         style={{ width: "100%" }}

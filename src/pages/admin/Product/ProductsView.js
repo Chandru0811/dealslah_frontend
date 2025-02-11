@@ -8,7 +8,7 @@ import { FaRegCopy } from "react-icons/fa";
 import { LuCopyCheck } from "react-icons/lu";
 import Modal from "react-bootstrap/Modal";
 
-function ProductView() {
+function ProductsView() {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
@@ -252,8 +252,8 @@ function ProductView() {
                       <p className="text-sm">Original Price</p>
                     </div>
                     <div className="col-6">
-                      <p className="text-muted text-sm">
-                        : {data?.original_price}
+                       <p className="text-muted text-sm">
+                       : {data?.original_price}
                       </p>
                     </div>
                   </div>
@@ -265,7 +265,7 @@ function ProductView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.discounted_price}
+                      : {data?.discounted_price}
                       </p>
                     </div>
                   </div>
@@ -277,7 +277,7 @@ function ProductView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.discount_percentage}
+                      : {data?.discount_percentage}
                       </p>
                     </div>
                   </div>
@@ -422,9 +422,9 @@ function ProductView() {
                             <p className="text-sm">Thumbnail {index + 1}</p>
                             <img
                               src={`${ImageURL}${
-                                item.path.startsWith("/")
-                                  ? item.path
-                                  : "/" + item.path
+                                item.resize_path.startsWith("/")
+                                  ? item.resize_path
+                                  : "/" + item.resize_path
                               }`}
                               alt={`Media ${index + 1}`}
                               style={{
@@ -441,13 +441,13 @@ function ProductView() {
                               className="d-flex gap-4"
                               id={`video-container-${index}`}
                             >
-                              {item.path && (
+                              {item.resize_path && (
                                 <iframe
                                   src={`https://www.youtube.com/embed/${extractVideoId(
-                                    item.path
+                                    item.resize_path
                                   )}`}
                                   width="280"
-                                  height="210" 
+                                  height="210"
                                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                   allowFullScreen
                                   title={`Video ${index + 1}`}
@@ -501,4 +501,4 @@ function ProductView() {
   );
 }
 
-export default ProductView;
+export default ProductsView;

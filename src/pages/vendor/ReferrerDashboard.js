@@ -50,7 +50,7 @@ function ReferrerDashboard() {
 
  const selectedMonthChart = {
    options: {
-     colors: ["#ff0060"],
+     colors: ["#EF4444"],
      chart: {
        id: "selected-month-report",
        toolbar: {
@@ -121,7 +121,7 @@ function ReferrerDashboard() {
 
   const lastSixMonthChart = {
     options: {
-      colors: ["#ff0060"],
+      colors: ["#EF4444"],
       chart: {
         id: "selected-month-report",
         toolbar: {

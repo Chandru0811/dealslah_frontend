@@ -23,7 +23,7 @@ function ProductAdd() {
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
   const id = localStorage.getItem("shop_id");
-  const [couponCode, setCouponCode] = useState("DEALSMACHI");
+  const [couponCode, setCouponCode] = useState("DEALSLAH");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
   const [mediaFields, setMediaFields] = useState([
     { image: "", video: "", selectedType: "image" },
@@ -96,14 +96,14 @@ function ProductAdd() {
           return new Date(value) >= new Date(start_date);
         }
       ),
-    // description: Yup.string()
-    //   .required("Description is required")
-    //   .min(10, "Description must be at least 10 characters long")
-    //   .max(250, "Description cannot be more than 250 characters long"),
-    // specifications: Yup.string()
-    //   .notRequired("Specification is required")
-    //   .min(10, "Specification must be at least 10 characters long")
-    //   .max(250, "Specification cannot be more than 250 characters long"),
+    description: Yup.string()
+      .required("Description is required")
+      .min(10, "Description must be at least 10 characters long")
+      .max(250, "Description cannot be more than 250 characters long"),
+    specifications: Yup.string()
+      .notRequired("Specification is required")
+      .min(10, "Specification must be at least 10 characters long")
+      .max(250, "Specification cannot be more than 250 characters long"),
     brand: Yup.string()
       .notRequired()
       .max(250, "Brand cannot be more than 250 characters long"),
@@ -399,6 +399,7 @@ function ProductAdd() {
           updatedImageSrc[index] = reader.result;
           setImageSrc(updatedImageSrc);
 
+          // Update cropper state for this index
           const updatedCropperStates = [...cropperStates];
           updatedCropperStates[index] = true;
           setCropperStates(updatedCropperStates);
@@ -430,8 +431,8 @@ function ProductAdd() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 320;
-        const targetHeight = 240;
+        const targetWidth = 1600;
+        const targetHeight = 1200;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -471,7 +472,9 @@ function ProductAdd() {
         type: "image/jpeg",
       });
 
+      // Update formik values for the specific index
       formik.setFieldValue(`image-${index}`, file);
+      // Update cropper state
       const updatedCropperStates = [...cropperStates];
       updatedCropperStates[index] = false;
       setCropperStates(updatedCropperStates);
@@ -972,7 +975,7 @@ function ProductAdd() {
                               image={imageSrc[index]}
                               crop={crop[index] || { x: 0, y: 0 }}
                               zoom={zoom[index] || 1}
-                              aspect={320 / 240}
+                              aspect={1600 / 1200}
                               onCropChange={(newCrop) =>
                                 updateCrop(index, newCrop)
                               }

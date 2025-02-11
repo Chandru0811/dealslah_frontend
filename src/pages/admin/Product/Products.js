@@ -116,6 +116,7 @@ const Products = () => {
                   </th>
                   <th className="text-start">Title</th>
                   <th className="text-start">Orginal Price</th>
+                  <th className="text-start">Discounted Price</th>
                   <th className="text-start">Company Name</th>
                   <th className="text-start">Status</th>
                   <th className="text-center">Action</th>
@@ -132,10 +133,13 @@ const Products = () => {
                         className="img-fluid w-25 me-3"
                         style={{ maxHeight: "70px", maxWidth: "70px" }}
                       /> */}
-                      {data.name}
+                      {data?.name}
                     </td>
                     <td className="align-middle text-start">
-                      {data.original_price}
+                    {data.original_price}
+                    </td>
+                    <td className="align-middle text-start">
+                      {data?.discounted_price}
                     </td>
                     <td className="align-middle text-start">
                       {data?.shop?.legal_name}
