@@ -606,8 +606,8 @@ function ProductEdit() {
         const canvas = document.createElement("canvas");
         const ctx = canvas.getContext("2d");
 
-        const targetWidth = 320;
-        const targetHeight = 240;
+        const targetWidth = 1280;
+        const targetHeight = 960;
         canvas.width = targetWidth;
         canvas.height = targetHeight;
 
@@ -1145,7 +1145,8 @@ function ProductEdit() {
                             (!cropperStates[index] && field.resize_path) ? (
                               <img
                                 src={
-                                  imageSrc[index] || `${ImageURL}${field.resize_path}`
+                                  imageSrc[index] ||
+                                  `${ImageURL}${field.resize_path}`
                                 }
                                 alt="Preview"
                                 className="img-thumbnail"
@@ -1166,7 +1167,7 @@ function ProductEdit() {
                                   image={imageSrc[index]}
                                   crop={crop[index] || { x: 0, y: 0 }}
                                   zoom={zoom[index] || 1}
-                                  aspect={320 / 240}
+                                  aspect={1280 / 960}
                                   onCropChange={(newCrop) =>
                                     updateCrop(index, newCrop)
                                   }
@@ -1222,7 +1223,9 @@ function ProductEdit() {
                               : ""
                           }`}
                           value={
-                            field.selectedType === "video" ? field.resize_path : ""
+                            field.selectedType === "video"
+                              ? field.resize_path
+                              : ""
                           }
                           disabled={field.selectedType !== "video"}
                           onChange={(e) => handleVideoChange(e, index)}
