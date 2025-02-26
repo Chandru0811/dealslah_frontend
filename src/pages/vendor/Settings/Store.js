@@ -12,7 +12,7 @@ const validationSchema = Yup.object({
   email: Yup.string()
     .email("Invalid email format")
     .required("Email is required"),
-mobile: Yup.string()
+  mobile: Yup.string()
     .matches(/^\d{8}$/, "Mobile number must be exactly 8 digits")
     .required("Mobile number is required"),
   shop_type: Yup.string().required("Shop Type is required!"),
@@ -26,6 +26,7 @@ mobile: Yup.string()
 
   // banner: Yup.mixed().required("Banner is required!"),
   description: Yup.string().required("Description is required!"),
+  show_name_on_website: Yup.boolean().required("This field is required!"),
 });
 
 const Store = ({ setValueChange }) => {
@@ -52,11 +53,11 @@ const Store = ({ setValueChange }) => {
       // banner: null,
       description: "",
       shop_ratings: "",
+      show_name_on_website: false,
     },
     validationSchema: validationSchema,
     onSubmit: async (data) => {
       setLoadIndicator(true);
-      console.log("Form Data", data);
       const formdata = new FormData();
       formdata.append("_method", "PUT");
       formdata.append("name", data.name);
@@ -72,6 +73,7 @@ const Store = ({ setValueChange }) => {
       formdata.append("external_url", data.external_url);
       formdata.append("description", data.description);
       formdata.append("shop_ratings", data.shop_ratings);
+      formdata.append("show_name_on_website", data.show_name_on_website ? 1 : 0);
 
       if (data.logo instanceof File || data.logo instanceof Blob) {
         formdata.append("logo", data.logo);
@@ -115,7 +117,7 @@ const Store = ({ setValueChange }) => {
         }
       } finally {
         setLoadIndicator(false);
-        setValueChange(false); 
+        setValueChange(false);
       }
     },
   });
@@ -127,7 +129,12 @@ const Store = ({ setValueChange }) => {
         const response = await api.get(`vendor/shop/details/${id}`);
         setData(response.data);
         const shopData = response.data.data;
-        formik.setValues(shopData);
+
+        // Convert 1/0 to true/false for Formik
+        formik.setValues({
+          ...shopData,
+          show_name_on_website: shopData.show_name_on_website === 1, // Convert to boolean
+        });
       } catch (error) {
         toast.error("Error Fetching Data ", error);
       }
@@ -150,8 +157,8 @@ const Store = ({ setValueChange }) => {
   //   formik.handleSubmit();
   // };
   const handleFormikChange = (e) => {
-    formik.handleChange(e); 
-    setValueChange(true); 
+    formik.handleChange(e);
+    setValueChange(true);
   };
 
   return (
@@ -395,6 +402,40 @@ const Store = ({ setValueChange }) => {
                   value={formik.values.external_url}
                 />
               </div>
+              <div className="col-md-4 col-12 mb-3">
+                <label className="form-label">
+                  Show Name on Website<span className="text-danger">*</span>
+                </label>
+              </div>
+              <div className="col-md-8 col-12 mb-3">
+                <div className="form-check">
+                  <input
+                    type="checkbox"
+                    className="form-check-input"
+                    id="showNameOnWebsite"
+                    name="show_name_on_website"
+                    checked={formik.values.show_name_on_website}
+                    onChange={(e) => {
+                      formik.setFieldValue(
+                        "show_name_on_website",
+                        e.target.checked
+                      );
+                    }}
+                  />
+                  <label
+                    className="form-check-label"
+                    htmlFor="showNameOnWebsite"
+                  >
+                    Yes
+                  </label>
+                </div>
+                {formik.errors.show_name_on_website && (
+                  <div className="invalid-feedback d-block">
+                    {formik.errors.show_name_on_website}
+                  </div>
+                )}
+              </div>
+
               {/* <div className="col-md-4 col-12 mb-5">
                 <label className="form-label">
                   Company Map Url<span className="text-danger">*</span>
