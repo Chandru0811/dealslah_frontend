@@ -942,10 +942,9 @@ function ProductEdit() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value.replace(
-                      /[^0-9]/g,
-                      ""
-                    );
+                    event.target.value = event.target.value
+                      .replace(/[^0-9.]/g, "")
+                      .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.original_price &&
@@ -972,10 +971,9 @@ function ProductEdit() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value.replace(
-                      /[^0-9]/g,
-                      ""
-                    );
+                    event.target.value = event.target.value
+                      .replace(/[^0-9.]/g, "")
+                      .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.discounted_price &&
