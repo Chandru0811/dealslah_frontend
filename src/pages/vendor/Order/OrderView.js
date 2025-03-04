@@ -168,14 +168,14 @@ function OrderView() {
                       </p>
                       <p>
                         <del>
-                          ₹
+                          $
                           {new Intl.NumberFormat("en-IN", {
                             maximumFractionDigits: 0,
                           }).format(parseFloat(data?.unit_price))}
                         </del>
                         &nbsp;&nbsp;
                         <span style={{ color: "#dc3545" }}>
-                          ₹
+                          $
                           {new Intl.NumberFormat("en-IN", {
                             maximumFractionDigits: 0,
                           }).format(parseFloat(data?.discount))}
@@ -275,7 +275,7 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
@@ -296,7 +296,7 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,
@@ -321,7 +321,7 @@ function OrderView() {
                       )}
                     </span>
                     <span>
-                      ₹
+                      $
                       {new Intl.NumberFormat("en-IN", {
                         minimumFractionDigits: 0,
                         maximumFractionDigits: 2,

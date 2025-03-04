@@ -268,10 +268,9 @@ function ReferrerEdit() {
                     <input
                       type="text"
                       onInput={(event) => {
-                        event.target.value = event.target.value.replace(
-                          /[^0-9]/g,
-                          ""
-                        );
+                        event.target.value = event.target.value
+                          .replace(/[^0-9.]/g, "")
+                          .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
                       }}
                       className={`form-control ${
                         formik.touched.amount && formik.errors.amount
@@ -293,10 +292,9 @@ function ReferrerEdit() {
                     <input
                       type="text"
                       onInput={(event) => {
-                        event.target.value = event.target.value.replace(
-                          /[^0-9]/g,
-                          ""
-                        );
+                        event.target.value = event.target.value
+                          .replace(/[^0-9.]/g, "")
+                          .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
                       }}
                       className={`form-control ${
                         formik.touched.commission_rate &&
