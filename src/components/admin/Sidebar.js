@@ -29,7 +29,7 @@ function Sidebar({ handleLogout }) {
       className="navbar show navbar-vertical navbar-expand-lg p-0 navbar-light border-bottom border-bottom-lg-0 border-end-lg"
       id="navbarVertical"
     >
-      <div className="container-fluid">
+      <div className="container-fluid adminSideBar">
         <button
           className="navbar-toggler mx-2 p-1"
           type="button"
@@ -76,7 +76,7 @@ function Sidebar({ handleLogout }) {
           id="sidebarCollapse"
           // style={{ marginTop: "5rem" }}
         >
-          <ul className="navbar-nav">
+          <ul className="navbar-nav ">
             <li className="nav-item">
               <NavLink className="nav-link" to="/dashboard">
                 <BsBarChartFill />

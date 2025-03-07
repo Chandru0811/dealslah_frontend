@@ -14,6 +14,18 @@
   --admin-border-color: #5c04d8;
 }
 
+.adminSideBar {
+  height: 90vh;
+  overflow: auto;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.adminSideBar::-webkit-scrollbar {
+  display: none;
+}
+
 .card {
   border-radius: 3px;
 }
@@ -40,12 +52,12 @@
   color: var(--admin-accent-color) !important;
 }
 
-.navbar-vertical.navbar-light .navbar-nav>.nav-item>.nav-link.active {
+.navbar-vertical.navbar-light .navbar-nav > .nav-item > .nav-link.active {
   background-color: var(--sidber-menu-color) !important;
   color: var(--admin-text-color) !important;
 }
 
-.navbar-vertical.navbar-light .navbar-nav>.nav-item>.nav-link:hover {
+.navbar-vertical.navbar-light .navbar-nav > .nav-item > .nav-link:hover {
   background-color: var(--admin-header-color);
   /* color:var( --sidber-menu-color)!important; */
 }
@@ -69,7 +81,7 @@
 }
 
 .navbar-vertical.navbar-light .navbar-nav .nav-link:hover::after {
-  content: '\25C0';
+  content: "\25C0";
   /* Right arrow icon Unicode */
   font-size: 1.5rem;
   color: var(--sidber-menu-color) !important;
@@ -78,7 +90,6 @@
   top: 50%;
   transform: translateY(-50%);
 }
-
 
 .navbar-vertical.navbar-expand-lg .navbar-brand {
   position: sticky;
@@ -122,7 +133,7 @@
   /* border-color: var(--admin-primary-color) !important; */
 }
 
-.btn-check:focus+.btn-button,
+.btn-check:focus + .btn-button,
 .btn-button:focus {
   color: var(--admin-text-color);
   background-color: var(--admin-secondary-color);
@@ -130,21 +141,21 @@
   box-shadow: 0 0 0 0.25rem var(--admin-teritary-color);
 }
 
-.btn-check:checked+.btn-button,
-.btn-check:active+.btn-button,
+.btn-check:checked + .btn-button,
+.btn-check:active + .btn-button,
 .btn-button:active,
 .btn-button.active,
-.show>.btn-button.dropdown-toggle {
+.show > .btn-button.dropdown-toggle {
   color: var(--admin-text-color);
   background-color: var(--admin-secondary-color);
   border-color: var(--admin-secondary-color);
 }
 
-.btn-check:checked+.btn-button:focus,
-.btn-check:active+.btn-button:focus,
+.btn-check:checked + .btn-button:focus,
+.btn-check:active + .btn-button:focus,
 .btn-button:active:focus,
 .btn-button.active:focus,
-.show>.btn-button.dropdown-toggle:focus {
+.show > .btn-button.dropdown-toggle:focus {
   box-shadow: 0 0 0 0.25rem var(--admin-teritary-color);
 }
 
@@ -155,11 +166,11 @@
   border-color: var(--admin-secondary-color);
 }
 
-.btn-button-check:checked+.btn-button,
+.btn-button-check:checked + .btn-button,
 .btn-button.active,
 .btn-button.show,
 .btn-button:first-child:active,
-:not(.btn-button-check)+.btn-button:active {
+:not(.btn-button-check) + .btn-button:active {
   background-color: var(--admin-secondary-color);
   border-color: var(--admin-secondary-color);
   color: var(--admin-text-color);
@@ -185,7 +196,6 @@
 }
 
 .circle {
-
   border-radius: 50%;
   /* Makes the input round */
   width: 30px;
@@ -226,7 +236,8 @@
   top: 37px;
   left: 19px;
   transform: translate(-18px, -18px);
-  animation: dotRect var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+  animation: dotRect var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86)
+    infinite;
 }
 
 .loader svg circle {
@@ -237,7 +248,8 @@
   stroke-linecap: round;
   stroke-dasharray: 150 50 150 50;
   stroke-dashoffset: 75;
-  animation: pathCircle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86) infinite;
+  animation: pathCircle var(--duration) cubic-bezier(0.785, 0.135, 0.15, 0.86)
+    infinite;
 }
 
 @keyframes dotRect {
@@ -366,7 +378,7 @@
   top: 0;
 } */
 
-@media screen and (max-width:992px) {
+@media screen and (max-width: 992px) {
   .logo_ats {
     position: none;
     min-width: 18.1%;

@@ -6,7 +6,7 @@ import { BiSolidCategory, BiLogOut } from "react-icons/bi";
 import { FaBoxOpen } from "react-icons/fa";
 import { FaUser } from "react-icons/fa6";
 import { AiFillPieChart } from "react-icons/ai";
-import { RiMoneyRupeeCircleFill } from "react-icons/ri";
+import { HiCurrencyDollar } from "react-icons/hi2";
 
 function VendorSidebar({ handleLogout }) {
   const navigate = useNavigate();
@@ -112,7 +112,7 @@ function VendorSidebar({ handleLogout }) {
                 </li>
                 <li className="nav-item">
                   <NavLink className="nav-link" to="/earnings">
-                    <RiMoneyRupeeCircleFill />
+                    <HiCurrencyDollar />
                     Earnings
                   </NavLink>
                 </li>

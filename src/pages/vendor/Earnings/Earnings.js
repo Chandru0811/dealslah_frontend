@@ -97,7 +97,7 @@ const Earnings = () => {
 
   const formatIndianCurrency = (num) => {
     if (!num || isNaN(num)) return "0";
-    return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 0 }).format(
+    return new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 }).format(
       Number(num)
     );
   };
@@ -242,10 +242,10 @@ const Earnings = () => {
                           {data?.vendor_name}
                         </td>
                         <td className="align-middle text-start">
-                          ${formatIndianCurrency(data?.amount)}
+                          ₹{formatIndianCurrency(data?.amount)}
                         </td>
                         <td className="align-middle text-start">
-                          ${formatIndianCurrency(data?.commission_rate)}
+                          ₹{formatIndianCurrency(data?.commission_rate)}
                         </td>
                       </tr>
                     );
@@ -257,7 +257,7 @@ const Earnings = () => {
               <h5>
                 Total Amount:{" "}
                 <span className="text-primary">
-                  $
+                  ₹
                   {formatIndianCurrency(
                     datas.reduce(
                       (acc, curr) => acc + (Number(curr.amount) || 0),
@@ -269,7 +269,7 @@ const Earnings = () => {
               <h5>
                 Total Commission:{" "}
                 <span className="text-success">
-                  $
+                  ₹
                   {formatIndianCurrency(
                     datas.reduce(
                       (acc, curr) => acc + (Number(curr.commission_rate) || 0),
