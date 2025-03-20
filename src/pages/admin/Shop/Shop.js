@@ -118,6 +118,19 @@ const Shop = () => {
                           className="img-fluid"
                           width={50}
                         />
+                        {data.is_direct === 1 && (
+                          <span
+                            className="dot"
+                            style={{
+                              backgroundColor: "#3598f0",
+                              width: "10px",
+                              height: "10px",
+                              display: "inline-block",
+                              borderRadius: "50%",
+                              marginRight: "3px",
+                            }}
+                          ></span>
+                        )}
                         {data.name}
                       </td>
                       {/* <td className="text-center">{data.name}</td> */}
