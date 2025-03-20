@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 import { FiAlertTriangle } from "react-icons/fi";
 import Cropper from "react-easy-crop";
 import { FaTrash } from "react-icons/fa";
+import { MultiSelect } from "react-multi-select-component";
 
 function ProductAdd() {
   const navigate = useNavigate();
@@ -20,15 +21,16 @@ function ProductAdd() {
   const MAX_FILE_SIZE = 2 * 1024 * 1024;
   const [showModal, setShowModal] = useState(false);
   const [allCategorgroup, setAllCategorgroup] = useState([]);
+  const [allSubCategorgroup, setAllSubCategorgroup] = useState([]);
   const [selectedCategoryGroup, setSelectedCategoryGroup] = useState(null);
   const [category, setCategory] = useState([]);
   const id = localStorage.getItem("shop_id");
-  const [couponCode, setCouponCode] = useState("DEALSLAH");
+  const [couponCode, setCouponCode] = useState("DEALSMACHI");
   const [isCouponChecked, setIsCouponChecked] = useState(false);
   const [mediaFields, setMediaFields] = useState([
     { image: "", video: "", selectedType: "image" },
   ]);
-
+  const [selectedSubCategories, setSelectedSubCategories] = useState([]);
   const getCurrentDate = () => {
     const today = new Date();
     const year = today.getFullYear();
@@ -40,6 +42,10 @@ function ProductAdd() {
   const validationSchema = Yup.object({
     shop_id: Yup.string().required("Category Group is required"),
     category_id: Yup.string().required("Category is required"),
+    // sub_category_id: Yup.array()
+    //   .of(Yup.string())
+    //   .min(1, "At least one Sub Category is required")
+    //   .required("Sub Category is required"),
     name: Yup.string()
       .max(50, "Name must be 50 characters or less")
       .required("Name is required"),
@@ -107,6 +113,10 @@ function ProductAdd() {
     brand: Yup.string()
       .notRequired()
       .max(250, "Brand cannot be more than 250 characters long"),
+    stock: Yup.number()
+      .typeError("Stock in Quantity must be a number")
+      .integer("Stock in Quantity must be an integer")
+      .required("Stock in Quantity is required"),
     // (1)
     variants: Yup.array().of(
       Yup.object().shape({
@@ -140,8 +150,10 @@ function ProductAdd() {
       shop_id: "",
       name: "",
       category_id: "",
+      sub_category_id: [],
       deal_type: "",
       brand: "",
+      stock: "",
       original_price: "",
       discounted_price: "",
       discounted_percentage: "",
@@ -170,8 +182,12 @@ function ProductAdd() {
       formData.append("shop_id", id);
       formData.append("name", values.name);
       formData.append("category_id", values.category_id);
+      values.sub_category_id.forEach((subCatId, index) => {
+        formData.append(`sub_category_id[${index}]`, subCatId);
+      });
       formData.append("deal_type", values.deal_type);
       formData.append("brand", values.brand);
+      formData.append("stock", values.stock);
       formData.append("original_price", values.original_price || 0);
       formData.append("discounted_price", values.discounted_price || 0);
       formData.append("discount_percentage", values.discounted_percentage || 0);
@@ -239,9 +255,11 @@ function ProductAdd() {
         shop_id: true,
         name: true,
         category_id: true,
+        sub_category_id: true,
         deal_type: true,
         delivery_days: true,
         brand: true,
+        stock: true,
         original_price: true,
         discounted_price: true,
         discounted_percentage: true,
@@ -264,9 +282,11 @@ function ProductAdd() {
           shop_id: "Category Group",
           name: "Name",
           category_id: "Category",
+          sub_category_id: "Sub Category",
           deal_type: "Deal Type",
           delivery_days: "Delivery Days",
           brand: "Brand cannot be more than 250 characters long",
+          stock: "Stock in Quantity",
           original_price: "Original Price",
           discounted_price: "Discounted Price",
           discounted_percentage: "Discounted Percentage",
@@ -331,6 +351,30 @@ function ProductAdd() {
     };
     getData();
   }, []);
+
+  const fetchSubCategory = async (categoryId) => {
+    try {
+      const category = await api.get(
+        `vendor/subcategories/category/${categoryId}`
+      );
+      setAllSubCategorgroup(category.data.data);
+    } catch (error) {
+      toast.error(error);
+    }
+  };
+
+  const handleCategoryChange = async (event) => {
+    const categoryId = event.target.value;
+    formik.setFieldValue("category_id", categoryId);
+    formik.setFieldValue("sub_category_id", []);
+    await fetchSubCategory(categoryId);
+  };
+
+  useEffect(() => {
+    if (formik.values.category_id) {
+      fetchSubCategory(formik.values.category_id);
+    }
+  }, [formik.values.category_id]);
 
   const fetchCategory = async (categoryId) => {
     try {
@@ -656,6 +700,7 @@ function ProductAdd() {
                     : ""
                 }`}
                 {...formik.getFieldProps("category_id")}
+                onChange={handleCategoryChange}
               >
                 <option></option>
                 {category &&
@@ -670,6 +715,40 @@ function ProductAdd() {
                   {formik.errors.category_id}
                 </div>
               )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <div className="row">
+                <div className="">
+                  <label className="form-label">Sub Category</label>
+                  <MultiSelect
+                    options={allSubCategorgroup.map((subCat) => ({
+                      label: subCat.name,
+                      value: subCat.id,
+                    }))}
+                    value={selectedSubCategories}
+                    onChange={(selected) => {
+                      setSelectedSubCategories(selected);
+                      formik.setFieldValue(
+                        "sub_category_id",
+                        selected.map((option) => option.value)
+                      );
+                    }}
+                    labelledBy="Select Sub Categories"
+                    className={`form-multi-select form-multi-select-sm border-1 rounded-1 ${
+                      formik.touched.sub_category_id &&
+                      formik.errors.sub_category_id
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                  />
+                  {formik.touched.sub_category_id &&
+                    formik.errors.sub_category_id && (
+                      <div className="invalid-feedback">
+                        {formik.errors.sub_category_id}
+                      </div>
+                    )}
+                </div>
+              </div>
             </div>
             <div className="col-md-6 col-12 mb-3">
               <label className="form-label">
@@ -762,9 +841,10 @@ function ProductAdd() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.original_price &&
@@ -790,9 +870,10 @@ function ProductAdd() {
                 <input
                   type="text"
                   onInput={(event) => {
-                    event.target.value = event.target.value
-                      .replace(/[^0-9.]/g, "")
-                      .replace(/^(\d*\.?\d{0,2}).*$/, "$1");
+                    event.target.value = event.target.value.replace(
+                      /[^0-9]/g,
+                      ""
+                    );
                   }}
                   className={`form-control form-control-sm ${
                     formik.touched.discounted_price &&
@@ -893,6 +974,23 @@ function ProductAdd() {
               />
               {formik.touched.brand && formik.errors.brand && (
                 <div className="invalid-feedback">{formik.errors.brand}</div>
+              )}
+            </div>
+            <div className="col-md-6 col-12 mb-3">
+              <label className="form-label">
+                Stock In Quantity <span className="text-danger">*</span>
+              </label>
+              <input
+                type="text"
+                className={`form-control form-control-sm ${
+                  formik.touched.stock && formik.errors.stock
+                    ? "is-invalid"
+                    : ""
+                }`}
+                {...formik.getFieldProps("stock")}
+              />
+              {formik.touched.stock && formik.errors.stock && (
+                <div className="invalid-feedback">{formik.errors.stock}</div>
               )}
             </div>
             <>
@@ -1109,51 +1207,6 @@ function ProductAdd() {
                   </div>
                 )}
             </div>
-            {/* {formik.values.deal_type === "1" && (
-              <div className="col-md-12 mb-3">
-                <label className="form-label">Variant</label>
-                <div className="row">
-                  {formik.values.variants.map((variant, index) => (
-                    <div className="col-md-6 col-12 mb-2" key={variant.id}>
-                      <div className="input-group mb-2">
-                        <input
-                          type="text"
-                          className="form-control form-control-sm"
-                          name={`variants[${index}].value`}
-                          value={variant.value}
-                          onChange={(e) => {
-                            const valueWithoutComma = e.target.value.replace(
-                              /,/g,
-                              ""
-                            );
-                            formik.setFieldValue(
-                              `variants[${index}].value`,
-                              valueWithoutComma
-                            );
-                          }}
-                          placeholder={`Variant ${index + 1}`}
-                        />
-                        <button
-                          type="button"
-                          className="btn btn-light btn-sm"
-                          onClick={() => removeVariant(variant.id)}
-                        >
-                          <FaTrash />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  type="button"
-                  className="btn btn-sm btn-button"
-                  onClick={addVariant}
-                >
-                  Add Variant
-                </button>
-              </div>
-            )} */}
-            {/* (2) */}
             {formik.values.deal_type === "1" && (
               <div className="col-md-12 mb-3">
                 <label className="form-label">Variant</label>

@@ -150,6 +150,21 @@ function ProductView() {
                 <div className="col-md-6 col-12">
                   <div className="row mb-3">
                     <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Sub Category</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        :{" "}
+                        {data?.subCategoryNames
+                          ?.map((sub) => sub.label)
+                          .join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
                       <p className="text-sm">Deal Type</p>
                     </div>
                     <div className="col-6">
@@ -218,15 +233,15 @@ function ProductView() {
                         <p className="text-sm">Discounted Price</p>
                       </div>
                       <div className="col-6">
-                      <p className="text-muted text-sm">
-                            :{" "}
-                            {data?.discounted_price &&
-                              new Intl.NumberFormat("en-IN", {
-                                minimumFractionDigits: 0,
-                                maximumFractionDigits: 2,
-                                useGrouping: true,
-                              }).format(parseFloat(data?.discounted_price))}
-                          </p>
+                        <p className="text-muted text-sm">
+                          :{" "}
+                          {data?.discounted_price &&
+                            new Intl.NumberFormat("en-IN", {
+                              minimumFractionDigits: 0,
+                              maximumFractionDigits: 2,
+                              useGrouping: true,
+                            }).format(parseFloat(data?.discounted_price))}
+                        </p>
                       </div>
                     </div>
                   </div>
