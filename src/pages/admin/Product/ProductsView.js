@@ -108,11 +108,33 @@ function ProductsView() {
               <h1 className="h4 ls-tight">
                 View Deals
                 <span>
-                  {data?.ownerEmailVerifiedAt !== null && (
-                    <i
-                      className="fa-duotone fa-solid fa-badge-check"
-                      style={{ color: "green" }}
-                    ></i>
+                  {data?.shop?.is_direct === 1 ? (
+                    data?.special_price === 1 &&
+                    new Date(data?.end_date) > new Date() ? (
+                      <>
+                        <span
+                          className="dot"
+                          style={{
+                            backgroundColor: "#3598f0",
+                            width: "10px",
+                            height: "10px",
+                            display: "inline-block",
+                            borderRadius: "50%",
+                            marginRight: "3px",
+                          }}
+                        ></span>
+                        <span style={{ fontSize: "12px" }}>Special price</span>
+                      </>
+                    ) : null
+                  ) : (
+                    data.ownerEmailVerifiedAt !== null && (
+                      <span>
+                        <i
+                          className="fa-duotone fa-solid fa-badge-check"
+                          style={{ color: "green" }}
+                        ></i>
+                      </span>
+                    )
                   )}
                 </span>
               </h1>
@@ -207,6 +229,18 @@ function ProductsView() {
                 <div className="col-md-6 col-12">
                   <div className="row mb-3">
                     <div className="col-6 d-flex justify-content-start align-items-center">
+                      <p className="text-sm">Sub Category</p>
+                    </div>
+                    <div className="col-6">
+                      <p className="text-muted text-sm">
+                        : {data?.subCategoryNames?.join(", ")}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-12">
+                  <div className="row mb-3">
+                    <div className="col-6 d-flex justify-content-start align-items-center">
                       <p className="text-sm">Deal Type</p>
                     </div>
                     <div className="col-6">
@@ -252,8 +286,8 @@ function ProductsView() {
                       <p className="text-sm">Original Price</p>
                     </div>
                     <div className="col-6">
-                       <p className="text-muted text-sm">
-                       : {data?.original_price}
+                      <p className="text-muted text-sm">
+                        : {data?.original_price}
                       </p>
                     </div>
                   </div>
@@ -265,7 +299,7 @@ function ProductsView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                      : {data?.discounted_price}
+                        : {data?.discounted_price}
                       </p>
                     </div>
                   </div>
@@ -277,7 +311,7 @@ function ProductsView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                      : {data?.discount_percentage}
+                        : {data?.discount_percentage}
                       </p>
                     </div>
                   </div>
