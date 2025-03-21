@@ -8,24 +8,45 @@ import { FaRegCopy } from "react-icons/fa";
 import { LuCopyCheck } from "react-icons/lu";
 import Modal from "react-bootstrap/Modal";
 
-function ProductsView() {
+function ProductView() {
   const { id } = useParams();
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(false);
   const [loadIndicator, setLoadIndicator] = useState(false);
   const [shopStatus, setShopStatus] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [showActiveModal, setShowActiveModal] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
+  const [specialPrize, setSpecialPrize] = useState(null);
+  const [end_date, setEndDate] = useState("");
 
-  const handleActivate = async () => {
-    setLoadIndicator(true);
+  const handleActivate = () => {
+    setShowActiveModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowActiveModal(false);
+    setSpecialPrize(null);
+    setEndDate("");
+  };
+
+  const handleConfirmActivate = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+
+    const payload = {
+      special_price: specialPrize === "1",
+      ...(specialPrize === "1" && { end_date }),
+    };
+
     try {
-      const response = await api.post(`admin/deal/${id}/approve`);
+      const response = await api.post(`admin/deal/${id}/approve`, payload);
       if (response.status === 200) {
         getData();
         toast.success("Product Activated Successfully!");
+        handleCloseModal();
       } else {
         toast.error(response.data.message);
       }
@@ -33,9 +54,28 @@ function ProductsView() {
       toast.error("An error occurred while activating the product.");
       console.error("Activation Error:", error);
     } finally {
-      setLoadIndicator(false);
+      setLoading(false);
     }
   };
+
+  // const handleConfirmActivate = async () => {
+  //   setLoadIndicator(true);
+  //   try {
+  //     const response = await api.post(`admin/deal/${id}/approve`);
+  //     if (response.status === 200) {
+  //       getData();
+  //       toast.success("Product Activated Successfully!");
+  //       handleCloseModal();
+  //     } else {
+  //       toast.error(response.data.message);
+  //     }
+  //   } catch (error) {
+  //     toast.error("An error occurred while activating the product.");
+  //     console.error("Activation Error:", error);
+  //   } finally {
+  //     setLoadIndicator(false);
+  //   }
+  // };
 
   const handleDeActive = async () => {
     setLoading(true);
@@ -106,7 +146,7 @@ function ProductsView() {
           <div className="row p-3">
             <div className="d-flex justify-content-between align-items-center">
               <h1 className="h4 ls-tight">
-                View Deals
+                View Deals &nbsp;
                 <span>
                   {data?.shop?.is_direct === 1 ? (
                     data?.special_price === 1 &&
@@ -167,6 +207,102 @@ function ProductsView() {
                     Deactivate
                   </button>
                 )}
+                {/* Modal */}
+                <Modal show={showActiveModal} onHide={handleCloseModal}>
+                  <Modal.Header closeButton></Modal.Header>
+                  <Modal.Body>
+                    <form onSubmit={handleConfirmActivate}>
+                      <div className="mb-3">
+                        <label className="form-label">Special Prize</label>
+                        <div>
+                          <input
+                            type="radio"
+                            id="special_price_yes"
+                            name="special_price"
+                            value="1"
+                            checked={specialPrize === "1"}
+                            onChange={() => setSpecialPrize("1")}
+                            className="form-check-input"
+                          />
+                          <label
+                            htmlFor="special_price_yes"
+                            className="form-check-label ms-2"
+                          >
+                            Yes
+                          </label>
+
+                          <input
+                            type="radio"
+                            id="special_price_no"
+                            name="special_price"
+                            value="0"
+                            checked={specialPrize === "0"}
+                            onChange={() => setSpecialPrize("0")}
+                            className="form-check-input ms-3"
+                          />
+                          <label
+                            htmlFor="special_price_no"
+                            className="form-check-label ms-2"
+                          >
+                            No
+                          </label>
+                        </div>
+                      </div>
+
+                      {specialPrize === "1" && (
+                        <div className="mb-3">
+                          <label className="form-label" htmlFor="end_date">
+                            End Date
+                          </label>
+                          <input
+                            type="date"
+                            id="end_date"
+                            className="form-control"
+                            value={
+                              end_date ||
+                              (data?.end_date
+                                ? data.end_date.split("T")[0]
+                                : "")
+                            }
+                            onChange={(e) => setEndDate(e.target.value)}
+                          />
+                        </div>
+                      )}
+
+                      {/* <button
+                        type="submit"
+                        className="btn btn-primary"
+                        disabled={loading}
+                      >
+                        {loading ? "Saving..." : "Save"}
+                      </button> */}
+                    </form>
+                  </Modal.Body>
+
+                  <Modal.Footer>
+                    <button
+                      className="btn btn-light btn-sm me-2"
+                      onClick={handleCloseModal}
+                    >
+                      Close
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-success btn-sm me-2"
+                      onClick={handleConfirmActivate}
+                      disabled={loadIndicator}
+                    >
+                      {loadIndicator && (
+                        <span
+                          className="spinner-border spinner-border-sm me-2"
+                          aria-hidden="true"
+                        ></span>
+                      )}{" "}
+                      {loading ? "Saving..." : "Save"}
+                      Activate
+                    </button>
+                  </Modal.Footer>
+                </Modal>
               </div>
             </div>
           </div>
@@ -232,9 +368,7 @@ function ProductsView() {
                       <p className="text-sm">Sub Category</p>
                     </div>
                     <div className="col-6">
-                      <p className="text-muted text-sm">
-                        : {data?.subCategoryNames?.join(", ")}
-                      </p>
+                      <p className="text-muted text-sm">: {data?.name}</p>
                     </div>
                   </div>
                 </div>
@@ -287,7 +421,13 @@ function ProductsView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.original_price}
+                        :{" "}
+                        {data?.original_price &&
+                          new Intl.NumberFormat("en-IN", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2,
+                            useGrouping: true,
+                          }).format(parseFloat(data?.original_price))}
                       </p>
                     </div>
                   </div>
@@ -299,7 +439,13 @@ function ProductsView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.discounted_price}
+                        :{" "}
+                        {data?.discounted_price &&
+                          new Intl.NumberFormat("en-IN", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2,
+                            useGrouping: true,
+                          }).format(parseFloat(data?.discounted_price))}
                       </p>
                     </div>
                   </div>
@@ -311,7 +457,13 @@ function ProductsView() {
                     </div>
                     <div className="col-6">
                       <p className="text-muted text-sm">
-                        : {data?.discount_percentage}
+                        :{" "}
+                        {data?.discount_percentage &&
+                          new Intl.NumberFormat("en-IN", {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2,
+                            useGrouping: true,
+                          }).format(parseFloat(data?.discount_percentage))}
                       </p>
                     </div>
                   </div>
@@ -535,4 +687,4 @@ function ProductsView() {
   );
 }
 
-export default ProductsView;
+export default ProductView;
