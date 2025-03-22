@@ -261,21 +261,15 @@ function CategoriesEdits() {
           </div>
         ) : (
           <>
-            <div className="card shadow border-0 mb-2 top-header">
-              <div className="container-fluid py-4">
-                <div className="row align-items-center">
-                  <div className="col">
-                    <h1 className="h4 ls-tight headingColor">Edit Category</h1>
-                  </div>
-                  <div className="col-auto">
-                    <div className="hstack gap-2 justify-content-end">
-                      <Link to="/categories">
-                        <button type="button" className="btn btn-light btn-sm">
-                          Back
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
+            <div className="card card-shadow">
+              <div className="row p-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h1 className="h4 ls-tight">Edit Category</h1>
+                  <Link to="/categories">
+                    <button type="button" className="btn btn-light btn-sm">
+                      <span>Back</span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -288,11 +282,12 @@ function CategoriesEdits() {
                     </label>
                     <select
                       aria-label="Default select example"
-                      className={`form-select ${formik.touched.category_group_id &&
+                      className={`form-select ${
+                        formik.touched.category_group_id &&
                         formik.errors.category_group_id
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("category_group_id")}
                     >
                       <option value=""></option>
@@ -316,10 +311,11 @@ function CategoriesEdits() {
                     </label>
                     <input
                       type="text"
-                      className={`form-control ${formik.touched.name && formik.errors.name
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.name && formik.errors.name
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("name")}
                     />
                     {formik.touched.name && formik.errors.name && (
@@ -411,10 +407,11 @@ function CategoriesEdits() {
                     <input
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
-                      className={`form-control ${formik.touched.icon && formik.errors.icon
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.icon && formik.errors.icon
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       name="icon"
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
@@ -479,10 +476,11 @@ function CategoriesEdits() {
                     </label>
                     <textarea
                       rows={5}
-                      className={`form-control ${formik.touched.description && formik.errors.description
-                        ? "is-invalid"
-                        : ""
-                        }`}
+                      className={`form-control ${
+                        formik.touched.description && formik.errors.description
+                          ? "is-invalid"
+                          : ""
+                      }`}
                       {...formik.getFieldProps("description")}
                       maxLength={825}
                     />
@@ -494,8 +492,11 @@ function CategoriesEdits() {
                       )}
                   </div>
                   <div className="hstack p-2">
-                    <button type="submit" className="btn btn-sm btn-button"
-                      disabled={loadIndicator}>
+                    <button
+                      type="submit"
+                      className="btn btn-sm btn-button"
+                      disabled={loadIndicator}
+                    >
                       {loadIndicator && (
                         <span
                           className="spinner-border spinner-border-sm me-2"

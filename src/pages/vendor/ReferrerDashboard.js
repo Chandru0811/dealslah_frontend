@@ -2,20 +2,22 @@ import React, { useEffect, useState } from "react";
 import Chart from "react-apexcharts";
 import "./../../styles/Vendor.css";
 import api from "../../config/URL";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 function ReferrerDashboard() {
   const [currentMonth, setCurrentMonth] = useState("");
   const [dashboardData, setDashboardData] = useState(null);
   const referrerCode = localStorage.getItem("referrer_code");
   const referrerName = localStorage.getItem("name");
-// console.log(dashboardData?.total_data?.total_count_month);
+  // console.log(dashboardData?.total_data?.total_count_month);
 
- const formatMonth = (month) => {
-   const [year, monthNum] = month.split("-");
-   const date = new Date(`${year}-${monthNum}-01`);
-   const options = { year: "numeric", month: "short" };
-   return date.toLocaleDateString("en-IN", options);
- };
+  const formatMonth = (month) => {
+    const [year, monthNum] = month.split("-");
+    const date = new Date(`${year}-${monthNum}-01`);
+    const options = { year: "numeric", month: "short" };
+    return date.toLocaleDateString("en-IN", options);
+  };
 
   const fetchDashboardData = async (month) => {
     try {
@@ -42,82 +44,81 @@ function ReferrerDashboard() {
     fetchDashboardData(month);
   }, []);
 
-  const handleMonthChange = (e) => {
-    const selectedMonth = e.target.value;
-    setCurrentMonth(selectedMonth);
-    fetchDashboardData(selectedMonth);
+  const handleMonthChange = (date) => {
+    setCurrentMonth(date);
+    fetchDashboardData(date);
   };
 
- const selectedMonthChart = {
-   options: {
-     colors: ["#EF4444"],
-     chart: {
-       id: "selected-month-report",
-       toolbar: {
-         show: true,
-         tools: {
-           download: true,
-           selection: false,
-           zoom: true,
-           zoomin: true,
-           zoomout: true,
-           pan: true,
-           reset: true,
-           customIcons: [],
-         },
-       },
-     },
-     dataLabels: {
-       style: {
-         fontFamily: "Kanit, sans-serif",
-       },
-     },
-     xaxis: {
-       categories: dashboardData?.current_month_report?.vendors || [],
-       title: {
-        text: "Vendors",
+  const selectedMonthChart = {
+    options: {
+      colors: ["#EF4444"],
+      chart: {
+        id: "selected-month-report",
+        toolbar: {
+          show: true,
+          tools: {
+            download: true,
+            selection: false,
+            zoom: true,
+            zoomin: true,
+            zoomout: true,
+            pan: true,
+            reset: true,
+            customIcons: [],
+          },
+        },
+      },
+      dataLabels: {
         style: {
-          fontSize: "14px",
-          fontWeight: 500,
           fontFamily: "Kanit, sans-serif",
         },
       },
-       labels: {
-         style: {
-           fontFamily: "Kanit, sans-serif",
-         },
-       },
-     },
-     yaxis: {
+      xaxis: {
+        categories: dashboardData?.current_month_report?.vendors || [],
+        title: {
+          text: "Vendors",
+          style: {
+            fontSize: "14px",
+            fontWeight: 500,
+            fontFamily: "Kanit, sans-serif",
+          },
+        },
+        labels: {
+          style: {
+            fontFamily: "Kanit, sans-serif",
+          },
+        },
+      },
+      yaxis: {
+        title: {
+          text: "Amount",
+          style: {
+            fontSize: "14px",
+            fontWeight: 500,
+            fontFamily: "Kanit, sans-serif",
+          },
+        },
+        labels: {
+          style: {
+            fontFamily: "Kanit, sans-serif",
+          },
+        },
+      },
       title: {
-        text: "Amount",
+        text: "Monthly Earnings",
         style: {
-          fontSize: "14px",
-          fontWeight: 500,
           fontFamily: "Kanit, sans-serif",
+          fontWeight: 500,
         },
       },
-       labels: {
-         style: {
-           fontFamily: "Kanit, sans-serif",
-         },
-       },
-     },
-     title: {
-       text: "Monthly Earnings",
-       style: {
-         fontFamily: "Kanit, sans-serif",
-         fontWeight: 500,
-       },
-     },
-   },
-   series: [
-     {
-       name: "Earnings",
-       data: dashboardData?.current_month_report?.amounts || [],
-     },
-   ],
- };
+    },
+    series: [
+      {
+        name: "Earnings",
+        data: dashboardData?.current_month_report?.amounts || [],
+      },
+    ],
+  };
 
   const lastSixMonthChart = {
     options: {
@@ -146,14 +147,14 @@ function ReferrerDashboard() {
       xaxis: {
         categories:
           dashboardData?.last_six_months_report?.months?.map(formatMonth) || [],
-          title: {
-            text: "Months",
-            style: {
-              fontSize: "14px",
-              fontWeight: 500,
-              fontFamily: "Kanit, sans-serif",
-            },
+        title: {
+          text: "Months",
+          style: {
+            fontSize: "14px",
+            fontWeight: 500,
+            fontFamily: "Kanit, sans-serif",
           },
+        },
         labels: {
           style: {
             fontFamily: "Kanit, sans-serif",
@@ -217,24 +218,29 @@ function ReferrerDashboard() {
             <div className="col-md-5 col-12">
               <div className="row mb-3">
                 <div className="col-12 pe-0 me-0">
-                  <p className="mt-1 text-nowrap">Referrer Id :{" "}{referrerCode}</p>
+                  <p className="mt-1 text-nowrap">
+                    Referrer Id : {referrerCode}
+                  </p>
                 </div>
               </div>
             </div>
             <div className="col-md-4 col-12">
               <div className="row mb-3">
-                <div className="col-1">
-                <label className="mt-1">Month</label>
+                <div className="col-2">
+                  <label className="mt-1">Month</label>
                 </div>
-                <div className="col-11">
-                <input
-                  type="month"
-                  className="form-control week-input ms-6"
-                  style={{ boxShadow: "none", width: "170px", height: "40px" }}
-                  value={currentMonth}
-                  onChange={(e) => handleMonthChange(e)}
-                  max={new Date().toISOString().slice(0, 7)}
-                />
+                <div className="col-10">
+                  <DatePicker
+                    selected={currentMonth}
+                    onChange={handleMonthChange}
+                    dateFormat="yyyy-MM"
+                    showMonthYearPicker
+                    className="form-control"
+                    style={{
+                      boxShadow: "none",
+                      width: "fit-content",
+                    }}
+                  />
                 </div>
               </div>
             </div>

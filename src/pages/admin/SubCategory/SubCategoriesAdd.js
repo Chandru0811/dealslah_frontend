@@ -300,21 +300,15 @@ function SubCategoriesAdd() {
   return (
     <section className="px-4">
       <form onSubmit={formik.handleSubmit}>
-        <div className="card shadow border-0 mb-2 top-header">
-          <div className="container-fluid py-4">
-            <div className="row align-items-center">
-              <div className="col">
-                <h1 className="h4 ls-tight headingColor">Add Sub Category</h1>
-              </div>
-              <div className="col-auto">
-                <div className="hstack gap-2 justify-content-end">
-                  <Link to="/categories">
-                    <button type="button" className="btn btn-light btn-sm">
-                      Back
-                    </button>
-                  </Link>
-                </div>
-              </div>
+        <div className="card card-shadow">
+          <div className="row p-3">
+            <div className="d-flex justify-content-between align-items-center">
+              <h1 className="h4 ls-tight">Add Sub Category</h1>
+              <Link to="/subcategories">
+                <button type="button" className="btn btn-light btn-sm">
+                  <span>Back</span>
+                </button>
+              </Link>
             </div>
           </div>
         </div>

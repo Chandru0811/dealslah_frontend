@@ -19,16 +19,16 @@ function ReferrerAdd() {
     vendor_id: Yup.string().required("*Select a vendor name"),
     amount: Yup.string().required("*Amount is required"),
     commission_rate: Yup.number()
-    .typeError("*Commission amount must be a number")
-    .min(0, "*Commission amount cannot be negative")
-    .required("*Commission amount is required")
-    .test(
-      "is-less-than-amount",
-      "*Commission amount cannot exceed the total amount",
-      function (value) {
-        return value <= this.parent.amount;
-      }
-    ),
+      .typeError("*Commission amount must be a number")
+      .min(0, "*Commission amount cannot be negative")
+      .required("*Commission amount is required")
+      .test(
+        "is-less-than-amount",
+        "*Commission amount cannot exceed the total amount",
+        function (value) {
+          return value <= this.parent.amount;
+        }
+      ),
     date: Yup.string().required("*Date is required"),
   });
 
@@ -42,14 +42,12 @@ function ReferrerAdd() {
       referrer_number: "",
       vendor_name: "",
       commission_rate: "",
+      year: "",
+      month: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
-      const selectedReferrer = vendorvr.find(
-        // eslint-disable-next-line eqeqeq
-        (v) => v.id == values.referrer_id
-      );
-      // eslint-disable-next-line eqeqeq
+      const selectedReferrer = vendorvr.find((v) => v.id == values.referrer_id);
       const selectedVendor = referedv.find((v) => v.id == values.vendor_id);
       const payload = {
         ...values,
@@ -57,6 +55,9 @@ function ReferrerAdd() {
         referrer_number: `DLR500${selectedReferrer?.id}`,
         vendor_name: selectedVendor?.name,
       };
+
+      delete payload.year;
+      delete payload.month;
 
       setLoadIndicator(true);
       try {
@@ -97,6 +98,28 @@ function ReferrerAdd() {
     fetchReferredVendor(referrer);
   };
 
+  const handleYearChange = (event) => {
+    const year = event.target.value;
+    formik.setFieldValue("year", year);
+    if (formik.values.month) {
+      formik.setFieldValue(
+        "date",
+        `${year}-${formik.values.month.padStart(2, "0")}`
+      );
+    }
+  };
+
+  const handleMonthChange = (event) => {
+    const month = event.target.value;
+    formik.setFieldValue("month", month);
+    if (formik.values.year) {
+      formik.setFieldValue(
+        "date",
+        `${formik.values.year}-${month.padStart(2, "0")}`
+      );
+    }
+  };
+
   const fetchData = async () => {
     try {
       const vendorvrData = await fetchAllReferrerVendorWithIds();
@@ -120,6 +143,51 @@ function ReferrerAdd() {
   useEffect(() => {
     fetchData();
   }, []);
+
+  const currentYear = new Date().getFullYear();
+  const minDate = referedv
+    .find((v) => v.id == formik.values.vendor_id)
+    ?.created_at?.substring(0, 4);
+  const minYear = minDate ? parseInt(minDate, 10) : 1999;
+  const years = Array.from(
+    { length: currentYear - minYear + 1 },
+    (_, i) => minYear + i
+  );
+
+  const months = [
+    { value: "1", label: "January" },
+    { value: "2", label: "February" },
+    { value: "3", label: "March" },
+    { value: "4", label: "April" },
+    { value: "5", label: "May" },
+    { value: "6", label: "June" },
+    { value: "7", label: "July" },
+    { value: "8", label: "August" },
+    { value: "9", label: "September" },
+    { value: "10", label: "October" },
+    { value: "11", label: "November" },
+    { value: "12", label: "December" },
+  ];
+
+  const filterMonths = () => {
+    const selectedYear = formik.values.year;
+    const maxMonth =
+      selectedYear == currentYear ? new Date().getMonth() + 1 : 12;
+    const minMonth =
+      selectedYear == minYear && minDate
+        ? parseInt(
+            referedv
+              .find((v) => v.id == formik.values.vendor_id)
+              ?.created_at?.substring(5, 7),
+            10
+          )
+        : 1;
+
+    return months.filter((month) => {
+      const monthNum = parseInt(month.value, 10);
+      return monthNum >= minMonth && monthNum <= maxMonth;
+    });
+  };
 
   return (
     <section className="px-4">
@@ -161,7 +229,7 @@ function ReferrerAdd() {
                   {...formik.getFieldProps("referrer_id")}
                   onChange={handleReferrerChange}
                 >
-                  <option></option>
+                  <option value="">Select Referrer</option>
                   {vendorvr &&
                     vendorvr.map((referrer_id) => (
                       <option key={referrer_id.id} value={referrer_id.id}>
@@ -188,7 +256,7 @@ function ReferrerAdd() {
                   }`}
                   {...formik.getFieldProps("vendor_id")}
                 >
-                  <option></option>
+                  <option value="">Select Vendor</option>
                   {referedv &&
                     referedv.map((vendor_id) => (
                       <option key={vendor_id.id} value={vendor_id.id}>
@@ -202,47 +270,59 @@ function ReferrerAdd() {
                   </div>
                 )}
               </div>
-              {/* <div className="col-md-6 col-12 mb-3">
-                <label className="form-label">
-                  Date<span className="text-danger">*</span>
-                </label>
-                <input
-                  type="month"
-                  className={`form-control ${
-                    formik.touched.date && formik.errors.date
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                  max={new Date().toISOString().slice(0, 7)}
-                  {...formik.getFieldProps("date")}
-                />
-                {formik.touched.date && formik.errors.date && (
-                  <div className="invalid-feedback">{formik.errors.date}</div>
-                )}
-              </div> */}
               <div className="col-md-6 col-12 mb-3">
                 <label className="form-label">
                   Date<span className="text-danger">*</span>
                 </label>
-                <input
-                  type="month"
-                  className={`form-control ${
-                    formik.touched.date && formik.errors.date
-                      ? "is-invalid"
-                      : ""
-                  }`}
-                  max={new Date().toISOString().slice(0, 7)}
-                  min={
-                    referedv && Array.isArray(referedv)
-                      ? referedv
-                          .find((v) => v.id == formik.values.vendor_id)
-                          ?.created_at?.substring(0, 7) || ""
-                      : ""
-                  }
-                  {...formik.getFieldProps("date")}
-                />
+                <div className="input-group">
+                  <select
+                    className={`form-select ${
+                      formik.touched.date && formik.errors.date
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                    name="year"
+                    value={formik.values.year}
+                    onChange={handleYearChange}
+                    onBlur={formik.handleBlur}
+                    style={{
+                      borderTopRightRadius: 0,
+                      borderBottomRightRadius: 0,
+                    }}
+                  >
+                    <option value="">Year</option>
+                    {years.map((year) => (
+                      <option key={year} value={year}>
+                        {year}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    className={`form-select ${
+                      formik.touched.date && formik.errors.date
+                        ? "is-invalid"
+                        : ""
+                    }`}
+                    name="month"
+                    value={formik.values.month}
+                    onChange={handleMonthChange}
+                    onBlur={formik.handleBlur}
+                    disabled={!formik.values.year}
+                    style={{
+                      borderTopLeftRadius: 0,
+                      borderBottomLeftRadius: 0,
+                    }}
+                  >
+                    <option value="">Month</option>
+                    {filterMonths().map((month) => (
+                      <option key={month.value} value={month.value}>
+                        {month.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {formik.touched.date && formik.errors.date && (
-                  <div className="invalid-feedback">{formik.errors.date}</div>
+                  <div className="text-danger mt-1">{formik.errors.date}</div>
                 )}
               </div>
               <div className="col-md-6 col-12 mb-3">

@@ -46,7 +46,7 @@ function SubCategoriesEdit() {
     name: Yup.string()
       .max(25, "Name must be 25 characters or less")
       .required("Name is required"),
-    icon: imageValidation,
+    image: imageValidation,
     description: Yup.string().max(250, "Maximum 250 characters allowed"),
   });
 
@@ -57,7 +57,7 @@ function SubCategoriesEdit() {
       description: "",
       name: "",
       slug: "",
-      icon: null,
+      image: null,
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -68,8 +68,8 @@ function SubCategoriesEdit() {
       formData.append("description", values.description);
       formData.append("name", values.name);
       formData.append("slug", values.slug);
-      if (values.icon) {
-        formData.append("icon", values.icon);
+      if (values.image) {
+        formData.append("image", values.image);
       }
 
       setLoadIndicator(true);
@@ -97,7 +97,7 @@ function SubCategoriesEdit() {
             Object.keys(errors).forEach((key) => {
               errors[key].forEach((errorMsg) => {
                 toast(errorMsg, {
-                  icon: <FiAlertTriangle className="text-warning" />,
+                  path: <FiAlertTriangle className="text-warning" />,
                 });
               });
             });
@@ -118,9 +118,9 @@ function SubCategoriesEdit() {
       setLoading(true);
       try {
         const response = await api.get(`/admin/subcategory/${id}`);
-        const { icon, ...rest } = response.data.data;
+        const { image, ...rest } = response.data.data;
         formik.setValues(rest);
-        setPreviewImage(`${ImageURL}${response.data.data.icon}`);
+        setPreviewImage(`${ImageURL}${response.data.data.path}`);
       } catch (error) {
         console.error("Error fetching data ", error);
       }
@@ -153,10 +153,10 @@ function SubCategoriesEdit() {
     const file = event?.target?.files[0];
     if (file) {
       if (file.size > MAX_FILE_SIZE) {
-        formik.setFieldError(`icon`, "File size is too large. Max 2MB.");
+        formik.setFieldError(`image`, "File size is too large. Max 2MB.");
         return;
       }
-      formik.setFieldError(`icon`, "");
+      formik.setFieldError(`image`, "");
 
       const reader = new FileReader();
       reader.onload = () => {
@@ -221,7 +221,7 @@ function SubCategoriesEdit() {
         type: originalFileType,
       });
 
-      formik.setFieldValue("icon", file);
+      formik.setFieldValue("image", file);
       // Create a URL for the cropped image and set it as the preview image
       const croppedImageURL = URL.createObjectURL(croppedImageBlob);
       setPreviewImage(croppedImageURL);
@@ -234,7 +234,7 @@ function SubCategoriesEdit() {
   const handleCropCancel = () => {
     setShowCropper(false);
     setImageSrc(null);
-    formik.setFieldValue("icon", "");
+    formik.setFieldValue("image", "");
     document.querySelector("input[type='file']").value = "";
   };
 
@@ -259,21 +259,15 @@ function SubCategoriesEdit() {
           </div>
         ) : (
           <>
-            <div className="card shadow border-0 mb-2 top-header">
-              <div className="container-fluid py-4">
-                <div className="row align-items-center">
-                  <div className="col">
-                    <h1 className="h4 ls-tight headingColor">Edit Category</h1>
-                  </div>
-                  <div className="col-auto">
-                    <div className="hstack gap-2 justify-content-end">
-                      <Link to="/categories">
-                        <button type="button" className="btn btn-light btn-sm">
-                          Back
-                        </button>
-                      </Link>
-                    </div>
-                  </div>
+            <div className="card card-shadow">
+              <div className="row p-3">
+                <div className="d-flex justify-content-between align-items-center">
+                  <h1 className="h4 ls-tight">Edit Sub Category</h1>
+                  <Link to="/subcategories">
+                    <button type="button" className="btn btn-light btn-sm">
+                      <span>Back</span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
@@ -327,81 +321,6 @@ function SubCategoriesEdit() {
                       </div>
                     )}
                   </div>
-                  {/* <div className="col-md-6 col-12 mb-3">
-                    <label className="form-label">
-                      Icon<span className="text-danger">*</span>
-                    </label>
-                    <input
-                      type="file"
-                      accept=".png, .jpg, .jpeg, .svg, .webp"
-                      className={`form-control ${
-                        formik.touched.image && formik.errors.image
-                          ? "is-invalid"
-                          : ""
-                      }`}
-                      onChange={handleFileChange}
-                      onBlur={formik.handleBlur}
-                    />
-                    <p style={{ fontSize: "13px" }}>
-                      Note: Maximum file size is 2MB. Allowed: .png, .jpg,
-                      .jpeg, .svg, .webp.
-                    </p>
-
-                    {formik.touched.image && formik.errors.image && (
-                      <div className="invalid-feedback">
-                        {formik.errors.image}
-                      </div>
-                    )}
-
-                    {previewImage && (
-                      <div className="my-3">
-                        <img
-                          src={previewImage}
-                          alt="Selected"
-                          style={{ maxWidth: "100px", maxHeight: "100px" }}
-                        />
-                      </div>
-                    )}
-
-                    {showCropper && (
-                      <div
-                        className="position-relative"
-                        style={{ height: 400 }}
-                      >
-                        <Cropper
-                          image={imageSrc}
-                          crop={crop}
-                          zoom={zoom}
-                          aspect={300 / 200}
-                          onCropChange={setCrop}
-                          onZoomChange={setZoom}
-                          onCropComplete={onCropComplete}
-                          cropShape="box"
-                          showGrid={false}
-                        />
-                      </div>
-                    )}
-
-                    {previewImage && showCropper && (
-                      <div className="d-flex justify-content-start mt-3 gap-2">
-                        <button
-                          type="button"
-                          className="btn btn-primary mt-3"
-                          onClick={handleCropSave}
-                        >
-                          Save Cropped Image
-                        </button>
-
-                        <button
-                          type="button"
-                          className="btn btn-secondary mt-3"
-                          onClick={handleCropCancel}
-                        >
-                          Cancel
-                        </button>
-                      </div>
-                    )}
-                  </div> */}
                   <div className="col-md-6 col-12 mb-3">
                     <label className="form-label">
                       Icon
@@ -411,11 +330,11 @@ function SubCategoriesEdit() {
                       type="file"
                       accept=".png,.jpeg,.jpg,.svg,.webp"
                       className={`form-control ${
-                        formik.touched.icon && formik.errors.icon
+                        formik.touched.image && formik.errors.image
                           ? "is-invalid"
                           : ""
                       }`}
-                      name="icon"
+                      name="image"
                       onChange={handleFileChange}
                       onBlur={formik.handleBlur}
                     />
@@ -423,9 +342,9 @@ function SubCategoriesEdit() {
                       Note: Maximum file size is 2MB. Allowed: .png, .jpg,
                       .jpeg, .svg, .webp.
                     </p>
-                    {formik.touched.icon && formik.errors.icon && (
+                    {formik.touched.image && formik.errors.image && (
                       <div className="invalid-feedback">
-                        {formik.errors.icon}
+                        {formik.errors.image}
                       </div>
                     )}
 
@@ -444,7 +363,7 @@ function SubCategoriesEdit() {
                           image={imageSrc}
                           crop={crop}
                           zoom={zoom}
-                          aspect={300 / 300}
+                          aspect={300 / 200}
                           onCropChange={setCrop}
                           onZoomChange={setZoom}
                           onCropComplete={onCropComplete}
