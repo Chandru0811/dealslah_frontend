@@ -19,7 +19,7 @@ function ProductView() {
   const [isCopied, setIsCopied] = useState(false);
   const handleOpenModal = () => setShowModal(true);
   const handleClose = () => setShowModal(false);
-  const [specialPrize, setSpecialPrize] = useState(null);
+  const [specialPrize, setSpecialPrize] = useState("0");
   const [end_date, setEndDate] = useState("");
 
   const handleActivate = () => {
@@ -28,7 +28,7 @@ function ProductView() {
 
   const handleCloseModal = () => {
     setShowActiveModal(false);
-    setSpecialPrize(null);
+    setSpecialPrize("0");
     setEndDate("");
   };
 
@@ -36,10 +36,14 @@ function ProductView() {
     e.preventDefault();
     setLoading(true);
 
-    const payload = {
-      special_price: specialPrize === "1",
-      ...(specialPrize === "1" && { end_date }),
-    };
+    const payload = {};
+
+    if (specialPrize === "1") {
+      payload.special_price = true;
+      payload.end_date = end_date;
+    } else if (specialPrize === "0") {
+      payload.special_price = false;
+    }
 
     try {
       const response = await api.post(`admin/deal/${id}/approve`, payload);
@@ -124,7 +128,7 @@ function ProductView() {
     try {
       if (data?.coupon_code) {
         await navigator.clipboard.writeText(data.coupon_code);
-        setIsCopied(true); // Set the copied state to true
+        setIsCopied(true);
         setTimeout(() => setIsCopied(false), 2000);
       }
     } catch (err) {
@@ -207,7 +211,7 @@ function ProductView() {
                     Deactivate
                   </button>
                 )}
-                {/* Modal */}
+                {/* Special Price Modal */}
                 <Modal show={showActiveModal} onHide={handleCloseModal}>
                   <Modal.Header closeButton></Modal.Header>
                   <Modal.Body>
@@ -260,9 +264,16 @@ function ProductView() {
                             className="form-control"
                             value={
                               end_date ||
-                              (data?.end_date
+                              (data?.end_date && !end_date
                                 ? data.end_date.split("T")[0]
                                 : "")
+                            }
+                            min={
+                              data?.start_date
+                                ? new Date(data.start_date)
+                                    .toISOString()
+                                    .split("T")[0]
+                                : ""
                             }
                             onChange={(e) => setEndDate(e.target.value)}
                           />
@@ -298,7 +309,7 @@ function ProductView() {
                           aria-hidden="true"
                         ></span>
                       )}{" "}
-                      {loading ? "Saving..." : "Save"}
+                      {loading ? "" : ""}
                       Activate
                     </button>
                   </Modal.Footer>
